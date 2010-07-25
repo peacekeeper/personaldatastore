@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_contentPane1" t="nextapp.echo.app.ContentPane">
+
+<p n="insets">10px</p>
+
+<c i="Component_splitPane1" t="nextapp.echo.app.SplitPane">
+<p n="styleName">Default</p>
+
+<p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM</p>
+<p n="separatorVisible">false</p>
+<p n="resizable">false</p>
+<c i="Component_row2" t="nextapp.echo.app.Row">
+<c i="Component_row3" t="nextapp.echo.app.Row">
+<c i="Component_imageIcon2" t="echopoint.ImageIcon">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p n="height">48px</p>
+<p n="width">48px</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/accountroot.png</p>
+</c>
+<c i="Component_label2" t="nextapp.echo.app.Label">
+
+
+<p n="styleName">Header</p>
+<p n="text">Account Root</p>
+</c>
+<p n="cellSpacing">10px</p>
+<p n="layoutData" t="nextapp.echo.app.layout.RowLayoutData">
+
+<p n="width">50%</p>
+</p>
+</c>
+
+
+<c i="Component_row1" t="nextapp.echo.app.Row">
+
+<c i="Component_label1" t="nextapp.echo.app.Label">
+
+
+<p n="styleName">Header</p>
+<p n="text">I-Number:</p>
+</c>
+<c i="Component_inumberLabel" t="nextapp.echo.app.Label" vis="private">
+<p n="text">...</p>
+<p n="styleName">Bold</p>
+</c>
+
+
+<p n="cellSpacing">10px</p>
+
+<p n="alignment">
+<a h="right"/>
+</p>
+<c i="Component_xdiPanel" t="pds.web.components.xdi.XdiPanel" vis="private"/>
+<p n="layoutData" t="nextapp.echo.app.layout.RowLayoutData">
+
+<p n="width">50%</p>
+</p>
+</c>
+<p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+<p n="maximumSize">70px</p>
+<p n="minimumSize">70px</p>
+</p>
+</c>
+
+<c i="Component_dataPredicatesColumn" t="pds.web.ui.shared.DataPredicatesColumn" vis="private"/>
+</c>
+</c>
+</form>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_contentPane1" t="nextapp.echo.app.ContentPane">
+
+
+<c i="Component_httpPane1" t="echopoint.HttpPane">
+<p n="width">100%</p>
+<p n="height">100%</p>
+<p n="id">httpPane</p>
+</c>
+</c>
+</form>

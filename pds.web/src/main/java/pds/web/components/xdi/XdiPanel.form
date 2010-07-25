@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_panel1" t="nextapp.echo.app.Panel">
+
+
+
+
+<c i="Component_button1" t="nextapp.echo.app.Button">
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/xdi.png</p>
+<e t="action">
+<h n="actionPerformed" v="onButtonActionPerformed"/>
+</e>
+<p n="styleName">Plain</p>
+</c>
+<p n="visible">false</p>
+</c>
+</form>

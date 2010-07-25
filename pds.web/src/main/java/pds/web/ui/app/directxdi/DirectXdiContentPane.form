@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_contentPane1" t="nextapp.echo.app.ContentPane">
+
+<p n="insets">10px</p>
+
+<c i="Component_splitPane1" t="nextapp.echo.app.SplitPane">
+<p n="styleName">Default</p>
+
+
+<p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM</p>
+
+<p n="separatorHeight">10px</p>
+<c i="Component_column1" t="nextapp.echo.app.Column">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p n="cellSpacing">10px</p>
+<c i="Component_row2" t="nextapp.echo.app.Row">
+<p n="border">3px solid #000000</p>
+<p n="cellSpacing">10px</p>
+<c i="Component_label2" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+<p n="layoutData" t="nextapp.echo.app.layout.RowLayoutData">
+<p n="insets">10px</p>
+</p>
+
+
+<p n="text">Here you can send arbitrary XDI transactions to your Personal Data Store.</p>
+</c>
+</c>
+
+
+
+
+
+<c i="Component_column2" t="nextapp.echo.app.Column">
+<c i="Component_xdiTextArea" t="nextapp.echo.app.TextArea" vis="private">
+<p n="styleName">Default</p>
+
+
+<p n="height">300px</p>
+
+
+<p n="width">95%</p>
+</c>
+</c>
+</c>
+<c i="Component_row4" t="nextapp.echo.app.Row">
+
+
+<p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+
+
+<p n="maximumSize">30px</p>
+<p n="minimumSize">30px</p>
+<p n="overflow">nextapp.echo.app.layout.SplitPaneLayoutData.OVERFLOW_HIDDEN</p>
+</p>
+<p n="alignment">
+<a h="right"/>
+</p>
+<p n="cellSpacing">10px</p>
+
+<c i="Component_button1" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+
+<e t="action">
+<h n="actionPerformed" v="onSendXdiActionPerformed"/>
+</e>
+<p n="text">Send!</p>
+</c>
+
+<c i="Component_button2" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+<e t="action">
+<h n="actionPerformed" v="onCloseActionPerformed"/>
+</e>
+<p n="text">Close</p>
+</c>
+</c>
+
+<p n="separatorColor">#ffffff</p>
+<p n="separatorVisible">true</p>
+</c>
+</c>
+</form>

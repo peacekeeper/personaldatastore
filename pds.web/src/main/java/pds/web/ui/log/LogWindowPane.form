@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_windowPane1" t="nextapp.echo.app.WindowPane">
+<c i="Component_logContentPane2" t="pds.web.ui.log.LogContentPane"/>
+
+
+<p n="closable">false</p>
+<p n="maximizeEnabled">true</p>
+<p n="title">Log</p>
+
+
+<p n="minimizeEnabled">false</p>
+<p n="width">600px</p>
+
+<p n="height">240px</p>
+
+
+<p n="styleName">Glass</p>
+<p n="visible">false</p>
+</c>
+</form>

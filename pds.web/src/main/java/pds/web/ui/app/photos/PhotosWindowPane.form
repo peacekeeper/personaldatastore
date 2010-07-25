@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_windowPane1" t="nextapp.echo.app.WindowPane">
+
+<p n="closable">true</p>
+<p n="maximizeEnabled">true</p>
+<p n="minimizeEnabled">false</p>
+<c i="Component_addressBookContentPane" t="pds.web.ui.app.addressbook.AddressBookContentPane" vis="private"/>
+
+<p n="width">800px</p>
+
+
+
+
+<p n="height">600px</p>
+<p n="title">Address Book</p>
+
+<p n="styleName">Blue</p>
+</c>
+</form>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_contentPane1" t="nextapp.echo.app.ContentPane">
+<c i="Component_splitPane1" t="nextapp.echo.app.SplitPane">
+<p n="styleName">Default</p>
+<c i="Component_row1" t="nextapp.echo.app.Row">
+<c i="Component_row2" t="nextapp.echo.app.Row">
+<c i="Component_imageIcon2" t="echopoint.ImageIcon">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p n="height">48px</p>
+<p n="width">48px</p>
+
+
+
+
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/app-feed.png</p>
+</c>
+<c i="Component_label1" t="nextapp.echo.app.Label">
+
+
+<p n="styleName">Header</p>
+
+<p n="text">Feed</p>
+</c>
+<p n="cellSpacing">10px</p>
+</c>
+<c i="Component_row3" t="nextapp.echo.app.Row">
+<c i="Component_xdiPanel" t="pds.web.components.xdi.XdiPanel" vis="private"/>
+<p n="alignment">
+<a h="right"/>
+</p>
+</c>
+<p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+<p n="maximumSize">70px</p>
+<p n="minimumSize">70px</p>
+</p>
+</c>
+<p n="resizable">false</p>
+<p n="separatorVisible">false</p>
+<p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM</p>
+
+<c i="Component_splitPane2" t="nextapp.echo.app.SplitPane">
+<p n="styleName">Default</p>
+<c i="Component_column1" t="nextapp.echo.app.Column">
+<c i="Component_column6" t="nextapp.echo.app.Column">
+<c i="Component_label3" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+<p n="text">What's up?</p>
+</c>
+<c i="Component_row5" t="nextapp.echo.app.Row">
+<p n="cellSpacing">10px</p>
+<c i="Component_label4" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+<p n="text">Content:</p>
+</c>
+<c i="Component_contentTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<e t="action">
+<h n="actionPerformed" v="onPostActionPerformed"/>
+</e>
+</c>
+<c i="Component_button1" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+<p n="text">Post!</p>
+<e t="action">
+<h n="actionPerformed" v="onPostActionPerformed"/>
+</e>
+</c>
+</c>
+
+
+<p n="cellSpacing">10px</p>
+
+</c>
+
+
+<p n="cellSpacing">10px</p>
+</c>
+
+<p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_HORIZONTAL_LEFT_RIGHT</p>
+<p n="resizable">true</p>
+<p n="separatorVisible">true</p>
+<p n="separatorWidth">10px</p>
+<p n="separatorHorizontalImage">
+<fi r="xy" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/separator-blue.png</fi>
+</p>
+<c i="Component_entriesColumn" t="pds.web.ui.shared.EntriesColumn" vis="private"/>
+</c>
+</c>
+<p n="insets">10px</p>
+</c>
+</form>

@@ -1,0 +1,22 @@
+* {
+	font-family: Arial;
+}
+body {
+	background-image:url('/images/cardback.jpg');
+	background-repeat:no-repeat;
+	background-position:bottom right;
+	background-attachment:fixed;
+}
+h1 {
+	font-size: 18pt;
+}
+a {
+	color: blue;
+}
+.code {
+	font-family:monospace;
+	font-weight:bold;
+}
+img {
+	border:none;
+}
