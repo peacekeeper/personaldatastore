@@ -7,10 +7,10 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pdsproject</groupId>
-	<artifactId>pds.atom</artifactId>
+	<artifactId>pds.feed</artifactId>
 	<packaging>war</packaging>
 	<version>0.5</version>
-	<name>pds.atom</name>
+	<name>pds.feed</name>
 	<build>
 		<resources>
 			<resource>
