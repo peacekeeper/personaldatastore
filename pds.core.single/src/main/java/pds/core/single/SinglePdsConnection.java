@@ -21,7 +21,7 @@ public class SinglePdsConnection implements PdsConnection {
 	@Override
 	public XRI3Segment getCanonical() {
 
-		return new XRI3Segment(identifier);
+		return new XRI3Segment(this.identifier);
 	}
 
 	public String[] getAliases() {

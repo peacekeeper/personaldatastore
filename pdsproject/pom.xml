@@ -13,11 +13,13 @@
 		<module>../pds.core</module>
 		<module>../pds.core.single</module>
 		<module>../pds.core.xri</module>
+		<module>../pds.discovery</module>
+		<module>../pds.profile</module>
 		<module>../pds.web</module>
 		<module>../pds.web.xdi</module>
 		<module>../pds.web.logger</module>
 		<module>../pds.web.tools</module>
-		<module>../pds.atom</module>
+		<module>../pds.feed</module>
 	</modules>
 	<build>
 		<plugins>
