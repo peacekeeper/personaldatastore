@@ -19,7 +19,11 @@
 		<module>../pds.web.xdi</module>
 		<module>../pds.web.logger</module>
 		<module>../pds.web.tools</module>
-		<module>../pds.feed</module>
+		<module>../pds.endpoint.feed</module>
+		<module>../pds.store.user</module>
+		<module>../pds.store.xri</module>
+		<module>../pds.store.xri.openxri</module>
+		<module>../pds.store.xri.grs</module>
 	</modules>
 	<build>
 		<plugins>
