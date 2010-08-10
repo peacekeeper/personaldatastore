@@ -18,12 +18,13 @@ import org.eclipse.higgins.xdi4j.impl.keyvalue.bdb.BDBGraphFactory;
 import org.eclipse.higgins.xdi4j.messaging.server.EndpointRegistry;
 import org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet;
 import org.eclipse.higgins.xdi4j.messaging.server.MessagingTarget;
+import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractMessagingTarget;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.CompoundMessagingTarget;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.graph.GraphMessagingTarget;
 import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.RoutingMessageInterceptor;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.core.messagingtargets.pds.ContextResourceMessagingTarget;
+import pds.core.messagingtargets.context.ContextResourceMessagingTarget;
 import pds.core.messagingtargets.pds.PdsResourceMessagingTarget;
 
 public class PdsFilter implements Filter {
@@ -125,13 +126,20 @@ public class PdsFilter implements Filter {
 
 					compoundMessagingTarget.getMessagingTargets().add(contextResourceMessagingTarget);
 
-					// create and add IbrokerResourceMessagingTarget
+					// create and add PdsResourceMessagingTarget
 
-					PdsResourceMessagingTarget xriResourceMessagingTarget = new PdsResourceMessagingTarget();
-					xriResourceMessagingTarget.setPdsConnection(pdsConnection);
-					xriResourceMessagingTarget.init(endpointRegistry);
+					PdsResourceMessagingTarget pdsResourceMessagingTarget = new PdsResourceMessagingTarget();
+					pdsResourceMessagingTarget.setPdsConnection(pdsConnection);
+					pdsResourceMessagingTarget.init(endpointRegistry);
 
-					compoundMessagingTarget.getMessagingTargets().add(xriResourceMessagingTarget);
+					compoundMessagingTarget.getMessagingTargets().add(pdsResourceMessagingTarget);
+
+					// add PdsConnectionMessagingTargets
+
+					for (AbstractMessagingTarget pdsConnectionMessagingTarget : pdsConnection.getPdsConnectionMessagingTargets()) {
+
+						compoundMessagingTarget.getMessagingTargets().add(pdsConnectionMessagingTarget);
+					}
 
 					// open graph
 

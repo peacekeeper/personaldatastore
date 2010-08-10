@@ -1,11 +1,10 @@
 package pds.core.single;
 
-import org.eclipse.higgins.xdi4j.messaging.Operation;
+import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractMessagingTarget;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.PdsConnection;
 import pds.core.PdsConnectionException;
-
 
 public class SinglePdsConnection implements PdsConnection {
 
@@ -34,16 +33,6 @@ public class SinglePdsConnection implements PdsConnection {
 		return new String[] { };
 	}
 
-	public boolean isSelfAuthenticated(Operation operation) throws PdsConnectionException {
-
-		throw new RuntimeException("Not implemented");
-	}
-
-	public String getPassword() throws PdsConnectionException {
-
-		throw new RuntimeException("Not implemented");
-	}
-
 	public String getPublicKey() throws PdsConnectionException {
 
 		throw new RuntimeException("Not implemented");
@@ -59,8 +48,8 @@ public class SinglePdsConnection implements PdsConnection {
 		throw new RuntimeException("Not implemented");
 	}
 
-	public void setNewPassword(String newPassword) throws PdsConnectionException {
+	public AbstractMessagingTarget[] getPdsConnectionMessagingTargets() {
 
-		throw new RuntimeException("Not implemented");
+		return new AbstractMessagingTarget[0];
 	}
 }

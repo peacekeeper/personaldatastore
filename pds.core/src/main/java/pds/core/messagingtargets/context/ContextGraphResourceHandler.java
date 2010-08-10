@@ -1,4 +1,4 @@
-package pds.core.messagingtargets.pds;
+package pds.core.messagingtargets.context;
 
 
 import org.eclipse.higgins.xdi4j.Graph;
