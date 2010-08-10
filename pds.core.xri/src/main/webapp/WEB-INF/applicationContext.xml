@@ -3,12 +3,33 @@
 	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
-	<bean id="PdsFilter" class="pds.core.pdsFilter">
-		<property name="endpointServlet" ref="endpointServlet" />
-		<property name="pdsConnectionFactory">
-			<bean class="pds.core.xri.XriPdsConnectionFactory" />
+	<!-- PDS Connection Factory (OpenXRI) -->
+
+	<bean id="pdsConnectionFactory" class="pds.core.xri.XriPdsConnectionFactory">
+		<property name="properties">
+			<util:properties location="/WEB-INF/application.properties" />
+		</property>
+		<property name="xriStore">
+			<bean class="pds.store.xri.openxri.OpenxriXriStore">
+				<constructor-arg>
+					<bean class="org.openxri.store.impl.db.DatabaseStore">
+						<constructor-arg>
+							<util:properties location="/WEB-INF/openxristore.properties" />
+						</constructor-arg>
+					</bean>
+				</constructor-arg>
+			</bean>
 		</property>
 	</bean>
+
+	<!-- PDS Filter -->
+
+	<bean id="pdsFilter" class="pds.core.pdsFilter">
+		<property name="endpointServlet" ref="endpointServlet" />
+		<property name="pdsConnectionFactory" ref="pdsConnectionFactory" />
+	</bean>
+
+	<!-- XDI Servlet -->
 
 	<bean id="endpointServlet" class="org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet" />
 

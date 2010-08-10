@@ -45,14 +45,8 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>ibrokerkit</groupId>
-			<artifactId>ibrokerStore</artifactId>
-			<version>0.5</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>ibrokerkit</groupId>
-			<artifactId>iname4java</artifactId>
+			<groupId>pdsproject</groupId>
+			<artifactId>pds.store.xri</artifactId>
 			<version>0.5</version>
 			<scope>compile</scope>
 		</dependency>

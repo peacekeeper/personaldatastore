@@ -1,21 +1,16 @@
 package pds.core.xri;
 
-import ibrokerkit.ibrokerstore.store.StoreUtil;
-import ibrokerkit.ibrokerstore.store.User;
-import ibrokerkit.iname4java.store.Xri;
-import ibrokerkit.iname4java.store.XriStoreException;
-
 import java.util.List;
 
-import org.eclipse.higgins.xdi4j.addressing.Addressing;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
+import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractMessagingTarget;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.xml.CanonicalID;
 
 import pds.core.PdsConnection;
 import pds.core.PdsConnectionException;
-
+import pds.core.xri.messagingtarget.PdsConnectionResourceMessagingTarget;
+import pds.store.xri.Xri;
+import pds.store.xri.XriStoreException;
 
 public class XriPdsConnection implements PdsConnection {
 
@@ -65,7 +60,7 @@ public class XriPdsConnection implements PdsConnection {
 		return new String[] { xdiService };
 	}
 
-	public boolean isSelfAuthenticated(Operation operation) throws PdsConnectionException {
+	/*	public boolean isSelfAuthenticated(Operation operation) throws PdsConnectionException {
 
 		// read information from the operation
 
@@ -111,7 +106,7 @@ public class XriPdsConnection implements PdsConnection {
 
 			throw new PdsConnectionException("Cannot read user password: " + ex.getMessage(), ex);
 		}
-	}
+	}*/
 
 	public String getPublicKey() throws PdsConnectionException {
 
@@ -146,15 +141,11 @@ public class XriPdsConnection implements PdsConnection {
 		}
 	}
 
-	public void setNewPassword(String newPassword) throws PdsConnectionException {
+	public AbstractMessagingTarget[] getPdsConnectionMessagingTargets() {
 
-		try {
+		PdsConnectionResourceMessagingTarget pdsConnectionResourceMessagingTarget = new PdsConnectionResourceMessagingTarget();
+		pdsConnectionResourceMessagingTarget.setPdsConnection(this);
 
-			this.user.setPass(StoreUtil.hashPass(newPassword));
-			this.pdsConnectionFactory.getIbrokerStore().updateObject(this.user);
-		} catch (Exception ex) {
-
-			throw new PdsConnectionException("Cannot set user password: " + ex.getMessage(), ex);
-		}
+		return new AbstractMessagingTarget[] { pdsConnectionResourceMessagingTarget };
 	}
 }
