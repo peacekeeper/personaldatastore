@@ -11,11 +11,11 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.xri.XriPdsConnection;
 
-public class PdsConnectionSubjectResourceHandler extends AbstractResourceHandler {
+public class XriSubjectResourceHandler extends AbstractResourceHandler {
 
 	private XriPdsConnection pdsConnection;
 
-	public PdsConnectionSubjectResourceHandler(Message message, Subject subject, XriPdsConnection pdsConnection) {
+	public XriSubjectResourceHandler(Message message, Subject subject, XriPdsConnection pdsConnection) {
 
 		super(message, subject);
 

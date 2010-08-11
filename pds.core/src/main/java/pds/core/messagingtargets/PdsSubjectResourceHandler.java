@@ -26,7 +26,12 @@ public class PdsSubjectResourceHandler extends AbstractResourceHandler {
 	@Override
 	public boolean executeGet(Operation operation, MessageResult messageResult, Object executionContext) throws MessagingException {
 
-		// type, canonical and aliases
+		// canonical, type and aliases
+
+		if (this.pdsConnection.getCanonical() != null) {
+
+			messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), new XRI3Segment("$$is"), this.pdsConnection.getCanonical());
+		}
 
 		messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_INHERITANCE, new XRI3Segment(this.operationSubject.getSubjectXri().getFirstSubSegment().getGCS().toString()));
 
@@ -34,11 +39,6 @@ public class PdsSubjectResourceHandler extends AbstractResourceHandler {
 		for (String alias : aliases) {
 
 			messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_EQUIVALENCE, new XRI3Segment(alias));
-		}
-
-		if (this.pdsConnection.getCanonical() != null) {
-
-			messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), new XRI3Segment("$$is"), this.pdsConnection.getCanonical());
 		}
 
 		// done

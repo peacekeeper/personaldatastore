@@ -7,7 +7,7 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.xml.CanonicalID;
 
 import pds.core.PdsConnection;
-import pds.core.xri.messagingtargets.PdsConnectionResourceMessagingTarget;
+import pds.core.xri.messagingtargets.XriResourceMessagingTarget;
 import pds.store.user.User;
 import pds.store.xri.Xri;
 import pds.store.xri.XriStoreException;
@@ -110,7 +110,7 @@ public class XriPdsConnection implements PdsConnection {
 
 	public AbstractMessagingTarget[] getPdsConnectionMessagingTargets() {
 
-		PdsConnectionResourceMessagingTarget pdsConnectionResourceMessagingTarget = new PdsConnectionResourceMessagingTarget();
+		XriResourceMessagingTarget pdsConnectionResourceMessagingTarget = new XriResourceMessagingTarget();
 		pdsConnectionResourceMessagingTarget.setPdsConnection(this);
 
 		return new AbstractMessagingTarget[] { pdsConnectionResourceMessagingTarget };

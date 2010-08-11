@@ -11,11 +11,11 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.xri.XriPdsConnection;
 
-public class PdsConnectionResourceMessagingTarget extends ResourceMessagingTarget {
+public class XriResourceMessagingTarget extends ResourceMessagingTarget {
 
 	private XriPdsConnection pdsConnection;
 
-	public PdsConnectionResourceMessagingTarget() {
+	public XriResourceMessagingTarget() {
 
 		super(true);
 	}
@@ -25,7 +25,7 @@ public class PdsConnectionResourceMessagingTarget extends ResourceMessagingTarge
 
 		if (operationSubject.getSubjectXri().equals(this.pdsConnection.getCanonical())) {
 
-			return new PdsConnectionSubjectResourceHandler(message, operationSubject, this.pdsConnection);
+			return new XriSubjectResourceHandler(message, operationSubject, this.pdsConnection);
 		}
 
 		return null;
@@ -37,7 +37,7 @@ public class PdsConnectionResourceMessagingTarget extends ResourceMessagingTarge
 		if (operationSubject.getSubjectXri().equals(this.pdsConnection.getCanonical()) &&
 				operationPredicate.getPredicateXri().equals(new XRI3Segment("$password"))) {
 
-			return new PdsConnectionSubjectPredicateLiteralResourceHandler(message, operationSubject, operationPredicate, operationLiteral, this.pdsConnection);
+			return new XriSubjectPredicateLiteralResourceHandler(message, operationSubject, operationPredicate, operationLiteral, this.pdsConnection);
 		}
 
 		return null;

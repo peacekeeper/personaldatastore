@@ -12,11 +12,11 @@ import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractResourceHandler;
 
 import pds.core.PdsConnection;
 
-public class PdsConnectionSubjectPredicateLiteralResourceHandler extends AbstractResourceHandler {
+public class XriSubjectPredicateLiteralResourceHandler extends AbstractResourceHandler {
 
 	private PdsConnection pdsConnection;
 
-	public PdsConnectionSubjectPredicateLiteralResourceHandler(Message message, Subject operationSubject, Predicate operationPredicate, Literal operationLiteral, PdsConnection pdsConnection) {
+	public XriSubjectPredicateLiteralResourceHandler(Message message, Subject operationSubject, Predicate operationPredicate, Literal operationLiteral, PdsConnection pdsConnection) {
 
 		super(message, operationSubject, operationPredicate, operationLiteral);
 
