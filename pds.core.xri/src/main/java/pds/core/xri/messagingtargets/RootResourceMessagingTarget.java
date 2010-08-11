@@ -8,11 +8,11 @@ import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceHandler;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceMessagingTarget;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.core.xri.XriPdsConnectionFactory;
+import pds.core.xri.XriPdsConnection;
 
 public class RootResourceMessagingTarget extends ResourceMessagingTarget {
 
-	private XriPdsConnectionFactory pdsConnectionFactory;
+	private XriPdsConnection pdsConnection;
 
 	public RootResourceMessagingTarget() {
 
@@ -25,19 +25,19 @@ public class RootResourceMessagingTarget extends ResourceMessagingTarget {
 		if (message.getMessageEnvelope().getGraph().containsStatement(subject.getSubjectXri(), DictionaryConstants.XRI_INHERITANCE, new XRI3Segment("=")) ||
 				message.getMessageEnvelope().getGraph().containsStatement(subject.getSubjectXri(), DictionaryConstants.XRI_INHERITANCE, new XRI3Segment("@"))) {
 
-			return new RootSubjectResourceHandler(message, subject, this.pdsConnectionFactory);
+			return new RootSubjectResourceHandler(message, subject, this.pdsConnection);
 		}
 
 		return null;
 	}
 
-	public XriPdsConnectionFactory getPdsConnectionFactory() {
+	public XriPdsConnection getPdsConnection() {
 
-		return this.pdsConnectionFactory;
+		return this.pdsConnection;
 	}
 
-	public void setPdsConnectionFactory(XriPdsConnectionFactory pdsConnectionFactory) {
+	public void setPdsConnection(XriPdsConnection pdsConnection) {
 
-		this.pdsConnectionFactory = pdsConnectionFactory;
+		this.pdsConnection = pdsConnection;
 	}
 }

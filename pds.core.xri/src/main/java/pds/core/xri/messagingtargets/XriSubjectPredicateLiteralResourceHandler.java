@@ -10,13 +10,16 @@ import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractResourceHandler;
 
-import pds.core.PdsConnection;
+import pds.core.xri.XriPdsConnection;
+import pds.store.user.StoreException;
+import pds.store.user.StoreUtil;
+import pds.store.user.User;
 
 public class XriSubjectPredicateLiteralResourceHandler extends AbstractResourceHandler {
 
-	private PdsConnection pdsConnection;
+	private XriPdsConnection pdsConnection;
 
-	public XriSubjectPredicateLiteralResourceHandler(Message message, Subject operationSubject, Predicate operationPredicate, Literal operationLiteral, PdsConnection pdsConnection) {
+	public XriSubjectPredicateLiteralResourceHandler(Message message, Subject operationSubject, Predicate operationPredicate, Literal operationLiteral, XriPdsConnection pdsConnection) {
 
 		super(message, operationSubject, operationPredicate, operationLiteral);
 
@@ -26,38 +29,23 @@ public class XriSubjectPredicateLiteralResourceHandler extends AbstractResourceH
 	@Override
 	public boolean executeMod(Operation operation, MessageResult messageResult, Object executionContext) throws MessagingException {
 
-/*		// read information from the message
+		User user = this.pdsConnection.getUser();
+		pds.store.user.Store userStore = this.pdsConnection.getPdsConnectionFactory().getUserStore();
 
-		String newPassword = this.operationLiteral.getData();
+		// read information from the message
 
-		// operation authenticated?
-
-		boolean isSelfAuthenticated; 
-
-		try {
-
-			isSelfAuthenticated = this.pdsConnection.isSelfAuthenticated(operation);
-		} catch (PdsConnectionException ex) {
-
-			throw new MessagingException("Cannot check authentication: " + ex.getMessage(), ex);
-		}
-
-		// authenticated?
-
-		if (! isSelfAuthenticated) {
-
-			throw new MessagingException("Not authenticated!");
-		}
+		String newPass = this.operationLiteral.getData();
 
 		// with the correct password we can modify the password
 
 		try {
 
-			this.pdsConnection.setNewPassword(newPassword);
-		} catch (PdsConnectionException ex) {
+			user.setPass(StoreUtil.hashPass(newPass));
+			userStore.updateObject(user);
+		} catch (StoreException ex) {
 
 			throw new MessagingException("Cannot set new password: " + ex.getMessage(), ex);
-		}*/
+		}
 
 		return true;
 	}

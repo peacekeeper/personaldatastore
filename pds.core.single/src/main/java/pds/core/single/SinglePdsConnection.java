@@ -4,17 +4,18 @@ import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractMessagingTarget;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.PdsConnection;
-import pds.core.PdsConnectionException;
 
 public class SinglePdsConnection implements PdsConnection {
 
-	private SinglePdsConnectionFactory pdsConnectionFactory;
 	private String identifier;
+	private String[] aliases;
+	private String[] endpoints;
 
-	SinglePdsConnection(SinglePdsConnectionFactory pdsConnectionFactory, String identifier) {
+	SinglePdsConnection(String identifier, String[] aliases, String[] endpoints) {
 
-		this.pdsConnectionFactory = pdsConnectionFactory;
 		this.identifier = identifier;
+		this.aliases = aliases;
+		this.endpoints = endpoints;
 	}
 
 	@Override
@@ -25,30 +26,15 @@ public class SinglePdsConnection implements PdsConnection {
 
 	public String[] getAliases() {
 
-		return new String[] { this.identifier };
+		return this.aliases;
 	}
 
 	public String[] getEndpoints() {
 
-		return new String[] { };
+		return this.endpoints;
 	}
 
-	public String getPublicKey() throws PdsConnectionException {
-
-		throw new RuntimeException("Not implemented");
-	}
-
-	public String getPrivateKey() throws PdsConnectionException {
-
-		throw new RuntimeException("Not implemented");
-	}
-
-	public String getCertificate() throws PdsConnectionException {
-
-		throw new RuntimeException("Not implemented");
-	}
-
-	public AbstractMessagingTarget[] getPdsConnectionMessagingTargets() {
+	public AbstractMessagingTarget[] getMessagingTargets() {
 
 		return new AbstractMessagingTarget[0];
 	}

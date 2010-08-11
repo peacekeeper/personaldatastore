@@ -108,12 +108,17 @@ public class XriPdsConnection implements PdsConnection {
 		}
 	}*/
 
-	public AbstractMessagingTarget[] getPdsConnectionMessagingTargets() {
+	public AbstractMessagingTarget[] getMessagingTargets() {
 
 		XriResourceMessagingTarget pdsConnectionResourceMessagingTarget = new XriResourceMessagingTarget();
 		pdsConnectionResourceMessagingTarget.setPdsConnection(this);
 
 		return new AbstractMessagingTarget[] { pdsConnectionResourceMessagingTarget };
+	}
+
+	public XriPdsConnectionFactory getPdsConnectionFactory() {
+
+		return this.pdsConnectionFactory;
 	}
 
 	public Xri getXri() {

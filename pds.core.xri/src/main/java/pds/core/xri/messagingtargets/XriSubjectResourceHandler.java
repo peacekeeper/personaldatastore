@@ -10,6 +10,8 @@ import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractResourceHandler;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.xri.XriPdsConnection;
+import pds.store.user.User;
+import pds.store.xri.Xri;
 
 public class XriSubjectResourceHandler extends AbstractResourceHandler {
 
@@ -25,14 +27,17 @@ public class XriSubjectResourceHandler extends AbstractResourceHandler {
 	@Override
 	public boolean executeGet(Operation operation, MessageResult messageResult, Object executionContext) throws MessagingException {
 
+		Xri xri = this.pdsConnection.getXri();
+		User user = this.pdsConnection.getUser();
+		
 		// private/public key, password
 
 		try {
 
-			String password = this.pdsConnection.getUser() != null ? this.pdsConnection.getUser().getPass() : null;
-			String publicKey = this.pdsConnection.getXri() != null ? this.pdsConnection.getXri().getAuthorityAttribute("publickey") : null;
-			String privateKey = this.pdsConnection.getXri() != null ? this.pdsConnection.getXri().getAuthorityAttribute("privatekey") : null;
-			String certificate = this.pdsConnection.getXri() != null ? this.pdsConnection.getXri().getAuthorityAttribute("certificate") : null;
+			String password = user != null ? user.getPass() : null;
+			String publicKey = xri != null ? xri.getAuthorityAttribute("publickey") : null;
+			String privateKey = xri != null ? xri.getAuthorityAttribute("privatekey") : null;
+			String certificate = xri != null ? xri.getAuthorityAttribute("certificate") : null;
 
 			if (password != null) messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), new XRI3Segment("$password"), password);
 			if (publicKey != null) messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), new XRI3Segment("$key$public"), publicKey);

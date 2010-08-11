@@ -111,7 +111,7 @@ public class PdsFilter implements Filter {
 
 				// add PdsConnectionMessagingTargets
 
-				for (AbstractMessagingTarget pdsConnectionMessagingTarget : pdsConnection.getPdsConnectionMessagingTargets()) {
+				for (AbstractMessagingTarget pdsConnectionMessagingTarget : pdsConnection.getMessagingTargets()) {
 
 					compoundMessagingTarget.getMessagingTargets().add(pdsConnectionMessagingTarget);
 				}

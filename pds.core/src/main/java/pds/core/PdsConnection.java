@@ -8,5 +8,5 @@ public interface PdsConnection {
 	public XRI3Segment getCanonical();
 	public String[] getAliases();
 	public String[] getEndpoints();
-	public AbstractMessagingTarget[] getPdsConnectionMessagingTargets();
+	public AbstractMessagingTarget[] getMessagingTargets();
 }
