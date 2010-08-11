@@ -11,6 +11,7 @@
 	</description>
 	<modules>
 		<module>../pds.core</module>
+		<module>../pds.core.any</module>
 		<module>../pds.core.single</module>
 		<module>../pds.core.xri</module>
 		<module>../pds.discovery</module>

@@ -8,7 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pdsproject</groupId>
 	<artifactId>pds.core.any</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<version>0.5</version>
 	<name>pds.core.any</name>
 	<build>
