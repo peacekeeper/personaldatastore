@@ -31,13 +31,19 @@ public class PdsFilter implements Filter {
 
 	private static Log log = LogFactory.getLog(PdsFilter.class.getName());
 
-	private String servletContextName;
+	private String databasePath;
 	private PdsConnectionFactory pdsConnectionFactory;
 	private EndpointServlet endpointServlet;
 
 	public void init(FilterConfig filterConfig) throws ServletException {
 
-		this.servletContextName = filterConfig.getServletContext().getServletContextName();
+		if (this.databasePath != null) {
+
+			this.databasePath = "./pds.core-" + filterConfig.getServletContext().getServletContextName() + "/";
+		}
+
+		if (this.pdsConnectionFactory != null) throw new ServletException("Please configure a PdsConnectionFactory!");
+		if (this.pdsConnectionFactory != null) throw new ServletException("Please configure the EndpointServlet!");
 
 		try {
 
@@ -120,11 +126,10 @@ public class PdsFilter implements Filter {
 
 				XRI3Segment canonical = pdsConnection.getCanonical();
 
-				String databasePath = "./pds.core-" + this.servletContextName + "/";
 				String databaseName = (canonical != null) ? canonical.toString() : identifier;
 
 				BDBGraphFactory graphFactory = new BDBGraphFactory();
-				graphFactory.setDatabasePath(databasePath);
+				graphFactory.setDatabasePath(this.databasePath);
 				graphFactory.setDatabaseName(databaseName);
 
 				Graph graph;
@@ -163,6 +168,16 @@ public class PdsFilter implements Filter {
 		}
 
 		chain.doFilter(request, response);
+	}
+
+	public String getDatabasePath() {
+
+		return this.databasePath;
+	}
+
+	public void setDatabasePath(String servletContextName) {
+
+		this.databasePath = servletContextName;
 	}
 
 	public PdsConnectionFactory getPdsConnectionFactory() {
