@@ -24,8 +24,8 @@ import org.eclipse.higgins.xdi4j.messaging.server.impl.graph.GraphMessagingTarge
 import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.RoutingMessageInterceptor;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.core.messagingtargets.context.ContextResourceMessagingTarget;
-import pds.core.messagingtargets.pds.PdsResourceMessagingTarget;
+import pds.core.messagingtargets.ContextResourceMessagingTarget;
+import pds.core.messagingtargets.PdsResourceMessagingTarget;
 
 public class PdsFilter implements Filter {
 
@@ -73,110 +73,84 @@ public class PdsFilter implements Filter {
 
 			try {
 
-				if (target.equals("")) {
+				// retrieve the PDS connection
 
-					/*					// create CompoundMessagingTarget
+				String identifier = target;
+				if (identifier.endsWith("/")) identifier = identifier.substring(0, identifier.length() - 1);
 
-					CompoundMessagingTarget compoundMessagingTarget = new CompoundMessagingTarget();
-					compoundMessagingTarget.setMode(CompoundMessagingTarget.MODE_FIRST_HANDLED);
+				PdsConnection pdsConnection = this.pdsConnectionFactory.getPdsConnection(identifier);
 
-					// create and add IbrokerOperationMessagingTarget
+				if (pdsConnection == null) {
 
-					IbrokerOperationMessagingTarget ibrokerOperationMessagingTarget = new IbrokerOperationMessagingTarget();
-					ibrokerOperationMessagingTarget.init(endpointRegistry);
+					log.info("No PDS connection at /" + target);
 
-					compoundMessagingTarget.getMessagingTargets().add(ibrokerOperationMessagingTarget);
-
-					// create and add IbrokerOperationMessagingTarget
-
-					IbrokerResourceMessagingTarget ibrokerResourceMessagingTarget = new IbrokerResourceMessagingTarget();
-					ibrokerResourceMessagingTarget.init(endpointRegistry);
-
-					compoundMessagingTarget.getMessagingTargets().add(ibrokerResourceMessagingTarget);
-
-					// finish and register CompoundMessagingTarget
-
-					compoundMessagingTarget.init(endpointRegistry);
-
-					endpointRegistry.registerMessagingTarget(target, compoundMessagingTarget);*/
-				} else {
-
-					// retrieve the PDS connection
-
-					String identifier = target;
-					if (identifier.endsWith("/")) identifier = identifier.substring(0, identifier.length() - 1);
-
-					PdsConnection pdsConnection = this.pdsConnectionFactory.getPdsConnection(identifier);
-
-					if (pdsConnection == null) {
-
-						throw new Exception("PDS not found.");
-					}
-
-					// create CompoundMessagingTarget
-
-					CompoundMessagingTarget compoundMessagingTarget = new CompoundMessagingTarget();
-					compoundMessagingTarget.setMode(CompoundMessagingTarget.MODE_WRITE_FIRST_HANDLED);
-
-					// create and add ContextResourceMessagingTarget
-
-					ContextResourceMessagingTarget contextResourceMessagingTarget = new ContextResourceMessagingTarget();
-					contextResourceMessagingTarget.setPdsConnection(pdsConnection);
-					contextResourceMessagingTarget.init(endpointRegistry);
-
-					compoundMessagingTarget.getMessagingTargets().add(contextResourceMessagingTarget);
-
-					// create and add PdsResourceMessagingTarget
-
-					PdsResourceMessagingTarget pdsResourceMessagingTarget = new PdsResourceMessagingTarget();
-					pdsResourceMessagingTarget.setPdsConnection(pdsConnection);
-					pdsResourceMessagingTarget.init(endpointRegistry);
-
-					compoundMessagingTarget.getMessagingTargets().add(pdsResourceMessagingTarget);
-
-					// add PdsConnectionMessagingTargets
-
-					for (AbstractMessagingTarget pdsConnectionMessagingTarget : pdsConnection.getPdsConnectionMessagingTargets()) {
-
-						compoundMessagingTarget.getMessagingTargets().add(pdsConnectionMessagingTarget);
-					}
-
-					// open graph
-
-					XRI3Segment canonical = pdsConnection.getCanonical();
-
-					String databasePath = "./pds.core-" + this.servletContextName + "/";
-					String databaseName = (canonical != null) ? canonical.toString() : identifier;
-
-					BDBGraphFactory graphFactory = new BDBGraphFactory();
-					graphFactory.setDatabasePath(databasePath);
-					graphFactory.setDatabaseName(databaseName);
-
-					Graph graph;
-
-					try {
-
-						graph = graphFactory.openGraph();
-					} catch (IOException ex) {
-
-						throw new PdsConnectionException("Cannot open graph: " + ex.getMessage(), ex);
-					}
-
-					// create and add GraphMessagingTarget
-
-					GraphMessagingTarget graphMessagingTarget = new GraphMessagingTarget();
-					graphMessagingTarget.setGraph(graph);
-					graphMessagingTarget.getMessageInterceptors().add(new RoutingMessageInterceptor());
-					graphMessagingTarget.init(endpointRegistry);
-
-					compoundMessagingTarget.getMessagingTargets().add(graphMessagingTarget);
-
-					// finish and register CompoundMessagingTarget
-
-					compoundMessagingTarget.init(endpointRegistry);
-
-					endpointRegistry.registerMessagingTarget(target, compoundMessagingTarget);
+					chain.doFilter(request, response);
+					return;
 				}
+
+				// create CompoundMessagingTarget
+
+				CompoundMessagingTarget compoundMessagingTarget = new CompoundMessagingTarget();
+				compoundMessagingTarget.setMode(CompoundMessagingTarget.MODE_WRITE_FIRST_HANDLED);
+
+				// create and add ContextResourceMessagingTarget
+
+				ContextResourceMessagingTarget contextResourceMessagingTarget = new ContextResourceMessagingTarget();
+				contextResourceMessagingTarget.setPdsConnection(pdsConnection);
+				contextResourceMessagingTarget.init(endpointRegistry);
+
+				compoundMessagingTarget.getMessagingTargets().add(contextResourceMessagingTarget);
+
+				// create and add PdsResourceMessagingTarget
+
+				PdsResourceMessagingTarget pdsResourceMessagingTarget = new PdsResourceMessagingTarget();
+				pdsResourceMessagingTarget.setPdsConnection(pdsConnection);
+				pdsResourceMessagingTarget.init(endpointRegistry);
+
+				compoundMessagingTarget.getMessagingTargets().add(pdsResourceMessagingTarget);
+
+				// add PdsConnectionMessagingTargets
+
+				for (AbstractMessagingTarget pdsConnectionMessagingTarget : pdsConnection.getPdsConnectionMessagingTargets()) {
+
+					compoundMessagingTarget.getMessagingTargets().add(pdsConnectionMessagingTarget);
+				}
+
+				// open graph
+
+				XRI3Segment canonical = pdsConnection.getCanonical();
+
+				String databasePath = "./pds.core-" + this.servletContextName + "/";
+				String databaseName = (canonical != null) ? canonical.toString() : identifier;
+
+				BDBGraphFactory graphFactory = new BDBGraphFactory();
+				graphFactory.setDatabasePath(databasePath);
+				graphFactory.setDatabaseName(databaseName);
+
+				Graph graph;
+
+				try {
+
+					graph = graphFactory.openGraph();
+				} catch (IOException ex) {
+
+					throw new PdsConnectionException("Cannot open graph: " + ex.getMessage(), ex);
+				}
+
+				// create and add GraphMessagingTarget
+
+				GraphMessagingTarget graphMessagingTarget = new GraphMessagingTarget();
+				graphMessagingTarget.setGraph(graph);
+				graphMessagingTarget.getMessageInterceptors().add(new RoutingMessageInterceptor());
+				graphMessagingTarget.init(endpointRegistry);
+
+				compoundMessagingTarget.getMessagingTargets().add(graphMessagingTarget);
+
+				// finish and register CompoundMessagingTarget
+
+				compoundMessagingTarget.init(endpointRegistry);
+
+				endpointRegistry.registerMessagingTarget(target, compoundMessagingTarget);
 			} catch (Exception ex) {
 
 				log.error("Cannot create messaging target for /" + target + ": " + ex.getMessage(), ex);

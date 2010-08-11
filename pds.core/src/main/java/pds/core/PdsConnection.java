@@ -8,8 +8,5 @@ public interface PdsConnection {
 	public XRI3Segment getCanonical();
 	public String[] getAliases();
 	public String[] getEndpoints();
-	public String getPublicKey() throws PdsConnectionException;
-	public String getPrivateKey() throws PdsConnectionException;
-	public String getCertificate() throws PdsConnectionException;
 	public AbstractMessagingTarget[] getPdsConnectionMessagingTargets();
 }
