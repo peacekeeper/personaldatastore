@@ -1,4 +1,4 @@
-package pds.core.xri.messagingtarget;
+package pds.core.xri.messagingtargets;
 
 
 import org.eclipse.higgins.xdi4j.Literal;

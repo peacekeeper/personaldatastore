@@ -7,8 +7,8 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.xml.CanonicalID;
 
 import pds.core.PdsConnection;
-import pds.core.PdsConnectionException;
-import pds.core.xri.messagingtarget.PdsConnectionResourceMessagingTarget;
+import pds.core.xri.messagingtargets.PdsConnectionResourceMessagingTarget;
+import pds.store.user.User;
 import pds.store.xri.Xri;
 import pds.store.xri.XriStoreException;
 
@@ -108,44 +108,21 @@ public class XriPdsConnection implements PdsConnection {
 		}
 	}*/
 
-	public String getPublicKey() throws PdsConnectionException {
-
-		try {
-
-			return this.xri.getAuthorityAttribute("publickey");
-		} catch (Exception ex) {
-
-			throw new PdsConnectionException("Cannot read XRI authority attribute: " + ex.getMessage(), ex);
-		}
-	}
-
-	public String getPrivateKey() throws PdsConnectionException {
-
-		try {
-
-			return this.xri.getAuthorityAttribute("privatekey");
-		} catch (Exception ex) {
-
-			throw new PdsConnectionException("Cannot read XRI authority attribute: " + ex.getMessage(), ex);
-		}
-	}
-
-	public String getCertificate() throws PdsConnectionException {
-
-		try {
-
-			return this.xri.getAuthorityAttribute("certificate");
-		} catch (Exception ex) {
-
-			throw new PdsConnectionException("Cannot read XRI authority attribute: " + ex.getMessage(), ex);
-		}
-	}
-
 	public AbstractMessagingTarget[] getPdsConnectionMessagingTargets() {
 
 		PdsConnectionResourceMessagingTarget pdsConnectionResourceMessagingTarget = new PdsConnectionResourceMessagingTarget();
 		pdsConnectionResourceMessagingTarget.setPdsConnection(this);
 
 		return new AbstractMessagingTarget[] { pdsConnectionResourceMessagingTarget };
+	}
+
+	public Xri getXri() {
+
+		return this.xri;
+	}
+
+	public User getUser() {
+
+		return this.user;
 	}
 }

@@ -3,23 +3,26 @@
 	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
-	<!-- PDS Connection Factory (OpenXRI) -->
+	<!-- PDS Connection Factory (pds.core.xri / pds.store.xri.openxri) -->
 
 	<bean id="pdsConnectionFactory" class="pds.core.xri.XriPdsConnectionFactory">
 		<property name="properties">
 			<util:properties location="/WEB-INF/application.properties" />
 		</property>
-		<property name="xriStore">
-			<bean class="pds.store.xri.openxri.OpenxriXriStore">
-				<constructor-arg>
-					<bean class="org.openxri.store.impl.db.DatabaseStore">
-						<constructor-arg>
-							<util:properties location="/WEB-INF/openxristore.properties" />
-						</constructor-arg>
-					</bean>
-				</constructor-arg>
-			</bean>
-		</property>
+		<property name="xriStore" ref="xriStore" />
+		<property name="userStore" ref="userStore" />
+	</bean>
+
+	<bean id="xriStore" class="pds.store.xri.openxri.OpenxriXriStoreFactory" factory-method="getXriStore">
+		<constructor-arg>
+			<util:properties />
+		</constructor-arg>
+	</bean>
+
+	<bean id="userStore" class="pds.store.user.impl.db.DatabaseStore">
+		<constructor-arg>
+			<util:properties location="/WEB-INF/pds.store.user.properties" />
+		</constructor-arg>
 	</bean>
 
 	<!-- PDS Filter -->
@@ -33,14 +36,18 @@
 
 	<bean id="endpointServlet" class="org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet" />
 
-<!-- 	<bean name="/"
-		class="org.eclipse.higgins.xdi4j.messaging.server.impl.CompoundMessagingTarget">
+	<bean name="/" class="org.eclipse.higgins.xdi4j.messaging.server.impl.CompoundMessagingTarget">
 		<property name="mode" value="first-handled" />
 		<property name="messagingTargets">
 			<list>
-				<bean class="pds.core.xri.ibroker.IbrokerOperationMessagingTarget" />
-				<bean class="pds.core.xri.ibroker.IbrokerResourceMessagingTarget" />
+				<bean class="pds.core.xri.messagingtargets.XriOperationMessagingTarget">
+					<property name="xriStore" ref="xriStore" />
+					<property name="userStore" ref="userStore" />
+				</bean>
+				<bean class="pds.core.xri.messagingtargets.XriResourceMessagingTarget">
+					<property name="xriStore" ref="xriStore" />
+				</bean>
 			</list>
 		</property> 
-	</bean> -->
+	</bean>
 </beans>

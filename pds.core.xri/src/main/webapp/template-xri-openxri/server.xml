@@ -1,0 +1,79 @@
+<server xmlns="http://www.openxri.org/namespaces/serverconfig">
+	<properties>
+		<property key="hostname" value="resolve.youribroker.com" />	<!-- Set this to the host name of the server. If this is not set, it will be auto-detected -->
+		<property key="hostport" value="80" />	<!-- Set this to the host port of the server. Defaults to 80. -->
+		<property key="servletpath" value="/" />		<!-- Path to the servlet, e.g. /xri/resolve. If this is not set, it will be auto-detected -->
+	</properties>
+	<component interface="org.openxri.server.Server">
+		<class>org.openxri.server.impl.BasicServer</class>
+		<properties />
+	</component>
+	<component interface="org.openxri.urimapper.URIMapper">
+		<class>org.openxri.urimapper.impl.FolderURIMapper</class>
+		<properties />
+	</component>
+	<component interface="org.openxri.store.Store">
+		<class>org.openxri.store.impl.db.DatabaseStore</class>
+		<properties>
+			<property key="hibernate.connection.datasource" value="java:comp/env/jdbc/ibroker_openxri" />
+			<property key="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<property key="hibernate.show_sql" value="false" />
+			<property key="hibernate.connection.autoReconnect" value="true" />
+			<property key="hibernate.connection.autoReconnectForPools" value="true" />
+			<property key="hibernate.connection.is-connection-validation-required" value="true" />
+			<property key="hibernate.transaction.factory_class" value="org.hibernate.transaction.JDBCTransactionFactory" />
+			<property key="hibernate.current_session_context_class" value="thread" />
+			<property key="hibernate.hbm2ddl.auto" value="update" />
+		</properties>
+	</component>
+	<component interface="org.openxri.plugin.Plugin">
+		<class>org.openxri.plugin.impl.RedirectPlugin</class>
+		<properties>
+			<property key="uri" value="http://www.youribroker.com/" />
+		</properties>
+	</component>
+	<pipeline name="create">
+		<stage>
+			<class>org.openxri.pipeline.stages.AddRandomCanonicalIDStage</class>
+			<properties />
+		</stage>
+	</pipeline>
+	<pipeline name="lookup">
+		<stage>
+			<class>org.openxri.pipeline.stages.FromStoreStage</class>
+			<properties />
+		</stage>
+		<stage>
+			<class>org.openxri.pipeline.stages.AddQueryStage</class>
+			<properties />
+		</stage>
+		<stage>
+			<class>org.openxri.pipeline.stages.AddExpiresRelativeStage</class>
+			<properties />
+		</stage>
+		<stage>
+			<class>org.openxri.pipeline.stages.AddProviderIDStage</class>
+			<properties />
+		</stage>
+		<stage>
+			<class>org.openxri.pipeline.stages.AddAuthorityResolutionSEPStage</class>
+			<properties>
+				<property key="http" value="true" />
+				<property key="https" value="true" />
+			</properties>
+		</stage>
+		<stage>
+			<class>org.openxri.pipeline.stages.AutoLocalIDsStage</class>
+			<properties>
+				<property key="excludeself" value="true" />
+			</properties>
+		</stage>
+		<stage>
+			<class>org.openxri.pipeline.stages.AddServerStatusStage</class>
+			<properties>
+				<property key="code" value="100" />
+				<property key="text" value="Success" />
+			</properties>
+		</stage>
+	</pipeline>
+</server>

@@ -1,4 +1,4 @@
-package pds.core.xri.messagingtarget;
+package pds.core.xri.messagingtargets;
 
 import org.eclipse.higgins.xdi4j.Literal;
 import org.eclipse.higgins.xdi4j.Predicate;
@@ -9,11 +9,11 @@ import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceHandler;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceMessagingTarget;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.core.PdsConnection;
+import pds.core.xri.XriPdsConnection;
 
 public class PdsConnectionResourceMessagingTarget extends ResourceMessagingTarget {
 
-	private PdsConnection pdsConnection;
+	private XriPdsConnection pdsConnection;
 
 	public PdsConnectionResourceMessagingTarget() {
 
@@ -43,12 +43,12 @@ public class PdsConnectionResourceMessagingTarget extends ResourceMessagingTarge
 		return null;
 	}
 
-	public PdsConnection getPdsConnection() {
+	public XriPdsConnection getPdsConnection() {
 
 		return this.pdsConnection;
 	}
 
-	public void setPdsConnection(PdsConnection pdsConnection) {
+	public void setPdsConnection(XriPdsConnection pdsConnection) {
 
 		this.pdsConnection = pdsConnection;
 	}
