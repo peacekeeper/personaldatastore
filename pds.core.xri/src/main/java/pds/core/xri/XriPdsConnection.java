@@ -46,11 +46,14 @@ public class XriPdsConnection implements PdsConnection {
 		return new XRI3Segment(canonicalIDValue);
 	}
 
-	public String[] getAliases() {
+	public XRI3Segment[] getAliases() {
 
 		List<String> aliases = this.xri.getAliases();
+		XRI3Segment[] xriAliases = new XRI3Segment[aliases.size()];
 
-		return aliases.toArray(new String[aliases.size()]);
+		for (int i=0; i<aliases.size(); i++) xriAliases[i] = new XRI3Segment(aliases.get(i));
+
+		return xriAliases;
 	}
 
 	public String[] getEndpoints() {

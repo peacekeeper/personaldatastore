@@ -27,14 +27,16 @@
 
 	<!-- PDS Filter -->
 
-	<bean id="pdsFilter" class="pds.core.pdsFilter">
-		<property name="endpointServlet" ref="endpointServlet" />
+	<bean id="PdsFilter" class="pds.core.PdsFilter">
+		<property name="endpointServlet" ref="EndpointServlet" />
 		<property name="pdsConnectionFactory" ref="pdsConnectionFactory" />
 	</bean>
 
 	<!-- XDI Servlet -->
 
-	<bean id="endpointServlet" class="org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet" />
+	<bean id="EndpointServlet" class="org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet" />
+
+	<!-- Additional MessagingTargets -->
 
 	<bean name="/" class="org.eclipse.higgins.xdi4j.messaging.server.impl.CompoundMessagingTarget">
 		<property name="mode" value="first-handled" />
@@ -50,4 +52,5 @@
 			</list>
 		</property> 
 	</bean>
+
 </beans>

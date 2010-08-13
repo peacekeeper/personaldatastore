@@ -7,6 +7,7 @@ import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceHandler;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceMessagingTarget;
 import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.ReadOnlyAddressInterceptor;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
+import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.PdsConnection;
 
@@ -27,9 +28,12 @@ public class PdsResourceMessagingTarget extends ResourceMessagingTarget {
 	@Override
 	public ResourceHandler getResource(Message message, Subject operationSubject) throws MessagingException {
 
-		if (operationSubject.getSubjectXri().equals(this.pdsConnection.getCanonical())) {
+		for (XRI3Segment alias : this.pdsConnection.getAliases()) {
 
-			return new PdsSubjectResourceHandler(message, operationSubject, this.pdsConnection);
+			if (operationSubject.getSubjectXri().equals(alias)) {
+
+				return new PdsSubjectResourceHandler(message, operationSubject, this.pdsConnection);
+			}
 		}
 
 		return null;

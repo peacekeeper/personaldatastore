@@ -37,13 +37,15 @@ public class PdsFilter implements Filter {
 
 	public void init(FilterConfig filterConfig) throws ServletException {
 
-		if (this.databasePath != null) {
+		log.info("Initializing...");
+
+		if (this.databasePath == null) {
 
 			this.databasePath = "./pds.core-" + filterConfig.getServletContext().getServletContextName() + "/";
 		}
 
-		if (this.pdsConnectionFactory != null) throw new ServletException("Please configure a PdsConnectionFactory!");
-		if (this.pdsConnectionFactory != null) throw new ServletException("Please configure the EndpointServlet!");
+		if (this.pdsConnectionFactory == null) throw new ServletException("Please configure a PdsConnectionFactory!");
+		if (this.endpointServlet == null) throw new ServletException("Please configure the EndpointServlet!");
 
 		try {
 
@@ -52,6 +54,8 @@ public class PdsFilter implements Filter {
 
 			throw new ServletException("Cannot initialize PDS connection factory: " + ex.getMessage(), ex);
 		}
+
+		log.info("Initializing complete.");
 	}
 
 	public void destroy() {

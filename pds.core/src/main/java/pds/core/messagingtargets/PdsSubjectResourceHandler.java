@@ -35,10 +35,10 @@ public class PdsSubjectResourceHandler extends AbstractResourceHandler {
 
 		messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_INHERITANCE, new XRI3Segment(this.operationSubject.getSubjectXri().getFirstSubSegment().getGCS().toString()));
 
-		String[] aliases = this.pdsConnection.getAliases();
-		for (String alias : aliases) {
+		XRI3Segment[] aliases = this.pdsConnection.getAliases();
+		for (XRI3Segment alias : aliases) {
 
-			messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_EQUIVALENCE, new XRI3Segment(alias));
+			messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_EQUIVALENCE, alias);
 		}
 
 		// done

@@ -2,11 +2,17 @@ package pds.core.any;
 
 import javax.servlet.FilterConfig;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+
 import pds.core.PdsConnection;
 import pds.core.PdsConnectionException;
 import pds.core.PdsConnectionFactory;
 
 public class AnyPdsConnectionFactory implements PdsConnectionFactory {
+
+	private static Log log = LogFactory.getLog(AnyPdsConnectionFactory.class.getName());
 
 	private String[] endpoints;
 
@@ -21,9 +27,20 @@ public class AnyPdsConnectionFactory implements PdsConnectionFactory {
 
 	public PdsConnection getPdsConnection(String identifier) throws PdsConnectionException {
 
+		// check if the identifier is a valid XRI3Segment
+
+		try {
+
+			new XRI3Segment(identifier);
+		} catch (Exception ex) {
+
+			log.warn("Not a valid XRI3Segment: " + identifier + ": " + ex.getMessage(), ex);
+			return null;
+		}
+
 		// done
 
-		return new AnyPdsConnection(identifier, this.endpoints);
+		return new AnyPdsConnection(new XRI3Segment(identifier), this.endpoints);
 	}
 
 	public String[] getEndpoints() {

@@ -6,7 +6,7 @@
 	<!-- PDS Connection Factory (pds.core.single) -->
 
 	<bean id="pdsConnectionFactory" class="pds.core.single.SinglePdsConnectionFactory">
-		<property name="identifier" value="=!1111.2222.3333.4444</property>
+		<property name="identifier" value="=!1111.2222.3333.4444" />
 		<property name="aliases">
 			<list>
 				<value>=yourname</value>
@@ -21,27 +21,13 @@
 
 	<!-- PDS Filter -->
 
-	<bean id="pdsFilter" class="pds.core.pdsFilter">
-		<property name="endpointServlet" ref="endpointServlet" />
+	<bean id="PdsFilter" class="pds.core.PdsFilter">
+		<property name="endpointServlet" ref="EndpointServlet" />
 		<property name="pdsConnectionFactory" ref="pdsConnectionFactory" />
 	</bean>
 
 	<!-- XDI Servlet -->
 
-	<bean id="endpointServlet" class="org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet" />
+	<bean id="EndpointServlet" class="org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet" init-method="initEndpointRegistry" />
 
-	<bean name="/" class="org.eclipse.higgins.xdi4j.messaging.server.impl.CompoundMessagingTarget">
-		<property name="mode" value="first-handled" />
-		<property name="messagingTargets">
-			<list>
-				<bean class="pds.core.xri.messagingtargets.XriOperationMessagingTarget">
-					<property name="xriStore" ref="xriStore" />
-					<property name="userStore" ref="userStore" />
-				</bean>
-				<bean class="pds.core.xri.messagingtargets.XriResourceMessagingTarget">
-					<property name="xriStore" ref="xriStore" />
-				</bean>
-			</list>
-		</property> 
-	</bean>
 </beans>

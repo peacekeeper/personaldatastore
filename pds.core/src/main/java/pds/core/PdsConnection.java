@@ -6,7 +6,7 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 public interface PdsConnection {
 
 	public XRI3Segment getCanonical();
-	public String[] getAliases();
+	public XRI3Segment[] getAliases();
 	public String[] getEndpoints();
 	public AbstractMessagingTarget[] getMessagingTargets();
 }

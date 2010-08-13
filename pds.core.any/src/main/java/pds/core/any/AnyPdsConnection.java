@@ -7,10 +7,10 @@ import pds.core.PdsConnection;
 
 public class AnyPdsConnection implements PdsConnection {
 
-	private String identifier;
+	private XRI3Segment identifier;
 	private String[] endpoints;
 
-	AnyPdsConnection(String identifier, String[] endpoints) {
+	AnyPdsConnection(XRI3Segment identifier, String[] endpoints) {
 
 		this.identifier = identifier;
 		this.endpoints = endpoints;
@@ -19,12 +19,12 @@ public class AnyPdsConnection implements PdsConnection {
 	@Override
 	public XRI3Segment getCanonical() {
 
-		return new XRI3Segment(this.identifier);
+		return this.identifier;
 	}
 
-	public String[] getAliases() {
+	public XRI3Segment[] getAliases() {
 
-		return new String[0];
+		return new XRI3Segment[0];
 	}
 
 	public String[] getEndpoints() {
