@@ -79,7 +79,7 @@ public class PdsFilter implements Filter {
 
 		if (messagingTarget == null) {
 
-			log.info("Creating messaging target for /" + target);
+			log.info("Looking up PDS connection at /" + target);
 
 			try {
 
@@ -160,6 +160,8 @@ public class PdsFilter implements Filter {
 				compoundMessagingTarget.init(endpointRegistry);
 
 				endpointRegistry.registerMessagingTarget(target, compoundMessagingTarget);
+
+				log.info("Registered PDS connection at /" + target);
 			} catch (Exception ex) {
 
 				log.error("Cannot create messaging target for /" + target + ": " + ex.getMessage(), ex);

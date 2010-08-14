@@ -15,7 +15,7 @@
 	<component interface="org.openxri.store.Store">
 		<class>org.openxri.store.impl.db.DatabaseStore</class>
 		<properties>
-			<property key="hibernate.connection.datasource" value="java:comp/env/jdbc/ibroker_openxri" />
+			<property key="hibernate.connection.datasource" value="java:comp/env/jdbc/pds_openxri" />
 			<property key="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
 			<property key="hibernate.show_sql" value="false" />
 			<property key="hibernate.connection.autoReconnect" value="true" />

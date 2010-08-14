@@ -10,20 +10,56 @@ import org.openxri.config.ServerConfig;
 import org.openxri.factories.ServerConfigFactory;
 import org.springframework.web.context.ServletContextAware;
 
-public class GrsXriStoreFactory implements ServletContextAware {
+import pds.store.xri.XriStoreFactory;
 
+public class GrsXriStoreFactory implements XriStoreFactory, ServletContextAware {
+
+	private Properties properties;
+	private EppTools eppTools;
 	private ServletContext servletContext;
 
+	public GrsXriStoreFactory(Properties properties, EppTools eppTools) {
+		
+		this.properties = properties;
+		this.eppTools = eppTools;
+		this.servletContext = null;
+	}
+	
+	public Properties getProperties() {
+
+		return this.properties;
+	}
+
+	public void setProperties(Properties properties) {
+
+		this.properties = properties;
+	}
+
+	public EppTools getEppTools() {
+
+		return this.eppTools;
+	}
+
+	public void setEppTools(EppTools eppTools) {
+
+		this.eppTools = eppTools;
+	}
+
+	public ServletContext getServletContext() {
+		
+		return this.servletContext;
+	}
+	
 	public void setServletContext(ServletContext servletContext) {
 
 		this.servletContext = servletContext;
 	}
 
-	public GrsXriStore getXriStore(Properties properties, EppTools eppTools) throws Exception {
+	public GrsXriStore createXriStore() throws Exception {
 
 		ServerConfig serverConfig = ServerConfigFactory.getSingleton();
-		if (serverConfig == null) serverConfig = ServerConfigFactory.initSingleton(this.servletContext, properties);
+		if (serverConfig == null) serverConfig = ServerConfigFactory.initSingleton(this.servletContext, this.properties);
 
-		return new GrsXriStore(serverConfig, eppTools);
+		return new GrsXriStore(serverConfig, this.eppTools);
 	}
 }

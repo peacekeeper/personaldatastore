@@ -18,6 +18,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import org.openxri.XRI;
 
 import pds.core.PdsConnection;
 import pds.core.PdsConnectionException;
@@ -69,6 +70,16 @@ public class XriPdsConnectionFactory implements PdsConnectionFactory {
 		String userIdentifier = null;
 		User user = null;
 
+		// make sure XRI is valid
+		
+		try {
+
+			new XRI(identifier);
+		} catch (Exception ex) {
+
+			return null;
+		}
+		
 		// find xri and user
 
 		try {

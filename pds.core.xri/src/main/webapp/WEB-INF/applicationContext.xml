@@ -13,11 +13,13 @@
 		<property name="userStore" ref="userStore" />
 	</bean>
 
-	<bean id="xriStore" class="pds.store.xri.openxri.OpenxriXriStoreFactory" factory-method="getXriStore">
+	<bean id="xriStoreFactory" class="pds.store.xri.openxri.OpenxriXriStoreFactory">
 		<constructor-arg>
 			<util:properties />
 		</constructor-arg>
 	</bean>
+
+	<bean id="xriStore" class="pds.store.xri.openxri.OpenxriXriStoreFactory" factory-bean="xriStoreFactory" factory-method="createXriStore" />
 
 	<bean id="userStore" class="pds.store.user.impl.db.DatabaseStore">
 		<constructor-arg>
@@ -42,12 +44,8 @@
 		<property name="mode" value="first-handled" />
 		<property name="messagingTargets">
 			<list>
-				<bean class="pds.core.xri.messagingtargets.XriOperationMessagingTarget">
-					<property name="xriStore" ref="xriStore" />
-					<property name="userStore" ref="userStore" />
-				</bean>
-				<bean class="pds.core.xri.messagingtargets.XriResourceMessagingTarget">
-					<property name="xriStore" ref="xriStore" />
+				<bean class="pds.core.xri.messagingtargets.RootResourceMessagingTarget">
+					<property name="pdsConnectionFactory" ref="pdsConnectionFactory" />
 				</bean>
 			</list>
 		</property> 

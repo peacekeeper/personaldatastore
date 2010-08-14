@@ -23,9 +23,12 @@ public class XriResourceMessagingTarget extends ResourceMessagingTarget {
 	@Override
 	public ResourceHandler getResource(Message message, Subject operationSubject) throws MessagingException {
 
-		if (operationSubject.getSubjectXri().equals(this.pdsConnection.getCanonical())) {
+		for (XRI3Segment alias : this.pdsConnection.getAliases()) {
 
-			return new XriSubjectResourceHandler(message, operationSubject, this.pdsConnection);
+			if (operationSubject.getSubjectXri().equals(alias)) {
+
+				return new XriSubjectResourceHandler(message, operationSubject, this.pdsConnection);
+			}
 		}
 
 		return null;
@@ -34,10 +37,13 @@ public class XriResourceMessagingTarget extends ResourceMessagingTarget {
 	@Override
 	public ResourceHandler getResource(Message message, Subject operationSubject, Predicate operationPredicate, Literal operationLiteral) throws MessagingException {
 
-		if (operationSubject.getSubjectXri().equals(this.pdsConnection.getCanonical()) &&
-				operationPredicate.getPredicateXri().equals(new XRI3Segment("$password"))) {
+		for (XRI3Segment alias : this.pdsConnection.getAliases()) {
 
-			return new XriSubjectPredicateLiteralResourceHandler(message, operationSubject, operationPredicate, operationLiteral, this.pdsConnection);
+			if (operationSubject.getSubjectXri().equals(alias) &&
+					operationPredicate.getPredicateXri().equals(new XRI3Segment("$password"))) {
+
+				return new XriSubjectPredicateLiteralResourceHandler(message, operationSubject, operationPredicate, operationLiteral, this.pdsConnection);
+			}
 		}
 
 		return null;

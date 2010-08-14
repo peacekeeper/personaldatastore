@@ -16,10 +16,9 @@
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
-				<version>6.1.24</version>
 				<configuration>
 					<jettyEnvXml>
-						${basedir}/../pdsproject/src/test/resources/jetty-env.xml
+						${basedir}/src/test/resources/jetty-env.xml
 					</jettyEnvXml>
 					<contextPath>/</contextPath>
 					<systemproperties>
@@ -33,6 +32,13 @@
 						</systemproperty>
 					</systemproperties>
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>commons-dbcp</groupId>
+						<artifactId>commons-dbcp</artifactId>
+						<version>1.4</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
@@ -86,6 +92,12 @@
 		<dependency>
 			<groupId>pdsproject</groupId>
 			<artifactId>pds.store.xri</artifactId>
+			<version>0.5</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>pdsproject</groupId>
+			<artifactId>pds.store.xri.openxri</artifactId>
 			<version>0.5</version>
 			<scope>compile</scope>
 		</dependency>
