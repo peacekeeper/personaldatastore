@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="ibrokerkit.ibrokerstore.store.impl.db.DbUser" table="user">
+
+		<!-- CLASS PROPERTIES -->
+
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+
+        <timestamp name="timestamp" />
+
+        <property name="identifier" unique="true" not-null="true" />
+
+        <property name="pass" />
+
+        <property name="recovery" />
+
+        <property name="name" unique="true" />
+
+        <property name="email" />
+
+        <property name="openid" not-null="true" />
+
+        <map name="attributes" table="user_attributes" fetch="join" lazy="false" cascade="all-delete-orphan">
+        	<key column="id" />
+        	<map-key column="k" type="string" />
+        	<element column="v" type="text" />
+        </map>
+
+		<!-- NAMED QUERIES -->
+
+		<query name="All"><![CDATA[
+			FROM DbUser
+		]]></query>
+
+		<query name="ByIdentifier"><![CDATA[
+			SELECT user
+			FROM DbUser as user
+			WHERE user.identifier = :identifier
+		]]></query>
+
+		<query name="ByName"><![CDATA[
+			SELECT user
+			FROM DbUser as user
+			WHERE user.name = :name
+		]]></query>
+
+		<query name="ByEmail"><![CDATA[
+			SELECT user
+			FROM DbUser as user
+			WHERE user.email = :email
+		]]></query>
+
+		<query name="ByRecovery"><![CDATA[
+			SELECT user
+			FROM DbUser as user
+			WHERE user.recovery = :recovery
+		]]></query>
+
+		<query name="ByIdentifierAndPass"><![CDATA[
+			SELECT user
+			FROM DbUser as user
+			WHERE user.identifier = :identifier
+			AND user.pass = :pass
+		]]></query>
+
+		<query name="Count"><![CDATA[
+			SELECT COUNT(*)
+			FROM DbUser
+		]]></query>
+
+    </class>
+
+</hibernate-mapping>
