@@ -67,9 +67,9 @@
 						<configuration>
 							<groupId>org.eclipse.higgins</groupId>
 							<artifactId>xdi4j</artifactId>
-							<version>1.0.700</version>
+							<version>1.0.800</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/lib/higgins-xdi4j_1.0.700.jar</file>
+							<file>${basedir}/../pdsproject/lib/higgins-xdi4j_1.0.800.jar</file>
 						</configuration>
 					</execution>
 					<execution>
@@ -83,7 +83,7 @@
 							<artifactId>rome</artifactId>
 							<version>1.0</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/lib/rome-1.0.jar</file>
+							<file>${basedir}/../pdsproject/lib/rome-1.0.jar</file>
 						</configuration>
 					</execution>
 				</executions>
@@ -124,7 +124,7 @@
 		<dependency>
 			<groupId>org.eclipse.higgins</groupId>
 			<artifactId>xdi4j</artifactId>
-			<version>1.0.700</version>
+			<version>1.0.800</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

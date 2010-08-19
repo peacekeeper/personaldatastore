@@ -26,9 +26,9 @@
 						<configuration>
 							<groupId>org.eclipse.higgins</groupId>
 							<artifactId>xdi4j</artifactId>
-							<version>1.0.700</version>
+							<version>1.0.800</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/lib/higgins-xdi4j_1.0.700.jar</file>
+							<file>${basedir}/../pdsproject/lib/higgins-xdi4j_1.0.800.jar</file>
 						</configuration>
 					</execution>
 					<execution>
@@ -42,7 +42,7 @@
 							<artifactId>je</artifactId>
 							<version>4.0.103</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/lib/je-4.0.103.jar</file>
+							<file>${basedir}/../pdsproject/lib/je-4.0.103.jar</file>
 						</configuration>
 					</execution>
 				</executions>
@@ -50,18 +50,6 @@
 		</plugins>
 	</build>
 	<dependencies>
-		<dependency>
-			<groupId>pdsproject</groupId>
-			<artifactId>pds.web.logger</artifactId>
-			<version>0.5</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.openxri</groupId>
-			<artifactId>openxri-client</artifactId>
-			<version>1.2.2-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
@@ -75,15 +63,27 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.4</version>
+			<groupId>pdsproject</groupId>
+			<artifactId>pds.web.logger</artifactId>
+			<version>0.5</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openxri</groupId>
+			<artifactId>openxri-client</artifactId>
+			<version>1.2.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.higgins</groupId>
 			<artifactId>xdi4j</artifactId>
-			<version>1.0.700</version>
+			<version>1.0.800</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.4</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

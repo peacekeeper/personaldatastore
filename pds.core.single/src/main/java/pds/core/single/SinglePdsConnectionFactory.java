@@ -27,7 +27,7 @@ public class SinglePdsConnectionFactory implements PdsConnectionFactory {
 			this.aliases = new XRI3Segment[0];
 		}
 
-		if (this.endpoints == null) {
+		if (this.endpoints == null || this.endpoints.length < 1 || this.endpoints[0].trim().length() < 1) {
 
 			this.endpoints = new String[] { filterConfig.getServletContext().getContextPath() };
 		}

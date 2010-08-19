@@ -63,6 +63,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openxri</groupId>
+			<artifactId>openxri-client</artifactId>
+			<version>1.2.2-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openxri</groupId>
 			<artifactId>openxri-server-logic</artifactId>
 			<version>1.2.2-SNAPSHOT</version>
 			<scope>compile</scope>
@@ -78,9 +84,9 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.openxri</groupId>
-			<artifactId>openxri-client</artifactId>
-			<version>1.2.2-SNAPSHOT</version>
+			<groupId>org.eclipse.higgins</groupId>
+			<artifactId>xdi4j</artifactId>
+			<version>1.0.800</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -111,12 +117,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>3.0.0.RELEASE</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.higgins</groupId>
-			<artifactId>xdi4j</artifactId>
-			<version>1.0.700</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

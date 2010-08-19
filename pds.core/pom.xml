@@ -26,9 +26,9 @@
 						<configuration>
 							<groupId>org.eclipse.higgins</groupId>
 							<artifactId>xdi4j</artifactId>
-							<version>1.0.700</version>
+							<version>1.0.800</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/lib/higgins-xdi4j_1.0.700.jar</file>
+							<file>${basedir}/../pdsproject/lib/higgins-xdi4j_1.0.800.jar</file>
 						</configuration>
 					</execution>
 					<execution>
@@ -42,7 +42,7 @@
 							<artifactId>je</artifactId>
 							<version>4.0.103</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/lib/je-4.0.103.jar</file>
+							<file>${basedir}/../pdsproject/lib/je-4.0.103.jar</file>
 						</configuration>
 					</execution>
 				</executions>
@@ -85,24 +85,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.higgins</groupId>
-			<artifactId>xdi4j</artifactId>
-			<version>1.0.700</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.sleepycat</groupId>
-			<artifactId>je</artifactId>
-			<version>4.0.103</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>bouncycastle</groupId>
-			<artifactId>bcprov-jdk15</artifactId>
-			<version>136</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.openxri</groupId>
 			<artifactId>openxri-server-logic</artifactId>
 			<version>1.2.2-SNAPSHOT</version>
@@ -122,6 +104,24 @@
 			<groupId>org.openxri</groupId>
 			<artifactId>openxri-client</artifactId>
 			<version>1.2.2-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.higgins</groupId>
+			<artifactId>xdi4j</artifactId>
+			<version>1.0.800</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sleepycat</groupId>
+			<artifactId>je</artifactId>
+			<version>4.0.103</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>bouncycastle</groupId>
+			<artifactId>bcprov-jdk15</artifactId>
+			<version>136</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

@@ -28,7 +28,7 @@
 							<artifactId>xmlsec</artifactId>
 							<version>534045-patched</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/lib/xmlsec-534045-patched.jar</file>
+							<file>${basedir}/../pdsproject/lib/xmlsec-534045-patched.jar</file>
 						</configuration>
 					</execution>
 				</executions>
