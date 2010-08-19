@@ -33,16 +33,19 @@ public class ContextGraphResourceHandler extends AbstractResourceHandler {
 		int httpCount = 1;
 		int httpsCount = 1;
 
-		for (String endpoint : endpoints) {
+		if (endpoints != null) {
 
-			if (endpoint.startsWith("https://")) {
+			for (String endpoint : endpoints) {
 
-				messageResult.getGraph().createStatement(new XRI3Segment("$"), new XRI3Segment("$https$uri$" + httpsCount), endpoint);
-				httpsCount++;
-			} else if (endpoint.startsWith("http://")) {
+				if (endpoint.startsWith("https://")) {
 
-				messageResult.getGraph().createStatement(new XRI3Segment("$"), new XRI3Segment("$http$uri$" + httpCount), endpoint);
-				httpCount++;
+					messageResult.getGraph().createStatement(new XRI3Segment("$"), new XRI3Segment("$https$uri$" + httpsCount), endpoint);
+					httpsCount++;
+				} else if (endpoint.startsWith("http://")) {
+
+					messageResult.getGraph().createStatement(new XRI3Segment("$"), new XRI3Segment("$http$uri$" + httpCount), endpoint);
+					httpCount++;
+				}
 			}
 		}
 

@@ -11,60 +11,6 @@
 	<packaging>jar</packaging>
 	<version>0.5</version>
 	<name>pds.core</name>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>execution1</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>org.eclipse.higgins</groupId>
-							<artifactId>xdi4j</artifactId>
-							<version>1.0.800</version>
-							<packaging>jar</packaging>
-							<file>${basedir}/../pdsproject/lib/higgins-xdi4j_1.0.800.jar</file>
-						</configuration>
-					</execution>
-					<execution>
-						<id>execution2</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>com.sleepycat</groupId>
-							<artifactId>je</artifactId>
-							<version>4.0.103</version>
-							<packaging>jar</packaging>
-							<file>${basedir}/../pdsproject/lib/je-4.0.103.jar</file>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<id>dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<includeScope>runtime</includeScope>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 	<dependencies>
 		<dependency>
 			<groupId>commons-logging</groupId>
@@ -116,6 +62,12 @@
 			<groupId>com.sleepycat</groupId>
 			<artifactId>je</artifactId>
 			<version>4.0.103</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

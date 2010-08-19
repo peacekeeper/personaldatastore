@@ -9,7 +9,6 @@
 	<bean id="pdsConnectionFactory" class="pds.core.xri.XriPdsConnectionFactory">
 
 		<!-- One or more URIs where this PDS is deployed. -->
-		<!-- If this is empty, the PDS will try to auto-detect its URI. -->
 
 		<property name="endpoints">
 			<list>

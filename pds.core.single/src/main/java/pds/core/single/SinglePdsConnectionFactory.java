@@ -30,13 +30,6 @@ public class SinglePdsConnectionFactory implements PdsConnectionFactory {
 
 			this.aliases = new XRI3Segment[0];
 		}
-		
-		// check endpoints
-
-		if (this.endpoints == null || this.endpoints.length < 1) {
-
-			this.endpoints = new String[] { filterConfig.getServletContext().getContextPath() };
-		}
 	}
 
 	public PdsConnection getPdsConnection(String identifier) throws PdsConnectionException {

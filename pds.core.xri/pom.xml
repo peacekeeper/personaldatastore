@@ -84,12 +84,6 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.higgins</groupId>
-			<artifactId>xdi4j</artifactId>
-			<version>1.0.800</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>pdsproject</groupId>
 			<artifactId>pds.core</artifactId>
 			<version>0.5</version>

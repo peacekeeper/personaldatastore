@@ -23,13 +23,13 @@
 		</property>
 
 		<!-- One or more URIs where this PDS is deployed. -->
-		<!-- If this is empty, the PDS will try to auto-detect its URI. -->
 
 		<property name="endpoints">
 			<list>
 				<value>http://xdi.yourserver.com/</value>
 			</list>
 		</property>
+
 	</bean>
 
 	<!-- PDS Filter -->

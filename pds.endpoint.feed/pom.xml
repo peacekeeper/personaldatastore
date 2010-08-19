@@ -65,20 +65,6 @@
 							<goal>install-file</goal>
 						</goals>
 						<configuration>
-							<groupId>org.eclipse.higgins</groupId>
-							<artifactId>xdi4j</artifactId>
-							<version>1.0.800</version>
-							<packaging>jar</packaging>
-							<file>${basedir}/../pdsproject/lib/higgins-xdi4j_1.0.800.jar</file>
-						</configuration>
-					</execution>
-					<execution>
-						<id>execution2</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
 							<groupId>net.java.dev</groupId>
 							<artifactId>rome</artifactId>
 							<version>1.0</version>
