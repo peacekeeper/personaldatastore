@@ -19,7 +19,9 @@ public class AnyPdsConnectionFactory implements PdsConnectionFactory {
 	@Override
 	public void init(FilterConfig filterConfig) throws PdsConnectionException {
 
-		if (this.endpoints == null) {
+		// check endpoints
+
+		if (this.endpoints == null || this.endpoints.length < 1) {
 
 			this.endpoints = new String[] { filterConfig.getServletContext().getContextPath() };
 		}

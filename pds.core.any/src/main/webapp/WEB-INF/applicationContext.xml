@@ -4,8 +4,13 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
 	<!-- PDS Connection Factory (pds.core.any) -->
+	<!-- You need to configure the following settings to match your environment. -->
 
 	<bean id="pdsConnectionFactory" class="pds.core.any.AnyPdsConnectionFactory">
+
+		<!-- One or more URIs where this PDS is deployed. -->
+		<!-- If this is empty, the PDS will try to auto-detect its URI. -->
+
 		<property name="endpoints">
 			<list>
 				<value>http://xdi.yourserver.com/</value>
@@ -14,6 +19,7 @@
 	</bean>
 
 	<!-- PDS Filter -->
+	<!-- Do not modify this, unless you know what you are doing. -->
 
 	<bean id="PdsFilter" class="pds.core.PdsFilter">
 		<property name="endpointServlet" ref="EndpointServlet" />
@@ -21,6 +27,7 @@
 	</bean>
 
 	<!-- XDI Servlet -->
+	<!-- Do not modify this, unless you know what you are doing. -->
 
 	<bean id="EndpointServlet" class="org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet" />
 

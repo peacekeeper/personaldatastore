@@ -17,12 +17,19 @@ public class XriPdsConnection implements PdsConnection {
 	private XriPdsConnectionFactory pdsConnectionFactory;
 	private Xri xri;
 	private User user;
+	private String[] endpoints;
 
-	XriPdsConnection(XriPdsConnectionFactory pdsConnectionFactory, Xri xri, User user) {
+	XriPdsConnection(XriPdsConnectionFactory pdsConnectionFactory, Xri xri, User user, String[] endpoints) {
 
 		this.pdsConnectionFactory = pdsConnectionFactory;
 		this.xri = xri;
 		this.user = user;
+		this.endpoints = endpoints;
+	}
+
+	public XriPdsConnectionFactory getPdsConnectionFactory() {
+
+		return this.pdsConnectionFactory;
 	}
 
 	@Override
@@ -64,11 +71,16 @@ public class XriPdsConnection implements PdsConnection {
 
 	public String[] getEndpoints() {
 
-		String xdiService = this.pdsConnectionFactory.getProperties().getProperty("xdi-service");
-		if (! xdiService.endsWith("/")) xdiService += "/";
-		xdiService += this.getCanonical().toString() + "/";
+		String[] endpoints = new String[this.endpoints.length];
 
-		return new String[] { xdiService };
+		for (int i=0; i<endpoints.length; i++) {
+
+			endpoints[i] = this.endpoints[i];
+			if (! endpoints[i].endsWith("/")) endpoints[i] += "/";
+			endpoints[i] += this.getCanonical().toString() + "/";
+		}
+
+		return endpoints;
 	}
 
 	/*	public boolean isSelfAuthenticated(Operation operation) throws PdsConnectionException {
@@ -125,11 +137,6 @@ public class XriPdsConnection implements PdsConnection {
 		pdsConnectionResourceMessagingTarget.setPdsConnection(this);
 
 		return new AbstractMessagingTarget[] { pdsConnectionResourceMessagingTarget };
-	}
-
-	public XriPdsConnectionFactory getPdsConnectionFactory() {
-
-		return this.pdsConnectionFactory;
 	}
 
 	public Xri getXri() {

@@ -17,17 +17,23 @@ public class SinglePdsConnectionFactory implements PdsConnectionFactory {
 	@Override
 	public void init(FilterConfig filterConfig) throws PdsConnectionException {
 
+		// check identifier
+		
 		if (this.identifier == null) {
 
 			throw new PdsConnectionException("Please configure an identifier for pds-core-single! See http://www.personaldatastore.info/pds-core-single/ for more information.");
 		}
 
-		if (this.aliases == null) {
+		// check aliases
+		
+		if (this.aliases == null || this.aliases.length < 1) {
 
 			this.aliases = new XRI3Segment[0];
 		}
+		
+		// check endpoints
 
-		if (this.endpoints == null || this.endpoints.length < 1 || this.endpoints[0].trim().length() < 1) {
+		if (this.endpoints == null || this.endpoints.length < 1) {
 
 			this.endpoints = new String[] { filterConfig.getServletContext().getContextPath() };
 		}

@@ -3,20 +3,17 @@ package pds.core.xri;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.security.KeyFactory;
-import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Properties;
 
 import javax.servlet.FilterConfig;
 
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.XRI;
 
@@ -28,38 +25,42 @@ import pds.store.xri.Xri;
 
 public class XriPdsConnectionFactory implements PdsConnectionFactory {
 
-	private Properties properties;
+	private String providerId;
+	private String[] endpoints;
 	private pds.store.xri.XriStore xriStore;
 	private pds.store.user.Store userStore;
 	private X509Certificate brokerCertificate;
 	private PrivateKey brokerPrivateKey;
-	private KeyPairGenerator keyPairGenerator;
-	private X509V3CertificateGenerator certificateGenerator;
+	private String userCertificateValidity;
+	private String userCertificateSignatureAlgorithm;
+
+	static {
+
+		Security.addProvider(new BouncyCastleProvider());
+	}
 
 	@Override
 	public void init(FilterConfig filterConfig) throws PdsConnectionException {
 
-		// load keys, token generator and token verifier
+		// check providerId
 
-		try {
+		if (this.providerId == null) {
 
-			Security.addProvider(new BouncyCastleProvider());
-			KeyFactory keyFactory = KeyFactory.getInstance("RSA", "BC");
-			CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509", "BC");
+			throw new PdsConnectionException("Please configure a providerId for pds-core-xri! See http://www.personaldatastore.info/pds-core-xri/ for more information.");
+		}
 
-			InputStream publicBrokerCertificateInputStream = new ByteArrayInputStream(Base64.decodeBase64(this.properties.getProperty("broker-certificate").getBytes("UTF-8"))); 
-			this.brokerCertificate = (X509Certificate) certificateFactory.generateCertificate(publicBrokerCertificateInputStream);
+		// check endpoints
 
-			KeySpec publicBrokerPrivateKeySpec = new PKCS8EncodedKeySpec(Base64.decodeBase64(this.properties.getProperty("broker-private-key").getBytes("UTF-8")));
-			this.brokerPrivateKey = keyFactory.generatePrivate(publicBrokerPrivateKeySpec);
+		if (this.endpoints == null || this.endpoints.length < 1) {
 
-			this.keyPairGenerator = KeyPairGenerator.getInstance("RSA", "BC");
-			this.keyPairGenerator.initialize(2048);
+			this.endpoints = new String[] { filterConfig.getServletContext().getContextPath() };
+		}
 
-			this.certificateGenerator = new X509V3CertificateGenerator();
-		} catch (Exception ex) {
+		// check xriStore
 
-			throw new PdsConnectionException("Cannot initialize keys: " + ex.getMessage(), ex);
+		if (this.xriStore == null) {
+
+			throw new PdsConnectionException("Please configure an xriStore for pds-core-xri! See http://www.personaldatastore.info/pds-core-xri/ for more information.");
 		}
 	}
 
@@ -71,7 +72,7 @@ public class XriPdsConnectionFactory implements PdsConnectionFactory {
 		User user = null;
 
 		// make sure XRI is valid
-		
+
 		try {
 
 			new XRI(identifier);
@@ -79,7 +80,7 @@ public class XriPdsConnectionFactory implements PdsConnectionFactory {
 
 			return null;
 		}
-		
+
 		// find xri and user
 
 		try {
@@ -96,17 +97,27 @@ public class XriPdsConnectionFactory implements PdsConnectionFactory {
 
 		// done
 
-		return new XriPdsConnection(this, xri, user);
+		return new XriPdsConnection(this, xri, user, this.endpoints);
 	}
 
-	public Properties getProperties() {
+	public String getProviderId() {
 
-		return this.properties;
+		return this.providerId;
 	}
 
-	public void setProperties(Properties properties) {
+	public void setProviderId(String providerId) {
 
-		this.properties = properties;
+		this.providerId = providerId;
+	}
+
+	public String[] getEndpoints() {
+
+		return this.endpoints;
+	}
+
+	public void setEndpoints(String[] endpoints) {
+
+		this.endpoints = endpoints;
 	}
 
 	public pds.store.xri.XriStore getXriStore() {
@@ -139,6 +150,20 @@ public class XriPdsConnectionFactory implements PdsConnectionFactory {
 		this.brokerCertificate = brokerCertificate;
 	}
 
+	public void setBrokerCertificate(String brokerCertificate) {
+
+		try {
+
+			CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509", "BC");
+
+			InputStream publicBrokerCertificateInputStream = new ByteArrayInputStream(Base64.decodeBase64(brokerCertificate.getBytes())); 
+			this.brokerCertificate = (X509Certificate) certificateFactory.generateCertificate(publicBrokerCertificateInputStream);
+		} catch (Exception ex) {
+
+			throw new RuntimeException("Invalid broker certificate: " + ex.getMessage(), ex);
+		}
+	}
+
 	public PrivateKey getBrokerPrivateKey() {
 
 		return this.brokerPrivateKey;
@@ -149,23 +174,36 @@ public class XriPdsConnectionFactory implements PdsConnectionFactory {
 		this.brokerPrivateKey = brokerPrivateKey;
 	}
 
-	public KeyPairGenerator getKeyPairGenerator() {
+	public void setBrokerPrivateKey(String brokerPrivateKey) {
 
-		return this.keyPairGenerator;
+		try {
+
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA", "BC");
+
+			KeySpec publicBrokerPrivateKeySpec = new PKCS8EncodedKeySpec(Base64.decodeBase64(brokerPrivateKey.getBytes()));
+			this.brokerPrivateKey = keyFactory.generatePrivate(publicBrokerPrivateKeySpec);
+		} catch (Exception ex) {
+
+			throw new RuntimeException("Invalid broker certificate: " + ex.getMessage(), ex);
+		}
 	}
 
-	public void setKeyPairGenerator(KeyPairGenerator keyPairGenerator) {
+	public String getUserCertificateValidity() {
 
-		this.keyPairGenerator = keyPairGenerator;
+		return this.userCertificateValidity;
 	}
 
-	public X509V3CertificateGenerator getCertificateGenerator() {
+	public void setUserCertificateValidity(String userCertificateValidity) {
 
-		return this.certificateGenerator;
+		this.userCertificateValidity = userCertificateValidity;
 	}
 
-	public void setCertificateGenerator( X509V3CertificateGenerator certificateGenerator) {
+	public String getUserCertificateSignatureAlgorithm() {
+		return this.userCertificateSignatureAlgorithm;
+	}
 
-		this.certificateGenerator = certificateGenerator;
+	public void setUserCertificateSignaturealgorithm(String userCertificateSignatureAlgorithm) {
+
+		this.userCertificateSignatureAlgorithm = userCertificateSignatureAlgorithm;
 	}
 }

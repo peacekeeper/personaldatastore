@@ -4,7 +4,6 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
 	<!-- PDS Connection Factory (pds.core.single) -->
-
 	<!-- You need to configure the following settings to match your environment. -->
 
 	<bean id="pdsConnectionFactory" class="pds.core.single.SinglePdsConnectionFactory">
@@ -44,6 +43,6 @@
 	<!-- XDI Servlet -->
 	<!-- Do not modify this, unless you know what you are doing. -->
 
-	<bean id="EndpointServlet" class="org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet" init-method="initEndpointRegistry" />
+	<bean id="EndpointServlet" class="org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet" />
 
 </beans>
