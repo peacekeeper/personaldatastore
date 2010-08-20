@@ -15,11 +15,10 @@ import javax.servlet.FilterConfig;
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
-import org.openxri.XRI;
 
 import pds.core.PdsConnection;
-import pds.core.PdsConnectionException;
 import pds.core.PdsConnectionFactory;
+import pds.core.PdsException;
 import pds.store.user.User;
 import pds.store.xri.Xri;
 
@@ -40,13 +39,13 @@ public class XriPdsConnectionFactory implements PdsConnectionFactory {
 	}
 
 	@Override
-	public void init(FilterConfig filterConfig) throws PdsConnectionException {
+	public void init(FilterConfig filterConfig) throws PdsException {
 
 		// check providerId
 
 		if (this.providerId == null) {
 
-			throw new PdsConnectionException("Please configure a providerId for pds-core-xri! See http://www.personaldatastore.info/pds-core-xri/ for more information.");
+			throw new PdsException("Please configure a providerId for pds-core-xri! See http://www.personaldatastore.info/pds-core-xri/ for more information.");
 		}
 
 		// check endpoints
@@ -60,26 +59,16 @@ public class XriPdsConnectionFactory implements PdsConnectionFactory {
 
 		if (this.xriStore == null) {
 
-			throw new PdsConnectionException("Please configure an xriStore for pds-core-xri! See http://www.personaldatastore.info/pds-core-xri/ for more information.");
+			throw new PdsException("Please configure an xriStore for pds-core-xri! See http://www.personaldatastore.info/pds-core-xri/ for more information.");
 		}
 	}
 
-	public PdsConnection getPdsConnection(String identifier) throws PdsConnectionException {
+	public PdsConnection getPdsConnection(String identifier) throws PdsException {
 
 		Xri xri = null;
 		XRI3Segment inumber = null;
 		String userIdentifier = null;
 		User user = null;
-
-		// make sure XRI is valid
-
-		try {
-
-			new XRI(identifier);
-		} catch (Exception ex) {
-
-			return null;
-		}
 
 		// find xri and user
 
@@ -92,12 +81,12 @@ public class XriPdsConnectionFactory implements PdsConnectionFactory {
 			if (inumber == null) return null;
 		} catch (Exception ex) {
 
-			throw new PdsConnectionException("Cannot find xri: " + ex.getMessage(), ex);
+			throw new PdsException("Cannot find xri: " + ex.getMessage(), ex);
 		}
 
 		// done
 
-		return new XriPdsConnection(this, xri, user, this.endpoints);
+		return new XriPdsConnection(identifier, this, xri, user, this.endpoints);
 	}
 
 	public String getProviderId() {

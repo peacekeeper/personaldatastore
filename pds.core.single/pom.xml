@@ -3,13 +3,13 @@
 	<parent>
 		<groupId>pdsproject</groupId>
 		<artifactId>pdsproject</artifactId>
-		<version>0.5</version>
+		<version>0.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pdsproject</groupId>
 	<artifactId>pds.core.single</artifactId>
 	<packaging>war</packaging>
-	<version>0.5</version>
+	<version>0.1-SNAPSHOT</version>
 	<name>pds.core.single</name>
 	<build>
 		<plugins>
@@ -57,7 +57,7 @@
 		<dependency>
 			<groupId>pdsproject</groupId>
 			<artifactId>pds.core</artifactId>
-			<version>0.5</version>
+			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

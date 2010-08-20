@@ -4,22 +4,25 @@ import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractMessagingTarget;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.PdsConnection;
+import pds.core.impl.AbstractPdsConnection;
 
-public class AnyPdsConnection implements PdsConnection {
+public class AnyPdsConnection extends AbstractPdsConnection implements PdsConnection {
 
-	private XRI3Segment identifier;
+	private XRI3Segment canonical;
 	private String[] endpoints;
 
-	AnyPdsConnection(XRI3Segment identifier, String[] endpoints) {
+	AnyPdsConnection(String identifier, XRI3Segment canonical, String[] endpoints) {
 
-		this.identifier = identifier;
+		super(identifier);
+		
+		this.canonical = canonical;
 		this.endpoints = endpoints;
 	}
 
 	@Override
 	public XRI3Segment getCanonical() {
 
-		return this.identifier;
+		return this.canonical;
 	}
 
 	public XRI3Segment[] getAliases() {

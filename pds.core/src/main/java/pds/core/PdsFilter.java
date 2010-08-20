@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.impl.keyvalue.bdb.BDBGraphFactory;
 import org.eclipse.higgins.xdi4j.messaging.server.EndpointRegistry;
 import org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet;
 import org.eclipse.higgins.xdi4j.messaging.server.MessagingTarget;
@@ -22,7 +21,6 @@ import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractMessagingTarget;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.CompoundMessagingTarget;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.graph.GraphMessagingTarget;
 import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.RoutingMessageInterceptor;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.messagingtargets.ContextResourceMessagingTarget;
 import pds.core.messagingtargets.PdsResourceMessagingTarget;
@@ -31,28 +29,32 @@ public class PdsFilter implements Filter {
 
 	private static Log log = LogFactory.getLog(PdsFilter.class.getName());
 
-	private String databasePath;
 	private PdsConnectionFactory pdsConnectionFactory;
+	private PdsGraphFactory pdsGraphFactory;
 	private EndpointServlet endpointServlet;
 
 	public void init(FilterConfig filterConfig) throws ServletException {
 
 		log.info("Initializing...");
 
-		if (this.databasePath == null) {
-
-			this.databasePath = "./pds.core-" + filterConfig.getServletContext().getServletContextName() + "/";
-		}
-
 		if (this.pdsConnectionFactory == null) throw new ServletException("Please configure a PdsConnectionFactory!");
+		if (this.pdsGraphFactory == null) throw new ServletException("Please configure a PdsGraphFactory!");
 		if (this.endpointServlet == null) throw new ServletException("Please configure the EndpointServlet!");
 
 		try {
 
 			this.pdsConnectionFactory.init(filterConfig);
-		} catch (PdsConnectionException ex) {
+		} catch (PdsException ex) {
 
 			throw new ServletException("Cannot initialize PDS connection factory: " + ex.getMessage(), ex);
+		}
+
+		try {
+
+			this.pdsGraphFactory.init(filterConfig);
+		} catch (PdsException ex) {
+
+			throw new ServletException("Cannot initialize PDS graph factory: " + ex.getMessage(), ex);
 		}
 
 		log.info("Initializing complete.");
@@ -126,25 +128,9 @@ public class PdsFilter implements Filter {
 					compoundMessagingTarget.getMessagingTargets().add(pdsConnectionMessagingTarget);
 				}
 
-				// open graph
+				// get graph
 
-				XRI3Segment canonical = pdsConnection.getCanonical();
-
-				String databaseName = (canonical != null) ? canonical.toString() : identifier;
-
-				BDBGraphFactory graphFactory = new BDBGraphFactory();
-				graphFactory.setDatabasePath(this.databasePath);
-				graphFactory.setDatabaseName(databaseName);
-
-				Graph graph;
-
-				try {
-
-					graph = graphFactory.openGraph();
-				} catch (IOException ex) {
-
-					throw new PdsConnectionException("Cannot open graph: " + ex.getMessage(), ex);
-				}
+				Graph graph = this.pdsGraphFactory.getPdsConnectionGraph(pdsConnection);
 
 				// create and add GraphMessagingTarget
 
@@ -176,16 +162,6 @@ public class PdsFilter implements Filter {
 		chain.doFilter(request, response);
 	}
 
-	public String getDatabasePath() {
-
-		return this.databasePath;
-	}
-
-	public void setDatabasePath(String servletContextName) {
-
-		this.databasePath = servletContextName;
-	}
-
 	public PdsConnectionFactory getPdsConnectionFactory() {
 
 		return this.pdsConnectionFactory;
@@ -194,6 +170,16 @@ public class PdsFilter implements Filter {
 	public void setPdsConnectionFactory(PdsConnectionFactory pdsConnectionFactory) {
 
 		this.pdsConnectionFactory = pdsConnectionFactory;
+	}
+
+	public PdsGraphFactory getPdsGraphFactory() {
+
+		return this.pdsGraphFactory;
+	}
+
+	public void setPdsGraphFactory(PdsGraphFactory pdsGraphFactory) {
+
+		this.pdsGraphFactory = pdsGraphFactory;
 	}
 
 	public EndpointServlet getEndpointServlet() {

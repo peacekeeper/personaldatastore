@@ -5,23 +5,23 @@ import javax.servlet.FilterConfig;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.PdsConnection;
-import pds.core.PdsConnectionException;
 import pds.core.PdsConnectionFactory;
+import pds.core.PdsException;
 
 public class SinglePdsConnectionFactory implements PdsConnectionFactory {
 
-	private XRI3Segment identifier;
+	private XRI3Segment canonical;
 	private XRI3Segment[] aliases;
 	private String[] endpoints;
 
 	@Override
-	public void init(FilterConfig filterConfig) throws PdsConnectionException {
+	public void init(FilterConfig filterConfig) throws PdsException {
 
-		// check identifier
+		// check canonical
 		
-		if (this.identifier == null) {
+		if (this.canonical == null) {
 
-			throw new PdsConnectionException("Please configure an identifier for pds-core-single! See http://www.personaldatastore.info/pds-core-single/ for more information.");
+			throw new PdsException("Please configure an identifier for pds-core-single! See http://www.personaldatastore.info/pds-core-single/ for more information.");
 		}
 
 		// check aliases
@@ -32,26 +32,26 @@ public class SinglePdsConnectionFactory implements PdsConnectionFactory {
 		}
 	}
 
-	public PdsConnection getPdsConnection(String identifier) throws PdsConnectionException {
+	public PdsConnection getPdsConnection(String identifier) throws PdsException {
 
 		if (! identifier.equals("")) return null;
-
-		return new SinglePdsConnection(this.identifier, this.aliases, this.endpoints);
+ 
+		return new SinglePdsConnection(identifier, this.canonical, this.aliases, this.endpoints);
 	}
 
-	public XRI3Segment getIdentifier() {
+	public XRI3Segment getCanonical() {
 
-		return this.identifier;
+		return this.canonical;
 	}
 
-	public void setIdentifier(XRI3Segment identifier) {
+	public void setCanonical(XRI3Segment canonical) {
 
-		this.identifier = identifier;
+		this.canonical = canonical;
 	}
 
-	public void setIdentifier(String identifier) {
+	public void setCanonical(String canonical) {
 
-		this.identifier = new XRI3Segment(identifier);
+		this.canonical = new XRI3Segment(canonical);
 	}
 
 	public XRI3Segment[] getAliases() {

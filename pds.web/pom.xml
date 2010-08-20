@@ -3,13 +3,13 @@
 	<parent>
 		<groupId>pdsproject</groupId>
 		<artifactId>pdsproject</artifactId>
-		<version>0.5</version>
+		<version>0.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pdsproject</groupId>
 	<artifactId>pds.web</artifactId>
 	<packaging>war</packaging>
-	<version>0.5</version>
+	<version>0.1-SNAPSHOT</version>
 	<name>pds.web</name>
 	<build>
 		<resources>
@@ -209,19 +209,19 @@
 		<dependency>
 			<groupId>pdsproject</groupId>
 			<artifactId>pds.web.logger</artifactId>
-			<version>0.5</version>
+			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>pdsproject</groupId>
 			<artifactId>pds.web.xdi</artifactId>
-			<version>0.5</version>
+			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>pdsproject</groupId>
 			<artifactId>pds.web.tools</artifactId>
-			<version>0.5</version>
+			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

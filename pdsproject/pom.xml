@@ -5,7 +5,7 @@
 	<artifactId>pdsproject</artifactId>
 	<packaging>pom</packaging>
 	<name>pdsproject</name>
-	<version>0.5</version>
+	<version>0.1-SNAPSHOT</version>
 	<description>
 		Reference implementation of a Personal Data Store (PDS).
 	</description>

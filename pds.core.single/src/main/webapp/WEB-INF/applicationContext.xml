@@ -12,7 +12,7 @@
 		<!-- This should be an resolvable identifier (e.g. an i-number, URI, e-mail address). -->
 		<!-- See pds-discovery for more information about identifiers and resolution. -->
 
-		<property name="identifier" value="=!1111.2222.3333.4444" />
+		<property name="canonical" value="=!1111.2222.3333.4444" />
 
 		<!-- Other identifiers for your PDS. -->
 
@@ -32,12 +32,20 @@
 
 	</bean>
 
+	<!-- PDS Graph Factory -->
+	<!-- This determines the XDI4j back-end store to be used by the PDS. -->
+
+	<bean id="pdsGraphFactory" class="pds.core.graphfactories.PdsBDBGraphFactory">
+		<property name="databasePath" value="./pds-bdb/" />
+	</bean>
+
 	<!-- PDS Filter -->
 	<!-- Do not modify this, unless you know what you are doing. -->
 
 	<bean id="PdsFilter" class="pds.core.PdsFilter">
 		<property name="endpointServlet" ref="EndpointServlet" />
 		<property name="pdsConnectionFactory" ref="pdsConnectionFactory" />
+		<property name="pdsGraphFactory" ref="pdsGraphFactory" />
 	</bean>
 
 	<!-- XDI Servlet -->

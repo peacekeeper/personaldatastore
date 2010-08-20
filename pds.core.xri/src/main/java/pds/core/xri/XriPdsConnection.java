@@ -7,19 +7,22 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.xml.CanonicalID;
 
 import pds.core.PdsConnection;
+import pds.core.impl.AbstractPdsConnection;
 import pds.core.xri.messagingtargets.XriResourceMessagingTarget;
 import pds.store.user.User;
 import pds.store.xri.Xri;
 import pds.store.xri.XriStoreException;
 
-public class XriPdsConnection implements PdsConnection {
+public class XriPdsConnection extends AbstractPdsConnection implements PdsConnection {
 
 	private XriPdsConnectionFactory pdsConnectionFactory;
 	private Xri xri;
 	private User user;
 	private String[] endpoints;
 
-	XriPdsConnection(XriPdsConnectionFactory pdsConnectionFactory, Xri xri, User user, String[] endpoints) {
+	XriPdsConnection(String identifier, XriPdsConnectionFactory pdsConnectionFactory, Xri xri, User user, String[] endpoints) {
+
+		super(identifier);
 
 		this.pdsConnectionFactory = pdsConnectionFactory;
 		this.xri = xri;

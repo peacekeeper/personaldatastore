@@ -18,12 +18,20 @@
 
 	</bean>
 
+	<!-- PDS Graph Factory -->
+	<!-- This determines the XDI4j back-end store to be used by the PDS. -->
+
+	<bean id="pdsGraphFactory" class="pds.core.graphfactories.PdsBDBGraphFactory">
+		<property name="databasePath" value="./pds-bdb/" />
+	</bean>
+
 	<!-- PDS Filter -->
 	<!-- Do not modify this, unless you know what you are doing. -->
 
 	<bean id="PdsFilter" class="pds.core.PdsFilter">
 		<property name="endpointServlet" ref="EndpointServlet" />
 		<property name="pdsConnectionFactory" ref="pdsConnectionFactory" />
+		<property name="pdsGraphFactory" ref="pdsGraphFactory" />
 	</bean>
 
 	<!-- XDI Servlet -->

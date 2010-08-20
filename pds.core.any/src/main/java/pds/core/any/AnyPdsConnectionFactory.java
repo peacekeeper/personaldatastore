@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.PdsConnection;
-import pds.core.PdsConnectionException;
+import pds.core.PdsException;
 import pds.core.PdsConnectionFactory;
 
 public class AnyPdsConnectionFactory implements PdsConnectionFactory {
@@ -17,11 +17,11 @@ public class AnyPdsConnectionFactory implements PdsConnectionFactory {
 	private String[] endpoints;
 
 	@Override
-	public void init(FilterConfig filterConfig) throws PdsConnectionException {
+	public void init(FilterConfig filterConfig) throws PdsException {
 
 	}
 
-	public PdsConnection getPdsConnection(String identifier) throws PdsConnectionException {
+	public PdsConnection getPdsConnection(String identifier) throws PdsException {
 
 		// check if the identifier is a valid XRI3Segment
 
@@ -36,7 +36,7 @@ public class AnyPdsConnectionFactory implements PdsConnectionFactory {
 
 		// done
 
-		return new AnyPdsConnection(new XRI3Segment(identifier), this.endpoints);
+		return new AnyPdsConnection(identifier, new XRI3Segment(identifier), this.endpoints);
 	}
 
 	public String[] getEndpoints() {
