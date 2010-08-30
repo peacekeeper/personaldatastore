@@ -50,6 +50,14 @@
 
 
 
+<c i="Component_label20" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">I-Name:</p>
+</c>
+<c i="Component_inameLabel" t="nextapp.echo.app.Label" vis="private">
+<p n="text">...</p>
+<p n="styleName">Bold</p>
+</c>
 <c i="Component_label1" t="nextapp.echo.app.Label">
 <p n="styleName">Default</p>
 <p n="text">Registration Fee:</p>

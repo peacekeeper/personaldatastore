@@ -119,10 +119,9 @@ public class Xdi {
 		// resolve endpoint
 
 		String inumber = null;
+		XDIHttpClient xdiClient = new XDIHttpClient(endpoint);
 
 		try {
-
-			XDIClient xdiClient = new XDIHttpClient(endpoint);
 
 			XRI3 operationAddress = new XRI3("$/$is($xdi$v$1)");
 			MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
@@ -145,7 +144,7 @@ public class Xdi {
 
 		XdiContext context = new XdiContext(
 				this, 
-				new XDIHttpClient(endpoint), 
+				xdiClient, 
 				inumber, 
 				new XRI3Segment(inumber), 
 				password);

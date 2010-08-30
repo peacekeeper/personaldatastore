@@ -51,6 +51,8 @@ public class ManualSignInPanel extends Panel {
 		
 		String endpoint = this.endpointTextField.getText();
 		if (endpoint == null || endpoint.trim().equals("")) return;
+		if (! endpoint.endsWith("/")) endpoint += "/";
+		if ((! endpoint.toLowerCase().startsWith("http://")) && (! endpoint.toLowerCase().startsWith("https://"))) endpoint = "http://" + endpoint;
 
 		// try to open the context
 

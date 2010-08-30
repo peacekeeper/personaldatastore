@@ -96,6 +96,8 @@ public class Step2ContentPane extends ContentPane {
 	private SelectField currencySelectField;
 	private Row externalCallReceiverRow;
 
+	private Label inameLabel;
+
 	public Step2ContentPane() {
 		super();
 
@@ -169,6 +171,7 @@ public class Step2ContentPane extends ContentPane {
 
 	private void refresh() {
 
+		this.inameLabel.setText(this.iname);
 		this.usdprice = this.iname.charAt(0) == '=' ? "12.00" : "55.00";
 		this.registerButton.setText("Register " + this.iname);
 
@@ -634,6 +637,14 @@ public class Step2ContentPane extends ContentPane {
 		Row row3 = new Row();
 		row3.setCellSpacing(new Extent(10, Extent.PX));
 		column2.add(row3);
+		Label label20 = new Label();
+		label20.setStyleName("Default");
+		label20.setText("I-Name:");
+		row3.add(label20);
+		inameLabel = new Label();
+		inameLabel.setStyleName("Bold");
+		inameLabel.setText("...");
+		row3.add(inameLabel);
 		Label label1 = new Label();
 		label1.setStyleName("Default");
 		label1.setText("Registration Fee:");

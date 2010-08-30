@@ -39,7 +39,6 @@ import pds.web.ui.context.ContextWindowPane;
 import pds.web.ui.log.LogWindowPane;
 import pds.web.xdi.XdiContext;
 import echopoint.ImageIcon;
-import pds.web.ui.AccountRootGrid;
 
 public class MainContentPane extends ContentPane implements ApplicationListener {
 
@@ -69,19 +68,21 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 	public void init() {
 
 		super.init();
-		
+
 		// Add PdsWebApps
-		
+
 		for (final PdsWebApp pdsWebApp : PDSApplication.getApp().getServlet().getPdsWebApps()) {
-			
+
 			Button pdsWebAppButton = new Button();
 			pdsWebAppButton.setStyleName("PlainWhite");
-			ResourceImageReference imageReference4 = pdsWebApp.getResourceImageReference();
-			pdsWebAppButton.setIcon(imageReference4);
+			ResourceImageReference imageReference = pdsWebApp.getResourceImageReference();
+			pdsWebAppButton.setIcon(imageReference);
 			pdsWebAppButton.setText(pdsWebApp.getName());
+			pdsWebAppButton.setInsets(new Insets(new Extent(10, Extent.PX)));
+
 			pdsWebAppButton.addActionListener(new ActionListener() {
 				private static final long serialVersionUID = 1L;
-		
+
 				public void actionPerformed(ActionEvent e) {
 					XRI3Segment subjectXri = new XRI3Segment(MainContentPane.this.getContext().getCanonical());
 					WindowPane windowPane = pdsWebApp.newWindowPane(MainContentPane.this.getContext(), subjectXri);
@@ -134,10 +135,10 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 	}
 
 	public XdiContext getContext() {
-		
+
 		return this.context;
 	}
-	
+
 	public boolean isDeveloperModeSelected() {
 
 		return this.developerModeCheckBox.isSelected();
@@ -213,7 +214,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 	 */
 	private void initComponents() {
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-				"/pds/web/resource/image/mainback-gray.jpg");
+		"/pds/web/resource/image/mainback-gray.jpg");
 		this.setBackgroundImage(new FillImage(imageReference1));
 		SplitPane splitPane1 = new SplitPane();
 		splitPane1.setStyleName("Default");
@@ -236,12 +237,12 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 		Button button1 = new Button();
 		button1.setStyleName("PlainWhite");
 		ResourceImageReference imageReference2 = new ResourceImageReference(
-				"/pds/web/resource/image/accountroot.png");
+		"/pds/web/resource/image/accountroot.png");
 		button1.setIcon(imageReference2);
 		button1.setText("Account Root");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onAccountRootActionPerformed(e);
 			}
@@ -250,12 +251,12 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 		Button button10 = new Button();
 		button10.setStyleName("PlainWhite");
 		ResourceImageReference imageReference3 = new ResourceImageReference(
-				"/pds/web/resource/image/linkcontracts.png");
+		"/pds/web/resource/image/linkcontracts.png");
 		button10.setIcon(imageReference3);
 		button10.setText("Link Contracts");
 		button10.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onLinkContractsActionPerformed(e);
 			}
@@ -288,13 +289,13 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 		splitPane1.add(column2);
 		ImageIcon imageIcon1 = new ImageIcon();
 		ResourceImageReference imageReference4 = new ResourceImageReference(
-				"/pds/web/resource/image/pds-logo.png");
+		"/pds/web/resource/image/pds-logo.png");
 		imageIcon1.setIcon(imageReference4);
 		imageIcon1.setHeight(new Extent(45, Extent.PX));
 		imageIcon1.setWidth(new Extent(337, Extent.PX));
 		imageIcon1.setInsets(new Insets(new Extent(0, Extent.PX), new Extent(
 				10, Extent.PX), new Extent(0, Extent.PX), new Extent(0,
-				Extent.PX)));
+						Extent.PX)));
 		column2.add(imageIcon1);
 		Row row2 = new Row();
 		row2.setAlignment(new Alignment(Alignment.RIGHT, Alignment.DEFAULT));
@@ -304,7 +305,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 		column2.add(row2);
 		ImageIcon imageIcon2 = new ImageIcon();
 		ResourceImageReference imageReference5 = new ResourceImageReference(
-				"/pds/web/resource/image/database.png");
+		"/pds/web/resource/image/database.png");
 		imageIcon2.setIcon(imageReference5);
 		imageIcon2.setHeight(new Extent(68, Extent.PX));
 		imageIcon2.setWidth(new Extent(68, Extent.PX));
@@ -317,7 +318,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 		logWindowCheckBox.setText("Show Log Window");
 		logWindowCheckBox.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onLogWindowActionPerformed(e);
 			}
@@ -328,7 +329,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 		developerModeCheckBox.setText("Enable Developer Mode");
 		developerModeCheckBox.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onDeveloperModeActionPerformed(e);
 			}

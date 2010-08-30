@@ -89,7 +89,7 @@ public class ContextWindowPane extends WindowPane implements ApplicationListener
 		this.setStyleName("Glass");
 		this.setZIndex(10);
 		this.setTitle("Personal Data Store");
-		this.setHeight(new Extent(360, Extent.PX));
+		this.setHeight(new Extent(400, Extent.PX));
 		this.setMaximizeEnabled(false);
 		this.setMinimizeEnabled(false);
 		this.setClosable(false);

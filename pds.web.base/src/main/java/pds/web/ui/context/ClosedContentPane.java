@@ -39,16 +39,30 @@ public class ClosedContentPane extends ContentPane {
 
 		List<SignInMethod> signInMethods = PDSApplication.getApp().getServlet().getSignInMethods();
 
-		this.signInPanelTabPane.removeAll();
-		for (SignInMethod signInMethod : signInMethods) {
+		if (signInMethods.size() < 1) {
+
+			this.remove(this.signInPanelTabPane);
+		} else if (signInMethods.size() < 2) {
+
+			SignInMethod signInMethod = signInMethods.get(0);
 
 			Panel signInPanel = signInMethod.newPanel();
 
-			TabPaneLayoutData tabPaneLayoutData = new TabPaneLayoutData();
-			tabPaneLayoutData.setTitle(signInMethod.getMethodName());
-			signInPanel.setLayoutData(tabPaneLayoutData);
+			this.remove(this.signInPanelTabPane);
+			this.add(signInPanel);
+		} else {
 
-			this.signInPanelTabPane.add(signInPanel);
+			this.signInPanelTabPane.removeAll();
+			for (SignInMethod signInMethod : signInMethods) {
+
+				Panel signInPanel = signInMethod.newPanel();
+
+				TabPaneLayoutData tabPaneLayoutData = new TabPaneLayoutData();
+				tabPaneLayoutData.setTitle(signInMethod.getMethodName());
+				signInPanel.setLayoutData(tabPaneLayoutData);
+
+				this.signInPanelTabPane.add(signInPanel);
+			}
 		}
 	}
 

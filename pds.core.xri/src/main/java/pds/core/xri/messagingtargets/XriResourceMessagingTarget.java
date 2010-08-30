@@ -23,7 +23,6 @@ import pds.core.xri.XriPdsInstance;
 import pds.store.user.StoreUtil;
 import pds.store.user.User;
 import pds.store.xri.Xri;
-import pds.store.xri.XriStore;
 
 public class XriResourceMessagingTarget extends ResourceMessagingTarget {
 

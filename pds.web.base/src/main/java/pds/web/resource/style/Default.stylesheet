@@ -333,7 +333,7 @@
 </f>
 </p>
 </s>
-<s n="Default" t="nextapp.echo.extras.app.TabPane">
+<s n="Plain" t="nextapp.echo.extras.app.TabPane">
 <p n="tabActiveBorder">3px solid #000000</p>
 <p n="tabInactiveBorder">3px solid #c0c0c0</p>
 <p n="tabPosition">nextapp.echo.extras.app.TabPane.TAB_POSITION_TOP</p>
@@ -465,5 +465,59 @@
 <s n="Optional" t="nextapp.echo.app.Label">
 
 <p n="foreground">#7f7f7f</p>
+</s>
+<s n="Default" t="nextapp.echo.extras.app.TabPane">
+    <p n="tabSpacing">-19px</p>
+    <p n="tabActiveBackground">#ffffff</p>
+    <p n="tabRolloverEnabled">true</p>
+    <p n="tabRolloverBackgroundInsets">8px 14px 0px 8px</p>
+    <p n="tabRolloverForeground">#ffffff</p>
+    <p n="tabInactiveBackground">#ffffff</p>
+    <p n="tabInactiveBackgroundInsets">8px 14px 1px 8px</p>
+    <p n="tabActiveInsets">4px 10px</p>
+    <p n="tabInactiveInsets">4px 10px</p>
+    <p n="tabInactiveBackgroundImage">
+      <fi r="xy" t="nextapp.echo.app.ResourceImageReference" x="50%" y="50%">/nextapp/appresource/alpha/fill/InputField.png</fi>
+    </p>
+    
+    <p n="tabInactiveImageBorder">
+      <fib bi="17px 23px 1px 17px" ci="8px 14px 0px 8px">
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderTopLeft.png</fi>
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderTop.png</fi>
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderTopRight.png</fi>
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderLeft.png</fi>
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderRight.png</fi>
+        <null-fi/>
+        <null-fi/>
+        <null-fi/>
+      </fib>
+    </p>
+    <p n="tabActiveImageBorder">
+      <fib bi="17px 23px 0px 17px" ci="8px 14px 0px 8px">
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderTopLeft.png</fi>
+        <fi r="x" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderTop.png</fi>
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderTopRight.png</fi>
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderLeft.png</fi>
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderRight.png</fi>
+        <null-fi/>
+        <null-fi/>
+        <null-fi/>
+      </fib>
+    </p>
+    <p n="imageBorder">
+      <fib bi="17px 23px 23px 17px" ci="8px 14px 14px 8px">
+        <fi r="0" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderTopLeft.png</fi>
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderTop.png</fi>
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderTopRight.png</fi>
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderLeft.png</fi>
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderRight.png</fi>
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderBottomLeft.png</fi>
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderBottom.png</fi>
+        <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/nextapp/appresource/alpha/imageborder/shadow/BorderBottomRight.png</fi>
+      </fib>
+    </p>
+  <p n="tabRolloverBackgroundImage">
+<fi r="xy" t="nextapp.echo.app.ResourceImageReference" x="50%" y="50%">/nextapp/appresource/alpha/fill/GradientWhiteSilver.png</fi>
+</p>
 </s>
 </ss>
