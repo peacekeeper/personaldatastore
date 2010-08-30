@@ -19,13 +19,13 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;
+import pds.web.xdi.XdiContext;
 import pds.web.xdi.XdiException;
 import pds.web.xdi.events.XdiGraphAddEvent;
 import pds.web.xdi.events.XdiGraphDelEvent;
 import pds.web.xdi.events.XdiGraphEvent;
 import pds.web.xdi.events.XdiGraphListener;
 import pds.web.xdi.events.XdiGraphModEvent;
-import pds.web.xdi.objects.XdiContext;
 
 public class PhotosColumn extends Column implements XdiGraphListener {
 

@@ -30,10 +30,10 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 
 import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;
+import pds.web.xdi.XdiContext;
 import pds.web.xdi.XdiException;
 import pds.web.xdi.events.XdiGraphEvent;
 import pds.web.xdi.events.XdiGraphListener;
-import pds.web.xdi.objects.XdiContext;
 
 public class OpenContentPane extends ContentPane implements XdiGraphListener {
 
@@ -56,7 +56,7 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 
 	private Label identifierTextField;
 	private Label canonicalTextField;
-	private Label uriTextField;
+	private Label endpointTextField;
 	private XdiPanel xdiPanel;
 
 	/**
@@ -89,7 +89,7 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 
 		this.identifierTextField.setText(this.context.getIdentifier());
 		this.canonicalTextField.setText(this.context.getCanonical());
-		this.uriTextField.setText(this.context.getUri());
+		this.endpointTextField.setText(this.context.getEndpoint());
 
 		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 	}
@@ -223,12 +223,12 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 		grid1.add(canonicalTextField);
 		Label label5 = new Label();
 		label5.setStyleName("Default");
-		label5.setText("URI:");
+		label5.setText("Endpoint:");
 		grid1.add(label5);
-		uriTextField = new Label();
-		uriTextField.setStyleName("Bold");
-		uriTextField.setText("...");
-		grid1.add(uriTextField);
+		endpointTextField = new Label();
+		endpointTextField.setStyleName("Bold");
+		endpointTextField.setText("...");
+		grid1.add(endpointTextField);
 		Row row1 = new Row();
 		row1.setAlignment(new Alignment(Alignment.RIGHT, Alignment.DEFAULT));
 		row1.setCellSpacing(new Extent(10, Extent.PX));

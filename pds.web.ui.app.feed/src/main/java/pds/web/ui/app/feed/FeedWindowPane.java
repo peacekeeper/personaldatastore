@@ -8,7 +8,7 @@ import nextapp.echo.app.WindowPane;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.web.ui.app.feed.FeedContentPane;
-import pds.web.xdi.objects.XdiContext;
+import pds.web.xdi.XdiContext;
 
 public class FeedWindowPane extends WindowPane {
 

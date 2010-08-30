@@ -4,10 +4,12 @@ package pds.web.ui.context;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import nextapp.echo.app.Column;
 import nextapp.echo.app.ContentPane;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.Insets;
+import nextapp.echo.app.Panel;
+import nextapp.echo.extras.app.TabPane;
+import nextapp.echo.extras.app.layout.TabPaneLayoutData;
 import pds.web.PDSApplication;
 
 public class ClosedContentPane extends ContentPane {
@@ -16,7 +18,7 @@ public class ClosedContentPane extends ContentPane {
 
 	protected ResourceBundle resourceBundle;
 
-	private Column signInContentPaneColumn;
+	private TabPane signInPanelTabPane;
 
 	/**
 	 * Creates a new <code>LoginContentPane</code>.
@@ -35,12 +37,18 @@ public class ClosedContentPane extends ContentPane {
 
 		// SignInMethods
 
-		List<SignInMethod> signInFactories = PDSApplication.getApp().getServlet().getSignInMethods();
+		List<SignInMethod> signInMethods = PDSApplication.getApp().getServlet().getSignInMethods();
 
-		this.signInContentPaneColumn.removeAll();
-		for (SignInMethod signInFactory : signInFactories) {
+		this.signInPanelTabPane.removeAll();
+		for (SignInMethod signInMethod : signInMethods) {
 
-			this.signInContentPaneColumn.add(signInFactory.newPanel());
+			Panel signInPanel = signInMethod.newPanel();
+
+			TabPaneLayoutData tabPaneLayoutData = new TabPaneLayoutData();
+			tabPaneLayoutData.setTitle(signInMethod.getMethodName());
+			signInPanel.setLayoutData(tabPaneLayoutData);
+
+			this.signInPanelTabPane.add(signInPanel);
 		}
 	}
 
@@ -51,7 +59,8 @@ public class ClosedContentPane extends ContentPane {
 	 */
 	private void initComponents() {
 		this.setInsets(new Insets(new Extent(10, Extent.PX)));
-		signInContentPaneColumn = new Column();
-		add(signInContentPaneColumn);
+		signInPanelTabPane = new TabPane();
+		signInPanelTabPane.setStyleName("Default");
+		add(signInPanelTabPane);
 	}
 }

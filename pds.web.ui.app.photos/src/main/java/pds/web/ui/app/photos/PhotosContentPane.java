@@ -51,13 +51,13 @@ import pds.web.ui.shared.FriendPanel.FriendPanelDelegate;
 import pds.web.ui.shared.PhotosColumn;
 import pds.web.util.MimeTypeUtil;
 import pds.web.xdi.Xdi;
+import pds.web.xdi.XdiContext;
 import pds.web.xdi.XdiException;
 import pds.web.xdi.events.XdiGraphAddEvent;
 import pds.web.xdi.events.XdiGraphDelEvent;
 import pds.web.xdi.events.XdiGraphEvent;
 import pds.web.xdi.events.XdiGraphListener;
 import pds.web.xdi.events.XdiGraphModEvent;
-import pds.web.xdi.objects.XdiContext;
 import echopoint.ImageIcon;
 
 public class PhotosContentPane extends ContentPane implements XdiGraphListener {
@@ -147,7 +147,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 				try {
 
 					Xdi xdi = PDSApplication.getApp().getXdi();
-					context = xdi.resolveContext(friendXri.toString(), null);
+					context = xdi.resolveContextByIname(friendXri.toString(), null);
 				} catch (Exception ex) {
 
 					MessageDialog.problem("Sorry, we could not open the Personal Data Store: " + ex.getMessage(), ex);

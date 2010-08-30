@@ -37,7 +37,7 @@ import pds.web.ui.accountroot.AccountRootWindowPane;
 import pds.web.ui.app.PdsWebApp;
 import pds.web.ui.context.ContextWindowPane;
 import pds.web.ui.log.LogWindowPane;
-import pds.web.xdi.objects.XdiContext;
+import pds.web.xdi.XdiContext;
 import echopoint.ImageIcon;
 import pds.web.ui.AccountRootGrid;
 

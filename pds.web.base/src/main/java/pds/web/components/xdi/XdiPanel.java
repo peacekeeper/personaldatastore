@@ -12,7 +12,7 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 
 import pds.web.ui.DeveloperModeComponent;
 import pds.web.ui.MainWindow;
-import pds.web.xdi.objects.XdiContext;
+import pds.web.xdi.XdiContext;
 
 public class XdiPanel extends Panel implements DeveloperModeComponent {
 

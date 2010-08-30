@@ -4,7 +4,7 @@ import java.util.ResourceBundle;
 
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.WindowPane;
-import pds.web.xdi.objects.XdiContext;
+import pds.web.xdi.XdiContext;
 
 public class DirectXdiWindowPane extends WindowPane {
 

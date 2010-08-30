@@ -51,6 +51,12 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>pdsproject</groupId>
+			<artifactId>pds.discovery</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.openxri</groupId>
 			<artifactId>openxri-client</artifactId>
 			<version>1.2.2-SNAPSHOT</version>
@@ -75,12 +81,6 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.sleepycat</groupId>
-			<artifactId>je</artifactId>
-			<version>4.0.103</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>1.0</version>
@@ -88,7 +88,7 @@
 		</dependency>
 		<dependency>
 			<groupId>bouncycastle</groupId>
-			<artifactId>bcprov-jdk16</artifactId>
+			<artifactId>bcprov-jdk15</artifactId>
 			<version>136</version>
 			<scope>compile</scope>
 		</dependency>

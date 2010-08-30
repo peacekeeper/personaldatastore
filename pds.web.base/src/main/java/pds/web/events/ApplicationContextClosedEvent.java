@@ -1,6 +1,6 @@
 package pds.web.events;
 
-import pds.web.xdi.objects.XdiContext;
+import pds.web.xdi.XdiContext;
 
 public class ApplicationContextClosedEvent extends ApplicationEvent {
 

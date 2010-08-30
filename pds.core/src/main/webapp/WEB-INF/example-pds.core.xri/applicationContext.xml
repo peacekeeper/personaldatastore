@@ -35,7 +35,9 @@
 
 	<bean id="xriStoreFactory" class="pds.store.xri.openxri.OpenxriXriStoreFactory">
 		<constructor-arg>
-			<util:properties />
+			<util:properties>
+				<prop key="server.config.file">/WEB-INF/server.xml</prop>
+			</util:properties>
 		</constructor-arg>
 	</bean>
 

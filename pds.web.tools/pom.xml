@@ -84,7 +84,7 @@
 		</dependency>
 		<dependency>
 			<groupId>bouncycastle</groupId>
-			<artifactId>bcprov-jdk16</artifactId>
+			<artifactId>bcprov-jdk15</artifactId>
 			<version>136</version>
 			<scope>compile</scope>
 		</dependency>

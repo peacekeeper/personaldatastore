@@ -1,20 +1,9 @@
 package pds.discovery;
 
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openxri.XRI;
+import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.resolve.Resolver;
-import org.openxri.resolve.ResolverFlags;
-import org.openxri.resolve.ResolverState;
-import org.openxri.xml.Service;
-import org.openxri.xml.XDIService;
-import org.openxri.xml.XRD;
 
 public class Discovery {
-
-	private static final Log log = LogFactory.getLog(Discovery.class.getName());
 
 	private Resolver resolver;
 
@@ -24,7 +13,7 @@ public class Discovery {
 
 			this.resolver = new Resolver(null);
 		} catch (Exception ex) {
-			
+
 			throw new RuntimeException(ex);
 		}
 	}
@@ -34,39 +23,14 @@ public class Discovery {
 		this.resolver = resolver;
 	}
 
-	public String resolveXriToInumber(String iname) throws Exception {
+	public String resolveXriToInumber(String xri) throws Exception {
 
-		String inumber = null;
-
-		ResolverFlags resolverFlags = new ResolverFlags();
-
-		XRD xrd = this.resolver.resolveAuthToXRD(new XRI(iname), resolverFlags, new ResolverState());
-		if (xrd.getCanonicalID() == null) return null;
-		inumber = xrd.getCanonicalID().getValue();
-
-		log.info("Resolved " + iname + " to " + inumber);
-		return inumber;
+		return org.eclipse.higgins.xdi4j.discovery.Discovery.discoverInumber(new XRI3Segment(xri), this.resolver);
 	}
 
-	public String resolveInumberToUri(String inumber) throws Exception {
+	public String resolveXriToEndpoint(String xri) throws Exception {
 
-		String uri = null;
-
-		ResolverFlags resolverFlags = new ResolverFlags();
-
-		XRD xrd = this.resolver.resolveSEPToXRD(new XRI(inumber ), XDIService.SERVICE_TYPE, null, resolverFlags, new ResolverState());
-		if (! xrd.getStatus().getCode().equals("100")) throw new RuntimeException("Resultion failed: " + xrd.getStatus().getCode());
-
-		List<?> services = xrd.getSelectedServices().getList();
-
-		for (Object service : services) {
-
-			if (((Service) service).getNumURIs() > 0) uri = ((Service) service).getURIAt(0).getUriString();
-		}
-		if (uri != null && (! uri.endsWith("/"))) uri += "/";
-
-		log.info("Resolved " + inumber + " to " + uri);
-		return uri;
+		return org.eclipse.higgins.xdi4j.discovery.Discovery.discoverEndpoint(new XRI3Segment(xri), this.resolver);
 	}
 
 	public Resolver getResolver() {

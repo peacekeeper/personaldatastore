@@ -29,6 +29,7 @@ import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.web.ui.shared.DataPredicatesColumn;
+import pds.web.xdi.XdiContext;
 import pds.web.xdi.XdiException;
 import pds.web.xdi.XdiUtil;
 import pds.web.xdi.events.XdiGraphAddEvent;
@@ -36,7 +37,6 @@ import pds.web.xdi.events.XdiGraphDelEvent;
 import pds.web.xdi.events.XdiGraphEvent;
 import pds.web.xdi.events.XdiGraphListener;
 import pds.web.xdi.events.XdiGraphModEvent;
-import pds.web.xdi.objects.XdiContext;
 import echopoint.ImageIcon;
 
 public class AccountPersonaContentPane extends ContentPane implements XdiGraphListener {

@@ -5,6 +5,9 @@
 <p n="insets">10px</p>
 <p n="overflow">1</p>
 
-<c i="Component_signInContentPaneColumn" t="nextapp.echo.app.Column" vis="private"/>
+
+<c i="Component_signInPanelTabPane" t="nextapp.echo.extras.app.TabPane" vis="private">
+<p n="styleName">Default</p>
+</c>
 </c>
 </form>

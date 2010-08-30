@@ -1,4 +1,4 @@
-package pds.web.xdi.objects.sync;
+package pds.web.xdi.sync;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -40,13 +40,13 @@ import pds.web.ui.shared.DataPredicatesColumn;
 import pds.web.ui.shared.FriendPanel;
 import pds.web.ui.shared.FriendPanel.FriendPanelDelegate;
 import pds.web.xdi.Xdi;
+import pds.web.xdi.XdiContext;
 import pds.web.xdi.XdiException;
 import pds.web.xdi.events.XdiGraphAddEvent;
 import pds.web.xdi.events.XdiGraphDelEvent;
 import pds.web.xdi.events.XdiGraphEvent;
 import pds.web.xdi.events.XdiGraphListener;
 import pds.web.xdi.events.XdiGraphModEvent;
-import pds.web.xdi.objects.XdiContext;
 import echopoint.ImageIcon;
 
 public class AddressBookContentPane extends ContentPane implements XdiGraphListener {
@@ -58,7 +58,6 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 	private XdiContext context;
 	private XRI3Segment subjectXri;
 	private XRI3 address;
-	private XRI3 friendAddress;
 
 	private XdiPanel xdiPanel;
 	private TextField addTextField;
@@ -133,7 +132,7 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 				try {
 
 					Xdi xdi = PDSApplication.getApp().getXdi();
-					context = xdi.resolveContext(friendXri.toString(), null);
+					context = xdi.resolveContextByIname(friendXri.toString(), null);
 				} catch (Exception ex) {
 
 					MessageDialog.problem("Sorry, we could not open the Personal Data Store: " + ex.getMessage(), ex);
@@ -150,14 +149,14 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 	public XRI3[] xdiGetAddresses() {
 
 		return new XRI3[] {
-				this.friendAddress
+				this.address
 		};
 	}
 
 	public XRI3[] xdiAddAddresses() {
 
 		return new XRI3[] {
-				new XRI3("" + this.friendAddress + "/$$")
+				new XRI3("" + this.address + "/$$")
 		};
 	}
 
@@ -205,8 +204,7 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 
 		this.context = context;
 		this.subjectXri = subjectXri;
-		this.address = new XRI3("" + this.subjectXri);
-		this.friendAddress = new XRI3("" + this.subjectXri + "/+friend");
+		this.address = new XRI3("" + this.subjectXri + "/+friend");
 
 		this.refresh();
 
@@ -250,7 +248,7 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 
 	private List<XRI3Segment> getFriendXris() throws XdiException {
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.friendAddress);
+		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.address);
 		MessageResult messageResult = this.context.send(operation);
 
 		Subject subject = messageResult.getGraph().getSubject(this.subjectXri);

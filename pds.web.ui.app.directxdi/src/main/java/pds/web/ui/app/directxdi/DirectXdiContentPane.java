@@ -35,8 +35,8 @@ import pds.web.PDSApplication;
 import pds.web.components.xdi.TransactionEventWindowPane;
 import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
+import pds.web.xdi.XdiContext;
 import pds.web.xdi.events.XdiTransactionEvent;
-import pds.web.xdi.objects.XdiContext;
 
 public class DirectXdiContentPane extends ContentPane {
 

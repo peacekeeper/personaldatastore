@@ -35,6 +35,7 @@ import pds.web.PDSApplication;
 import pds.web.events.ApplicationContextClosedEvent;
 import pds.web.events.ApplicationEvent;
 import pds.web.events.ApplicationListener;
+import pds.web.xdi.XdiContext;
 import pds.web.xdi.XdiException;
 import pds.web.xdi.XdiUtil;
 import pds.web.xdi.events.XdiGraphAddEvent;
@@ -42,7 +43,6 @@ import pds.web.xdi.events.XdiGraphDelEvent;
 import pds.web.xdi.events.XdiGraphEvent;
 import pds.web.xdi.events.XdiGraphListener;
 import pds.web.xdi.events.XdiGraphModEvent;
-import pds.web.xdi.objects.XdiContext;
 
 public class AccountRootGrid extends Grid implements ApplicationListener, XdiGraphListener {
 

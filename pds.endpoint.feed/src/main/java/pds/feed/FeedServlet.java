@@ -126,8 +126,8 @@ public class FeedServlet extends HttpServlet {
 
 		String xri = parseXri(request);
 		String inumber = discovery.resolveXriToInumber(xri);
-		String uri = discovery.resolveInumberToUri(inumber);
-		Iterator<Subject> subjects = fetch(inumber, uri);
+		String endpoint = discovery.resolveXriToEndpoint(inumber);
+		Iterator<Subject> subjects = fetch(inumber, endpoint);
 
 		SyndFeed feed = new SyndFeedImpl();
 		feed.setFeedType(this.feedType);

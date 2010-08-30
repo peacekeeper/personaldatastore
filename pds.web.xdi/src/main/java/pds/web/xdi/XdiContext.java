@@ -1,4 +1,4 @@
-package pds.web.xdi.objects;
+package pds.web.xdi;
 
 
 import java.util.ArrayList;
@@ -26,9 +26,6 @@ import org.eclipse.higgins.xdi4j.util.iterators.IteratorArrayMaker;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.web.xdi.Xdi;
-import pds.web.xdi.XdiException;
-import pds.web.xdi.XdiUtil;
 import pds.web.xdi.events.XdiGraphAddEvent;
 import pds.web.xdi.events.XdiGraphDelEvent;
 import pds.web.xdi.events.XdiGraphEvent;
@@ -68,7 +65,7 @@ public class XdiContext {
 		this.xdiDelGraphListeners = new HashMap<XRI3, List<XdiGraphListener> > ();
 	}
 
-	public String getUri() {
+	public String getEndpoint() {
 
 		return this.xdiClient.getUrl().toString();
 	}
@@ -96,7 +93,9 @@ public class XdiContext {
 		Operation operation = this.prepareOperation(MessagingConstants.XRI_GET, operationAddress);
 		MessageResult messageResult = this.send(operation);
 
-		if (! XdiContext.this.password.equals(Addressing.findLiteralData(messageResult.getGraph(), operationAddress))) {
+		String password = Addressing.findLiteralData(messageResult.getGraph(), operationAddress);
+		
+		if (! XdiContext.this.password.equals(password)) {
 
 			throw new XdiException("Incorrect password.");
 		}
@@ -163,6 +162,10 @@ public class XdiContext {
 		return operation;
 	}
 
+	/*
+	 * Sending methods
+	 */
+
 	public MessageResult send(Operation operation) throws XdiException {
 
 		return this.send(operation.getMessage());
@@ -177,26 +180,7 @@ public class XdiContext {
 
 		// send the message envelope
 
-		Date beginTimestamp = new Date();
-		MessageResult messageResult;
-
-		try {
-
-			messageResult = this.xdiClient.send(messageEnvelope, null);
-
-			if (ErrorMessageResult.isValid(messageResult.getGraph())) {
-
-				messageResult = ErrorMessageResult.fromGraph(messageResult.getGraph());
-				throw new XdiException("Problem from XDI Server: " + ((ErrorMessageResult) messageResult).getErrorString());
-			}
-
-			this.xdi.fireXdiTransactionSuccessEvent(new XdiTransactionSuccessEvent(this, messageEnvelope, beginTimestamp, new Date(), messageResult));
-		} catch (Exception ex) {
-
-			if (! (ex instanceof XdiException)) ex = new XdiException("Problem during XDI Transaction: " + ex.getMessage(), ex);
-			this.xdi.fireXdiTransactionFailureEvent(new XdiTransactionFailureEvent(this, messageEnvelope, beginTimestamp, new Date(), ex));
-			throw (XdiException) ex;
-		}
+		MessageResult messageResult = this.xdi.send(this.xdiClient, messageEnvelope);
 
 		// check modified addresses
 

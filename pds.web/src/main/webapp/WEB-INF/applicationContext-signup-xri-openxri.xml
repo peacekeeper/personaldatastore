@@ -9,11 +9,11 @@
 
 		<!-- The XRI store for which to instantiate PDSes. -->
 
-		<property name="xriStore" ref="openxriXriStore" />
+		<property name="xriStore" ref="xriStore" />
 
 		<!-- The user store. -->
 
-		<property name="userStore" ref="openxriUserStore" />
+		<property name="userStore" ref="userStore" />
 
 		<!-- One or more URIs where this PDS is deployed. -->
 
@@ -42,19 +42,19 @@
 
 	</bean>
 
-	<bean id="openxriXriStoreFactory" class="pds.store.xri.openxri.OpenxriXriStoreFactory">
+	<bean id="xriStoreFactory" class="pds.store.xri.openxri.OpenxriXriStoreFactory">
 		<constructor-arg>
 			<util:properties>
-				<prop key="server.config.file">/WEB-INF/server-openxri.xml</prop>
+				<prop key="server.config.file">/WEB-INF/server.xml</prop>
 			</util:properties>
 		</constructor-arg>
 	</bean>
 
-	<bean id="openxriXriStore" factory-bean="openxriXriStoreFactory" factory-method="createXriStore" />
+	<bean id="xriStore" factory-bean="xriStoreFactory" factory-method="createXriStore" />
 
-	<bean id="openxriUserStore" class="pds.store.user.impl.db.DatabaseStore" init-method="init" destroy-method="close">
+	<bean id="userStore" class="pds.store.user.impl.db.DatabaseStore" init-method="init" destroy-method="close">
 		<constructor-arg>
-			<util:properties location="/WEB-INF/pds.store.user-openxri.properties" />
+			<util:properties location="/WEB-INF/pds.store.user.properties" />
 		</constructor-arg>
 	</bean>
 

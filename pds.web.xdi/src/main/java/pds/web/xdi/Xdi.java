@@ -2,25 +2,30 @@ package pds.web.xdi;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.higgins.xdi4j.Graph;
+import org.eclipse.higgins.xdi4j.addressing.Addressing;
+import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
+import org.eclipse.higgins.xdi4j.messaging.Message;
+import org.eclipse.higgins.xdi4j.messaging.MessageEnvelope;
+import org.eclipse.higgins.xdi4j.messaging.MessageResult;
+import org.eclipse.higgins.xdi4j.messaging.Operation;
+import org.eclipse.higgins.xdi4j.messaging.client.XDIClient;
 import org.eclipse.higgins.xdi4j.messaging.client.http.XDIHttpClient;
-import org.eclipse.higgins.xdi4j.seps.XDIService;
+import org.eclipse.higgins.xdi4j.messaging.error.ErrorMessageResult;
+import org.eclipse.higgins.xdi4j.util.CopyUtil;
+import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
-import org.openxri.XRI;
-import org.openxri.resolve.Resolver;
-import org.openxri.resolve.ResolverFlags;
-import org.openxri.resolve.ResolverState;
-import org.openxri.xml.Service;
-import org.openxri.xml.XRD;
 
+import pds.discovery.Discovery;
 import pds.web.logger.Logger;
-import pds.web.xdi.events.XdiListener;
 import pds.web.xdi.events.XdiTransactionFailureEvent;
+import pds.web.xdi.events.XdiTransactionListener;
 import pds.web.xdi.events.XdiTransactionSuccessEvent;
-import pds.web.xdi.objects.XdiContext;
 
 /**
  * PDS-based implementation of the Store interface.
@@ -29,108 +34,203 @@ public class Xdi {
 
 	private static final Log log = LogFactory.getLog(Xdi.class.getName());
 
-	private final Resolver resolver;
+	private final Discovery discovery;
 	private final Logger logger;
 
-	private final List<XdiListener> xdiListeners;
+	private final List<XdiTransactionListener> xdiListeners;
 
-	public Xdi(Resolver resolver, Logger logger) {
+	public Xdi(Discovery discovery, Logger logger) {
 
-		this.resolver = resolver;
+		this.discovery = discovery;
 		this.logger = logger;
-		
-		this.xdiListeners = new ArrayList<XdiListener> ();
+
+		this.xdiListeners = new ArrayList<XdiTransactionListener> ();
 	}
 
 	/*
 	 * Context methods
 	 */
 
-	public XdiContext resolveContext(String iname, String password) throws XdiException {
+	public XdiContext resolveContextByIname(String iname, String password) throws XdiException {
 
-		log.trace("resolveContext()");
+		log.trace("resolveContextByIname()");
 
-		String uri = null;
+		// resolve I-Name
+
 		String inumber = null;
 
 		try {
 
-			ResolverFlags resolverFlags = new ResolverFlags();
-
-			XRD xrd = this.resolver.resolveAuthToXRD(new XRI(iname), resolverFlags, new ResolverState());
-			inumber = xrd.getCanonicalID().getValue();
+			inumber = this.discovery.resolveXriToInumber(iname);
 		} catch (Exception ex) {
 
-			throw new RuntimeException("The I-Name or its I-Number could not be found: " + ex.getMessage());
+			throw new XdiException("Problem while resolving the I-Name: " + ex.getMessage());
 		}
 
-		this.logger.info("The I-Name " + iname + " has been resolved to the I-Number " + inumber, null);
-
-		try {
-
-			ResolverFlags resolverFlags = new ResolverFlags();
-			resolverFlags.setNoDefaultT(true);
-
-			XRD xrd = this.resolver.resolveSEPToXRD(new XRI(inumber), XDIService.SERVICE_TYPE, null, resolverFlags, new ResolverState());
-			if (! xrd.getStatus().getCode().equals("100")) throw new RuntimeException("Resultion failed: " + xrd.getStatus().getCode());
-
-			List<?> services = xrd.getSelectedServices().getList();
-			
-			for (Object service : services) {
-
-				if (((Service) service).getNumURIs() > 0) uri = ((Service) service).getURIAt(0).getUriString();
-			}
-
-			if (uri == null) throw new RuntimeException("No XDI endpoint URI.");
-			if (! uri.endsWith("/")) uri += "/";
-		} catch (Exception ex) {
-
-			throw new RuntimeException("The I-Name's XDI endpoint could not be found: " + ex.getMessage());
-		}
-
-		this.logger.info("The I-Number " + inumber + " has been resolved to the URI " + uri, null);
-
-		XdiContext context = new XdiContext(
-				this, 
-				new XDIHttpClient(uri), 
-				iname, 
-				new XRI3Segment(inumber), 
-				password);
+		if (inumber == null) throw new XdiException("The I-Name or its I-Number could not be found.");
+		this.logger.info("The I-Name " + iname + " has been resolved to the I-Number " + inumber + ".", null);
 
 		// done
 
-		log.trace("Done.");
+		return this.resolveContextByInumber(inumber, password);
+	}
+
+	public XdiContext resolveContextByInumber(String inumber, String password) throws XdiException {
+
+		log.trace("resolveContextByInumber()");
+
+		// resolve I-Number
+
+		String endpoint = null;
+
+		try {
+
+			endpoint = this.discovery.resolveXriToEndpoint(inumber);
+		} catch (Exception ex) {
+
+			throw new XdiException("Problem while resolving the I-Number: " + ex.getMessage());
+		}
+
+		if (endpoint == null) throw new XdiException("The XDI endpoint could not be found.");
+		this.logger.info("The I-Number " + inumber + " has been resolved to the XDI endpoint " + endpoint + ".", null);
+
+		// instantiate context
+
+		XdiContext context = new XdiContext(
+				this, 
+				new XDIHttpClient(endpoint), 
+				inumber, 
+				new XRI3Segment(inumber), 
+				password);
+
+		// check password
+
+		if (password != null) context.checkPassword();
+
+		// done
+
 		return context;
+	}
+
+	public XdiContext resolveContextByEndpoint(String endpoint, String password) throws XdiException {
+
+		log.trace("resolveContextByEndpoint()");
+
+		// resolve endpoint
+
+		String inumber = null;
+
+		try {
+
+			XDIClient xdiClient = new XDIHttpClient(endpoint);
+
+			XRI3 operationAddress = new XRI3("$/$is($xdi$v$1)");
+			MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
+			Message message = messageEnvelope.newMessage(MessagingConstants.XRI_SELF);
+			Operation operation = message.createGetOperation();
+			Graph operationGraph = operation.createOperationGraph(null);
+			CopyUtil.copyStatement(Addressing.convertAddressToStatement(operationAddress), operationGraph, null);
+			MessageResult messageResult = this.send(xdiClient, messageEnvelope);
+
+			inumber = Addressing.findReferenceXri(messageResult.getGraph(), operationAddress).toString();
+		} catch (Exception ex) {
+
+			throw new RuntimeException("Problem while resolving the endpoint: " + ex.getMessage());
+		}
+
+		if (inumber == null) throw new XdiException("The I-Number could not be found.");
+		this.logger.info("The XDI endpoint " + endpoint + " has been resolved to the I-Number " + inumber + ".", null);
+
+		// instantiate context
+
+		XdiContext context = new XdiContext(
+				this, 
+				new XDIHttpClient(endpoint), 
+				inumber, 
+				new XRI3Segment(inumber), 
+				password);
+
+		// check password
+
+		if (password != null) context.checkPassword();
+
+		// done
+
+		return context;
+	}
+
+	/*
+	 * Sending methods
+	 */
+
+	public MessageResult send(XDIClient xdiClient, Operation operation) throws XdiException {
+
+		return this.send(xdiClient, operation.getMessage());
+	}
+
+	public MessageResult send(XDIClient xdiClient, Message message) throws XdiException {
+
+		return this.send(xdiClient, message.getMessageEnvelope());
+	}
+
+	public MessageResult send(XDIClient xdiClient, MessageEnvelope messageEnvelope) throws XdiException {
+
+		// send the message envelope
+
+		Date beginTimestamp = new Date();
+		MessageResult messageResult;
+
+		try {
+
+			messageResult = xdiClient.send(messageEnvelope, null);
+
+			if (ErrorMessageResult.isValid(messageResult.getGraph())) {
+
+				messageResult = ErrorMessageResult.fromGraph(messageResult.getGraph());
+				throw new XdiException("Problem from XDI Server: " + ((ErrorMessageResult) messageResult).getErrorString());
+			}
+
+			this.fireXdiTransactionSuccessEvent(new XdiTransactionSuccessEvent(this, messageEnvelope, beginTimestamp, new Date(), messageResult));
+		} catch (Exception ex) {
+
+			if (! (ex instanceof XdiException)) ex = new XdiException("Problem during XDI Transaction: " + ex.getMessage(), ex);
+			this.fireXdiTransactionFailureEvent(new XdiTransactionFailureEvent(this, messageEnvelope, beginTimestamp, new Date(), ex));
+			throw (XdiException) ex;
+		}
+
+		// done
+
+		return messageResult;
 	}
 
 	/*
 	 * Listener methods
 	 */
 
-	public void addXdiListener(XdiListener xdiListener) {
+	public void addXdiListener(XdiTransactionListener xdiListener) {
 
 		if (this.xdiListeners.contains(xdiListener)) return;
 		this.xdiListeners.add(xdiListener);
 	}
 
-	public void removeXdiListener(XdiListener xdiListener) {
+	public void removeXdiListener(XdiTransactionListener xdiListener) {
 
 		this.xdiListeners.remove(xdiListener);
 	}
 
 	public void fireXdiTransactionSuccessEvent(XdiTransactionSuccessEvent transactionSuccessEvent) {
 
-		for (XdiListener storeListener : this.xdiListeners) {
+		for (XdiTransactionListener xdiListener : this.xdiListeners) {
 
-			storeListener.onXdiTransactionSuccess(transactionSuccessEvent);
+			xdiListener.onXdiTransactionSuccess(transactionSuccessEvent);
 		}
 	}
 
 	public void fireXdiTransactionFailureEvent(XdiTransactionFailureEvent transactionFailureEvent) {
 
-		for (XdiListener storeListener : this.xdiListeners) {
+		for (XdiTransactionListener xdiListener : this.xdiListeners) {
 
-			storeListener.onXdiTransactionFailure(transactionFailureEvent);
+			xdiListener.onXdiTransactionFailure(transactionFailureEvent);
 		}
 	}
 }

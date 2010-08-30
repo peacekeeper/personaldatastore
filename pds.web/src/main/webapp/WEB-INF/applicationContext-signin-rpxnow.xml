@@ -5,7 +5,7 @@
 
 	<!-- RpxnowSignInMethod -->
 
-	<bean id="rpxnowSignUpMethod" class="pds.web.signin.rpxnow.RpxnowSignInMethod">
+	<bean id="rpxnowSignInMethod" class="pds.web.signin.rpxnow.RpxnowSignInMethod">
 	
 		<!-- The RPXnow URL. -->
 		<!-- You should not have to change this. -->

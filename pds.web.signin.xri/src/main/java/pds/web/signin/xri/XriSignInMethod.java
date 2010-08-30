@@ -10,6 +10,12 @@ public class XriSignInMethod implements SignInMethod {
 	private List<XriSignUpMethod> xriSignUpMethods;
 
 	@Override
+	public String getMethodName() {
+		
+		return "I-Name Sign-In";
+	}
+
+	@Override
 	public Panel newPanel() {
 
 		XriSignInPanel xriSignPanel = new XriSignInPanel();

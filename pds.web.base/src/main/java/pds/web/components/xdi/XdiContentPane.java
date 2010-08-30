@@ -27,8 +27,8 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 
 import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;
+import pds.web.xdi.XdiContext;
 import pds.web.xdi.XdiException;
-import pds.web.xdi.objects.XdiContext;
 
 public class XdiContentPane extends ContentPane {
 
@@ -77,10 +77,10 @@ public class XdiContentPane extends ContentPane {
 
 			MessageResult messageResult = this.context.send(operation);
 
-			String httpUri = this.context.getUri();
+			String httpEndpoint = this.context.getEndpoint();
 
 			this.xdiAddressLabel.setText(this.mainAddress == null ? "" : this.mainAddress.toString());
-			this.httpAddressLabel.setText(httpUri + (this.mainAddress == null ? "" : this.mainAddress.toString()));
+			this.httpAddressLabel.setText(httpEndpoint + (this.mainAddress == null ? "" : this.mainAddress.toString()));
 			this.graphContentPane.setGraph(messageResult.getGraph());
 		} catch (XdiException ex) {
 

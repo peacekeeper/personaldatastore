@@ -41,9 +41,10 @@
 </c>
 <c i="Component_label5" t="nextapp.echo.app.Label">
 <p n="styleName">Default</p>
-<p n="text">URI:</p>
+
+<p n="text">Endpoint:</p>
 </c>
-<c i="Component_uriTextField" t="nextapp.echo.app.Label" vis="private">
+<c i="Component_endpointTextField" t="nextapp.echo.app.Label" vis="private">
 
 <p n="text">...</p>
 

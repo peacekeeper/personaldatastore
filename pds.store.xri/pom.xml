@@ -64,6 +64,10 @@
 					<groupId>org.apache.derby</groupId>
 					<artifactId>derby</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>mysql</groupId>
+					<artifactId>mysql-connector-java</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>

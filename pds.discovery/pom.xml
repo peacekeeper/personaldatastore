@@ -56,5 +56,11 @@
 			<version>1.2.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.higgins</groupId>
+			<artifactId>xdi4j</artifactId>
+			<version>1.0.800</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 </project>

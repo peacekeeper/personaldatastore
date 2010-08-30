@@ -1,6 +1,6 @@
 package pds.web.xdi.events;
 
-public interface XdiListener {
+public interface XdiTransactionListener {
 
 	public void onXdiTransactionSuccess(XdiTransactionSuccessEvent xdiTransactionSuccessEvent);
 	public void onXdiTransactionFailure(XdiTransactionFailureEvent xdiTransactionFailureEvent);

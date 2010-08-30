@@ -11,6 +11,12 @@ public class RpxnowSignInMethod implements SignInMethod {
 	private String endpoint;
 
 	@Override
+	public String getMethodName() {
+		
+		return "OpenID Sign-In";
+	}
+
+	@Override
 	public Panel newPanel() {
 
 		RpxnowSignInPanel rpxnowSignPanel = new RpxnowSignInPanel();

@@ -24,7 +24,7 @@ import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
 import pds.web.ui.html.HtmlWindowPane;
 import pds.web.xdi.Xdi;
-import pds.web.xdi.objects.XdiContext;
+import pds.web.xdi.XdiContext;
 
 public class XriSignInPanel extends Panel {
 
@@ -77,12 +77,11 @@ public class XriSignInPanel extends Panel {
 		String password = this.passwordField.getText();
 		if (password == null || password.trim().equals("")) return;
 
-		// try to open the context
+		// resolve the i-name, instantiate context and check password
 
 		try {
 
-			XdiContext context = xdi.resolveContext(iname, password);
-			context.checkPassword();
+			XdiContext context = xdi.resolveContextByIname(iname, password);
 
 			PDSApplication.getApp().openContext(context);
 		} catch (Exception ex) {

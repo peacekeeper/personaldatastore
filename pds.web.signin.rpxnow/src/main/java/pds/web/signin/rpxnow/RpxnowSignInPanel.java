@@ -25,7 +25,7 @@ import pds.web.signin.rpxnow.rpx.Rpx;
 import pds.web.tools.util.XmlUtils;
 import pds.web.ui.MessageDialog;
 import pds.web.xdi.Xdi;
-import pds.web.xdi.objects.XdiContext;
+import pds.web.xdi.XdiContext;
 
 public class RpxnowSignInPanel extends Panel implements ExternalCallReceiver {
 
