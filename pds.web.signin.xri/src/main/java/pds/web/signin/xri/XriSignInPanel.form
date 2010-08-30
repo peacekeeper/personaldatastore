@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_contentPane1" t="nextapp.echo.app.Panel">
+
+<p n="insets">10px</p>
+<p n="overflow">1</p>
+
+<c i="Component_column2" t="nextapp.echo.app.Column">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<c i="Component_label4" t="nextapp.echo.app.Label">
+
+
+
+<p n="text">Enter your I-Name / Password:</p>
+<p n="styleName">Header</p>
+</c>
+<c i="Component_grid2" t="nextapp.echo.app.Grid">
+<c i="Component_label1" t="nextapp.echo.app.Label">
+
+<p n="styleName">Default</p>
+<p n="text">I-Name:</p>
+</c>
+<c i="Component_inameTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+
+<e t="action">
+<h n="actionPerformed" v="onOpenActionPerformed"/>
+</e>
+<p n="width">100%</p>
+</c>
+<c i="Component_label6" t="nextapp.echo.app.Label">
+<p n="text">Password:</p>
+<p n="styleName">Default</p>
+</c>
+
+<c i="Component_passwordField" t="nextapp.echo.app.PasswordField" vis="private">
+<p n="styleName">Default</p>
+
+<e t="action">
+<h n="actionPerformed" v="onOpenActionPerformed"/>
+</e>
+<p n="width">100%</p>
+<p n="layoutData" t="nextapp.echo.app.layout.GridLayoutData">
+<p n="insets">10px 0px 0px 0px</p>
+</p>
+</c>
+
+<p n="width">100%</p>
+<p n="columnWidth" x="0">150px</p>
+</c>
+
+
+
+
+<p n="cellSpacing">10px</p>
+
+<c i="Component_row2" t="nextapp.echo.app.Row">
+
+<c i="Component_button2" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+
+<e t="action">
+<h n="actionPerformed" v="onOpenActionPerformed"/>
+</e>
+
+<p n="text">Open Personal Data Store</p>
+</c>
+
+
+
+
+<p n="alignment">
+<a h="right"/>
+</p>
+<p n="cellSpacing">10px</p>
+<p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+<p n="maximumSize">40px</p>
+<p n="minimumSize">40px</p>
+<p n="overflow">nextapp.echo.app.layout.SplitPaneLayoutData.OVERFLOW_HIDDEN</p>
+</p>
+</c>
+<c i="Component_button1" t="nextapp.echo.app.Button">
+
+
+<e t="action">
+<h n="actionPerformed" v="onWhatInamesActionPerformed"/>
+</e>
+
+
+<p n="styleName">Plain</p>
+
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/tooltip.png</p>
+<p n="text">What are I-Names?</p>
+</c>
+<c i="Component_xriSignUpPanelColumn" t="nextapp.echo.app.Column" vis="private"/>
+</c>
+</c>
+</form>
