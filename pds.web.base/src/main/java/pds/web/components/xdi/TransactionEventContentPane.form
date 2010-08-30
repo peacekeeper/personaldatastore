@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_contentPane1" t="nextapp.echo.app.ContentPane">
+
+<p n="insets">10px</p>
+
+
+<c i="Component_splitPane1" t="nextapp.echo.app.SplitPane">
+<p n="styleName">Default</p>
+<c i="Component_column1" t="nextapp.echo.app.Column">
+<c i="Component_row1" t="nextapp.echo.app.Row">
+<p n="border">3px solid #000000</p>
+<p n="cellSpacing">10px</p>
+<c i="Component_label1" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+
+<p n="layoutData" t="nextapp.echo.app.layout.RowLayoutData">
+<p n="insets">10px</p>
+</p>
+<p n="text">This window displays a raw XDI transaction with your Personal Data Store.</p>
+</c>
+</c>
+<p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+<p n="overflow">nextapp.echo.app.layout.SplitPaneLayoutData.OVERFLOW_HIDDEN</p>
+
+
+
+
+<p n="maximumSize">75px</p>
+<p n="minimumSize">75px</p>
+</p>
+<c i="Component_row2" t="nextapp.echo.app.Row">
+<c i="Component_label2" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+
+<p n="text">Start:</p>
+</c>
+<c i="Component_beginTimestampLabel" t="nextapp.echo.app.Label" vis="private">
+
+<p n="text">...</p>
+<p n="styleName">Bold</p>
+</c>
+<p n="cellSpacing">10px</p>
+<c i="Component_label3" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+
+<p n="text">End:</p>
+</c>
+<c i="Component_endTimestampLabel" t="nextapp.echo.app.Label" vis="private">
+
+<p n="text">...</p>
+<p n="styleName">Bold</p>
+</c>
+<c i="Component_label4" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+
+<p n="text">Duration:</p>
+</c>
+<c i="Component_durationLabel" t="nextapp.echo.app.Label" vis="private">
+
+<p n="text">...</p>
+<p n="styleName">Bold</p>
+</c>
+</c>
+<p n="cellSpacing">10px</p>
+</c>
+<c i="Component_tabPane1" t="nextapp.echo.extras.app.TabPane">
+<c i="Component_messageEnvelopeTab" t="nextapp.echo.app.ContentPane" vis="private">
+<p n="layoutData" t="nextapp.echo.extras.app.layout.TabPaneLayoutData">
+
+
+
+
+<p n="title">XDI Request</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/xdi-request.png</p>
+</p>
+
+<c i="Component_messageEnvelopeGraphContentPane" t="pds.web.components.xdi.GraphContentPane" vis="private"/>
+</c>
+<c i="Component_messageResultTab" t="nextapp.echo.app.ContentPane" vis="private">
+<p n="layoutData" t="nextapp.echo.extras.app.layout.TabPaneLayoutData">
+
+
+
+
+<p n="title">XDI Response</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/xdi-response.png</p>
+</p>
+
+
+
+<c i="Component_messageResultGraphContentPane" t="pds.web.components.xdi.GraphContentPane" vis="private"/>
+</c>
+<p n="styleName">Default</p>
+
+<c i="Component_exceptionTab" t="nextapp.echo.app.ContentPane" vis="private">
+<p n="layoutData" t="nextapp.echo.extras.app.layout.TabPaneLayoutData">
+
+
+
+
+
+
+
+<p n="title">XDI Error</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/xdi-exception.png</p>
+</p>
+
+
+
+
+
+<c i="Component_column2" t="nextapp.echo.app.Column">
+<c i="Component_exceptionLabel" t="nextapp.echo.app.Label" vis="private">
+
+<p n="styleName">Bold</p>
+
+<p n="text">...</p>
+</c>
+</c>
+<p n="insets">5px 0px 0px 0px</p>
+</c>
+
+
+</c>
+<p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM</p>
+<p n="separatorVisible">false</p>
+<p n="separatorHeight">10px</p>
+</c>
+</c>
+</form>

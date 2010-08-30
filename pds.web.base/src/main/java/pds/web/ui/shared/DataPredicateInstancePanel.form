@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_panel1" t="nextapp.echo.app.Panel">
+
+
+
+
+
+
+<c i="Component_row1" t="nextapp.echo.app.Row">
+
+<c i="Component_xdiPanel" t="pds.web.components.xdi.XdiPanel" vis="private"/>
+
+
+<p n="cellSpacing">10px</p>
+<c i="Component_valueLabel" t="nextapp.echo.app.Label" vis="private">
+<p n="styleName">Default</p>
+<p n="text">...</p>
+</c>
+<c i="Component_valueTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<e t="action">
+<h n="actionPerformed" v="onUpdateActionPerformed"/>
+</e>
+<p n="visible">false</p>
+</c>
+<c i="Component_editButton" t="nextapp.echo.app.Button" vis="private">
+
+
+<e t="action">
+<h n="actionPerformed" v="onEditActionPerformed"/>
+</e>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/op-edit.png</p>
+<p n="styleName">Plain</p>
+</c>
+<c i="Component_updateButton" t="nextapp.echo.app.Button" vis="private">
+
+
+<e t="action">
+<h n="actionPerformed" v="onUpdateActionPerformed"/>
+</e>
+<p n="visible">false</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/op-ok.png</p>
+<p n="styleName">Plain</p>
+</c>
+<c i="Component_deleteButton" t="nextapp.echo.app.Button" vis="private">
+
+
+<e t="action">
+<h n="actionPerformed" v="onDeleteActionPerformed"/>
+</e>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/op-cancel.png</p>
+<p n="styleName">Plain</p>
+</c>
+</c>
+
+
+<p n="insets">0px 0px 5px 30px</p>
+</c>
+</form>

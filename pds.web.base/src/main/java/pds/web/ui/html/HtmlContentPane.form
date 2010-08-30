@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_contentPane1" t="nextapp.echo.app.ContentPane">
+
+
+
+<c i="Component_splitPane1" t="nextapp.echo.app.SplitPane">
+<p n="styleName">Default</p>
+<c i="Component_httpPane1" t="echopoint.HttpPane">
+<p n="width">100%</p>
+<p n="height">100%</p>
+<p n="id">httpPane</p>
+</c>
+<c i="Component_row1" t="nextapp.echo.app.Row">
+<c i="Component_button1" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+<p n="text">Close Window</p>
+<e t="action">
+<h n="actionPerformed" v="onCloseActionPerformed"/>
+</e>
+</c>
+<p n="alignment">
+<a h="right"/>
+</p>
+<p n="insets">10px</p>
+<p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+<p n="maximumSize">60px</p>
+<p n="minimumSize">60px</p>
+</p>
+</c>
+<p n="separatorVisible">false</p>
+<p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM</p>
+</c>
+</c>
+</form>

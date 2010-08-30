@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_contentPane1" t="nextapp.echo.app.ContentPane">
+
+<p n="insets">10px</p>
+<p n="overflow">1</p>
+
+<c i="Component_signInContentPaneColumn" t="nextapp.echo.app.Column" vis="private"/>
+</c>
+</form>

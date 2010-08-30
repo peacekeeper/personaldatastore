@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_panel1" t="echopoint.jquery.TooltipContainer">
+<c i="Component_imageIcon7" t="echopoint.ImageIcon">
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/tooltip.png</p>
+<p n="height">24px</p>
+<p n="width">24px</p>
+</c>
+<c i="Component_panel9" t="nextapp.echo.app.Panel">
+
+<p n="styleName">Tooltip</p>
+<c i="Component_label1" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">TOOLTIP HERE</p>
+</c>
+</c>
+</c>
+</form>

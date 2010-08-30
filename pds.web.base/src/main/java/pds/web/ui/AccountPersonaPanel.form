@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_panel1" t="nextapp.echo.app.Panel">
+
+
+<c i="Component_button" t="nextapp.echo.app.Button" vis="private">
+
+<e t="action">
+<h n="actionPerformed" v="onButtonActionPerformed"/>
+</e>
+<p n="text">...</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/accountpersona.png</p>
+<p n="styleName">PlainWhite</p>
+</c>
+
+<p n="insets">10px</p>
+</c>
+</form>

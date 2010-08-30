@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_panel1" t="nextapp.echo.app.Panel">
+
+
+
+
+<c i="Component_row1" t="nextapp.echo.app.Row">
+<c i="Component_timestampLabel" t="nextapp.echo.app.Label" vis="private">
+<p n="styleName">Default</p>
+<p n="text">...</p>
+<p n="font">
+<f sz="10pt">
+<tf>Courier New</tf>
+<tf> monospace</tf>
+</f>
+</p>
+</c>
+<c i="Component_button" t="nextapp.echo.app.Button" vis="private">
+
+<e t="action">
+<h n="actionPerformed" v="onButtonActionPerformed"/>
+</e>
+
+
+<p n="styleName">Plain</p>
+</c>
+<p n="cellSpacing">10px</p>
+
+<c i="Component_summaryLabel" t="nextapp.echo.app.Label" vis="private">
+<p n="styleName">Default</p>
+<p n="text">...</p>
+</c>
+</c>
+</c>
+</form>

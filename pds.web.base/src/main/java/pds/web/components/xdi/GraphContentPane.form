@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_contentPane1" t="nextapp.echo.app.ContentPane">
+<c i="Component_column1" t="nextapp.echo.app.Column">
+
+<c i="Component_row1" t="nextapp.echo.app.Row">
+<c i="Component_button2" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+<p n="text">X3 Simple</p>
+<e t="action">
+<h n="actionPerformed" v="onX3SimpleActionPerformed"/>
+</e>
+</c>
+<c i="Component_button1" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+<p n="text">X3 Standard</p>
+<e t="action">
+<h n="actionPerformed" v="onX3StandardActionPerformed"/>
+</e>
+</c>
+
+<c i="Component_button3" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+<p n="text">X3J</p>
+<e t="action">
+<h n="actionPerformed" v="onX3JActionPerformed"/>
+</e>
+</c>
+<c i="Component_button4" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+<p n="text">XDI/XML</p>
+<e t="action">
+<h n="actionPerformed" v="onXDIXMLActionPerformed"/>
+</e>
+</c>
+<p n="cellSpacing">10px</p>
+</c>
+
+
+<p n="cellSpacing">10px</p>
+<c i="Component_htmlLabel" t="pds.web.components.HtmlLabel" vis="private">
+
+
+
+
+<p n="html">&lt;div style="white-space:nowrap;font-family:monospace;"&gt;&lt;pre&gt;&lt;!-- $$$ --&gt;&lt;/pre&gt;&lt;/div&gt;</p>
+</c>
+</c>
+<p n="insets">10px</p>
+</c>
+</form>

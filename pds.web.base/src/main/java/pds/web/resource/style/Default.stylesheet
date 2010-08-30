@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ss>
+    <s n="ControlPane" t="nextapp.echo.app.Row">
+        <p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+            <p n="overflow" t="i">nextapp.echo.app.layout.SplitPaneLayoutData.OVERFLOW_HIDDEN</p>
+            <p n="background" t="Color">#cfcfdf</p>
+            <p n="backgroundImage" t="FillImage">
+                <fi r="x" t="r" y="50%">
+                    <i r="/pds/web/resource/image/fill/ControlPaneFill.png"/>
+                </fi>
+            </p>
+        </p>
+        <p n="insets" t="Insets">0px 9px</p>
+        <p n="cellSpacing" t="Extent">3px</p>
+    </s>
+    <s n="ControlPane.Button" t="nextapp.echo.app.button.AbstractButton">
+        <p n="lineWrap" t="b">false</p>
+        
+        <p n="foreground" t="Color">#000000</p>
+        <p n="rolloverEnabled" t="b">true</p>
+        <p n="rolloverForeground" t="Color">#ffffff</p>
+        
+        <p n="rolloverBackgroundImage" t="FillImage">
+            <fi r="x" t="r" y="50%">/pds/web/resource/image/fill/ControlPaneHighlight.png</fi>
+        </p>
+        <p n="pressedEnabled" t="b">true</p>
+        <p n="pressedForeground" t="Color">#dfffff</p>
+        
+        <p n="pressedBackgroundImage" t="FillImage">
+            <fi r="x" t="r" y="50%">/pds/web/resource/image/fill/ControlPaneHighlightLight.png</fi>
+        </p>
+    <p n="insets">5px 15px</p>
+<p n="pressedBackground">#808080</p>
+<p n="rolloverBackground">#808080</p>
+</s>
+    <s n="Red" t="nextapp.echo.app.WindowPane">
+        <p n="ieAlphaRenderBorder" t="b">true</p>
+        <p n="titleForeground" t="Color">#ffffff</p>
+        
+        <p n="titleInsets" t="Insets">5px 10px</p>
+        <p n="border" t="FillImageBorder">
+            <fib bi="17px 23px 23px 17px" ci="8px 14px 14px 8px">
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/red/BorderTopLeft.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/red/BorderTop.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/red/BorderTopRight.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/red/BorderLeft.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/red/BorderRight.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/red/BorderBottomLeft.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/red/BorderBottom.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/red/BorderBottomRight.png"/>
+                </fi>
+            </fib>
+        </p>
+        <p n="titleBackgroundImage" t="FillImage">
+            <fi r="x" t="r" y="50%">
+                <i r="/pds/web/resource/image/window/red/Header.png"/>
+            </fi>
+        </p>
+    <p n="titleBackground">#ffffff</p>
+</s>
+    <s n="Glass" t="nextapp.echo.app.WindowPane">
+        <p n="ieAlphaRenderBorder" t="b">true</p>
+        <p n="titleForeground" t="Color">#ffffff</p>
+        <p n="titleInsets" t="Insets">5px 10px</p>
+        
+        <p n="border" t="FillImageBorder">
+            <fib bi="34px 20px 20px 20px" ci="6px 15px 15px 12px">
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/glass/BorderTopLeft.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/glass/BorderTop.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/glass/BorderTopRight.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/glass/BorderLeft.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/glass/BorderRight.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/glass/BorderBottomLeft.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/glass/BorderBottom.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/glass/BorderBottomRight.png"/>
+                </fi>
+            </fib>
+        </p>
+        
+    
+<p n="titleFont">
+<f sz="12pt">
+<tf>sans-serif</tf>
+</f>
+</p>
+<p n="titleBackgroundImage">
+<fi r="x" t="nextapp.echo.app.ResourceImageReference" y="100%">/pds/web/resource/image/window/glass/Header.png</fi>
+</p>
+</s>
+    <s n="Trans" t="nextapp.echo.app.WindowPane">
+        <p n="ieAlphaRenderBorder" t="b">true</p>
+        <p n="titleForeground" t="Color">#ffffff</p>
+        <p n="titleInsets" t="Insets">5px 10px</p>
+        <p n="titleBackgroundImage" t="FillImage">
+            <fi r="x" t="r" y="100%">
+                <i r="/pds/web/resource/image/window/trans/Header.png"/>
+            </fi>
+        </p>
+        <p n="border" t="FillImageBorder">
+            <fib bi="34px 20px 20px 20px" ci="6px 15px 15px 12px">
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/trans/BorderTopLeft.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/trans/BorderTop.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/trans/BorderTopRight.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/trans/BorderLeft.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/trans/BorderRight.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/trans/BorderBottomLeft.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/trans/BorderBottom.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/trans/BorderBottomRight.png"/>
+                </fi>
+            </fib>
+        </p>
+        <p n="titleFont" t="Font">
+            <f bo="1" it="1" sz="10pt">
+                <tf>sans-serif</tf>
+            </f>
+        </p>
+    </s>
+    <s n="Default" t="nextapp.echo.app.text.TextComponent">
+        
+        <p n="border" t="Border">2px groove #cfdfff</p>
+        <p n="backgroundImage" t="FillImage">
+            <fi t="r" y="50%">
+                <i r="/pds/web/resource/image/fill/GlassFill.png"/>
+            </fi>
+        </p>
+    
+<p n="verticalScroll">50px</p>
+
+<p n="insets">5px</p>
+<p n="font">
+<f bo="true" sz="12pt">
+<tf>Arial</tf>
+<tf> sans-serif</tf>
+</f>
+</p>
+<p n="background">#cfdfff</p>
+</s>
+    <s b="Default" n="Default.100" t="nextapp.echo.app.text.TextComponent">
+        <p n="width">100%</p>
+    
+<p n="font">
+<f sz="10pt">
+<tf>Arial</tf>
+<tf> sans-serif</tf>
+</f>
+</p>
+</s>
+    <s n="Default" t="nextapp.echo.app.Button">
+        <p n="background">#e7e7e7</p>
+        <p n="border">2px groove #e7e7e7</p>
+        
+        <p n="foreground">#000000</p>
+        <p n="focusedEnabled">true</p>
+        <p n="pressedEnabled">true</p>
+        <p n="rolloverBackground">#ffffff</p>
+        <p n="rolloverBorder">2px groove #ffffff</p>
+        
+        <p n="rolloverEnabled">true</p>
+        <p n="disabledForeground">#afafaf</p>
+        <p n="disabledBackground">#dcdcdc</p>
+        <p n="disabledBorder">2px groove #dcdcdc</p>
+        
+        <p n="pressedBackground">#bec1cb</p>
+    <p n="insets">5px 10px</p>
+<p n="focusedBorder">2px groove #808080</p>
+<p n="pressedBorder">2px inset #c0c0c0</p>
+</s>
+    <s n="Default" t="nextapp.echo.app.SplitPane">
+        
+        
+        
+        
+    <p n="separatorHeight">10px</p>
+<p n="separatorWidth">10px</p>
+
+
+</s>
+    <s b="Default" n="Selection" t="nextapp.echo.app.Table">
+        <p n="rolloverEnabled" t="b">true</p>
+        <p n="selectionEnabled" t="b">true</p>
+        
+        <p n="selectionBackground" t="Color">#ffdf8f</p>
+    <p n="rolloverBackground">#c0c0c0</p>
+</s>
+    <s n="Default" t="nextapp.echo.app.Table">
+        <p n="insets" t="Insets">1px 8px</p>
+        
+    <p n="border">2px groove #c0c0c0</p>
+</s>
+    <s n="Layout.Spaced" t="nextapp.echo.app.Column">
+        <p n="cellSpacing" t="Extent">10px</p>
+    </s>
+    <s n="Layout.Spaced" t="nextapp.echo.app.Row">
+        <p n="cellSpacing" t="Extent">10px</p>
+    </s>
+    <s b="Layout.Spaced" n="Layout.Spaced.Border" t="nextapp.echo.app.Column">
+        
+        <p n="insets" t="Insets">3px 8px</p>
+    <p n="border">2px groove #808080</p>
+</s>
+    <s b="Layout.Spaced" n="Layout.Spaced.Border" t="nextapp.echo.app.Row">
+        
+        <p n="insets" t="Insets">3px 8px</p>
+    <p n="border">2px groove #808080</p>
+</s>
+    <s n="Layout.Spaced" t="nextapp.echo.app.Grid">
+        <p n="insets" t="Insets">2px 5px</p>
+    </s>
+    <s b="Layout.Spaced" n="Layout.Spaced.Border" t="nextapp.echo.app.Grid">
+        
+    <p n="border">2px groove #808080</p>
+</s>
+    <s n="LayoutGrid.HeaderLabel" t="nextapp.echo.app.Label">
+        <p n="layoutData" t="nextapp.echo.app.layout.GridLayoutData">
+            <p n="columnSpan">-1</p>
+            <p n="backgroundImage" t="FillImage">
+                <fi t="r" y="50%">
+                    <i r="/pds/web/resource/image/fill/GlassFill.png"/>
+                </fi>
+            </p>
+        </p>
+        <p n="font" t="Font">
+            <f bo="1" it="1" sz="10pt"/>
+        </p>
+    </s>
+
+<s n="Default" t="nextapp.echo.app.Label">
+
+<p n="font">
+<f sz="10pt">
+<tf>Arial</tf>
+<tf> sans-serif</tf>
+</f>
+</p>
+</s>
+<s n="Plain" t="nextapp.echo.app.Button">
+
+
+
+<p n="insets">0px</p>
+<p n="foreground">#000000</p>
+
+<p n="font">
+<f sz="10pt" un="true">
+<tf>Arial</tf>
+<tf> sans-serif</tf>
+</f>
+</p>
+</s>
+<s n="Log" t="nextapp.echo.app.TextArea">
+<p n="font">
+<f sz="10pt">
+<tf>Courier New</tf>
+<tf> Courier</tf>
+<tf> monospace</tf>
+</f>
+</p>
+</s>
+<s n="TaskHeader" t="nextapp.echo.app.Label">
+<p n="font">
+<f bo="true" it="true" sz="14pt">
+<tf>Arial</tf>
+<tf> sans-serif</tf>
+</f>
+</p>
+</s>
+<s n="TaskButton" t="nextapp.echo.app.Button">
+<p n="width">250px</p>
+
+
+
+
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/gear.png</p>
+<p n="rolloverEnabled">true</p>
+<p n="pressedEnabled">true</p>
+<p n="focusedEnabled">true</p>
+<p n="focusedForeground">#ffffff</p>
+<p n="pressedForeground">#ffffff</p>
+<p n="rolloverForeground">#ffffff</p>
+</s>
+<s n="PlainWhite" t="nextapp.echo.app.Button">
+<p n="foreground">#ffffff</p>
+
+<p n="font">
+<f sz="10pt">
+<tf>Arial</tf>
+<tf> sans-serif</tf>
+</f>
+</p>
+</s>
+<s n="Default" t="nextapp.echo.extras.app.TabPane">
+<p n="tabActiveBorder">3px solid #000000</p>
+<p n="tabInactiveBorder">3px solid #c0c0c0</p>
+<p n="tabPosition">nextapp.echo.extras.app.TabPane.TAB_POSITION_TOP</p>
+<p n="tabSpacing">10px</p>
+<p n="tabAlignment">
+<a h="center" v="center"/>
+</p>
+</s>
+<s n="Default" t="nextapp.echo.extras.app.AccordionPane">
+<p n="tabBackground">#ffffff</p>
+<p n="tabInsets">10px</p>
+
+<p n="tabForeground">#c0c0c0</p>
+</s>
+<s n="Tooltip" t="nextapp.echo.app.Panel">
+
+
+<p n="border">2px solid #000000</p>
+<p n="insets">10px</p>
+
+<p n="width">400px</p>
+
+
+<p n="foreground">#000000</p>
+<p n="background">#ffffff</p>
+</s>
+<s n="Intro" t="nextapp.echo.app.Row">
+
+<p n="cellSpacing">10px</p>
+<p n="border">3px solid #000000</p>
+</s>
+<s n="Gray" t="nextapp.echo.app.WindowPane">
+        <p n="ieAlphaRenderBorder" t="b">true</p>
+        <p n="titleForeground" t="Color">#ffffff</p>
+        
+        <p n="titleInsets" t="Insets">5px 10px</p>
+        
+        
+    <p n="border">
+<fib bi="17px 23px 23px 17px" ci="8px 14px 14px 8px">
+<fi r="xy" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/window/gray/BorderTopLeft.png</fi>
+<fi r="xy" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/window/gray/BorderTop.png</fi>
+<fi r="xy" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/window/gray/BorderTopRight.png</fi>
+<fi r="xy" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/window/gray/BorderLeft.png</fi>
+<fi r="xy" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/window/gray/BorderRight.png</fi>
+<fi r="xy" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/window/gray/BorderBottomLeft.png</fi>
+<fi r="xy" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/window/gray/BorderBottom.png</fi>
+<fi r="xy" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/window/gray/BorderBottomRight.png</fi>
+</fib>
+</p>
+<p n="titleBackgroundImage">
+<fi r="x" t="nextapp.echo.app.ResourceImageReference" y="50%">/pds/web/resource/image/window/gray/Header.png</fi>
+</p>
+<p n="titleBackground">#3f3f3f</p>
+</s>
+<s b="Default" n="Bold" t="nextapp.echo.app.Label">
+<p n="font">
+<f bo="true" sz="10pt">
+<tf>Arial</tf>
+<tf> sans-serif</tf>
+</f>
+</p>
+</s>
+<s b="Default" n="Header" t="nextapp.echo.app.Label">
+<p n="font">
+<f bo="true" sz="12pt">
+<tf>Arial</tf>
+<tf> sans-serif</tf>
+</f>
+</p>
+</s>
+<s n="Default" t="nextapp.echo.app.TextArea">
+
+<p n="font">
+<f bo="true" sz="10pt">
+<tf>Courier New</tf>
+<tf> monospace</tf>
+</f>
+</p>
+</s>
+<s n="Blue" t="nextapp.echo.app.WindowPane">
+        <p n="ieAlphaRenderBorder" t="b">true</p>
+        <p n="titleForeground" t="Color">#ffffff</p>
+        
+        <p n="titleInsets" t="Insets">5px 10px</p>
+        <p n="border" t="FillImageBorder">
+            <fib bi="17px 23px 23px 17px" ci="8px 14px 14px 8px">
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/blue/BorderTopLeft.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/blue/BorderTop.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/blue/BorderTopRight.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/blue/BorderLeft.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/blue/BorderRight.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/blue/BorderBottomLeft.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/blue/BorderBottom.png"/>
+                </fi>
+                <fi t="r">
+                    <i r="/pds/web/resource/image/window/blue/BorderBottomRight.png"/>
+                </fi>
+            </fib>
+        </p>
+        <p n="titleBackgroundImage" t="FillImage">
+            <fi r="x" t="r" y="50%">
+                <i r="/pds/web/resource/image/window/blue/Header.png"/>
+            </fi>
+        </p>
+    <p n="titleBackground">#ffffff</p>
+</s>
+<s n="Feedback" t="nextapp.echo.app.Label">
+
+<p n="font">
+<f it="true" sz="12pt">
+<tf>Arial</tf>
+</f>
+</p>
+</s>
+<s n="Optional" t="nextapp.echo.app.Label">
+
+<p n="foreground">#7f7f7f</p>
+</s>
+</ss>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_panel1" t="nextapp.echo.app.Panel">
+
+
+
+
+
+
+<c i="Component_row1" t="nextapp.echo.app.Row">
+
+<c i="Component_xdiPanel" t="pds.web.components.xdi.XdiPanel" vis="private">
+<p n="layoutData" t="nextapp.echo.app.layout.RowLayoutData">
+<p n="alignment">
+<a v="center"/>
+</p>
+</p>
+</c>
+
+
+<p n="cellSpacing">10px</p>
+<c i="Component_imageIcon1" t="echopoint.ImageIcon">
+
+
+
+
+
+
+
+
+
+
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/friend.png</p>
+<p n="height">48px</p>
+<p n="width">48px</p>
+</c>
+
+
+
+
+<c i="Component_friendButton" t="nextapp.echo.app.Button" vis="private">
+
+<p n="styleName">Plain</p>
+<p n="text">...</p>
+<e t="action">
+<h n="actionPerformed" v="onFriendActionPerformed"/>
+</e>
+</c>
+<c i="Component_deleteButton" t="nextapp.echo.app.Button" vis="private">
+
+
+<e t="action">
+<h n="actionPerformed" v="onDeleteActionPerformed"/>
+</e>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/op-cancel.png</p>
+<p n="styleName">Plain</p>
+<p n="layoutData" t="nextapp.echo.app.layout.RowLayoutData">
+<p n="alignment">
+<a v="center"/>
+</p>
+</p>
+</c>
+
+</c>
+</c>
+</form>
