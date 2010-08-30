@@ -14,6 +14,10 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+			</plugin>
+			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
 				<configuration>
@@ -31,6 +35,11 @@
 							<value>false</value>
 						</systemproperty>
 					</systemproperties>
+					<webAppConfig>
+						<baseResource implementation="org.mortbay.resource.ResourceCollection">
+							<resources>src/main/webapp</resources>
+						</baseResource>
+					</webAppConfig>
 				</configuration>
 				<dependencies>
 					<dependency>
