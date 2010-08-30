@@ -3,25 +3,31 @@ package pds.core.xri.messagingtargets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.higgins.xdi4j.Literal;
 import org.eclipse.higgins.xdi4j.Predicate;
 import org.eclipse.higgins.xdi4j.Subject;
 import org.eclipse.higgins.xdi4j.exceptions.MessagingException;
 import org.eclipse.higgins.xdi4j.messaging.Message;
-import org.eclipse.higgins.xdi4j.messaging.authn.impl.PasswordMessageAuthenticator;
-import org.eclipse.higgins.xdi4j.messaging.authn.impl.PasswordMessageAuthenticator.PasswordValidator;
 import org.eclipse.higgins.xdi4j.messaging.server.EndpointRegistry;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceHandler;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceMessagingTarget;
-import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.ProtectedAddressInterceptor;
+import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.authn.PasswordAuthenticationMessageInterceptor;
+import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.authn.PasswordAuthenticationMessageInterceptor.PasswordValidator;
+import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.authz.ProtectedAddressInterceptor;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.xri.XriPdsInstance;
 import pds.store.user.StoreUtil;
 import pds.store.user.User;
+import pds.store.xri.Xri;
+import pds.store.xri.XriStore;
 
 public class XriResourceMessagingTarget extends ResourceMessagingTarget {
+
+	private static Log log = LogFactory.getLog(ResourceMessagingTarget.class.getName());
 
 	private XriPdsInstance pdsInstance;
 
@@ -35,29 +41,54 @@ public class XriResourceMessagingTarget extends ResourceMessagingTarget {
 
 		super.init(endpointRegistry);
 
-		// add a PasswordMessageAuthenticator
+		// add a PasswordAuthenticationMessageInterceptor
 
-		PasswordMessageAuthenticator passwordMessageAuthenticator = new PasswordMessageAuthenticator();
-		passwordMessageAuthenticator.setPasswordValidator(new PasswordValidator() {
+		PasswordAuthenticationMessageInterceptor passwordAuthenticationMessageInterceptor = new PasswordAuthenticationMessageInterceptor();
+		passwordAuthenticationMessageInterceptor.setPasswordValidator(new PasswordValidator() {
 
-			public boolean isValidPassword(XRI3Segment senderXri, String password) {
+			public boolean isValidPassword(XRI3Segment senderXri3, String password) throws MessagingException {
+
+				XriStore xriStore = XriResourceMessagingTarget.this.pdsInstance.getPdsInstanceFactory().getXriStore();
+				pds.store.user.Store userStore = XriResourceMessagingTarget.this.pdsInstance.getPdsInstanceFactory().getUserStore();
+
+				Xri senderXri = null;
+				String senderUserIdentifier = null;
+				User senderUser = null;
+
+				// find sender xri and user
+
+				try {
+
+					senderXri = xriStore.findXri(senderXri3.toString());
+
+					if (senderXri != null) senderUserIdentifier = senderXri.getUserIdentifier();
+					if (senderUserIdentifier != null) senderUser = userStore.findUser(senderUserIdentifier);
+				} catch (Exception ex) {
+
+					throw new MessagingException("Cannot look up xri: " + ex.getMessage(), ex);
+				}
+
+				if (senderXri == null || senderUser == null) {
+
+					log.debug("Sender xri or user not found.");
+					return false;
+				}
+
+				// check user and password
 
 				User user = XriResourceMessagingTarget.this.pdsInstance.getUser();
 				if (user == null) return false;
 
-				if (! StoreUtil.checkPass(user.getPass(), password)) return false;
+				boolean self = senderUser.equals(user);
+				boolean valid = StoreUtil.checkPass(senderUser.getPass(), password);
 
-				XRI3Segment[] aliases = XriResourceMessagingTarget.this.pdsInstance.getAliases();
+				// done
 
-				for (XRI3Segment alias : aliases) {
-
-					if (alias.equals(senderXri)) return true;
-				}
-
-				return false;
+				log.debug("self: " + self + ", valid: " + valid);
+				return self && valid;
 			}
 		});
-		this.getMessageAuthenticators().add(passwordMessageAuthenticator);
+		this.getMessageInterceptors().add(passwordAuthenticationMessageInterceptor);
 
 		// add a ProtectedAddressInterceptor
 

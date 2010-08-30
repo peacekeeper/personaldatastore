@@ -7,6 +7,7 @@ import org.eclipse.higgins.xdi4j.messaging.Message;
 import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractResourceHandler;
+import org.eclipse.higgins.xdi4j.messaging.server.impl.ExecutionContext;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.xri.XriPdsInstance;
@@ -25,7 +26,7 @@ public class XriSubjectResourceHandler extends AbstractResourceHandler {
 	}
 
 	@Override
-	public boolean executeGet(Operation operation, MessageResult messageResult, Object executionContext) throws MessagingException {
+	public boolean executeGet(Operation operation, MessageResult messageResult, ExecutionContext executionContext) throws MessagingException {
 
 		Xri xri = this.pdsInstance.getXri();
 		User user = this.pdsInstance.getUser();

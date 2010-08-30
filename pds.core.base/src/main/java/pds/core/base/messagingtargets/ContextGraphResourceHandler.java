@@ -7,6 +7,7 @@ import org.eclipse.higgins.xdi4j.messaging.Message;
 import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractResourceHandler;
+import org.eclipse.higgins.xdi4j.messaging.server.impl.ExecutionContext;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.base.PdsInstance;
@@ -23,7 +24,7 @@ public class ContextGraphResourceHandler extends AbstractResourceHandler {
 	}
 
 	@Override
-	public boolean executeGet(Operation operation, MessageResult messageResult, Object executionContext) throws MessagingException {
+	public boolean executeGet(Operation operation, MessageResult messageResult, ExecutionContext executionContext) throws MessagingException {
 
 		messageResult.getGraph().createStatement(new XRI3Segment("$"), new XRI3Segment("$is$a"), new XRI3Segment("($xdi$v$1)"));
 		messageResult.getGraph().createStatement(new XRI3Segment("$"), new XRI3Segment("$is$a"), new XRI3Segment("($pds$v$1)"));

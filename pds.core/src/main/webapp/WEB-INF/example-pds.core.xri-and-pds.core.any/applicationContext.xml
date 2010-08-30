@@ -88,6 +88,12 @@
 
 	<bean id="EndpointServlet" class="org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet" />
 
+	<!-- Additional MessagingTargets -->
+
+	<bean name="/" class="pds.core.xri.messagingtargets.RootResourceMessagingTarget">
+		<property name="pdsInstanceFactory" ref="pdsInstanceFactory" />
+	</bean>
+
 	<!-- Spring Utils -->
 
 	<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">

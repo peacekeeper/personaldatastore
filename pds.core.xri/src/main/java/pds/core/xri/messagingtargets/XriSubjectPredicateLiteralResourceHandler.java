@@ -9,6 +9,7 @@ import org.eclipse.higgins.xdi4j.messaging.Message;
 import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractResourceHandler;
+import org.eclipse.higgins.xdi4j.messaging.server.impl.ExecutionContext;
 
 import pds.core.xri.XriPdsInstance;
 import pds.store.user.StoreException;
@@ -27,7 +28,7 @@ public class XriSubjectPredicateLiteralResourceHandler extends AbstractResourceH
 	}
 
 	@Override
-	public boolean executeMod(Operation operation, MessageResult messageResult, Object executionContext) throws MessagingException {
+	public boolean executeMod(Operation operation, MessageResult messageResult, ExecutionContext executionContext) throws MessagingException {
 
 		User user = this.pdsInstance.getUser();
 		pds.store.user.Store userStore = this.pdsInstance.getPdsInstanceFactory().getUserStore();

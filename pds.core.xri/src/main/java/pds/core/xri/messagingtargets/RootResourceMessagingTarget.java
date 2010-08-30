@@ -22,8 +22,7 @@ public class RootResourceMessagingTarget extends ResourceMessagingTarget {
 	@Override
 	public ResourceHandler getResource(Message message, Subject subject) throws MessagingException {
 
-		if (message.getMessageEnvelope().getGraph().containsStatement(subject.getSubjectXri(), DictionaryConstants.XRI_IS_A, new XRI3Segment("=")) ||
-				message.getMessageEnvelope().getGraph().containsStatement(subject.getSubjectXri(), DictionaryConstants.XRI_IS_A, new XRI3Segment("@"))) {
+		if (message.getMessageEnvelope().getGraph().containsStatement(subject.getSubjectXri(), DictionaryConstants.XRI_IS_A, new XRI3Segment(subject.getSubjectXri().toString().substring(0, 1)))) {
 
 			return new RootSubjectResourceHandler(message, subject, this.pdsInstanceFactory);
 		}

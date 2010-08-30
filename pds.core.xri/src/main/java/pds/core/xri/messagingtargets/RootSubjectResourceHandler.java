@@ -13,6 +13,7 @@ import org.eclipse.higgins.xdi4j.messaging.Message;
 import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractResourceHandler;
+import org.eclipse.higgins.xdi4j.messaging.server.impl.ExecutionContext;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.GCSAuthority;
@@ -39,7 +40,7 @@ public class RootSubjectResourceHandler extends AbstractResourceHandler {
 	}
 
 	@Override
-	public boolean executeAdd(Operation operation, MessageResult messageResult, Object executionContext) throws MessagingException {
+	public boolean executeAdd(Operation operation, MessageResult messageResult, ExecutionContext executionContext) throws MessagingException {
 
 		pds.store.xri.XriStore xriStore = this.pdsInstanceFactory.getXriStore();
 		pds.store.user.Store userStore = this.pdsInstanceFactory.getUserStore();
@@ -99,7 +100,7 @@ public class RootSubjectResourceHandler extends AbstractResourceHandler {
 	}
 
 	@Override
-	public boolean executeGet(Operation operation, MessageResult messageResult, Object executionContext) throws MessagingException {
+	public boolean executeGet(Operation operation, MessageResult messageResult, ExecutionContext executionContext) throws MessagingException {
 
 		pds.store.xri.XriStore xriStore = this.pdsInstanceFactory.getXriStore();
 
