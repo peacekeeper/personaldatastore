@@ -120,20 +120,23 @@ public class RootSubjectResourceHandler extends AbstractResourceHandler {
 			throw new MessagingException("Cannot find xri " + xriString + ": " + ex.getMessage(), ex);
 		}
 
-		// anyone can check if an XRI exists or not
-
 		if (xri == null) return false;
 
-		messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_IS_A, new XRI3Segment(this.operationSubject.getSubjectXri().getFirstSubSegment().getGCS().toString()));
+		// canonical, type and aliases
 
 		try {
-
-			List<String> aliases = xri.getAliases();
-			for (String alias : aliases) messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_IS, new XRI3Segment(alias));
 
 			if (xri.getCanonicalID() != null) {
 
 				messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), new XRI3Segment("$$is"), new XRI3Segment(xri.getCanonicalID().getValue()));
+			}
+
+			messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_IS_A, new XRI3Segment(this.operationSubject.getSubjectXri().getFirstSubSegment().getGCS().toString()));
+
+			List<String> aliases = xri.getAliases();
+			for (String alias : aliases) {
+
+				messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_IS, new XRI3Segment(alias));
 			}
 		} catch (XriStoreException ex) {
 

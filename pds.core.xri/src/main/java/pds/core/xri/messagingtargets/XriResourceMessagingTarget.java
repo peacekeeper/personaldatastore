@@ -48,7 +48,7 @@ public class XriResourceMessagingTarget extends ResourceMessagingTarget {
 
 			public boolean isValidPassword(XRI3Segment senderXri3, String password) throws MessagingException {
 
-				XriStore xriStore = XriResourceMessagingTarget.this.pdsInstance.getPdsInstanceFactory().getXriStore();
+				pds.store.xri.XriStore xriStore = XriResourceMessagingTarget.this.pdsInstance.getPdsInstanceFactory().getXriStore();
 				pds.store.user.Store userStore = XriResourceMessagingTarget.this.pdsInstance.getPdsInstanceFactory().getUserStore();
 
 				Xri senderXri = null;
