@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_panel1" t="nextapp.echo.app.ContentPane">
+
+<c i="Component_splitPane1" t="nextapp.echo.app.SplitPane">
+<p n="styleName">Default</p>
+<p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM</p>
+<c i="Component_column1" t="nextapp.echo.app.Column">
+
+<c i="Component_feedbackLabel" t="nextapp.echo.app.Label" vis="private">
+
+
+
+<p n="visible">false</p>
+
+<p n="styleName">Feedback</p>
+<p n="layoutData" t="nextapp.echo.app.layout.ColumnLayoutData">
+
+<p n="insets">5px 0px 0px 5px</p>
+</p>
+<p n="text">...</p>
+</c>
+
+<p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+
+
+
+
+
+
+<p n="maximumSize">30px</p>
+<p n="minimumSize">30px</p>
+</p>
+</c>
+<c i="Component_splitPane2" t="nextapp.echo.app.SplitPane">
+<p n="styleName">Default</p>
+<p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM</p>
+
+
+<p n="separatorVisible">false</p>
+
+
+<c i="Component_contentPane1" t="nextapp.echo.app.ContentPane">
+<c i="Component_column2" t="nextapp.echo.app.Column">
+
+
+
+
+<c i="Component_row3" t="nextapp.echo.app.Row">
+
+
+
+<c i="Component_label1" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">Registration Fee:</p>
+</c>
+<c i="Component_priceCurrencyLabel" t="nextapp.echo.app.Label" vis="private">
+
+
+<p n="text">...</p>
+<p n="styleName">Bold</p>
+</c>
+<c i="Component_priceLabel" t="nextapp.echo.app.Label" vis="private">
+
+
+<p n="text">...</p>
+<p n="styleName">Bold</p>
+</c>
+<c i="Component_label4" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">Registration Period:</p>
+</c>
+<c i="Component_yearsSelectField" t="nextapp.echo.app.SelectField" vis="private">
+<p n="styleName">Default</p>
+<p n="font">
+<f bo="true" sz="12pt">
+<tf>Arial</tf>
+</f>
+</p>
+</c>
+<c i="Component_label2" t="nextapp.echo.app.Label">
+
+<p n="text">years</p>
+<p n="styleName">Bold</p>
+</c>
+<c i="Component_label19" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">Currency:</p>
+</c>
+<c i="Component_currencySelectField" t="nextapp.echo.app.SelectField" vis="private">
+<p n="styleName">Default</p>
+<p n="font">
+<f bo="true" sz="12pt">
+<tf>Arial</tf>
+</f>
+</p>
+</c>
+<p n="cellSpacing">10px</p>
+</c>
+<c i="Component_grid1" t="nextapp.echo.app.Grid">
+<p n="orientation">nextapp.echo.app.Grid.ORIENTATION_HORIZONTAL</p>
+<p n="size">4</p>
+<c i="Component_label3" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">Name:</p>
+</c>
+<c i="Component_nameTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<p n="insets">2px</p>
+</c>
+<c i="Component_label5" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">1st Phone:</p>
+</c>
+<c i="Component_primaryVoiceTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<p n="insets">2px</p>
+</c>
+<c i="Component_label6" t="nextapp.echo.app.Label">
+
+
+<p n="styleName">Optional</p>
+<p n="text">Organization:</p>
+</c>
+<c i="Component_organizationTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<p n="insets">2px</p>
+</c>
+<c i="Component_label7" t="nextapp.echo.app.Label">
+
+<p n="text">2nd Phone:</p>
+<p n="styleName">Optional</p>
+</c>
+<c i="Component_secondaryVoiceTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<p n="insets">2px</p>
+</c>
+<c i="Component_label8" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">Street:</p>
+</c>
+<c i="Component_street1TextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<p n="insets">2px</p>
+</c>
+<c i="Component_label9" t="nextapp.echo.app.Label">
+
+<p n="text">Fax:</p>
+<p n="styleName">Optional</p>
+</c>
+<c i="Component_faxTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<p n="insets">2px</p>
+</c>
+<c i="Component_label10" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+</c>
+<c i="Component_street2TextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<p n="insets">2px</p>
+</c>
+<c i="Component_label11" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">1st E-Mail:</p>
+</c>
+<c i="Component_primaryEmailTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<p n="insets">2px</p>
+</c>
+<c i="Component_label12" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">Postal Code:</p>
+</c>
+<c i="Component_postalCodeTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<p n="insets">2px</p>
+</c>
+<c i="Component_label13" t="nextapp.echo.app.Label">
+
+<p n="text">2nd E-Mail:</p>
+<p n="styleName">Optional</p>
+</c>
+<c i="Component_secondaryEmailTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<p n="insets">2px</p>
+</c>
+<c i="Component_label14" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">City:</p>
+</c>
+<c i="Component_cityTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<p n="insets">2px</p>
+</c>
+<c i="Component_label15" t="nextapp.echo.app.Label">
+
+<p n="text">Pager:</p>
+<p n="styleName">Optional</p>
+</c>
+<c i="Component_pagerTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<p n="insets">2px</p>
+</c>
+<c i="Component_label16" t="nextapp.echo.app.Label">
+
+<p n="text">State/Province:</p>
+<p n="styleName">Optional</p>
+</c>
+<c i="Component_stateTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<p n="insets">2px</p>
+</c>
+<c i="Component_label17" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">Country:</p>
+</c>
+
+
+<p n="layoutData" t="nextapp.echo.app.layout.ColumnLayoutData">
+<p n="insets">10px 0px 0px 0px</p>
+</p>
+<c i="Component_countrySelectField" t="nextapp.echo.app.SelectField" vis="private">
+<p n="styleName">Default</p>
+</c>
+
+<p n="insets">4px</p>
+</c>
+<c i="Component_acceptCheckBox" t="nextapp.echo.app.CheckBox" vis="private">
+<p n="text">I accept the Terms of Service.</p>
+<p n="styleName">Default</p>
+<p n="insets">5px 0px</p>
+</c>
+<c i="Component_mpayPanel" t="pds.web.signup.xri.grs.components.mpay.MpayPanel" vis="private">
+<p n="layoutData" t="nextapp.echo.app.layout.ColumnLayoutData">
+<p n="insets">10px 0px 0px 0px</p>
+</p>
+</c>
+<p n="insets">10px</p>
+<c i="Component_externalCallReceiverRow" t="nextapp.echo.app.Row" vis="private">
+
+<p n="visible">false</p>
+</c>
+</c>
+<p n="overflow">8</p>
+<p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+
+<p n="backgroundImage">
+<fi r="xy" t="nextapp.echo.app.ResourceImageReference">/pds/web/signup/xri/grs/stripes.png</fi>
+</p>
+</p>
+</c>
+<c i="Component_row5" t="nextapp.echo.app.Row">
+
+
+<p n="id">southComponent</p>
+<p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+
+
+
+
+
+
+
+
+<p n="maximumSize">50px</p>
+<p n="minimumSize">50px</p>
+<p n="insets">10px 0px 0px 0px</p>
+</p>
+<c i="Component_label18" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+
+<p n="text">Choose a password:</p>
+</c>
+<c i="Component_passwordField" t="nextapp.echo.app.PasswordField" vis="private">
+<p n="styleName">Default</p>
+<e t="action">
+<h n="actionPerformed" v="onRegisterActionPerformed"/>
+</e>
+</c>
+<c i="Component_registerButton" t="nextapp.echo.app.Button" vis="private">
+<p n="styleName">Default</p>
+
+<e t="action">
+<h n="actionPerformed" v="onRegisterActionPerformed"/>
+</e>
+<p n="text">Register the name</p>
+
+</c>
+<p n="cellSpacing">10px</p>
+<c i="Component_button1" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+<p n="text">Back</p>
+<e t="action">
+<h n="actionPerformed" v="onBackActionPerformed"/>
+</e>
+</c>
+</c>
+</c>
+<p n="separatorVisible">false</p>
+</c>
+<p n="insets">10px</p>
+</c>
+</form>

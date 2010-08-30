@@ -93,7 +93,7 @@ public class Xdi {
 		XdiContext context = new XdiContext(
 				this, 
 				new XDIHttpClient(uri), 
-				new XRI3Segment(iname), 
+				iname, 
 				new XRI3Segment(inumber), 
 				password);
 

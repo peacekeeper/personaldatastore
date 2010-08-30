@@ -10,27 +10,27 @@ import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractResourceHandler;
 
-import pds.core.xri.XriPdsConnection;
+import pds.core.xri.XriPdsInstance;
 import pds.store.user.StoreException;
 import pds.store.user.StoreUtil;
 import pds.store.user.User;
 
 public class XriSubjectPredicateLiteralResourceHandler extends AbstractResourceHandler {
 
-	private XriPdsConnection pdsConnection;
+	private XriPdsInstance pdsInstance;
 
-	public XriSubjectPredicateLiteralResourceHandler(Message message, Subject operationSubject, Predicate operationPredicate, Literal operationLiteral, XriPdsConnection pdsConnection) {
+	public XriSubjectPredicateLiteralResourceHandler(Message message, Subject operationSubject, Predicate operationPredicate, Literal operationLiteral, XriPdsInstance pdsInstance) {
 
 		super(message, operationSubject, operationPredicate, operationLiteral);
 
-		this.pdsConnection = pdsConnection;
+		this.pdsInstance = pdsInstance;
 	}
 
 	@Override
 	public boolean executeMod(Operation operation, MessageResult messageResult, Object executionContext) throws MessagingException {
 
-		User user = this.pdsConnection.getUser();
-		pds.store.user.Store userStore = this.pdsConnection.getPdsConnectionFactory().getUserStore();
+		User user = this.pdsInstance.getUser();
+		pds.store.user.Store userStore = this.pdsInstance.getPdsInstanceFactory().getUserStore();
 
 		// read information from the message
 

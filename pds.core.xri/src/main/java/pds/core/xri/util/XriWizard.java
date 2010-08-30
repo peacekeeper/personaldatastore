@@ -23,7 +23,7 @@ import org.openxri.xml.CertificateService;
 import org.openxri.xml.Service;
 import org.openxri.xml.XDIService;
 
-import pds.core.xri.XriPdsConnectionFactory;
+import pds.core.xri.XriPdsInstanceFactory;
 import pds.store.xri.Xri;
 
 public class XriWizard {
@@ -49,14 +49,14 @@ public class XriWizard {
 		}
 	}
 
-	public static void configure(XriPdsConnectionFactory pdsConnectionFactory, Xri xri) throws Exception {
+	public static void configure(XriPdsInstanceFactory pdsInstanceFactory, Xri xri) throws Exception {
 
 		xri.deleteAllServices();
 		List<Service> services = new ArrayList<Service> ();
 
 		// set up XDI SEP(s)
 
-		String[] endpoints = pdsConnectionFactory.getEndpoints();
+		String[] endpoints = pdsInstanceFactory.getEndpoints();
 		URI[] uris = new URI[endpoints.length];
 
 		for (int i=0; i<endpoints.length; i++) {
@@ -70,8 +70,7 @@ public class XriWizard {
 
 		services.add(
 				new XDIService(
-						uris,
-						pdsConnectionFactory.getProviderId()));
+						uris));
 
 		// set up keys/certificate and SEP 
 
@@ -81,8 +80,8 @@ public class XriWizard {
 				! xri.hasAuthorityAttribute("privatekey") ||
 				! xri.hasAuthorityAttribute("certificate")) {
 
-			X509Certificate brokerCertificate = pdsConnectionFactory.getBrokerCertificate();
-			PrivateKey brokerPrivateKey = pdsConnectionFactory.getBrokerPrivateKey();
+			X509Certificate brokerCertificate = pdsInstanceFactory.getBrokerCertificate();
+			PrivateKey brokerPrivateKey = pdsInstanceFactory.getBrokerPrivateKey();
 
 			KeyPair keyPair = keyPairGenerator.generateKeyPair();
 			PublicKey userPublicKey = keyPair.getPublic();
@@ -93,9 +92,9 @@ public class XriWizard {
 			certificateGenerator.setSubjectDN(new X509Name("cn=" + xri.getCanonicalID().getValue()));
 			certificateGenerator.setIssuerDN(brokerCertificate.getIssuerX500Principal());
 			certificateGenerator.setNotBefore(userCertificateDate);
-			certificateGenerator.setNotAfter(new Date(userCertificateDate.getTime() + Long.parseLong(pdsConnectionFactory.getUserCertificateValidity())));
+			certificateGenerator.setNotAfter(new Date(userCertificateDate.getTime() + Long.parseLong(pdsInstanceFactory.getUserCertificateValidity())));
 			certificateGenerator.setSerialNumber(BigInteger.valueOf(userCertificateDate.getTime()));
-			certificateGenerator.setSignatureAlgorithm(pdsConnectionFactory.getUserCertificateSignatureAlgorithm());
+			certificateGenerator.setSignatureAlgorithm(pdsInstanceFactory.getUserCertificateSignatureAlgorithm());
 
 			userCertificate = certificateGenerator.generate(brokerPrivateKey);
 

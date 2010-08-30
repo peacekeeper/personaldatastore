@@ -5,7 +5,7 @@
 
 <hibernate-mapping>
 
-    <class name="ibrokerkit.ibrokerstore.store.impl.db.DbUser" table="user">
+    <class name="pds.store.user.impl.db.DbUser" table="user">
 
 		<!-- CLASS PROPERTIES -->
 

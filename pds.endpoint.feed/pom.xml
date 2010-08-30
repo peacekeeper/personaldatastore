@@ -12,26 +12,6 @@
 	<version>0.1-SNAPSHOT</version>
 	<name>pds.endpoint.feed</name>
 	<build>
-		<resources>
-			<resource>
-				<directory>${basedir}/src/main/java</directory>
-				<includes>
-					<include>**/*.js</include>
-					<include>**/*.png</include>
-					<include>**/*.gif</include>
-					<include>**/*.jpg</include>
-					<include>**/*.stylesheet</include>
-					<include>**/*.properties</include>
-					<include>**/*.jks</include>
-					<include>**/*.vm</include>
-					<include>**/*.css</include>
-					<include>**/*.txt</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>${basedir}/src/main/resources</directory>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_windowPane1" t="nextapp.echo.app.WindowPane">
+
+
+
+
+
+
+
+
+<p n="closable">false</p>
+
+
+
+<p n="minimizeEnabled">false</p>
+
+<p n="maximizeEnabled">false</p>
+
+
+
+
+
+
+
+<c i="Component_loginContentPane1" t="pds.web.ui.context.ClosedContentPane"/>
+
+
+
+
+
+<p n="styleName">Glass</p>
+
+<p n="width">600px</p>
+<p n="title">Personal Data Store</p>
+<p n="ZIndex">10</p>
+
+<p n="height">360px</p>
+</c>
+</form>

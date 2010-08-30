@@ -12,6 +12,14 @@
 	<version>0.1-SNAPSHOT</version>
 	<name>pds.store.user</name>
 	<build>
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/java</directory>
+				<includes>
+					<include>**/*.hbm.xml</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>

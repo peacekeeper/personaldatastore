@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<!-- RpxnowSignInMethod -->
+
+	<bean id="rpxnowSignUpMethod" class="pds.web.signin.rpxnow.RpxnowSignInMethod">
+	
+		<!-- The RPXnow URL. -->
+		<!-- You should not have to change this. -->
+	
+		<property name="baseUrl" value="https://rpxnow.com/" />
+
+		<!-- Your RPXnow API key. -->
+		<!-- You need to change this to your API key. -->
+		
+		<property name="apiKey" value="..." />
+	
+		<!-- The RPXnow HTML code. -->
+		<!-- You need to change this to your HTML code. -->
+		<!-- Make sure all < and > and " characters are properly XML escaped. -->
+	
+		<property name="htmlCode" value="..." />
+		
+		<!-- A URI where the PDS for RPXnow users is deployed. -->
+	
+		<property name="endpoint" value="http://xdi.yourserver.com/" />
+	
+	</bean>
+
+</beans>

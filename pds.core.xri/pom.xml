@@ -8,40 +8,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pdsproject</groupId>
 	<artifactId>pds.core.xri</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<version>0.1-SNAPSHOT</version>
 	<name>pds.core.xri</name>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>maven-jetty-plugin</artifactId>
-				<configuration>
-					<jettyEnvXml>
-						${basedir}/src/test/resources/jetty-env.xml
-					</jettyEnvXml>
-					<contextPath>/</contextPath>
-					<systemproperties>
-						<systemproperty>
-							<name>org.apache.commons.logging.Log</name>
-							<value>org.apache.commons.logging.impl.Log4JLogger</value>
-						</systemproperty>
-						<systemproperty>
-							<name>slf4j</name>
-							<value>false</value>
-						</systemproperty>
-					</systemproperties>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>commons-dbcp</groupId>
-						<artifactId>commons-dbcp</artifactId>
-						<version>1.4</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-		</plugins>
-	</build>
 	<dependencies>
 		<dependency>
 			<groupId>commons-logging</groupId>
@@ -85,7 +54,7 @@
 		</dependency>
 		<dependency>
 			<groupId>pdsproject</groupId>
-			<artifactId>pds.core</artifactId>
+			<artifactId>pds.core.base</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
@@ -108,9 +77,9 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>3.0.0.RELEASE</version>
+			<groupId>pdsproject</groupId>
+			<artifactId>pds.util.spring</artifactId>
+			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<!-- PDS Instance Factory (pds.core.any) -->
+	<!-- You need to configure the following settings to match your environment. -->
+
+	<bean id="pdsInstanceFactory" class="pds.core.any.AnyPdsInstanceFactory">
+
+		<!-- One or more URIs where this PDS is deployed. -->
+
+		<property name="endpoints">
+			<list>
+				<value>http://xdi.yourserver.com/</value>
+			</list>
+		</property>
+
+	</bean>
+
+	<!-- PDS Graph Factory -->
+	<!-- This determines the XDI4j back-end store to be used by the PDS. -->
+
+	<bean id="pdsGraphFactory" class="pds.core.base.graphfactories.PdsBDBGraphFactory">
+		<property name="databasePath" value="./pds-bdb/" />
+	</bean>
+
+	<!-- PDS Filter -->
+	<!-- Do not modify this, unless you know what you are doing. -->
+
+	<bean id="PdsFilter" class="pds.core.base.PdsFilter">
+		<property name="endpointServlet" ref="EndpointServlet" />
+		<property name="pdsInstanceFactories">
+			<util:list>
+				<ref bean="pdsInstanceFactory" />
+			</util:list>
+		</property>
+		<property name="pdsGraphFactory" ref="pdsGraphFactory" />
+	</bean>
+
+	<!-- XDI Servlet -->
+	<!-- Do not modify this, unless you know what you are doing. -->
+
+	<bean id="EndpointServlet" class="org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet" />
+
+</beans>
