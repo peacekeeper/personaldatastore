@@ -96,11 +96,11 @@
 			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>pdsproject</groupId>
 			<artifactId>pds.web.signup.xri.grs</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
-		</dependency>
+		</dependency> -->
 	</dependencies>
 </project>
