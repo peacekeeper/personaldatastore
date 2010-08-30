@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+
+	<!-- GENERAL INFORMATION -->
+
+	<display-name>pds.web</display-name>
+
+	<!-- SPRING SERVLET -->
+
+	<servlet>
+		<servlet-name>PDSSpringServlet</servlet-name>
+		<servlet-class>pds.web.PDSSpringServlet</servlet-class>
+		<load-on-startup>20</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>PDSSpringServlet</servlet-name>
+		<url-pattern>/pds.web/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- EXTERNAL CALL SERVLET -->
+
+	<servlet>
+		<servlet-name>ExternalCallServlet</servlet-name>
+		<servlet-class>pds.web.servlet.external.ExternalCallServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ExternalCallServlet</servlet-name>
+		<url-pattern>/ExternalCall/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- SECURITY -->
+
+<!-- 	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>secure</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<user-data-constraint>
+			<description>ssl</description>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint> -->
+
+	<!-- SPRING -->
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/applicationContext-*.xml, /WEB-INF/applicationContext.xml</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+</web-app>

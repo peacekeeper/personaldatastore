@@ -3,11 +3,14 @@
 	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
-	<!-- SignInMethods -->
+	<!-- PdsWebApps -->
 
-	<util:list id="signInMethods">
+	<util:list id="pdsWebApps">
 
-		<ref bean="manualSignInMethod" />
+		<bean class="pds.web.ui.app.addressbook.AddressBookPdsWebApp" />
+		<bean class="pds.web.ui.app.feed.FeedPdsWebApp" />
+		<bean class="pds.web.ui.app.photos.PhotosPdsWebApp" />
+		<bean class="pds.web.ui.app.directxdi.DirectXdiPdsWebApp" />
 
 	</util:list>
 

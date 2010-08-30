@@ -7,7 +7,7 @@
 
 	<util:list id="signInMethods">
 
-		<ref bean="manualSignInMethod" />
+		<ref bean="rpxnowSignInMethod" />
 
 	</util:list>
 
