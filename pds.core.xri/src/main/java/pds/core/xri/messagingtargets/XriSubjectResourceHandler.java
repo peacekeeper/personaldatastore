@@ -9,27 +9,27 @@ import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractResourceHandler;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.core.xri.XriPdsConnection;
+import pds.core.xri.XriPdsInstance;
 import pds.store.user.User;
 import pds.store.xri.Xri;
 
 public class XriSubjectResourceHandler extends AbstractResourceHandler {
 
-	private XriPdsConnection pdsConnection;
+	private XriPdsInstance pdsInstance;
 
-	public XriSubjectResourceHandler(Message message, Subject subject, XriPdsConnection pdsConnection) {
+	public XriSubjectResourceHandler(Message message, Subject subject, XriPdsInstance pdsInstance) {
 
 		super(message, subject);
 
-		this.pdsConnection = pdsConnection;
+		this.pdsInstance = pdsInstance;
 	}
 
 	@Override
 	public boolean executeGet(Operation operation, MessageResult messageResult, Object executionContext) throws MessagingException {
 
-		Xri xri = this.pdsConnection.getXri();
-		User user = this.pdsConnection.getUser();
-		
+		Xri xri = this.pdsInstance.getXri();
+		User user = this.pdsInstance.getUser();
+
 		// private/public key, password
 
 		try {

@@ -43,8 +43,7 @@ public class OpenxriXriStoreFactory implements XriStoreFactory, ServletContextAw
 
 	public OpenxriXriStore createXriStore() throws Exception {
 
-		ServerConfig serverConfig = ServerConfigFactory.getSingleton();
-		if (serverConfig == null) serverConfig = ServerConfigFactory.initSingleton(this.servletContext, this.properties);
+		ServerConfig serverConfig = ServerConfigFactory.init(this.servletContext, this.properties);
 
 		return new OpenxriXriStore(serverConfig);
 	}

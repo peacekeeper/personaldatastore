@@ -45,8 +45,8 @@ public class XdiContext {
 
 	private final Xdi xdi;
 	private final XDIHttpClient xdiClient;
-	private final XRI3Segment iname;
-	private final XRI3Segment inumber;
+	private final String identifier;
+	private final XRI3Segment canonical;
 	private final String password;
 
 	private final Map<XRI3, List<XdiGraphListener> > xdiGetGraphListeners;
@@ -54,12 +54,12 @@ public class XdiContext {
 	private final Map<XRI3, List<XdiGraphListener> > xdiModGraphListeners;
 	private final Map<XRI3, List<XdiGraphListener> > xdiDelGraphListeners;
 
-	public XdiContext(Xdi xdi, XDIHttpClient xdiClient, XRI3Segment iname, XRI3Segment inumber, String password) { 
+	public XdiContext(Xdi xdi, XDIHttpClient xdiClient, String identifier, XRI3Segment canonical, String password) { 
 
 		this.xdi = xdi;
 		this.xdiClient = xdiClient;
-		this.iname = iname;
-		this.inumber = inumber;
+		this.identifier = identifier;
+		this.canonical = canonical;
 		this.password = password;
 
 		this.xdiGetGraphListeners = new HashMap<XRI3, List<XdiGraphListener> > ();
@@ -73,14 +73,14 @@ public class XdiContext {
 		return this.xdiClient.getUrl().toString();
 	}
 
-	public String getIname() {
+	public String getIdentifier() {
 
-		return this.iname.toString();
+		return this.identifier;
 	}
 
-	public String getInumber() {
+	public String getCanonical() {
 
-		return this.inumber.toString();
+		return this.canonical.toString();
 	}
 
 	public String getPassword() {
@@ -92,7 +92,7 @@ public class XdiContext {
 
 		// $get
 
-		XRI3 operationAddress = new XRI3("" + this.inumber + "/$password");
+		XRI3 operationAddress = new XRI3("" + this.canonical + "/$password");
 		Operation operation = this.prepareOperation(MessagingConstants.XRI_GET, operationAddress);
 		MessageResult messageResult = this.send(operation);
 
@@ -138,8 +138,8 @@ public class XdiContext {
 	public Message prepareMessage() {
 
 		MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
-		Message message = messageEnvelope.newMessage(this.inumber);
-		if (this.password != null) messageEnvelope.getGraph().createStatement(this.inumber, new XRI3Segment("$password"), this.password);
+		Message message = messageEnvelope.newMessage(this.canonical);
+		if (this.password != null) messageEnvelope.getGraph().createStatement(this.canonical, new XRI3Segment("$password"), this.password);
 
 		return message;
 	}
@@ -147,8 +147,8 @@ public class XdiContext {
 	public Operation prepareOperation(XRI3Segment operationXri) {
 
 		MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
-		Message message = messageEnvelope.newMessage(this.inumber);
-		if (this.password != null) messageEnvelope.getGraph().createStatement(this.inumber, new XRI3Segment("$password"), this.password);
+		Message message = messageEnvelope.newMessage(this.canonical);
+		if (this.password != null) messageEnvelope.getGraph().createStatement(this.canonical, new XRI3Segment("$password"), this.password);
 		Operation operation = message.createOperation(operationXri);
 
 		return operation;

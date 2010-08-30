@@ -18,7 +18,7 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.GCSAuthority;
 import org.openxri.XRI;
 
-import pds.core.xri.XriPdsConnectionFactory;
+import pds.core.xri.XriPdsInstanceFactory;
 import pds.core.xri.util.XriWizard;
 import pds.store.user.StoreUtil;
 import pds.store.xri.Xri;
@@ -29,20 +29,20 @@ public class RootSubjectResourceHandler extends AbstractResourceHandler {
 
 	private static final Log log = LogFactory.getLog(RootSubjectResourceHandler.class);
 
-	private XriPdsConnectionFactory pdsConnectionFactory;
+	private XriPdsInstanceFactory pdsInstanceFactory;
 
-	public RootSubjectResourceHandler(Message message, Subject subject, XriPdsConnectionFactory pdsConnectionFactory) {
+	public RootSubjectResourceHandler(Message message, Subject subject, XriPdsInstanceFactory pdsInstanceFactory) {
 
 		super(message, subject);
 
-		this.pdsConnectionFactory = pdsConnectionFactory;
+		this.pdsInstanceFactory = pdsInstanceFactory;
 	}
 
 	@Override
 	public boolean executeAdd(Operation operation, MessageResult messageResult, Object executionContext) throws MessagingException {
 
-		pds.store.xri.XriStore xriStore = this.pdsConnectionFactory.getXriStore();
-		pds.store.user.Store userStore = this.pdsConnectionFactory.getUserStore();
+		pds.store.xri.XriStore xriStore = this.pdsInstanceFactory.getXriStore();
+		pds.store.user.Store userStore = this.pdsInstanceFactory.getUserStore();
 
 		// read information from the message
 
@@ -84,7 +84,7 @@ public class RootSubjectResourceHandler extends AbstractResourceHandler {
 			xri = xriStore.registerXri(parentXri, localName, xriData, 0);
 			inumber = xri.getCanonicalID().getValue();
 
-			XriWizard.configure(this.pdsConnectionFactory, xri);
+			XriWizard.configure(this.pdsInstanceFactory, xri);
 		} catch (Exception ex) {
 
 			log.warn("Can not create XRI: " + ex.getMessage(), ex);
@@ -101,7 +101,7 @@ public class RootSubjectResourceHandler extends AbstractResourceHandler {
 	@Override
 	public boolean executeGet(Operation operation, MessageResult messageResult, Object executionContext) throws MessagingException {
 
-		pds.store.xri.XriStore xriStore = this.pdsConnectionFactory.getXriStore();
+		pds.store.xri.XriStore xriStore = this.pdsInstanceFactory.getXriStore();
 
 		// read information from the message
 
@@ -123,12 +123,12 @@ public class RootSubjectResourceHandler extends AbstractResourceHandler {
 
 		if (xri == null) return false;
 
-		messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_INHERITANCE, new XRI3Segment(this.operationSubject.getSubjectXri().getFirstSubSegment().getGCS().toString()));
+		messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_IS_A, new XRI3Segment(this.operationSubject.getSubjectXri().getFirstSubSegment().getGCS().toString()));
 
 		try {
 
 			List<String> aliases = xri.getAliases();
-			for (String alias : aliases) messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_EQUIVALENCE, new XRI3Segment(alias));
+			for (String alias : aliases) messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_IS, new XRI3Segment(alias));
 
 			if (xri.getCanonicalID() != null) {
 

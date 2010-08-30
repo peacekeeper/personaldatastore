@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<!-- OpenxriXriSignUpMethod -->
+
+	<bean id="openxriXriSignUpMethod" class="pds.web.signup.xri.openxri.OpenxriXriSignUpMethod">
+
+		<!-- The XRI store for which to instantiate PDSes. -->
+
+		<property name="xriStore" ref="openxriXriStore" />
+
+		<!-- The user store. -->
+
+		<property name="userStore" ref="openxriUserStore" />
+
+		<!-- One or more URIs where this PDS is deployed. -->
+
+		<property name="endpoints">
+			<list>
+				<value>http://xdi.yourserver.com/</value>
+			</list>
+		</property>
+
+		<!-- The following are settings for issuing certificates to new XRIs. -->
+
+		<property name="brokerCertificate" value="MIIDdjCCAl4CCQCtDxZ3419zrzANBgkqhkiG9w0BAQUFADB9MQswCQYDVQQGEwJVSzEPMA0GA1UECBMGTG9uZG9uMQ8wDQYDVQQHEwZMb25kb24xDjAMBgNVBAoTBU15ZGV4MRwwGgYDVQQDDBNAIWMzLmY0ZjkuMTg5OS41OTFkMR4wHAYJKoZIhvcNAQkBFg9oZWxsb0BteWRleC5vcmcwHhcNMDgxMTE1MDEzNzAzWhcNMjgxMTE1MDEzNzAzWjB9MQswCQYDVQQGEwJVSzEPMA0GA1UECBMGTG9uZG9uMQ8wDQYDVQQHEwZMb25kb24xDjAMBgNVBAoTBU15ZGV4MRwwGgYDVQQDDBNAIWMzLmY0ZjkuMTg5OS41OTFkMR4wHAYJKoZIhvcNAQkBFg9oZWxsb0BteWRleC5vcmcwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDCnneFrXbSwj/b6oZt5m+8+Zzcfsx96p/9wKJyo+BuECo03pfwlBKAr5zfGetv4ObrdmNiECgxtnjeiIHDVBptfp6MI0aQg0rk84+3hSb6qHTsC3in2jfxheNfri+pHp65LX6z0chvo8BzoLrqwoVPB+Z2lHmwWyaGf+sOtxl2F7aKwOeJJ68YxHu948baFBgoPevbrZ3Fht59zlSLhqhXe7jLa+YGpNBJIi45AcyvcIDfP+3EZnjzGpQuV/hgFv8FiDya2g1vrldBByZW/S3JSbth9Am/IMnhv32aE8NeoVzFA8GHqS6MB/eaaF/69kSi0pPL/RisxqnBEc8CXmuHAgMBAAEwDQYJKoZIhvcNAQEFBQADggEBAJfwCIjnCIp3TDN2qtsMyASDWfMT1IMGUzAzH7KUZEyZa3SHCuup8J1FmPgcDpOF3JnrYqGj8cDMNhuoJPt/YHyy3rYoGHBAViAGyxhSuSaam9jJNV/ZPzrrSIuvo785KD+LczKYkYh3RiLTCzrvIZ40ea93T7PaOweMsKyDpXMnV8u03lsfFlZUK4HlFBONGa38O4Os11tp554pp69F3UCwPw09xQIs0WYRXYvQdyAnW3KIAyUZjGIVD4oCdpXxPetwNoKERzGmHM67SG/4g5PwulWdA5fnYs3SbGIGY9LE3kOwLVi/6yy3sguH1GAydl1ywpfQS6COvyndQZh4mzI=" />
+		<property name="brokerPrivateKey" value="MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDCnneFrXbSwj/b6oZt5m+8+Zzcfsx96p/9wKJyo+BuECo03pfwlBKAr5zfGetv4ObrdmNiECgxtnjeiIHDVBptfp6MI0aQg0rk84+3hSb6qHTsC3in2jfxheNfri+pHp65LX6z0chvo8BzoLrqwoVPB+Z2lHmwWyaGf+sOtxl2F7aKwOeJJ68YxHu948baFBgoPevbrZ3Fht59zlSLhqhXe7jLa+YGpNBJIi45AcyvcIDfP+3EZnjzGpQuV/hgFv8FiDya2g1vrldBByZW/S3JSbth9Am/IMnhv32aE8NeoVzFA8GHqS6MB/eaaF/69kSi0pPL/RisxqnBEc8CXmuHAgMBAAECggEAAI+ubo9CgXcX8g1qF9ULS3M41ZX0BwTvMy8kCMqaMhcP2BkwPPxgVUisXiRX/nmakOFFhhnf08zf6lxga2zJqrkrweG0KWSHicN+DZxvsVddBvU9gtZpROQK9NKuxoEVGhmcfO5E8rV5L5wuDdFDyyeNrZfeBfktUkP6LI+wnhuQHIP0y0nzi73sv6DpCF5QiriNdJrBuS+e3SQ4dTTaZJQvXEM8gjBOdo2dsuWs6OArwhu1D/qHvoDcFn5vbNVblqlT7o/5geRRo3fRffh9dkAZSHmksMNPQGLvx3h84pbZBnKkgN9WVXwluVqz56/T6HLQRwOe9ETrS+7Kt714qQKBgQDk8uUNQQWkV56vbfYab2WthKcyGG+/PBN++xaOI0KTu1zBLHnsVmSxufNnjk0rsNjkJqoEfFEWP+rVZEQLAlT/36zXdOw/R65W6lX5hxI1ewF8Yh993Lyds+nYMkoOZbY6XVlKle3EkWYaxTxdMVQXawdh3bsYf/XIq8GvQXIM1QKBgQDZnS9phsjeeLjGJQvuaNs8ibm0IcTf+A234BBcLZn03xAmbAU/i+33eAySgDWRWTwAk2I1jxGykdxR81vTRFEAefL47+AqcWDOgsWL6a1uf6OhGapVJ3h4cU341SP58oIBfyRveWXNGSJBvZE/Nlrv5DEnU/ucF1DKQeQ81PwU6wKBgDtbWdUQ2YSdDtAOozKBVQwiizJqsXYT/j36nQNm0tj4R3jxrf5++4Y0Xo2nkAxWwjSMbaHSFTe+hISkhRuRlDXuaKJHdwSE8gcoo/eYdDkXVfBIhD+eXexI+8SIbTjEV/VTxFWY/1bqF12zaw4CPvn/Tp+p29rjOfa3yPRF9GqtAoGAdUd5Xe3+I6f8LQ2aOIraXO3830+zwuD0w7xGFOeeqZHuKkbdLTpErbJNVEc0l3j4FXdY3nSUnSBvFNuLCXkwDomqoO7maPlhqupffOAbUAoKLbCfU/VJv9+QniKAmRxRZG0ZPdq3OqnpBHUd6mto5xCcTQ299Im8SMTqNL60fLECgYA84r6iYzvevTzMZu56KN3GxQs2Rxpsx1uNWRzDOt6hQ2vSdOlz9xDi/xxMpw9Ln2/u7PqXXBmD/xoww2EKnLpw+13pSsdVNI9Nro2qhOsNSlinzvI+P1Y+mJTSq3v+IIi+684QkkTkzlO41Oj2miD/agKJ1MZf2UVBbKw5KrsxBA==" />
+		<property name="userCertificateValidity" value="631152000000" />
+		<property name="userCertificateSignatureAlgorithm" value="SHA1withRSA" />
+
+		<!-- The following are settings for welcome E-Mails. -->
+
+		<property name="emailRegisterTemplate" value="/WEB-INF/register.vm" />
+		<property name="emailProperties">
+			<util:properties>
+				<prop key="email-from">office@yourserver.com</prop>
+				<prop key="email-server">localhost</prop>
+			</util:properties>
+		</property>
+
+	</bean>
+
+	<bean id="openxriXriStoreFactory" class="pds.store.xri.openxri.OpenxriXriStoreFactory">
+		<constructor-arg>
+			<util:properties>
+				<prop key="server.config.file">/WEB-INF/server-openxri.xml</prop>
+			</util:properties>
+		</constructor-arg>
+	</bean>
+
+	<bean id="openxriXriStore" factory-bean="openxriXriStoreFactory" factory-method="createXriStore" />
+
+	<bean id="openxriUserStore" class="pds.store.user.impl.db.DatabaseStore" init-method="init" destroy-method="close">
+		<constructor-arg>
+			<util:properties location="/WEB-INF/pds.store.user-openxri.properties" />
+		</constructor-arg>
+	</bean>
+
+	<!-- Spring Utils -->
+
+	<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+		<property name="customEditors">
+			<map>
+				<entry key="java.security.cert.X509Certificate" value="pds.util.spring.editorsupport.X509CertificatePropertyEditorSupport" />
+				<entry key="java.security.PrivateKey" value="pds.util.spring.editorsupport.PrivateKeyPropertyEditorSupport" />
+			</map>
+		</property>
+	</bean>
+
+</beans>

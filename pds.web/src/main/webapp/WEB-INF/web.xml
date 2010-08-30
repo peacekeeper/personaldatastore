@@ -1,23 +1,32 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
-<web-app>
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+
+	<!-- GENERAL INFORMATION -->
 
 	<display-name>pds.web</display-name>
 
+	<!-- SPRING SERVLET -->
+
 	<servlet>
-		<servlet-name>PDSServlet</servlet-name>
-		<servlet-class>pds.web.PDSServlet</servlet-class>
+		<servlet-name>PDSSpringServlet</servlet-name>
+		<servlet-class>pds.web.PDSSpringServlet</servlet-class>
+		<load-on-startup>20</load-on-startup>
 	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>PDSSpringServlet</servlet-name>
+		<url-pattern>/pds.web/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- EXTERNAL CALL SERVLET -->
 
 	<servlet>
 		<servlet-name>ExternalCallServlet</servlet-name>
 		<servlet-class>pds.web.servlet.external.ExternalCallServlet</servlet-class>
 	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>PDSServlet</servlet-name>
-		<url-pattern>/pds.web/*</url-pattern>
-	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>ExternalCallServlet</servlet-name>
@@ -36,5 +45,16 @@
 			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
 		</user-data-constraint>
 	</security-constraint> -->
+
+	<!-- SPRING -->
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/applicationContext-*.xml, /WEB-INF/applicationContext.xml</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
 
 </web-app>

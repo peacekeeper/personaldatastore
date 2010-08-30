@@ -1,0 +1,48 @@
+<Configure class="org.mortbay.jetty.webapp.WebAppContext">
+	<New class="org.mortbay.jetty.plus.naming.Resource">
+		<Arg>java:comp/env/jdbc/pds_openxri</Arg>
+		<Arg>
+			<New class="org.apache.commons.dbcp.BasicDataSource">
+				<Set name="maxActive">20</Set>
+				<Set name="maxIdle">10</Set>
+				<Set name="maxWait">-1</Set>
+				<Set name="removeAbandoned">true</Set>
+				<Set name="removeAbandonedTimeout">60</Set>
+				<Set name="logAbandoned">true</Set>
+				<Set name="username">pds_openxri</Set>
+				<Set name="password">pds</Set>
+				<Set name="driverClassName">com.mysql.jdbc.Driver</Set>
+				<Set name="testOnBorrow">true</Set>
+				<Set name="testOnReturn">true</Set>
+				<Set name="testWhileIdle">true</Set>
+				<Set name="validationQuery">SELECT 1</Set>
+				<Set name="url">
+					jdbc:mysql://localhost:3306/pds_openxri?autoReconnect=true
+				</Set>
+			</New>
+		</Arg>
+	</New>
+	<New class="org.mortbay.jetty.plus.naming.Resource">
+		<Arg>java:comp/env/jdbc/pds_user</Arg>
+		<Arg>
+			<New class="org.apache.commons.dbcp.BasicDataSource">
+				<Set name="maxActive">20</Set>
+				<Set name="maxIdle">10</Set>
+				<Set name="maxWait">-1</Set>
+				<Set name="removeAbandoned">true</Set>
+				<Set name="removeAbandonedTimeout">60</Set>
+				<Set name="logAbandoned">true</Set>
+				<Set name="username">pds_user</Set>
+				<Set name="password">pds</Set>
+				<Set name="driverClassName">com.mysql.jdbc.Driver</Set>
+				<Set name="testOnBorrow">true</Set>
+				<Set name="testOnReturn">true</Set>
+				<Set name="testWhileIdle">true</Set>
+				<Set name="validationQuery">SELECT 1</Set>
+				<Set name="url">
+					jdbc:mysql://localhost:3306/pds_user?autoReconnect=true
+				</Set>
+			</New>
+		</Arg>
+	</New>
+</Configure>
