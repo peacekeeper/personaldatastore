@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_panel1" t="nextapp.echo.app.ContentPane">
+
+
+<c i="Component_splitPane1" t="nextapp.echo.app.SplitPane">
+<p n="styleName">Default</p>
+<p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM</p>
+<c i="Component_column1" t="nextapp.echo.app.Column">
+
+<c i="Component_feedbackLabel" t="nextapp.echo.app.Label" vis="private">
+
+
+
+<p n="visible">false</p>
+
+<p n="styleName">Feedback</p>
+<p n="layoutData" t="nextapp.echo.app.layout.ColumnLayoutData">
+
+<p n="insets">5px 0px 0px 5px</p>
+</p>
+<p n="text">...</p>
+</c>
+
+<p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+
+
+
+
+
+
+<p n="maximumSize">30px</p>
+<p n="minimumSize">30px</p>
+</p>
+</c>
+
+<p n="separatorVisible">false</p>
+<c i="Component_contentPane2" t="nextapp.echo.app.ContentPane">
+
+<p n="overflow">8</p>
+
+<c i="Component_column2" t="nextapp.echo.app.Column">
+
+
+
+
+
+<c i="Component_label1" t="nextapp.echo.app.Label">
+
+
+
+
+
+
+<p n="styleName">Header</p>
+<p n="text">Check for availability:</p>
+</c>
+<c i="Component_row1" t="nextapp.echo.app.Row">
+
+
+<c i="Component_inameTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="insets">5px</p>
+<p n="styleName">Default</p>
+<p n="text">=yourname</p>
+
+<e t="action">
+<h n="actionPerformed" v="onRegisterTopLevelActionPerformed"/>
+</e>
+</c>
+<p n="cellSpacing">10px</p>
+<c i="Component_button1" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+<p n="text">Go</p>
+<e t="action">
+<h n="actionPerformed" v="onRegisterTopLevelActionPerformed"/>
+</e>
+</c>
+
+<c i="Component_imageIcon1" t="echopoint.ImageIcon">
+
+
+
+
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/signup/xri/grs/logo-inames.png</p>
+
+<p n="layoutData" t="nextapp.echo.app.layout.RowLayoutData">
+
+<p n="insets">0px 0px 0px 20px</p>
+</p>
+</c>
+</c>
+<p n="cellSpacing">10px</p>
+
+
+
+
+
+
+
+
+<p n="insets">10px</p>
+
+
+
+<c i="Component_label2" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+<p n="text">An I-Name is a single, unified identifier on the Internet that can point to different targets and provide multiple services at the same time. It acts as the primary identifier for your Personal Data Store.</p>
+</c>
+
+<c i="Component_label4" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+<p n="text">Every I-Name comes with a corresponding I-Number, which is like a Swiss bank account name for your online identity.</p>
+</c>
+<c i="Component_grid1" t="nextapp.echo.app.Grid">
+<c i="Component_label3" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">Examples:</p>
+</c>
+<c i="Component_label5" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+<p n="text">=mary (I-Name)</p>
+</c>
+<c i="Component_label6" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+</c>
+<c i="Component_label7" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+<p n="text">=john.smith (I-Name)</p>
+</c>
+<p n="columnWidth" x="0">100px</p>
+<c i="Component_label10" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+</c>
+<c i="Component_label11" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">@mycompany (I-Name)</p>
+</c>
+<c i="Component_label8" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+</c>
+<c i="Component_label9" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">=!D18C.522F.0B25.1EF9 (I-Number)</p>
+</c>
+</c>
+</c>
+</c>
+</c>
+<p n="insets">10px</p>
+</c>
+</form>
