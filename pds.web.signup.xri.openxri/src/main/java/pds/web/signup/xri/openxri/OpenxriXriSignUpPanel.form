@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_panel1" t="nextapp.echo.app.Panel">
+
+<c i="Component_row1" t="nextapp.echo.app.Row">
+<c i="Component_button1" t="nextapp.echo.app.Button">
+
+
+<e t="action">
+<h n="actionPerformed" v="onActionPerformed"/>
+</e>
+
+<p n="text">Get a free I-Name</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/star.png</p>
+<p n="styleName">Plain</p>
+</c>
+<p n="cellSpacing">10px</p>
+<c i="Component_label1" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">Example: =web*yourname</p>
+
+</c>
+</c>
+<p n="insets">10px 0px 0px 0px</p>
+</c>
+</form>
