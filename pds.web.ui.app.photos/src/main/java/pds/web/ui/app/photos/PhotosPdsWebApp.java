@@ -13,7 +13,7 @@ public class PhotosPdsWebApp implements PdsWebApp {
 	@Override
 	public String getName() {
 
-		return "Address Book";
+		return "Photos";
 	}
 
 	@Override
