@@ -17,7 +17,6 @@ import org.eclipse.higgins.xdi4j.constants.DictionaryConstants;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.web.ui.shared.DataPredicatesColumn;
@@ -63,8 +62,8 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 	public void dispose() {
 
 		// remove us as listener
-
-		PDSApplication.getApp().getOpenContext().removeXdiGraphListener(this);
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
@@ -118,6 +117,12 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 
 	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
 
+		// remove us as listener
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		// refresh
+		
 		this.context = context;
 		this.subjectXri = subjectXri;
 		this.address = new XRI3("" + this.subjectXri);
@@ -129,7 +134,7 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 
 		// add us as listener
 
-		PDSApplication.getApp().getOpenContext().addXdiGraphListener(this);
+		this.context.addXdiGraphListener(this);
 	}
 
 	/**

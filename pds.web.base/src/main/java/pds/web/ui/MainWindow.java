@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nextapp.echo.app.Component;
-import nextapp.echo.app.ContentPane;
 import nextapp.echo.app.PaneContainer;
 import nextapp.echo.app.Window;
 import nextapp.echo.app.WindowPane;

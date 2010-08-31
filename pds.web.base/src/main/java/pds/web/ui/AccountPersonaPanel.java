@@ -17,7 +17,6 @@ import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.web.PDSApplication;
 import pds.web.ui.accountpersona.AccountPersonaWindowPane;
 import pds.web.xdi.XdiContext;
 import pds.web.xdi.XdiException;
@@ -62,8 +61,8 @@ public class AccountPersonaPanel extends Panel implements XdiGraphListener {
 		super.dispose();
 
 		// remove us as listener
-
-		PDSApplication.getApp().getOpenContext().removeXdiGraphListener(this);
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
@@ -134,6 +133,12 @@ public class AccountPersonaPanel extends Panel implements XdiGraphListener {
 
 	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
 
+		// remove us as listener
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		// refresh
+		
 		this.context = context;
 		this.subjectXri = subjectXri;
 		this.address = new XRI3("" + this.subjectXri);
@@ -143,7 +148,7 @@ public class AccountPersonaPanel extends Panel implements XdiGraphListener {
 
 		// add us as listener
 
-		PDSApplication.getApp().getOpenContext().addXdiGraphListener(this);
+		this.context.addXdiGraphListener(this);
 	}
 
 	private void onButtonActionPerformed(ActionEvent e) {

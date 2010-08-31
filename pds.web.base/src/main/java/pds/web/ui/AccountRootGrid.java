@@ -31,7 +31,6 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3SubSegment;
 
-import pds.web.PDSApplication;
 import pds.web.events.ApplicationContextClosedEvent;
 import pds.web.events.ApplicationEvent;
 import pds.web.events.ApplicationListener;
@@ -78,12 +77,11 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 	@Override
 	public void dispose() {
 
+		super.dispose();
+
 		// remove us as listener
-
-		if (PDSApplication.getApp().getOpenContext() != null) {
-
-			PDSApplication.getApp().getOpenContext().removeXdiGraphListener(this);
-		}
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
@@ -175,6 +173,12 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 
 	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
 
+		// remove us as listener
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		// refresh
+		
 		this.context = context;
 		this.subjectXri = subjectXri;
 		this.address = new XRI3("" + this.subjectXri);
@@ -184,7 +188,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 
 		// add us as listener
 
-		PDSApplication.getApp().getOpenContext().addXdiGraphListener(this);
+		this.context.addXdiGraphListener(this);
 	}
 
 	public void onApplicationEvent(ApplicationEvent applicationEvent) {

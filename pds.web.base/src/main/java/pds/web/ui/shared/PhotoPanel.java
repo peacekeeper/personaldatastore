@@ -4,13 +4,20 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ResourceBundle;
 
+import nextapp.echo.app.Alignment;
 import nextapp.echo.app.AwtImageReference;
+import nextapp.echo.app.Button;
 import nextapp.echo.app.Column;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.ImageReference;
 import nextapp.echo.app.Insets;
+import nextapp.echo.app.Label;
 import nextapp.echo.app.Panel;
+import nextapp.echo.app.ResourceImageReference;
 import nextapp.echo.app.Row;
+import nextapp.echo.app.event.ActionEvent;
+import nextapp.echo.app.event.ActionListener;
+import nextapp.echo.app.layout.RowLayoutData;
 
 import org.apache.commons.codec.binary.Base64;
 import org.eclipse.higgins.xdi4j.addressing.Addressing;
@@ -20,7 +27,6 @@ import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.web.xdi.XdiContext;
@@ -32,13 +38,6 @@ import pds.web.xdi.events.XdiGraphEvent;
 import pds.web.xdi.events.XdiGraphListener;
 import pds.web.xdi.events.XdiGraphModEvent;
 import echopoint.ImageIcon;
-import nextapp.echo.app.Label;
-import nextapp.echo.app.Button;
-import nextapp.echo.app.ResourceImageReference;
-import nextapp.echo.app.layout.RowLayoutData;
-import nextapp.echo.app.Alignment;
-import nextapp.echo.app.event.ActionListener;
-import nextapp.echo.app.event.ActionEvent;
 
 public class PhotoPanel extends Panel implements XdiGraphListener {
 
@@ -80,8 +79,8 @@ public class PhotoPanel extends Panel implements XdiGraphListener {
 		super.dispose();
 
 		// remove us as listener
-
-		PDSApplication.getApp().getOpenContext().removeXdiGraphListener(this);
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
@@ -180,6 +179,12 @@ public class PhotoPanel extends Panel implements XdiGraphListener {
 
 	public void setContextAndSubjectXriAndPhotoXri(XdiContext context, XRI3Segment subjectXri, XRI3Segment photoXri) {
 
+		// remove us as listener
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		// refresh
+		
 		this.context = context;
 		this.subjectXri = subjectXri;
 		this.photoXri = photoXri;
@@ -191,7 +196,7 @@ public class PhotoPanel extends Panel implements XdiGraphListener {
 
 		// add us as listener
 
-		PDSApplication.getApp().getOpenContext().addXdiGraphListener(this);
+		this.context.addXdiGraphListener(this);
 	}
 
 	private byte[] getBytes() throws XdiException {

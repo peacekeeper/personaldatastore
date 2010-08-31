@@ -7,8 +7,8 @@ import nextapp.echo.app.WindowPane;
 
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.web.ui.app.feed.FeedContentPane;
 import pds.web.xdi.XdiContext;
+import pds.web.ui.app.feed.FeedContentPane;
 
 public class FeedWindowPane extends WindowPane {
 
@@ -45,6 +45,7 @@ public class FeedWindowPane extends WindowPane {
 		this.setMinimizeEnabled(false);
 		this.setMaximizeEnabled(true);
 		this.setClosable(true);
+		this.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
 		this.setWidth(new Extent(800, Extent.PX));
 		feedContentPane = new FeedContentPane();
 		add(feedContentPane);

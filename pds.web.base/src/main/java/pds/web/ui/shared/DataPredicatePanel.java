@@ -29,7 +29,6 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3SubSegment;
 
-import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
@@ -90,7 +89,7 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 
 		// remove us as listener
 
-		PDSApplication.getApp().getOpenContext().removeXdiGraphListener(this);
+		if (this.context != null) this.context.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
@@ -102,9 +101,9 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 
 			this.instanceValuesColumn.removeAll();
 			List<XRI3Segment> dataPredicateInstanceXris = this.getDataPredicateInstanceXris();
-			
+
 			for (XRI3Segment dataPredicateInstanceXri : dataPredicateInstanceXris) {
-				
+
 				this.addDataPredicateInstancePanel(dataPredicateInstanceXri);
 			}
 		} catch (Exception ex) {
@@ -183,6 +182,12 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 
 	public void setContextAndSubjectXriAndPredicateXri(XdiContext context, XRI3Segment subjectXri, XRI3Segment predicateXri) {
 
+		// remove us as listener
+
+		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		// refresh
+
 		this.context = context;
 		this.subjectXri = subjectXri;
 		this.predicateXri = predicateXri;
@@ -195,7 +200,7 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 
 		// add us as listener
 
-		PDSApplication.getApp().getOpenContext().addXdiGraphListener(this);
+		this.context.addXdiGraphListener(this);
 	}
 
 	public void setReadOnly(boolean readOnly) {

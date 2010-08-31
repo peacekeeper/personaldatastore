@@ -4,7 +4,6 @@ import java.util.ResourceBundle;
 
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.WindowPane;
-import pds.web.ui.log.LogContentPane;
 
 public class LogWindowPane extends WindowPane {
 

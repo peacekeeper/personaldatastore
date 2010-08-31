@@ -5,7 +5,7 @@
 <p n="closable">true</p>
 <p n="maximizeEnabled">true</p>
 <p n="minimizeEnabled">false</p>
-<c i="Component_photosContentPane" t="pds.web.app.photos.PhotosContentPane" vis="private"/>
+
 
 <p n="width">800px</p>
 
@@ -16,5 +16,8 @@
 <p n="title">Address Book</p>
 
 <p n="styleName">Blue</p>
+
+<p n="defaultCloseOperation">nextapp.echo.app.WindowPane.DISPOSE_ON_CLOSE</p>
+<c i="Component_photosContentPane" t="pds.web.ui.app.photos.PhotosContentPane" vis="private"/>
 </c>
 </form>

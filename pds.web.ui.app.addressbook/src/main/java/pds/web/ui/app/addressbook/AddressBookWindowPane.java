@@ -44,6 +44,7 @@ public class AddressBookWindowPane extends WindowPane {
 		this.setMinimizeEnabled(false);
 		this.setMaximizeEnabled(true);
 		this.setClosable(true);
+		this.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
 		this.setWidth(new Extent(800, Extent.PX));
 		addressBookContentPane = new AddressBookContentPane();
 		add(addressBookContentPane);

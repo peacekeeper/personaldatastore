@@ -18,7 +18,6 @@ import nextapp.echo.app.WindowPane;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.RowLayoutData;
-
 import pds.web.PDSApplication;
 import pds.web.logger.Logger;
 

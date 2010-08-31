@@ -150,7 +150,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 			this.pdsColumn.setVisible(true);
 
-			this.context = PDSApplication.getApp().getOpenContext();
+			this.context = ((ApplicationContextOpenedEvent) applicationEvent).getContext();
 
 			this.refresh(applicationEvent);
 		}

@@ -9,7 +9,6 @@ import pds.web.events.ApplicationContextClosedEvent;
 import pds.web.events.ApplicationContextOpenedEvent;
 import pds.web.events.ApplicationEvent;
 import pds.web.events.ApplicationListener;
-import pds.web.ui.context.ClosedContentPane;
 
 public class ContextWindowPane extends WindowPane implements ApplicationListener {
 

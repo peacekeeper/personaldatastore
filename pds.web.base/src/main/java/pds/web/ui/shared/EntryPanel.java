@@ -26,7 +26,6 @@ import org.eclipse.higgins.xdi4j.types.Timestamps;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.web.xdi.XdiContext;
@@ -36,8 +35,6 @@ import pds.web.xdi.events.XdiGraphDelEvent;
 import pds.web.xdi.events.XdiGraphEvent;
 import pds.web.xdi.events.XdiGraphListener;
 import echopoint.ImageIcon;
-import nextapp.echo.app.Border;
-import nextapp.echo.app.Color;
 
 public class EntryPanel extends Panel implements XdiGraphListener {
 
@@ -82,8 +79,8 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		super.dispose();
 
 		// remove us as listener
-
-		PDSApplication.getApp().getOpenContext().removeXdiGraphListener(this);
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
@@ -146,6 +143,12 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 
 	public void setContextAndSubjectXriAndEntryXri(XdiContext context, XRI3Segment subjectXri, XRI3Segment entryXri) {
 
+		// remove us as listener
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		// refresh
+		
 		this.context = context;
 		this.subjectXri = subjectXri;
 		this.entryXri = entryXri;
@@ -159,7 +162,7 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 
 		// add us as listener
 
-		PDSApplication.getApp().getOpenContext().addXdiGraphListener(this);
+		this.context.addXdiGraphListener(this);
 	}
 
 	public void setEntryPanelDelegate(EntryPanelDelegate entryPanelDelegate) {

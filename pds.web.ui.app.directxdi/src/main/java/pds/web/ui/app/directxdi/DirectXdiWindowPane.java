@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.WindowPane;
 import pds.web.xdi.XdiContext;
+import pds.web.ui.app.directxdi.DirectXdiContentPane;
 
 public class DirectXdiWindowPane extends WindowPane {
 
@@ -41,6 +42,7 @@ public class DirectXdiWindowPane extends WindowPane {
 		this.setMinimizeEnabled(false);
 		this.setMaximizeEnabled(true);
 		this.setClosable(true);
+		this.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
 		this.setWidth(new Extent(800, Extent.PX));
 		directXdiContentPane = new DirectXdiContentPane();
 		add(directXdiContentPane);

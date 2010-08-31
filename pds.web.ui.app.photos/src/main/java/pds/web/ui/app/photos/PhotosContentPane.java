@@ -102,9 +102,11 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 	@Override
 	public void dispose() {
 
-		// remove us as listener
+		super.dispose();
 
-		PDSApplication.getApp().getOpenContext().removeXdiGraphListener(this);
+		// remove us as listener
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
@@ -219,6 +221,12 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 
 	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
 
+		// remove us as listener
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		// refresh
+		
 		this.context = context;
 		this.subjectXri = subjectXri;
 		this.address = new XRI3("" + this.subjectXri);
@@ -229,7 +237,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 
 		// add us as listener
 
-		PDSApplication.getApp().getOpenContext().addXdiGraphListener(this);
+		this.context.addXdiGraphListener(this);
 	}
 
 	private void onAddActionPerformed(ActionEvent e) {

@@ -81,8 +81,8 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 		super.dispose();
 
 		// remove us as listener
-
-		PDSApplication.getApp().getOpenContext().removeXdiGraphListener(this);
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
@@ -130,13 +130,19 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 
 	public void setContext(XdiContext context) {
 
+		// remove us as listener
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		// refresh
+		
 		this.context = context;
 
 		this.refresh();
 
 		// add us as listener
 
-		PDSApplication.getApp().getOpenContext().addXdiGraphListener(this);
+		this.context.addXdiGraphListener(this);
 	}
 
 	private Date getFirstAccess() throws XdiException {

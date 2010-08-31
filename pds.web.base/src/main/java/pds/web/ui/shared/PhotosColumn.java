@@ -17,7 +17,6 @@ import org.eclipse.higgins.xdi4j.util.iterators.MappingIterator;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;
 import pds.web.xdi.XdiContext;
 import pds.web.xdi.XdiException;
@@ -59,8 +58,8 @@ public class PhotosColumn extends Column implements XdiGraphListener {
 		super.dispose();
 
 		// remove us as listener
-
-		PDSApplication.getApp().getOpenContext().removeXdiGraphListener(this);
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
@@ -151,6 +150,12 @@ public class PhotosColumn extends Column implements XdiGraphListener {
 
 	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
 
+		// remove us as listener
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		// refresh
+		
 		this.context = context;
 		this.subjectXri = subjectXri;
 		this.address = new XRI3("" + this.subjectXri + "/+photos");
@@ -159,7 +164,7 @@ public class PhotosColumn extends Column implements XdiGraphListener {
 
 		// add us as listener
 
-		PDSApplication.getApp().getOpenContext().addXdiGraphListener(this);
+		this.context.addXdiGraphListener(this);
 	}
 
 	private List<XRI3Segment> getPhotoXris() throws XdiException {

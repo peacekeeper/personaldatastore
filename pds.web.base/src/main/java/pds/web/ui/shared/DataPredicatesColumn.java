@@ -18,7 +18,6 @@ import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.web.PDSApplication;
 import pds.web.dictionary.PdsDictionary;
 import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
@@ -52,6 +51,22 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 
 		// Add design-time configured components.
 		initComponents();
+	}
+
+	@Override
+	public void init() {
+
+		super.init();
+	}
+
+	@Override
+	public void dispose() {
+
+		super.dispose();
+
+		// remove us as listener
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
@@ -154,6 +169,12 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 
 	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
 
+		// remove us as listener
+		
+		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		// refresh
+		
 		this.context = context;
 		this.subjectXri = subjectXri;
 		this.address = new XRI3("" + this.subjectXri);
@@ -162,7 +183,7 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 
 		// add us as listener
 
-		PDSApplication.getApp().getOpenContext().addXdiGraphListener(this);
+		this.context.addXdiGraphListener(this);
 	}
 
 	public void setReadOnly(boolean readOnly) {

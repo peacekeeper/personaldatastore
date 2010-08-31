@@ -21,9 +21,9 @@ import pds.web.logger.events.LogEvent;
 import pds.web.logger.events.LogListener;
 import pds.web.ui.MainWindow;
 import pds.web.util.HtmlUtil;
-import pds.web.xdi.events.XdiTransactionListener;
 import pds.web.xdi.events.XdiTransactionEvent;
 import pds.web.xdi.events.XdiTransactionFailureEvent;
+import pds.web.xdi.events.XdiTransactionListener;
 import pds.web.xdi.events.XdiTransactionSuccessEvent;
 
 public class LogContentPane extends ContentPane implements LogListener, XdiTransactionListener {

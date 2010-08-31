@@ -5,7 +5,7 @@
 <p n="closable">true</p>
 <p n="maximizeEnabled">true</p>
 <p n="minimizeEnabled">false</p>
-<c i="Component_directXdiContentPane" t="pds.web.app.directxdi.DirectXdiContentPane" vis="private"/>
+<c i="Component_directXdiContentPane" t="pds.web.ui.app.directxdi.DirectXdiContentPane" vis="private"/>
 
 <p n="width">800px</p>
 
@@ -17,5 +17,6 @@
 <p n="title">Direct XDI</p>
 
 <p n="styleName">Blue</p>
+<p n="defaultCloseOperation">nextapp.echo.app.WindowPane.DISPOSE_ON_CLOSE</p>
 </c>
 </form>
