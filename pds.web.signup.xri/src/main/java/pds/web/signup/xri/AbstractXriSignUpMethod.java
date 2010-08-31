@@ -49,7 +49,7 @@ public abstract class AbstractXriSignUpMethod implements XriSignUpMethod {
 
 			Reader templateReader = new FileReader(new File(pdsApplication.getServlet().getServletContext().getRealPath(this.emailRegisterTemplate)));
 
-			Velocity.evaluate(context, writer, null, templateReader);
+			Velocity.evaluate(context, writer, this.emailRegisterTemplate, templateReader);
 			templateReader.close();
 			buffer = writer.getBuffer();
 
