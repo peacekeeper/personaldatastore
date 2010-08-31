@@ -183,7 +183,7 @@ public class Step1ContentPane extends ContentPane {
 		column2.add(label2);
 		Label label4 = new Label();
 		label4.setStyleName("Default");
-		label4.setText("Every I-Name comes with a corresponding I-Number, which is like a Swiss bank account name for your online identity.");
+		label4.setText("Every I-Name comes with a corresponding I-Number, which is like a Swiss bank account number for your online identity.");
 		column2.add(label4);
 		Grid grid1 = new Grid();
 		grid1.setColumnWidth(0, new Extent(100, Extent.PX));

@@ -140,7 +140,8 @@
 <c i="Component_label4" t="nextapp.echo.app.Label">
 <p n="styleName">Default</p>
 
-<p n="text">Every I-Name comes with a corresponding I-Number, which is like a Swiss bank account name for your online identity.</p>
+
+<p n="text">Every I-Name comes with a corresponding I-Number, which is like a Swiss bank account number for your online identity.</p>
 </c>
 <c i="Component_grid1" t="nextapp.echo.app.Grid">
 <c i="Component_label6" t="nextapp.echo.app.Label">
