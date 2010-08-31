@@ -70,9 +70,37 @@ public class Xdi {
 		if (inumber == null) throw new XdiException("The I-Name or its I-Number could not be found.");
 		this.logger.info("The I-Name " + iname + " has been resolved to the I-Number " + inumber + ".", null);
 
+		// resolve I-Number
+
+		String endpoint = null;
+
+		try {
+
+			endpoint = this.discovery.resolveXriToEndpoint(inumber);
+		} catch (Exception ex) {
+
+			throw new XdiException("Problem while resolving the I-Number: " + ex.getMessage());
+		}
+
+		if (endpoint == null) throw new XdiException("The XDI endpoint could not be found.");
+		this.logger.info("The I-Number " + inumber + " has been resolved to the XDI endpoint " + endpoint + ".", null);
+
+		// instantiate context
+
+		XdiContext context = new XdiContext(
+				this, 
+				new XDIHttpClient(endpoint), 
+				iname, 
+				new XRI3Segment(inumber), 
+				password);
+
+		// check password
+
+		if (password != null) context.checkPassword();
+
 		// done
 
-		return this.resolveContextByInumber(inumber, password);
+		return context;
 	}
 
 	public XdiContext resolveContextByInumber(String inumber, String password) throws XdiException {
