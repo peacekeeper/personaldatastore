@@ -16,6 +16,7 @@ import pds.web.events.ApplicationContextOpenedEvent;
 import pds.web.events.ApplicationEvent;
 import pds.web.events.ApplicationListener;
 import pds.web.logger.Logger;
+import pds.web.resource.style.Styles;
 import pds.web.ui.MainContentPane;
 import pds.web.ui.MainWindow;
 import pds.web.xdi.Xdi;

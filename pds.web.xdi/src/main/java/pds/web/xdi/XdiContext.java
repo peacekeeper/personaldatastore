@@ -90,12 +90,10 @@ public class XdiContext {
 		// $get
 
 		XRI3 operationAddress = new XRI3("" + this.canonical + "/$password");
-		Operation operation = this.prepareOperation(MessagingConstants.XRI_GET, operationAddress);
+		Operation operation = this.prepareOperation(MessagingConstants.XRI_GETEXISTS, operationAddress);
 		MessageResult messageResult = this.send(operation);
 
-		String password = Addressing.findLiteralData(messageResult.getGraph(), operationAddress);
-		
-		if (! XdiContext.this.password.equals(password)) {
+		if (! Boolean.TRUE.equals(messageResult.getBoolean())) {
 
 			throw new XdiException("Incorrect password.");
 		}
@@ -261,7 +259,7 @@ public class XdiContext {
 			while (operationAddress != null) {
 
 				XRI3 listenersAddress = bubbled ? new XRI3(operationAddress.toString() + "/$$") : operationAddress;
-				
+
 				log.debug("Looking for listeners on address " + listenersAddress + " (" + operationXri + ")");
 
 				List<XdiGraphListener> xdiGraphListeners;
