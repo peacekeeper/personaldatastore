@@ -35,11 +35,6 @@
 							<value>false</value>
 						</systemproperty>
 					</systemproperties>
-					<webAppConfig>
-						<baseResource implementation="org.mortbay.resource.ResourceCollection">
-							<resources>src/main/webapp</resources>
-						</baseResource>
-					</webAppConfig>
 				</configuration>
 				<dependencies>
 					<dependency>
