@@ -63,7 +63,7 @@ public class XriWizard {
 
 			String endpoint = (String) endpoints[i];
 			if (! endpoint.endsWith("/")) endpoint += "/";
-			endpoint += xri.getCanonicalID().toString() + "/";
+			endpoint += xri.getCanonicalID().getValue() + "/";
 
 			uris[i] = URI.create(endpoint);		
 		}
