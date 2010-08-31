@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
+import pds.web.PDSApplication;
 import pds.web.signin.xri.XriSignUpMethod;
 import pds.web.signup.xri.util.Email;
 
@@ -30,7 +31,7 @@ public abstract class AbstractXriSignUpMethod implements XriSignUpMethod {
 	private String emailRegisterTemplate;
 	private Properties emailProperties;
 
-	public void sendEmail(String iname, String to) {
+	public void sendEmail(PDSApplication pdsApplication, String iname, String to) {
 
 		// send e-mail
 
@@ -46,7 +47,7 @@ public abstract class AbstractXriSignUpMethod implements XriSignUpMethod {
 			VelocityContext context = new VelocityContext(this.emailProperties);
 			context.put("iname", iname);
 
-			Reader templateReader = new FileReader(new File(this.emailRegisterTemplate));
+			Reader templateReader = new FileReader(new File(pdsApplication.getServlet().getServletContext().getRealPath(this.emailRegisterTemplate)));
 
 			Velocity.evaluate(context, writer, null, templateReader);
 			templateReader.close();

@@ -557,16 +557,25 @@ public class Step2ContentPane extends ContentPane {
 
 		String to = this.primaryEmailTextField.getText();
 
-		this.grsXriSignUpMethod.sendEmail(xri.getFullName(), to);
+		this.grsXriSignUpMethod.sendEmail(pdsApplication, xri.getFullName(), to);
 
 		// close us
 
 		this.completed = true;
 
-		MessageDialog.info(xri.getFullName() + " has been registered.");
-		
-		WindowPane windowPane = (WindowPane) MainWindow.findParentComponentByClass(this, WindowPane.class);
-		windowPane.getParent().remove(windowPane);
+		final String fullName = xri.getFullName();
+
+		pdsApplication.enqueueTask(taskQueueHandle, new Runnable() {
+
+			@Override
+			public void run() {
+
+				MessageDialog.info(fullName + " has been registered.");
+
+				WindowPane windowPane = (WindowPane) MainWindow.findParentComponentByClass(Step2ContentPane.this, WindowPane.class);
+				windowPane.getParent().remove(windowPane);
+			}
+		});
 	}
 
 	private static String fixPhone(String phone, String country) {
@@ -626,9 +635,9 @@ public class Step2ContentPane extends ContentPane {
 		ContentPane contentPane1 = new ContentPane();
 		SplitPaneLayoutData contentPane1LayoutData = new SplitPaneLayoutData();
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-				"/pds/web/signup/xri/grs/stripes.png");
+		"/pds/web/signup/xri/grs/stripes.png");
 		contentPane1LayoutData
-				.setBackgroundImage(new FillImage(imageReference1));
+		.setBackgroundImage(new FillImage(imageReference1));
 		contentPane1.setLayoutData(contentPane1LayoutData);
 		splitPane2.add(contentPane1);
 		Column column2 = new Column();
@@ -834,7 +843,7 @@ public class Step2ContentPane extends ContentPane {
 		passwordField.setStyleName("Default");
 		passwordField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onRegisterActionPerformed(e);
 			}
@@ -845,7 +854,7 @@ public class Step2ContentPane extends ContentPane {
 		registerButton.setText("Register the name");
 		registerButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onRegisterActionPerformed(e);
 			}
@@ -856,7 +865,7 @@ public class Step2ContentPane extends ContentPane {
 		button1.setText("Back");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onBackActionPerformed(e);
 			}

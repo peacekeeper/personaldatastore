@@ -28,6 +28,7 @@ import pds.store.user.User;
 import pds.store.xri.Xri;
 import pds.store.xri.XriStore;
 import pds.store.xri.openxri.OpenxriXriData;
+import pds.web.PDSApplication;
 import pds.web.signup.xri.util.XriWizard;
 import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
@@ -90,6 +91,7 @@ public class Step2ContentPane extends ContentPane {
 
 	private void onRegisterActionPerformed(ActionEvent e) {
 
+		PDSApplication pdsApplication = PDSApplication.getApp();
 		XriStore xriStore = this.openxriXriSignUpMethod.getXriStore();
 		pds.store.user.Store userStore = this.openxriXriSignUpMethod.getUserStore();
 
@@ -168,11 +170,13 @@ public class Step2ContentPane extends ContentPane {
 
 		String to = this.emailTextField.getText();
 
-		this.openxriXriSignUpMethod.sendEmail(xri.getFullName(), to);
+		this.openxriXriSignUpMethod.sendEmail(pdsApplication, xri.getFullName(), to);
 
 		// close us
 
-		MessageDialog.info(xri.getFullName() + " has been registered.");
+		final String fullName = xri.getFullName();
+		
+		MessageDialog.info(fullName + " has been registered.");
 		
 		WindowPane windowPane = (WindowPane) MainWindow.findParentComponentByClass(this, WindowPane.class);
 		windowPane.getParent().remove(windowPane);

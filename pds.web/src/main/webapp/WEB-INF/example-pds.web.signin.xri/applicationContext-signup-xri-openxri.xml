@@ -32,7 +32,7 @@
 
 		<!-- The following are settings for welcome E-Mails. -->
 
-		<property name="emailRegisterTemplate" value="/WEB-INF/doregister.vm" />
+		<property name="emailRegisterTemplate" value="WEB-INF/doregister.vm" />
 		<property name="emailProperties">
 			<util:properties>
 				<prop key="email-from">office@yourserver.com</prop>
