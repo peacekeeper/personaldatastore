@@ -10,7 +10,6 @@ import nextapp.echo.app.Extent;
 import nextapp.echo.app.Grid;
 import nextapp.echo.app.Insets;
 import nextapp.echo.app.Label;
-import nextapp.echo.app.Panel;
 import nextapp.echo.app.Row;
 import nextapp.echo.app.SplitPane;
 import nextapp.echo.app.layout.GridLayoutData;
@@ -28,7 +27,6 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;
 import pds.web.xdi.XdiContext;
-import pds.web.xdi.XdiException;
 
 public class XdiContentPane extends ContentPane {
 
@@ -40,9 +38,10 @@ public class XdiContentPane extends ContentPane {
 	private XRI3 mainAddress;
 	private XRI3[] getAddresses;
 
-	private GraphContentPane graphContentPane;
 	private Label xdiAddressLabel;
 	private Label httpAddressLabel;
+
+	private GraphContentPane graphContentPane;
 
 	/**
 	 * Creates a new <code>XdiContentPane</code>.
@@ -68,11 +67,15 @@ public class XdiContentPane extends ContentPane {
 		try {
 
 			Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET);
-			Graph operationGraph = operation.createOperationGraph(null);
 
-			for (XRI3 getAddress : this.getAddresses) {
+			if (this.getAddresses != null) {
 
-				CopyUtil.copyStatement(Addressing.convertAddressToStatement(getAddress), operationGraph, null);
+				Graph operationGraph = operation.createOperationGraph(null);
+
+				for (XRI3 getAddress : this.getAddresses) {
+
+					CopyUtil.copyStatement(Addressing.convertAddressToStatement(getAddress), operationGraph, null);
+				}
 			}
 
 			MessageResult messageResult = this.context.send(operation);
@@ -82,9 +85,9 @@ public class XdiContentPane extends ContentPane {
 			this.xdiAddressLabel.setText(this.mainAddress == null ? "" : this.mainAddress.toString());
 			this.httpAddressLabel.setText(httpEndpoint + (this.mainAddress == null ? "" : this.mainAddress.toString()));
 			this.graphContentPane.setGraph(messageResult.getGraph());
-		} catch (XdiException ex) {
+		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -94,7 +97,7 @@ public class XdiContentPane extends ContentPane {
 		this.context = context;
 		this.mainAddress = mainAddress;
 		this.getAddresses = getAddresses;
-		
+
 		this.refresh();
 	}
 
@@ -104,12 +107,12 @@ public class XdiContentPane extends ContentPane {
 	}
 
 	public XRI3 getMainAddress() {
-		
+
 		return this.mainAddress;
 	}
 
 	public XRI3[] getGetAddresses() {
-		
+
 		return this.getAddresses;
 	}
 
@@ -141,8 +144,7 @@ public class XdiContentPane extends ContentPane {
 		column1.add(row1);
 		Label label1 = new Label();
 		label1.setStyleName("Default");
-		label1
-		.setText("This window displays the raw XDI data of an object in your Personal Data Store.");
+		label1.setText("This window displays the raw XDI data of an object in your Personal Data Store.");
 		RowLayoutData label1LayoutData = new RowLayoutData();
 		label1LayoutData.setInsets(new Insets(new Extent(10, Extent.PX)));
 		label1.setLayoutData(label1LayoutData);
@@ -181,8 +183,6 @@ public class XdiContentPane extends ContentPane {
 		httpAddressLabel.setStyleName("Bold");
 		httpAddressLabel.setText("...");
 		grid1.add(httpAddressLabel);
-		Panel panel1 = new Panel();
-		column1.add(panel1);
 		graphContentPane = new GraphContentPane();
 		splitPane1.add(graphContentPane);
 	}

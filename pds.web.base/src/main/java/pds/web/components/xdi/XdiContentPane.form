@@ -59,7 +59,7 @@
 </c>
 </c>
 
-<c i="Component_panel1" t="nextapp.echo.app.Panel"/>
+
 <p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
 <p n="overflow">nextapp.echo.app.layout.SplitPaneLayoutData.OVERFLOW_HIDDEN</p>
 
@@ -70,10 +70,11 @@
 <p n="minimumSize">110px</p>
 </p>
 </c>
-<c i="Component_graphContentPane" t="pds.web.components.xdi.GraphContentPane" vis="private"/>
+
 <p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM</p>
 <p n="separatorHeight">10px</p>
 <p n="separatorVisible">false</p>
+<c i="Component_graphContentPane" t="pds.web.components.xdi.GraphContentPane" vis="private"/>
 </c>
 </c>
 </form>

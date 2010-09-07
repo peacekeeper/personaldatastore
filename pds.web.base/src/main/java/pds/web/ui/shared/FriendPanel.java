@@ -80,7 +80,7 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 			this.friendButton.setText(friend);
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -122,7 +122,7 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 			}
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -175,9 +175,9 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 			operation.createOperationGraph(Addressing.convertAddressToGraph(this.address));
 
 			this.context.send(operation);
-		} catch (XdiException ex) {
+		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while storing your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}

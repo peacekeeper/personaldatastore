@@ -93,8 +93,87 @@
 <p n="cellSpacing">20px</p>
 
 <c i="Component_pdsWebAppGrid" t="nextapp.echo.app.Grid" vis="private">
-<p n="size">4</p>
+
 <p n="orientation">nextapp.echo.app.Grid.ORIENTATION_HORIZONTAL</p>
+<p n="size">5</p>
+</c>
+<c i="Component_label3" t="nextapp.echo.app.Label">
+
+
+<p n="styleName">Header</p>
+
+<p n="text">Data Housekeeping</p>
+</c>
+<c i="Component_row5" t="nextapp.echo.app.Row">
+
+
+<c i="Component_toolTipContainer1" t="nextapp.echo.extras.app.ToolTipContainer">
+<c i="Component_button2" t="nextapp.echo.app.Button">
+
+
+<e t="action">
+<h n="actionPerformed" v="onResetDataActionPerformed"/>
+</e>
+
+
+
+
+
+
+
+
+<p n="styleName">PlainWhite</p>
+
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/data-clean.png</p>
+<p n="text">Reset data</p>
+</c>
+<c i="Component_panel1" t="nextapp.echo.app.Panel">
+<p n="styleName">Tooltip</p>
+<c i="Component_label4" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">This will clear all data from your Personal Data Store. Make sure you have a backup!</p>
+</c>
+</c>
+</c>
+
+<c i="Component_toolTipContainer2" t="nextapp.echo.extras.app.ToolTipContainer">
+<c i="Component_button3" t="nextapp.echo.app.Button">
+<p n="text">Data Export</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/data-export.png</p>
+<p n="styleName">PlainWhite</p>
+<e t="action">
+<h n="actionPerformed" v="onDataExportActionPerformed"/>
+</e>
+</c>
+<c i="Component_panel2" t="nextapp.echo.app.Panel">
+<p n="styleName">Tooltip</p>
+<c i="Component_label5" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">This allows you to download all the contents of your Personal Data Store as an XDI file.</p>
+</c>
+</c>
+</c>
+<c i="Component_toolTipContainer3" t="nextapp.echo.extras.app.ToolTipContainer">
+<c i="Component_button11" t="nextapp.echo.app.Button">
+
+
+<e t="action">
+<h n="actionPerformed" v="onDataImportActionPerformed"/>
+</e>
+<p n="styleName">PlainWhite</p>
+<p n="text">Data Import</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/data-import.png</p>
+</c>
+<c i="Component_panel3" t="nextapp.echo.app.Panel">
+<p n="styleName">Tooltip</p>
+<c i="Component_label6" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+<p n="text">This allows you to import data from an XDI file input your Personal Data Store.</p>
+</c>
+</c>
+</c>
+<p n="cellSpacing">20px</p>
 </c>
 </c>
 </c>

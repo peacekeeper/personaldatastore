@@ -1,10 +1,10 @@
 package pds.web.ui.app.addressbook;
 
 import nextapp.echo.app.ResourceImageReference;
-import nextapp.echo.app.WindowPane;
 
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
+import pds.web.ui.MainContentPane;
 import pds.web.ui.app.PdsWebApp;
 import pds.web.xdi.XdiContext;
 
@@ -23,11 +23,11 @@ public class AddressBookPdsWebApp implements PdsWebApp {
 	}
 
 	@Override
-	public WindowPane newWindowPane(XdiContext context, XRI3Segment subjectXri) {
+	public void onActionPerformed(MainContentPane mainContentPane, XdiContext context, XRI3Segment subjectXri) {
 
 		AddressBookWindowPane addressBookWindowPane = new AddressBookWindowPane();
 		addressBookWindowPane.setContextAndSubjectXri(context, subjectXri);
 
-		return addressBookWindowPane;
+		mainContentPane.add(addressBookWindowPane);
 	}
 }

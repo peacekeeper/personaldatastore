@@ -19,6 +19,7 @@ import org.eclipse.higgins.xdi4j.messaging.Message;
 import org.eclipse.higgins.xdi4j.messaging.MessageEnvelope;
 import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
+import org.eclipse.higgins.xdi4j.messaging.client.XDIClient;
 import org.eclipse.higgins.xdi4j.messaging.client.http.XDIHttpClient;
 import org.eclipse.higgins.xdi4j.messaging.error.ErrorMessageResult;
 import org.eclipse.higgins.xdi4j.util.CopyUtil;
@@ -41,7 +42,7 @@ public class XdiContext {
 	private static final Log log = LogFactory.getLog(XdiContext.class.getName());
 
 	private final Xdi xdi;
-	private final XDIHttpClient xdiClient;
+	private final XDIClient xdiClient;
 	private final String identifier;
 	private final XRI3Segment canonical;
 	private final String password;
@@ -51,7 +52,7 @@ public class XdiContext {
 	private final Map<XRI3, List<XdiGraphListener> > xdiModGraphListeners;
 	private final Map<XRI3, List<XdiGraphListener> > xdiDelGraphListeners;
 
-	public XdiContext(Xdi xdi, XDIHttpClient xdiClient, String identifier, XRI3Segment canonical, String password) { 
+	public XdiContext(Xdi xdi, XDIClient xdiClient, String identifier, XRI3Segment canonical, String password) { 
 
 		this.xdi = xdi;
 		this.xdiClient = xdiClient;
@@ -67,7 +68,12 @@ public class XdiContext {
 
 	public String getEndpoint() {
 
-		return this.xdiClient.getUrl().toString();
+		if (this.xdiClient instanceof XDIHttpClient) {
+
+			return ((XDIHttpClient) this.xdiClient).getUrl().toString();
+		}
+
+		return null;
 	}
 
 	public String getIdentifier() {
@@ -110,12 +116,6 @@ public class XdiContext {
 
 			MessageResult ret = XdiContext.this.xdiClient.send(messageEnvelope, null);
 
-			if (ErrorMessageResult.isValid(ret.getGraph())) {
-
-				ret = ErrorMessageResult.fromGraph(ret.getGraph());
-				throw new XdiException("Problem from XDI Server: " + ((ErrorMessageResult) ret).getErrorString());
-			}
-
 			transactionEvent = new XdiTransactionSuccessEvent(this, messageEnvelope, beginTimestamp, new Date(), ret);
 			this.xdi.fireXdiTransactionSuccessEvent((XdiTransactionSuccessEvent) transactionEvent);
 		} catch (Exception ex) {
@@ -147,6 +147,14 @@ public class XdiContext {
 		Message message = messageEnvelope.newMessage(this.canonical);
 		if (this.password != null) messageEnvelope.getGraph().createStatement(this.canonical, new XRI3Segment("$password"), this.password);
 		Operation operation = message.createOperation(operationXri);
+
+		return operation;
+	}
+
+	public Operation prepareOperation(XRI3Segment operationXri, Graph operationGraph) {
+
+		Operation operation = this.prepareOperation(operationXri);
+		operation.createOperationGraph(operationGraph);
 
 		return operation;
 	}
@@ -193,6 +201,14 @@ public class XdiContext {
 
 				this.fireXdiGraphEvent(operationAddresses, operationXri);
 			}
+		}
+
+		// check for eerrors
+
+		if (ErrorMessageResult.isValid(messageResult.getGraph())) {
+
+			messageResult = ErrorMessageResult.fromGraph(messageResult.getGraph());
+			throw new XdiException("Problem from XDI Server: " + ((ErrorMessageResult) messageResult).getErrorString());
 		}
 
 		// done

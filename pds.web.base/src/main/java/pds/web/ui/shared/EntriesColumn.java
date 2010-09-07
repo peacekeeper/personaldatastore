@@ -84,7 +84,7 @@ public class EntriesColumn extends Column implements XdiGraphListener {
 			}
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -153,7 +153,7 @@ public class EntriesColumn extends Column implements XdiGraphListener {
 			}
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}

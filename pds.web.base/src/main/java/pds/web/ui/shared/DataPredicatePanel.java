@@ -108,7 +108,7 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 			}
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -175,7 +175,7 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 			}
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -237,7 +237,7 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 				this.addDataPredicateInstance(value);
 			} catch (Exception ex) {
 
-				MessageDialog.problem("Sorry, a problem occurred while storing your personal data: " + ex.getMessage(), ex);
+				MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
 				return;
 			}
 

@@ -10,6 +10,7 @@
 		<bean class="pds.web.ui.app.addressbook.AddressBookPdsWebApp" />
 		<bean class="pds.web.ui.app.feed.FeedPdsWebApp" />
 		<bean class="pds.web.ui.app.photos.PhotosPdsWebApp" />
+		<bean class="pds.web.ui.app.whisper.WhisperPdsWebApp" />
 		<bean class="pds.web.ui.app.directxdi.DirectXdiPdsWebApp" />
 
 	</util:list>

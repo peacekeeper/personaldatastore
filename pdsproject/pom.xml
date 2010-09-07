@@ -32,6 +32,7 @@
 		<module>../pds.web.ui.app.feed</module>
 		<module>../pds.web.ui.app.photos</module>
 		<module>../pds.web.ui.app.directxdi</module>
+		<module>../pds.web.ui.app.whisper</module>
 		<module>../pds.endpoint.feed</module>
 		<module>../pds.store.user</module>
 		<module>../pds.store.xri</module>

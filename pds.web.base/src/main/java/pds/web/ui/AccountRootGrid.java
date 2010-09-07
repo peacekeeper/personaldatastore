@@ -100,7 +100,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 			}
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -154,7 +154,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 			}
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}

@@ -88,7 +88,7 @@ public class AccountPersonaContentPane extends ContentPane implements XdiGraphLi
 			this.dataPredicatesColumn.setContextAndSubjectXri(this.context, this.subjectXri);
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -142,7 +142,7 @@ public class AccountPersonaContentPane extends ContentPane implements XdiGraphLi
 			}
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -172,9 +172,9 @@ public class AccountPersonaContentPane extends ContentPane implements XdiGraphLi
 		try {
 
 			this.delete();
-		} catch (XdiException ex) {
+		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while storing your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}

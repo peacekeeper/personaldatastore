@@ -25,7 +25,8 @@
 
 
 
-<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/app-feed.png</p>
+
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/ui/app/feed/app.png</p>
 </c>
 <c i="Component_label1" t="nextapp.echo.app.Label">
 

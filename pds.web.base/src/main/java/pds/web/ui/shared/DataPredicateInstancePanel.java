@@ -92,7 +92,7 @@ public class DataPredicateInstancePanel extends Panel implements XdiGraphListene
 			this.valueTextField.setText(value);
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -140,7 +140,7 @@ public class DataPredicateInstancePanel extends Panel implements XdiGraphListene
 			}
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -201,9 +201,9 @@ public class DataPredicateInstancePanel extends Panel implements XdiGraphListene
 		try {
 
 			this.setValue(this.valueTextField.getText());
-		} catch (XdiException ex) {
+		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while storing your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 
@@ -220,9 +220,9 @@ public class DataPredicateInstancePanel extends Panel implements XdiGraphListene
 			try {
 
 				this.delete();
-			} catch (XdiException ex) {
+			} catch (Exception ex) {
 
-				MessageDialog.problem("Sorry, a problem occurred while storing your personal data: " + ex.getMessage(), ex);
+				MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
 				return;
 			}
 		} else {

@@ -60,6 +60,8 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 
 	@Override
 	public void dispose() {
+		
+		super.dispose();
 
 		// remove us as listener
 		
@@ -75,7 +77,7 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 			this.dataPredicatesColumn.setContextAndSubjectXri(this.context, this.subjectXri);
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}

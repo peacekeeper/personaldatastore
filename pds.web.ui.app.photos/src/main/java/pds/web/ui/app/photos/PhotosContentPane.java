@@ -130,7 +130,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 			}
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -214,7 +214,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 			}
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -252,7 +252,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 				this.addFriendXri(new XRI3Segment(friend));
 			} catch (Exception ex) {
 
-				MessageDialog.problem("Sorry, a problem occurred while storing your personal data: " + ex.getMessage(), ex);
+				MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
 				return;
 			}
 
@@ -305,7 +305,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 			this.addPhoto(this.tempBytes, this.titleTextField.getText(), this.tempMimeType);
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while storing your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 
@@ -395,7 +395,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		row1.add(row2);
 		ImageIcon imageIcon2 = new ImageIcon();
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-		"/pds/web/resource/image/app-photos.png");
+				"/pds/web/ui/app/photos/app.png");
 		imageIcon2.setIcon(imageReference1);
 		imageIcon2.setHeight(new Extent(48, Extent.PX));
 		imageIcon2.setWidth(new Extent(48, Extent.PX));
@@ -412,7 +412,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		SplitPane splitPane2 = new SplitPane();
 		splitPane2.setStyleName("Default");
 		ResourceImageReference imageReference2 = new ResourceImageReference(
-		"/pds/web/resource/image/separator-blue.png");
+				"/pds/web/resource/image/separator-blue.png");
 		splitPane2.setSeparatorHorizontalImage(new FillImage(imageReference2));
 		splitPane2.setOrientation(SplitPane.ORIENTATION_HORIZONTAL_LEFT_RIGHT);
 		splitPane2.setSeparatorWidth(new Extent(10, Extent.PX));
@@ -454,7 +454,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		uploadSelect1.setId("imageFileUploadSelect");
 		uploadSelect1.addUploadListener(new UploadListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void uploadComplete(UploadEvent e) {
 				onImageFileUploadComplete(e);
 			}
@@ -465,7 +465,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		button1.setText("Post!");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onPostActionPerformed(e);
 			}
@@ -483,7 +483,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		addTextField.setVisible(false);
 		addTextField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onAddActionPerformed(e);
 			}
@@ -492,11 +492,11 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		addButton = new Button();
 		addButton.setStyleName("Plain");
 		ResourceImageReference imageReference3 = new ResourceImageReference(
-		"/pds/web/resource/image/op-add.png");
+				"/pds/web/resource/image/op-add.png");
 		addButton.setIcon(imageReference3);
 		addButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onAddActionPerformed(e);
 			}
@@ -505,12 +505,12 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		cancelButton = new Button();
 		cancelButton.setStyleName("Plain");
 		ResourceImageReference imageReference4 = new ResourceImageReference(
-		"/pds/web/resource/image/op-cancel.png");
+				"/pds/web/resource/image/op-cancel.png");
 		cancelButton.setIcon(imageReference4);
 		cancelButton.setVisible(false);
 		cancelButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onCancelActionPerformed(e);
 			}

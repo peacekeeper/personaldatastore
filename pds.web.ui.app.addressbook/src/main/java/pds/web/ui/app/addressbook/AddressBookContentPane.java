@@ -115,7 +115,7 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 			}
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -197,7 +197,7 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 			}
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your personal data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -233,7 +233,7 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 				this.addFriendXri(new XRI3Segment(friend));
 			} catch (Exception ex) {
 
-				MessageDialog.problem("Sorry, a problem occurred while storing your personal data: " + ex.getMessage(), ex);
+				MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
 				return;
 			}
 
@@ -306,7 +306,7 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 		row1.add(row2);
 		ImageIcon imageIcon2 = new ImageIcon();
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-		"/pds/web/resource/image/app-addressbook.png");
+				"/pds/web/ui/app/addressbook/app.png");
 		imageIcon2.setIcon(imageReference1);
 		imageIcon2.setHeight(new Extent(48, Extent.PX));
 		imageIcon2.setWidth(new Extent(48, Extent.PX));
@@ -323,7 +323,7 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 		SplitPane splitPane2 = new SplitPane();
 		splitPane2.setStyleName("Default");
 		ResourceImageReference imageReference2 = new ResourceImageReference(
-		"/pds/web/resource/image/separator-blue.png");
+				"/pds/web/resource/image/separator-blue.png");
 		splitPane2.setSeparatorHorizontalImage(new FillImage(imageReference2));
 		splitPane2.setOrientation(SplitPane.ORIENTATION_HORIZONTAL_LEFT_RIGHT);
 		splitPane2.setSeparatorWidth(new Extent(10, Extent.PX));
@@ -345,7 +345,7 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 		addTextField.setVisible(false);
 		addTextField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onAddActionPerformed(e);
 			}
@@ -354,11 +354,11 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 		addButton = new Button();
 		addButton.setStyleName("Plain");
 		ResourceImageReference imageReference3 = new ResourceImageReference(
-		"/pds/web/resource/image/op-add.png");
+				"/pds/web/resource/image/op-add.png");
 		addButton.setIcon(imageReference3);
 		addButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onAddActionPerformed(e);
 			}
@@ -367,12 +367,12 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 		cancelButton = new Button();
 		cancelButton.setStyleName("Plain");
 		ResourceImageReference imageReference4 = new ResourceImageReference(
-		"/pds/web/resource/image/op-cancel.png");
+				"/pds/web/resource/image/op-cancel.png");
 		cancelButton.setIcon(imageReference4);
 		cancelButton.setVisible(false);
 		cancelButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onCancelActionPerformed(e);
 			}

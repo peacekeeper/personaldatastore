@@ -37,14 +37,14 @@ public class Xdi {
 	private final Discovery discovery;
 	private final Logger logger;
 
-	private final List<XdiTransactionListener> xdiListeners;
+	private final List<XdiTransactionListener> xdiTransactionListeners;
 
 	public Xdi(Discovery discovery, Logger logger) {
 
 		this.discovery = discovery;
 		this.logger = logger;
 
-		this.xdiListeners = new ArrayList<XdiTransactionListener> ();
+		this.xdiTransactionListeners = new ArrayList<XdiTransactionListener> ();
 	}
 
 	/*
@@ -236,18 +236,18 @@ public class Xdi {
 
 	public void addXdiListener(XdiTransactionListener xdiListener) {
 
-		if (this.xdiListeners.contains(xdiListener)) return;
-		this.xdiListeners.add(xdiListener);
+		if (this.xdiTransactionListeners.contains(xdiListener)) return;
+		this.xdiTransactionListeners.add(xdiListener);
 	}
 
 	public void removeXdiListener(XdiTransactionListener xdiListener) {
 
-		this.xdiListeners.remove(xdiListener);
+		this.xdiTransactionListeners.remove(xdiListener);
 	}
 
 	public void fireXdiTransactionSuccessEvent(XdiTransactionSuccessEvent transactionSuccessEvent) {
 
-		for (XdiTransactionListener xdiListener : this.xdiListeners) {
+		for (XdiTransactionListener xdiListener : this.xdiTransactionListeners) {
 
 			xdiListener.onXdiTransactionSuccess(transactionSuccessEvent);
 		}
@@ -255,7 +255,7 @@ public class Xdi {
 
 	public void fireXdiTransactionFailureEvent(XdiTransactionFailureEvent transactionFailureEvent) {
 
-		for (XdiTransactionListener xdiListener : this.xdiListeners) {
+		for (XdiTransactionListener xdiListener : this.xdiTransactionListeners) {
 
 			xdiListener.onXdiTransactionFailure(transactionFailureEvent);
 		}
