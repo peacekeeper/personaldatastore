@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_windowPane1" t="nextapp.echo.app.WindowPane">
+
+<p n="closable">true</p>
+<p n="maximizeEnabled">true</p>
+<p n="minimizeEnabled">false</p>
+<c i="Component_dataImportContentPane" t="pds.web.ui.dataimport.DataImportContentPane" vis="private"/>
+
+
+
+
+
+
+
+
+<p n="styleName">Gray</p>
+<p n="height">400px</p>
+<p n="width">600px</p>
+<p n="title">Data Import</p>
+</c>
+</form>
