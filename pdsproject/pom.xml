@@ -35,7 +35,6 @@
 		<module>../pds.web.signin.xri</module>
 		<module>../pds.web.signup.xri</module>
 		<module>../pds.web.signup.xri.openxri</module>
-		<!-- <module>../pds.web.signup.xri.grs</module> -->
 		<module>../pds.web.ui.app.addressbook</module>
 		<module>../pds.web.ui.app.feed</module>
 		<module>../pds.web.ui.app.photos</module>
@@ -49,7 +48,6 @@
 		<module>../pds.store.user</module>
 		<module>../pds.store.xri</module>
 		<module>../pds.store.xri.openxri</module>
-		<!-- <module>../pds.store.xri.grs</module> -->
 		<module>../pds.util.spring</module>
 		<module>../pds.xdi</module>
 	</modules>
