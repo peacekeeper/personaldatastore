@@ -18,8 +18,8 @@ import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;
-import pds.web.xdi.Xdi;
-import pds.web.xdi.XdiContext;
+import pds.xdi.Xdi;
+import pds.xdi.XdiContext;
 
 public class ManualSignInPanel extends Panel {
 

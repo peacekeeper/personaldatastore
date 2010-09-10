@@ -55,7 +55,10 @@
 <c i="Component_splitPane2" t="nextapp.echo.app.SplitPane">
 <p n="styleName">Default</p>
 <c i="Component_column1" t="nextapp.echo.app.Column">
-<c i="Component_column6" t="nextapp.echo.app.Column">
+
+
+
+<p n="cellSpacing">10px</p>
 <c i="Component_label3" t="nextapp.echo.app.Label">
 <p n="styleName">Default</p>
 
@@ -82,14 +85,27 @@
 </e>
 </c>
 </c>
-
-
+<c i="Component_row4" t="nextapp.echo.app.Row">
+<c i="Component_label2" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">Subscribe:</p>
+</c>
 <p n="cellSpacing">10px</p>
-
+<c i="Component_subscribeTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<e t="action">
+<h n="actionPerformed" v="onSubscribeActionPerformed"/>
+</e>
 </c>
 
-
-<p n="cellSpacing">10px</p>
+<c i="Component_button2" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+<p n="text">Subscribe</p>
+<e t="action">
+<h n="actionPerformed" v="onSubscribeActionPerformed"/>
+</e>
+</c>
+</c>
 </c>
 
 <p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_HORIZONTAL_LEFT_RIGHT</p>
@@ -99,7 +115,8 @@
 <p n="separatorHorizontalImage">
 <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/separator-blue.png</fi>
 </p>
-<c i="Component_entriesColumn" t="pds.web.ui.shared.EntriesColumn" vis="private"/>
+
+<c i="Component_entriesColumn" t="pds.web.ui.app.feed.components.EntriesColumn" vis="private"/>
 </c>
 </c>
 <p n="insets">10px</p>

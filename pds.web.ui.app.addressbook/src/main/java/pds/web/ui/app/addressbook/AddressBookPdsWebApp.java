@@ -6,7 +6,7 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.web.ui.MainContentPane;
 import pds.web.ui.app.PdsWebApp;
-import pds.web.xdi.XdiContext;
+import pds.xdi.XdiContext;
 
 public class AddressBookPdsWebApp implements PdsWebApp {
 

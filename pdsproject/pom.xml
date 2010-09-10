@@ -9,36 +9,49 @@
 	<description>
 		Reference implementation of a Personal Data Store (PDS).
 	</description>
+	<profiles>
+		<profile>
+			<id>grs</id>
+			<modules>
+				<module>../pds.web.signup.xri.grs</module>
+				<module>../pds.store.xri.grs</module>
+			</modules>
+		</profile>
+	</profiles>
 	<modules>
 		<module>../pds.core</module>
 		<module>../pds.core.base</module>
 		<module>../pds.core.any</module>
 		<module>../pds.core.single</module>
 		<module>../pds.core.xri</module>
-		<module>../pds.discovery</module>
+		<module>../pds.dictionary</module>
 		<module>../pds.profile</module>
 		<module>../pds.web</module>
 		<module>../pds.web.base</module>
-		<module>../pds.web.xdi</module>
 		<module>../pds.web.logger</module>
 		<module>../pds.web.tools</module>
 		<module>../pds.web.signin.manual</module>
 		<module>../pds.web.signin.rpxnow</module>
 		<module>../pds.web.signin.xri</module>
 		<module>../pds.web.signup.xri</module>
- 		<module>../pds.web.signup.xri.openxri</module>
-<!-- 		<module>../pds.web.signup.xri.grs</module> -->
+		<module>../pds.web.signup.xri.openxri</module>
+		<!-- <module>../pds.web.signup.xri.grs</module> -->
 		<module>../pds.web.ui.app.addressbook</module>
 		<module>../pds.web.ui.app.feed</module>
 		<module>../pds.web.ui.app.photos</module>
 		<module>../pds.web.ui.app.directxdi</module>
 		<module>../pds.web.ui.app.whisper</module>
 		<module>../pds.endpoint.feed</module>
+		<module>../pds.endpoint.hcard</module>
+		<module>../pds.endpoint.poco</module>
+		<module>../pds.endpoint.pubsubhubbub</module>
+		<module>../pds.endpoint.salmon</module>
 		<module>../pds.store.user</module>
 		<module>../pds.store.xri</module>
 		<module>../pds.store.xri.openxri</module>
-<!-- 		<module>../pds.store.xri.grs</module> -->
+		<!-- <module>../pds.store.xri.grs</module> -->
 		<module>../pds.util.spring</module>
+		<module>../pds.xdi</module>
 	</modules>
 	<build>
 		<plugins>

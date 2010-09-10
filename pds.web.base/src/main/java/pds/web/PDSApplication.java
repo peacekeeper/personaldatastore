@@ -19,8 +19,8 @@ import pds.web.logger.Logger;
 import pds.web.resource.style.Styles;
 import pds.web.ui.MainContentPane;
 import pds.web.ui.MainWindow;
-import pds.web.xdi.Xdi;
-import pds.web.xdi.XdiContext;
+import pds.xdi.Xdi;
+import pds.xdi.XdiContext;
 
 /**
  * Application instance implementation.
@@ -179,7 +179,7 @@ public class PDSApplication extends ApplicationInstance {
 
 		try {
 
-			this.xdi = new Xdi(this.getServlet().getDiscovery(), this.getLogger());
+			this.xdi = new Xdi(this.getServlet().getResolver());
 		} catch (Exception ex) {
 
 			throw new RuntimeException("Cannot initialize Xdi component: " + ex.getMessage(), ex);

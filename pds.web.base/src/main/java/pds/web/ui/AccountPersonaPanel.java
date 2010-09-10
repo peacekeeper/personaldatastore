@@ -18,13 +18,13 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.web.ui.accountpersona.AccountPersonaWindowPane;
-import pds.web.xdi.XdiContext;
-import pds.web.xdi.XdiException;
-import pds.web.xdi.events.XdiGraphAddEvent;
-import pds.web.xdi.events.XdiGraphDelEvent;
-import pds.web.xdi.events.XdiGraphEvent;
-import pds.web.xdi.events.XdiGraphListener;
-import pds.web.xdi.events.XdiGraphModEvent;
+import pds.xdi.XdiContext;
+import pds.xdi.XdiException;
+import pds.xdi.events.XdiGraphAddEvent;
+import pds.xdi.events.XdiGraphDelEvent;
+import pds.xdi.events.XdiGraphEvent;
+import pds.xdi.events.XdiGraphListener;
+import pds.xdi.events.XdiGraphModEvent;
 
 public class AccountPersonaPanel extends Panel implements XdiGraphListener {
 

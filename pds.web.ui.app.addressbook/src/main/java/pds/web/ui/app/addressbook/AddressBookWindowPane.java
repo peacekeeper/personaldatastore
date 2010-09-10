@@ -7,7 +7,7 @@ import nextapp.echo.app.WindowPane;
 
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.web.xdi.XdiContext;
+import pds.xdi.XdiContext;
 
 public class AddressBookWindowPane extends WindowPane {
 

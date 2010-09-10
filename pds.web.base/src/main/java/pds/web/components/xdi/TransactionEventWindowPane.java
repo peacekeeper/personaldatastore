@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.WindowPane;
 import pds.web.components.xdi.TransactionEventContentPane;
-import pds.web.xdi.events.XdiTransactionEvent;
+import pds.xdi.events.XdiTransactionEvent;
 
 public class TransactionEventWindowPane extends WindowPane {
 

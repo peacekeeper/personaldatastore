@@ -205,19 +205,19 @@
 		</dependency>
 		<dependency>
 			<groupId>pdsproject</groupId>
-			<artifactId>pds.web.xdi</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>pdsproject</groupId>
 			<artifactId>pds.web.tools</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>pdsproject</groupId>
-			<artifactId>pds.discovery</artifactId>
+			<artifactId>pds.xdi</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>pdsproject</groupId>
+			<artifactId>pds.dictionary</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>

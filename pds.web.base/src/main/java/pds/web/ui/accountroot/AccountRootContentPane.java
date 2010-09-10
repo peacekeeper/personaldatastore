@@ -20,9 +20,9 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.web.ui.shared.DataPredicatesColumn;
-import pds.web.xdi.XdiContext;
-import pds.web.xdi.events.XdiGraphEvent;
-import pds.web.xdi.events.XdiGraphListener;
+import pds.xdi.XdiContext;
+import pds.xdi.events.XdiGraphEvent;
+import pds.xdi.events.XdiGraphListener;
 import echopoint.ImageIcon;
 
 public class AccountRootContentPane extends ContentPane implements XdiGraphListener {

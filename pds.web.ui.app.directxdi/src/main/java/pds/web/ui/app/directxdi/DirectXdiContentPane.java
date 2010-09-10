@@ -35,8 +35,8 @@ import pds.web.PDSApplication;
 import pds.web.components.xdi.TransactionEventWindowPane;
 import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
-import pds.web.xdi.XdiContext;
-import pds.web.xdi.events.XdiTransactionEvent;
+import pds.xdi.XdiContext;
+import pds.xdi.events.XdiTransactionEvent;
 
 public class DirectXdiContentPane extends ContentPane {
 
@@ -66,7 +66,7 @@ public class DirectXdiContentPane extends ContentPane {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("" + this.context.getCanonical() + "\n");
 
-		if (context.getPassword() != null) {
+		if (this.context.getPassword() != null) {
 
 			buffer.append("\t$password\n");
 			buffer.append("\t\t\"********\"\n");

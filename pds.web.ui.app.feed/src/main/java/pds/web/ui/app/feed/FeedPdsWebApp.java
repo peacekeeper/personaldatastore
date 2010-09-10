@@ -6,9 +6,12 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.web.ui.MainContentPane;
 import pds.web.ui.app.PdsWebApp;
-import pds.web.xdi.XdiContext;
+import pds.xdi.XdiContext;
 
 public class FeedPdsWebApp implements PdsWebApp {
+
+	private String hub;
+	private String pubsubhubbubCallback;
 
 	@Override
 	public String getName() {
@@ -26,8 +29,29 @@ public class FeedPdsWebApp implements PdsWebApp {
 	public void onActionPerformed(MainContentPane mainContentPane, XdiContext context, XRI3Segment subjectXri) {
 
 		FeedWindowPane feedWindowPane = new FeedWindowPane();
+		feedWindowPane.setFeedPdsWebApp(this);
 		feedWindowPane.setContextAndSubjectXri(context, subjectXri);
 
 		mainContentPane.add(feedWindowPane);
+	}
+
+	public String getHub() {
+
+		return this.hub;
+	}
+
+	public void setHub(String hub) {
+
+		this.hub = hub;
+	}
+
+	public String getPubsubhubbubCallback() {
+
+		return this.pubsubhubbubCallback;
+	}
+
+	public void setPubsubhubbubCallback(String pubsubhubbubCallback) {
+
+		this.pubsubhubbubCallback = pubsubhubbubCallback;
 	}
 }

@@ -18,16 +18,16 @@ import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.web.dictionary.PdsDictionary;
+import pds.dictionary.PdsDictionary;
 import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
-import pds.web.xdi.XdiContext;
-import pds.web.xdi.XdiException;
-import pds.web.xdi.events.XdiGraphAddEvent;
-import pds.web.xdi.events.XdiGraphDelEvent;
-import pds.web.xdi.events.XdiGraphEvent;
-import pds.web.xdi.events.XdiGraphListener;
-import pds.web.xdi.events.XdiGraphModEvent;
+import pds.xdi.XdiContext;
+import pds.xdi.XdiException;
+import pds.xdi.events.XdiGraphAddEvent;
+import pds.xdi.events.XdiGraphDelEvent;
+import pds.xdi.events.XdiGraphEvent;
+import pds.xdi.events.XdiGraphListener;
+import pds.xdi.events.XdiGraphModEvent;
 
 public class DataPredicatesColumn extends Column implements XdiGraphListener {
 
@@ -75,7 +75,7 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 
 			// get list of data predicate XRIs
 
-			XRI3Segment[] pdsDictionaryPredicates = PdsDictionary.getDictionaryPredicates();
+			XRI3Segment[] pdsDictionaryPredicates = PdsDictionary.DICTIONARY_PREDICATES;
 			List<XRI3Segment> dataPredicateXris;
 
 			dataPredicateXris = this.getExistingDataPredicateXris(pdsDictionaryPredicates);

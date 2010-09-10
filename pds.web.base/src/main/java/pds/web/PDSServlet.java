@@ -15,7 +15,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openxri.resolve.Resolver;
 
-import pds.discovery.Discovery;
 import pds.web.ui.app.PdsWebApp;
 import pds.web.ui.context.SignInMethod;
 
@@ -29,7 +28,6 @@ public class PDSServlet extends WebContainerServlet {
 	private List<SignInMethod> signInMethods;
 
 	private transient Resolver resolver;
-	private transient Discovery discovery;
 
 	@Override
 	public ApplicationInstance newApplicationInstance() {
@@ -47,7 +45,6 @@ public class PDSServlet extends WebContainerServlet {
 		this.addInitStyleSheet(StaticTextService.forResource("pds.web.css", "text/css", "pds/web/resource/style/pds.web.css"));
 
 		this.initResolver();
-		this.initDiscovery();
 
 		log.info("Initializing complete.");
 	}
@@ -63,29 +60,11 @@ public class PDSServlet extends WebContainerServlet {
 		}
 	}
 
-	private void initDiscovery() {
-
-		try {
-
-			this.discovery = new Discovery(this.getResolver());
-		} catch (Exception ex) {
-
-			throw new RuntimeException("Cannot initialize discovery: " + ex.getMessage(), ex);
-		}
-	}
-
 	public Resolver getResolver() {
 
 		if (this.resolver == null) this.initResolver();
 
 		return this.resolver;
-	}
-
-	public Discovery getDiscovery() {
-
-		if (this.discovery == null) this.initDiscovery();
-
-		return this.discovery;
 	}
 
 	public List<PdsWebApp> getPdsWebApps() {

@@ -30,10 +30,10 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 
 import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;
-import pds.web.xdi.XdiContext;
-import pds.web.xdi.XdiException;
-import pds.web.xdi.events.XdiGraphEvent;
-import pds.web.xdi.events.XdiGraphListener;
+import pds.xdi.XdiContext;
+import pds.xdi.XdiException;
+import pds.xdi.events.XdiGraphEvent;
+import pds.xdi.events.XdiGraphListener;
 
 public class OpenContentPane extends ContentPane implements XdiGraphListener {
 
@@ -88,7 +88,7 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 	private void refresh() {
 
 		this.identifierTextField.setText(this.context.getIdentifier());
-		this.canonicalTextField.setText(this.context.getCanonical());
+		this.canonicalTextField.setText(this.context.getCanonical().toString());
 		this.endpointTextField.setText(this.context.getEndpoint());
 
 		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());

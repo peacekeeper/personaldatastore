@@ -46,18 +46,18 @@ import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
+import pds.web.ui.app.photos.components.PhotosColumn;
 import pds.web.ui.shared.FriendPanel;
 import pds.web.ui.shared.FriendPanel.FriendPanelDelegate;
-import pds.web.ui.shared.PhotosColumn;
 import pds.web.util.MimeTypeUtil;
-import pds.web.xdi.Xdi;
-import pds.web.xdi.XdiContext;
-import pds.web.xdi.XdiException;
-import pds.web.xdi.events.XdiGraphAddEvent;
-import pds.web.xdi.events.XdiGraphDelEvent;
-import pds.web.xdi.events.XdiGraphEvent;
-import pds.web.xdi.events.XdiGraphListener;
-import pds.web.xdi.events.XdiGraphModEvent;
+import pds.xdi.Xdi;
+import pds.xdi.XdiContext;
+import pds.xdi.XdiException;
+import pds.xdi.events.XdiGraphAddEvent;
+import pds.xdi.events.XdiGraphDelEvent;
+import pds.xdi.events.XdiGraphEvent;
+import pds.xdi.events.XdiGraphListener;
+import pds.xdi.events.XdiGraphModEvent;
 import echopoint.ImageIcon;
 
 public class PhotosContentPane extends ContentPane implements XdiGraphListener {
@@ -75,13 +75,14 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 	private XdiPanel xdiPanel;
 	private TextField addTextField;
 	private Button addButton;
-	private Button cancelButton;
 	private Column friendsColumn;
 	private PhotosColumn photosColumn;
 	private TextField titleTextField;
 
 	private byte[] tempBytes;
 	private String tempMimeType;
+
+	private Button cancelButton;
 
 	/**
 	 * Creates a new <code>AddressBookContentPane</code>.
@@ -156,7 +157,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 					return;
 				}
 
-				PhotosContentPane.this.photosColumn.setContextAndSubjectXri(context, new XRI3Segment(context.getCanonical()));
+				PhotosContentPane.this.photosColumn.setContextAndSubjectXri(context, context.getCanonical());
 			}
 		});
 
@@ -519,7 +520,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		friendsColumn = new Column();
 		friendsColumn.setCellSpacing(new Extent(10, Extent.PX));
 		column1.add(friendsColumn);
-		photosColumn = new PhotosColumn();
+		photosColumn = new pds.web.ui.app.photos.components.PhotosColumn();
 		photosColumn.setInsets(new Insets(new Extent(10, Extent.PX),
 				new Extent(0, Extent.PX), new Extent(0, Extent.PX), new Extent(
 						0, Extent.PX)));

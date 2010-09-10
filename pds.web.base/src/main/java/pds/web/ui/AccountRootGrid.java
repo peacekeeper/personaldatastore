@@ -34,14 +34,14 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3SubSegment;
 import pds.web.events.ApplicationContextClosedEvent;
 import pds.web.events.ApplicationEvent;
 import pds.web.events.ApplicationListener;
-import pds.web.xdi.XdiContext;
-import pds.web.xdi.XdiException;
-import pds.web.xdi.XdiUtil;
-import pds.web.xdi.events.XdiGraphAddEvent;
-import pds.web.xdi.events.XdiGraphDelEvent;
-import pds.web.xdi.events.XdiGraphEvent;
-import pds.web.xdi.events.XdiGraphListener;
-import pds.web.xdi.events.XdiGraphModEvent;
+import pds.xdi.XdiContext;
+import pds.xdi.XdiException;
+import pds.xdi.XdiUtil;
+import pds.xdi.events.XdiGraphAddEvent;
+import pds.xdi.events.XdiGraphDelEvent;
+import pds.xdi.events.XdiGraphEvent;
+import pds.xdi.events.XdiGraphListener;
+import pds.xdi.events.XdiGraphModEvent;
 
 public class AccountRootGrid extends Grid implements ApplicationListener, XdiGraphListener {
 
@@ -50,7 +50,6 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 	protected ResourceBundle resourceBundle;
 
 	private XdiContext context;
-	private XRI3Segment subjectXri;
 	private XRI3 address;
 	private XRI3 extensionAddress;
 
@@ -80,7 +79,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		super.dispose();
 
 		// remove us as listener
-		
+
 		if (this.context != null) this.context.removeXdiGraphListener(this);
 	}
 
@@ -171,18 +170,17 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		this.add(this.addAccountPersonaButton);
 	}
 
-	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
+	public void setContext(XdiContext context) {
 
 		// remove us as listener
-		
+
 		if (this.context != null) this.context.removeXdiGraphListener(this);
 
 		// refresh
-		
+
 		this.context = context;
-		this.subjectXri = subjectXri;
-		this.address = new XRI3("" + this.subjectXri);
-		this.extensionAddress = new XRI3("" + this.subjectXri + "/" + DictionaryConstants.XRI_EXTENSION);
+		this.address = new XRI3("" + this.context.getCanonical());
+		this.extensionAddress = new XRI3("" + this.context.getCanonical() + "/" + DictionaryConstants.XRI_EXTENSION);
 
 		this.refresh();
 
@@ -208,7 +206,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 	}
 
 	private void onCreateActionPerformed(ActionEvent e) {
-		
+
 		try {
 
 			this.addAccountPersona(this.addAccountPersonaTextField.getText());
@@ -235,7 +233,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.extensionAddress);
 		MessageResult messageResult = this.context.send(operation);
 
-		Subject subject = messageResult.getGraph().getSubject(this.subjectXri);
+		Subject subject = messageResult.getGraph().getSubject(this.context.getCanonical());
 		if (subject == null) return new ArrayList<XRI3Segment> ();
 
 		Iterator<XRI3Segment> accountPersonaXris = Dictionary.getSubjectExtensions(subject);
@@ -245,14 +243,14 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 	private void addAccountPersona(String name) throws XdiException {
 
 		XRI3SubSegment accountPersonaSubSegment = XdiUtil.randomSubSegment();
-		XRI3Segment accountPersonaXri = new XRI3Segment("" + this.subjectXri + accountPersonaSubSegment);
+		XRI3Segment accountPersonaXri = new XRI3Segment("" + this.context.getCanonical() + accountPersonaSubSegment);
 
 		// $add
 
 		Message message = this.context.prepareMessage();
 		Operation operation = message.createAddOperation();
 		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(this.subjectXri, DictionaryConstants.XRI_EXTENSION, new XRI3Segment("" + accountPersonaSubSegment));
+		operationGraph.createStatement(this.context.getCanonical(), DictionaryConstants.XRI_EXTENSION, new XRI3Segment("" + accountPersonaSubSegment));
 		operationGraph.createStatement(accountPersonaXri, new XRI3Segment("$a$xsd$string"), name);
 
 		this.context.send(message);
@@ -270,14 +268,14 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		addAccountPersonaButton = new Button();
 		addAccountPersonaButton.setStyleName("PlainWhite");
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-				"/pds/web/resource/image/accountpersonanew.png");
+		"/pds/web/resource/image/accountpersonanew.png");
 		addAccountPersonaButton.setIcon(imageReference1);
 		addAccountPersonaButton.setText("Create New");
 		addAccountPersonaButton
-				.setInsets(new Insets(new Extent(10, Extent.PX)));
+		.setInsets(new Insets(new Extent(10, Extent.PX)));
 		addAccountPersonaButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onAddAccountPersonaActionPerformed(e);
 			}
@@ -304,7 +302,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		button1.setText("Create");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onCreateActionPerformed(e);
 			}
@@ -315,7 +313,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		button2.setText("Cancel");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onCancelActionPerformed(e);
 			}

@@ -118,6 +118,7 @@
 <p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/op-add.png</p>
 <p n="styleName">Plain</p>
 </c>
+
 <c i="Component_cancelButton" t="nextapp.echo.app.Button" vis="private">
 
 <p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/op-cancel.png</p>
@@ -133,7 +134,7 @@
 </c>
 <p n="cellSpacing">10px</p>
 </c>
-<c i="Component_photosColumn" t="pds.web.ui.shared.PhotosColumn" vis="private">
+<c i="Component_photosColumn" t="pds.web.ui.app.photos.components.PhotosColumn" vis="private">
 
 <p n="insets">0px 0px 0px 10px</p>
 </c>

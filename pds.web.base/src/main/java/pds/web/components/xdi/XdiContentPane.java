@@ -26,7 +26,7 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 
 import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;
-import pds.web.xdi.XdiContext;
+import pds.xdi.XdiContext;
 
 public class XdiContentPane extends ContentPane {
 

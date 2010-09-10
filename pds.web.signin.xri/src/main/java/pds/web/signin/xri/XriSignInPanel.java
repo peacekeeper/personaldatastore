@@ -23,8 +23,8 @@ import pds.web.PDSApplication;
 import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
 import pds.web.ui.html.HtmlWindowPane;
-import pds.web.xdi.Xdi;
-import pds.web.xdi.XdiContext;
+import pds.xdi.Xdi;
+import pds.xdi.XdiContext;
 
 public class XriSignInPanel extends Panel {
 

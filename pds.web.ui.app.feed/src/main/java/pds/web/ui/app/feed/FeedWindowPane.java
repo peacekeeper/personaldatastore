@@ -7,7 +7,7 @@ import nextapp.echo.app.WindowPane;
 
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
-import pds.web.xdi.XdiContext;
+import pds.xdi.XdiContext;
 import pds.web.ui.app.feed.FeedContentPane;
 
 public class FeedWindowPane extends WindowPane {
@@ -26,6 +26,11 @@ public class FeedWindowPane extends WindowPane {
 
 		// Add design-time configured components.
 		initComponents();
+	}
+
+	public void setFeedPdsWebApp(FeedPdsWebApp feedPdsWebApp) {
+
+		this.feedContentPane.setFeedPdsWebApp(feedPdsWebApp);
 	}
 
 	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {

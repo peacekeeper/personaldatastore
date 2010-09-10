@@ -17,16 +17,19 @@ import pds.web.PDSApplication;
 import pds.web.components.HtmlLabel;
 import pds.web.components.xdi.TransactionEventPanel;
 import pds.web.logger.LogEntry;
+import pds.web.logger.Logger;
 import pds.web.logger.events.LogEvent;
 import pds.web.logger.events.LogListener;
 import pds.web.ui.MainWindow;
 import pds.web.util.HtmlUtil;
-import pds.web.xdi.events.XdiTransactionEvent;
-import pds.web.xdi.events.XdiTransactionFailureEvent;
-import pds.web.xdi.events.XdiTransactionListener;
-import pds.web.xdi.events.XdiTransactionSuccessEvent;
+import pds.xdi.events.XdiListener;
+import pds.xdi.events.XdiResolutionEndpointEvent;
+import pds.xdi.events.XdiResolutionEvent;
+import pds.xdi.events.XdiResolutionInameEvent;
+import pds.xdi.events.XdiResolutionInumberEvent;
+import pds.xdi.events.XdiTransactionEvent;
 
-public class LogContentPane extends ContentPane implements LogListener, XdiTransactionListener {
+public class LogContentPane extends ContentPane implements LogListener, XdiListener {
 
 	private static final long serialVersionUID = -3506230103141402132L;
 
@@ -93,18 +96,27 @@ public class LogContentPane extends ContentPane implements LogListener, XdiTrans
 		this.htmlLabel.setHtml(html);
 	}
 
-	public void onXdiTransactionSuccess(XdiTransactionSuccessEvent transactionSuccessEvent) {
+	public void onXdiTransaction(XdiTransactionEvent xdiTransactionEvent) {
 
 		if (WebContainerServlet.getActiveConnection().getUserInstance().getApplicationInstance() != this.getApplicationInstance()) return;
 
-		this.addTransactionEventPanel(transactionSuccessEvent);
+		this.addTransactionEventPanel(xdiTransactionEvent);
 	}
 
-	public void onXdiTransactionFailure(XdiTransactionFailureEvent transactionFailureEvent) {
+	public void onXdiResolution(XdiResolutionEvent xdiResolutionEvent) {
 
-		if (WebContainerServlet.getActiveConnection().getUserInstance().getApplicationInstance() != this.getApplicationInstance()) return;
+		Logger logger = PDSApplication.getApp().getLogger();
 
-		this.addTransactionEventPanel(transactionFailureEvent);
+		if (xdiResolutionEvent instanceof XdiResolutionInameEvent) {
+
+			logger.info("The I-Name " + ((XdiResolutionInameEvent) xdiResolutionEvent).getIname() + " has been resolved to the I-Number " + ((XdiResolutionInameEvent) xdiResolutionEvent).getInumber() + ".", null);
+		} else if (xdiResolutionEvent instanceof XdiResolutionInumberEvent) {
+
+			logger.info("The I-Number " + ((XdiResolutionInumberEvent) xdiResolutionEvent).getInumber() + " has been resolved to the XDI Endpoint" + ((XdiResolutionInumberEvent) xdiResolutionEvent).getEndpoint() + ".", null);
+		} else if (xdiResolutionEvent instanceof XdiResolutionEndpointEvent) {
+
+			logger.info("The XDI endpoint " + ((XdiResolutionEndpointEvent) xdiResolutionEvent).getEndpoint() + " has been resolved to the I-Number " + ((XdiResolutionEndpointEvent) xdiResolutionEvent).getInumber() + ".", null);
+		}
 	}
 
 	private void addTransactionEventPanel(final XdiTransactionEvent transactionEvent) {

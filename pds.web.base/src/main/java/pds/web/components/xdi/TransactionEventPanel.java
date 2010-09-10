@@ -19,9 +19,9 @@ import nextapp.echo.app.event.ActionListener;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
 
 import pds.web.ui.MainWindow;
-import pds.web.xdi.events.XdiTransactionEvent;
-import pds.web.xdi.events.XdiTransactionFailureEvent;
-import pds.web.xdi.events.XdiTransactionSuccessEvent;
+import pds.xdi.events.XdiTransactionEvent;
+import pds.xdi.events.XdiTransactionFailureEvent;
+import pds.xdi.events.XdiTransactionSuccessEvent;
 
 public class TransactionEventPanel extends Panel {
 

@@ -30,7 +30,7 @@ import org.eclipse.higgins.xdi4j.messaging.Operation;
 
 import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;
-import pds.web.xdi.XdiContext;
+import pds.xdi.XdiContext;
 import echopoint.ImageIcon;
 
 public class DataExportContentPane extends ContentPane {
@@ -69,7 +69,7 @@ public class DataExportContentPane extends ContentPane {
 
 		try {
 
-			this.canonicalLabel.setText(this.context.getCanonical());
+			this.canonicalLabel.setText(this.context.getCanonical().toString());
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);

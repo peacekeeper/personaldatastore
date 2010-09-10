@@ -1,6 +1,6 @@
 package pds.web.events;
 
-import pds.web.xdi.XdiContext;
+import pds.xdi.XdiContext;
 
 public class ApplicationContextOpenedEvent extends ApplicationEvent {
 

@@ -19,9 +19,9 @@ import nextapp.echo.app.layout.RowLayoutData;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 import nextapp.echo.extras.app.TabPane;
 import nextapp.echo.extras.app.layout.TabPaneLayoutData;
-import pds.web.xdi.events.XdiTransactionEvent;
-import pds.web.xdi.events.XdiTransactionFailureEvent;
-import pds.web.xdi.events.XdiTransactionSuccessEvent;
+import pds.xdi.events.XdiTransactionEvent;
+import pds.xdi.events.XdiTransactionFailureEvent;
+import pds.xdi.events.XdiTransactionSuccessEvent;
 
 public class TransactionEventContentPane extends ContentPane  {
 

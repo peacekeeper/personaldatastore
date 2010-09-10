@@ -4,7 +4,7 @@ import java.util.ResourceBundle;
 
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.WindowPane;
-import pds.web.xdi.XdiContext;
+import pds.xdi.XdiContext;
 import pds.web.ui.dataexport.DataExportContentPane;
 
 public class DataExportWindowPane extends WindowPane {

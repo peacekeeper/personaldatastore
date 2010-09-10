@@ -36,7 +36,7 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
-import pds.web.xdi.XdiContext;
+import pds.xdi.XdiContext;
 import echopoint.ImageIcon;
 
 public class DataImportContentPane extends ContentPane {
@@ -85,7 +85,7 @@ public class DataImportContentPane extends ContentPane {
 
 		try {
 
-			this.canonicalLabel.setText(this.context.getCanonical());
+			this.canonicalLabel.setText(this.context.getCanonical().toString());
 			this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, null, null);
 		} catch (Exception ex) {
 

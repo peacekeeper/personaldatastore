@@ -14,7 +14,6 @@ import nextapp.echo.app.TaskQueueHandle;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.higgins.xdi4j.messaging.client.http.XDIHttpClient;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.w3c.dom.Element;
 
@@ -24,8 +23,8 @@ import pds.web.servlet.external.ExternalCallReceiver;
 import pds.web.signin.rpxnow.rpx.Rpx;
 import pds.web.tools.util.XmlUtils;
 import pds.web.ui.MessageDialog;
-import pds.web.xdi.Xdi;
-import pds.web.xdi.XdiContext;
+import pds.xdi.Xdi;
+import pds.xdi.XdiContext;
 
 public class RpxnowSignInPanel extends Panel implements ExternalCallReceiver {
 
@@ -109,12 +108,7 @@ public class RpxnowSignInPanel extends Panel implements ExternalCallReceiver {
 
 		try {
 
-			final XdiContext context = new XdiContext(
-					xdi, 
-					new XDIHttpClient(endpoint), 
-					identifier, 
-					canonical, 
-					null);
+			final XdiContext context = xdi.resolveContextManually(endpoint, identifier, canonical, null);
 
 			pdsApplication.enqueueTask(taskQueueHandle, new Runnable() {
 
