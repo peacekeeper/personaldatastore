@@ -29,14 +29,12 @@ import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.util.iterators.IteratorListMaker;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3SubSegment;
 
 import pds.web.events.ApplicationContextClosedEvent;
 import pds.web.events.ApplicationEvent;
 import pds.web.events.ApplicationListener;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
-import pds.xdi.XdiUtil;
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
@@ -242,16 +240,14 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 
 	private void addAccountPersona(String name) throws XdiException {
 
-		XRI3SubSegment accountPersonaSubSegment = XdiUtil.randomSubSegment();
-		XRI3Segment accountPersonaXri = new XRI3Segment("" + this.context.getCanonical() + accountPersonaSubSegment);
+		XRI3Segment accountPersonaXri = new XRI3Segment("" + this.context.getCanonical() + "$($)");
 
 		// $add
 
 		Message message = this.context.prepareMessage();
 		Operation operation = message.createAddOperation();
 		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(this.context.getCanonical(), DictionaryConstants.XRI_EXTENSION, new XRI3Segment("" + accountPersonaSubSegment));
-		operationGraph.createStatement(accountPersonaXri, new XRI3Segment("$a$xsd$string"), name);
+		operationGraph.createStatement(accountPersonaXri, new XRI3Segment("$a$string"), name);
 
 		this.context.send(message);
 	}

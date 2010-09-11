@@ -18,7 +18,6 @@ import nextapp.echo.app.layout.SplitPaneLayoutData;
 
 import org.eclipse.higgins.xdi4j.Graph;
 import org.eclipse.higgins.xdi4j.addressing.Addressing;
-import org.eclipse.higgins.xdi4j.constants.DictionaryConstants;
 import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
 import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
@@ -30,7 +29,6 @@ import pds.web.ui.MessageDialog;
 import pds.web.ui.shared.DataPredicatesColumn;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
-import pds.xdi.XdiUtil;
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
@@ -192,7 +190,6 @@ public class AccountPersonaContentPane extends ContentPane implements XdiGraphLi
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_DEL);
 		Graph operationGraph = operation.createOperationGraph(null);
 		operationGraph.createStatement(this.subjectXri);
-		operationGraph.createStatement(XdiUtil.extractParentXriSegment(this.subjectXri), DictionaryConstants.XRI_EXTENSION, XdiUtil.extractLocalXriSegment(this.subjectXri));
 
 		this.context.send(operation);
 	}

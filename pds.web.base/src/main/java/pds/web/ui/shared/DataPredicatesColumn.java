@@ -1,20 +1,10 @@
 package pds.web.ui.shared;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import nextapp.echo.app.Column;
 import nextapp.echo.app.Component;
 
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.Predicate;
-import org.eclipse.higgins.xdi4j.Subject;
-import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
-import org.eclipse.higgins.xdi4j.dictionary.Dictionary;
-import org.eclipse.higgins.xdi4j.messaging.Message;
-import org.eclipse.higgins.xdi4j.messaging.MessageResult;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
@@ -22,7 +12,6 @@ import pds.dictionary.PdsDictionary;
 import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
 import pds.xdi.XdiContext;
-import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
@@ -76,23 +65,6 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 			// get list of data predicate XRIs
 
 			XRI3Segment[] pdsDictionaryPredicates = PdsDictionary.DICTIONARY_PREDICATES;
-			List<XRI3Segment> dataPredicateXris;
-
-			dataPredicateXris = this.getExistingDataPredicateXris(pdsDictionaryPredicates);
-
-			// some not initialized yet?
-
-			List<XRI3Segment> missingDataPredicateXris = new ArrayList<XRI3Segment> ();
-
-			for (XRI3Segment dataPredicateXri : pdsDictionaryPredicates) {
-
-				if (! dataPredicateXris.contains(dataPredicateXri)) missingDataPredicateXris.add(dataPredicateXri);
-			}
-
-			if (! missingDataPredicateXris.isEmpty()) {
-
-				this.addDataPredicateXris(missingDataPredicateXris.toArray(new XRI3Segment[missingDataPredicateXris.size()]));
-			}
 
 			// add them
 
@@ -194,54 +166,6 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 
 			((DataPredicatePanel) component).setReadOnly(readOnly);
 		}
-	}
-
-	private List<XRI3Segment> getExistingDataPredicateXris(XRI3Segment[] dataPredicateXris) throws XdiException {
-
-		// $get
-
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET);
-		Graph operationGraph = operation.createOperationGraph(null);
-
-		for (XRI3Segment predicateXri : dataPredicateXris) {
-
-			operationGraph.createStatement(this.subjectXri, Dictionary.makeExtensionPredicate(predicateXri));
-		}
-
-		MessageResult messageResult = this.context.send(operation);
-
-		Subject subject = messageResult.getGraph().getSubject(this.subjectXri);
-		if (subject == null) return new ArrayList<XRI3Segment> ();
-
-		List<XRI3Segment> existingDataPredicateXris = new ArrayList<XRI3Segment> ();
-
-		for (XRI3Segment predicateXri : dataPredicateXris) {
-
-			Predicate predicate = subject.getPredicate(Dictionary.makeExtensionPredicate(predicateXri));
-			if (predicate == null) continue;
-
-			existingDataPredicateXris.add(predicateXri);
-		}
-		
-		return existingDataPredicateXris;
-	}
-
-	private void addDataPredicateXris(XRI3Segment[] dataPredicateXris) throws XdiException {
-
-		// $add
-
-		Message message = this.context.prepareMessage();
-		Operation operation = message.createAddOperation();
-		Graph operationGraph = operation.createOperationGraph(null);
-
-		for (XRI3Segment dataPredicateXri : dataPredicateXris) {
-
-			operationGraph.createStatement(this.subjectXri, Dictionary.makeExtensionPredicate(dataPredicateXri));
-			operationGraph.createStatement(this.subjectXri, Dictionary.makeRestrictionPredicate(dataPredicateXri));
-			operationGraph.createStatement(this.subjectXri, Dictionary.makeCanonicalPredicate(dataPredicateXri));
-		}
-
-		this.context.send(message);
 	}
 
 	/**

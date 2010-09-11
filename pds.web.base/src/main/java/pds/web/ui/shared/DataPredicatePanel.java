@@ -27,14 +27,12 @@ import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.util.iterators.IteratorListMaker;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3SubSegment;
 
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
-import pds.xdi.XdiUtil;
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
@@ -274,14 +272,12 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 
 	private void addDataPredicateInstance(final String value) throws XdiException {
 
-		XRI3SubSegment dataPredicateInstanceSubSegment = XdiUtil.randomSubSegment();
-		XRI3Segment dataPredicateInstanceXri = new XRI3Segment("" + this.predicateXri + dataPredicateInstanceSubSegment);
+		XRI3Segment dataPredicateInstanceXri = new XRI3Segment("" + this.predicateXri + "$($)");
 
 		// $add
 
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_ADD);
 		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(this.subjectXri, Dictionary.makeExtensionPredicate(this.predicateXri), new XRI3Segment("" + dataPredicateInstanceSubSegment));
 		operationGraph.createStatement(this.subjectXri, dataPredicateInstanceXri, value);
 		this.context.send(operation);
 	}

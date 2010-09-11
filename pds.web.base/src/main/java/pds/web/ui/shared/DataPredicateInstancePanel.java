@@ -16,7 +16,6 @@ import nextapp.echo.app.event.ActionListener;
 import org.eclipse.higgins.xdi4j.Graph;
 import org.eclipse.higgins.xdi4j.addressing.Addressing;
 import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
-import org.eclipse.higgins.xdi4j.dictionary.Dictionary;
 import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
@@ -27,7 +26,6 @@ import pds.web.ui.MessageDialog;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
 import pds.xdi.XdiNotExistentException;
-import pds.xdi.XdiUtil;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
@@ -265,7 +263,6 @@ public class DataPredicateInstancePanel extends Panel implements XdiGraphListene
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_DEL);
 		Graph operationGraph = operation.createOperationGraph(null);
 		operationGraph.createStatement(this.subjectXri, this.predicateXri);
-		operationGraph.createStatement(this.subjectXri, Dictionary.makeExtensionPredicate(XdiUtil.extractParentXriSegment(this.predicateXri)), XdiUtil.extractLocalXriSegment(this.predicateXri));
 
 		this.context.send(operation);
 	}

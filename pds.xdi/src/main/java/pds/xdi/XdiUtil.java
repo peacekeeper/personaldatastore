@@ -67,7 +67,7 @@ public class XdiUtil {
 
 		return new XRI3(buffer.toString());
 	}
-
+/*
 	public static XRI3Segment extractParentXriSegment(XRI3Segment xri) {
 
 		StringBuffer buffer = new StringBuffer();
@@ -95,5 +95,5 @@ public class XdiUtil {
 
 			return null;
 		}
-	}
+	}*/
 }
