@@ -232,9 +232,11 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 		try {
 
+			String pubsubhubbubEndpoint = this.feedPdsWebApp.getPubsubhubbubEndpoint() + this.context.getCanonical();
+
 			hubverifytoken = PuSHUtil.subscribe(
 					hub, 
-					this.feedPdsWebApp.getPubsubhubbubEndpoint(), 
+					pubsubhubbubEndpoint, 
 					hubtopic, 
 					this.feedPdsWebApp.getLeaseSeconds(), 
 					null);

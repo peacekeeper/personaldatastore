@@ -11,8 +11,8 @@
 
 		<bean class="pds.web.ui.app.feed.FeedPdsWebApp">
 			<property name="hub" value="http://pubsubhubbub.appspot.com/" />
-			<property name="pubsubhubbubEndpoint" value="http://yourserver.com/pds-endpoint-pubsubhubbub/" />
-			<property name="atomFeedEndpoint" value="http://yourserver.com/pds-endpoint-feed/atom/" />
+			<property name="pubsubhubbubEndpoint" value="http://ginger.freexri.com:11080/pds-endpoint-pubsubhubbub/" />
+			<property name="atomFeedEndpoint" value="http://ginger.freexri.com:11080/pds-endpoint-feed/atom/" />
 			<!-- <property name="leaseSeconds" value="..." /> -->
 		</bean>
 
