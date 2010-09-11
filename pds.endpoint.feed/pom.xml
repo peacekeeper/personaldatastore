@@ -76,6 +76,12 @@
 		</dependency>
 		<dependency>
 			<groupId>pdsproject</groupId>
+			<artifactId>pds.dictionary.feed</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>pdsproject</groupId>
 			<artifactId>pds.xdi</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>

@@ -45,8 +45,9 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
 	private static final Xdi xdi;
 
-	private String endpoint;
 	private String format;
+	private String contentType;
+
 	private String html;
 
 	static {
@@ -99,6 +100,7 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		Properties properties = new Properties();
 		HCard hCard = this.getHCard(request, properties);
 
+		if (this.contentType != null) response.setContentType(this.contentType);
 		Writer writer = response.getWriter();
 
 		if ("html".equals(this.format)) {
@@ -129,17 +131,7 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
 	private XdiContext getContext(String xri) throws Exception {
 
-		if (this.endpoint != null) {
-
-			String endpoint = this.endpoint;
-			if (! this.endpoint.endsWith("/")) this.endpoint += "/";
-			this.endpoint += xri + "/";
-
-			return xdi.resolveContextManually(endpoint, xri, new XRI3Segment(xri), null);
-		} else {
-
-			return xdi.resolveContextByIname(xri, null);
-		}
+		return xdi.resolveContextByIname(xri, null);
 	}
 
 	private Subject fetch(XdiContext context) throws Exception {
@@ -184,16 +176,6 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		return hCardBuilder.done();
 	}
 
-	public String getEndpoint() {
-
-		return this.endpoint;
-	}
-
-	public void setEndpoint(String endpoint) {
-
-		this.endpoint = endpoint;
-	}
-
 	public String getFormat() {
 
 		return this.format;
@@ -202,5 +184,8 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 	public void setFormat(String format) {
 
 		this.format = format;
+
+		if ("json".equals(format)) this.contentType = "application/json";
+		if ("html".equals(format)) this.contentType = "text/html";
 	}
 }

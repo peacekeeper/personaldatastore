@@ -3,9 +3,6 @@ package pds.endpoint.poco;
 
 public class Poco {
 
-	public static final String FORMAT_JSON = "json";
-	public static final String FORMAT_XML = "xml";
-
 	private String id;
 	private String profileurl;
 	private String displayname;
@@ -99,13 +96,5 @@ public class Poco {
 		buffer.append("</response>\n");
 
 		return buffer.toString();
-	}
-
-	public String toString(String format) {
-
-		if (FORMAT_JSON.equals(format)) return this.toJSON();
-		if (FORMAT_XML.equals(format)) return this.toXML();
-
-		return this.toString();
 	}
 }

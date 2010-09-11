@@ -12,7 +12,7 @@
 
 		<property name="endpoints">
 			<list>
-				<value>http://xdi.yourserver.com/</value>
+				<value>http://yourserver.com/pds-core/</value>
 			</list>
 		</property>
 

@@ -33,8 +33,8 @@ public class PocoServlet implements HttpRequestHandler {
 
 	private static final Xdi xdi;
 
-	private String endpoint;
 	private String format;
+	private String contentType;
 
 	static {
 
@@ -70,8 +70,17 @@ public class PocoServlet implements HttpRequestHandler {
 
 		Poco poco = this.getPoco(request);
 
+		if (this.contentType != null) response.setContentType(this.contentType);
 		Writer writer = response.getWriter();
-		writer.write(poco.toString(this.format));
+
+		if ("xml".equals(this.format)) {
+
+			writer.write(poco.toXML());
+		} else if ("json".equals(this.format)) {
+
+			writer.write(poco.toJSON());
+		}
+
 		writer.flush();
 		writer.close();
 	}
@@ -87,17 +96,7 @@ public class PocoServlet implements HttpRequestHandler {
 
 	private XdiContext getContext(String xri) throws Exception {
 
-		if (this.endpoint != null) {
-
-			String endpoint = this.endpoint;
-			if (! this.endpoint.endsWith("/")) this.endpoint += "/";
-			this.endpoint += xri + "/";
-
-			return xdi.resolveContextManually(endpoint, xri, new XRI3Segment(xri), null);
-		} else {
-
-			return xdi.resolveContextByIname(xri, null);
-		}
+		return xdi.resolveContextByIname(xri, null);
 	}
 
 	private Subject fetch(XdiContext context) throws Exception {
@@ -134,16 +133,6 @@ public class PocoServlet implements HttpRequestHandler {
 		return new Poco(id, profileurl, displayname, nameFormatted, birthday, gender, email);
 	}
 
-	public String getEndpoint() {
-
-		return this.endpoint;
-	}
-
-	public void setEndpoint(String endpoint) {
-
-		this.endpoint = endpoint;
-	}
-
 	public String getFormat() {
 
 		return this.format;
@@ -152,5 +141,8 @@ public class PocoServlet implements HttpRequestHandler {
 	public void setFormat(String format) {
 
 		this.format = format;
+
+		if ("json".equals(format)) this.contentType = "application/json";
+		if ("html".equals(format)) this.contentType = "text/html";
 	}
 }

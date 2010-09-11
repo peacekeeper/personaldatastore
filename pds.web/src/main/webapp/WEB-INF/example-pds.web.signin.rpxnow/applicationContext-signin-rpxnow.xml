@@ -25,7 +25,7 @@
 		
 		<!-- A URI where the PDS for RPXnow users is deployed. -->
 	
-		<property name="endpoint" value="http://xdi.yourserver.com/" />
+		<property name="endpoint" value="http://yourserver.com/pds-core/" />
 	
 	</bean>
 

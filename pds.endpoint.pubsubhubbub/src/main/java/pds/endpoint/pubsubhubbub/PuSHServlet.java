@@ -21,9 +21,11 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.resolve.Resolver;
 import org.springframework.web.HttpRequestHandler;
 
+import pds.dictionary.feed.FeedDictionary;
 import pds.xdi.Xdi;
 import pds.xdi.XdiContext;
 
+import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.feed.synd.SyndLinkImpl;
 import com.sun.syndication.io.SyndFeedInput;
@@ -33,8 +35,10 @@ public class PuSHServlet implements HttpRequestHandler {
 
 	private static final long serialVersionUID = -1912598515775509417L;
 
-	private static final XRI3Segment XRI_VERIFYTOKEN = new XRI3Segment("+verify.token");
-	private static final XRI3Segment XRI_SUBSCRIBED = new XRI3Segment("+subscribed");
+	private static final XRI3Segment XRI_TOPICS = new XRI3Segment("+ostatus+topics");
+	private static final XRI3Segment XRI_ITEM = new XRI3Segment("+item");
+	private static final XRI3Segment XRI_VERIFYTOKEN = new XRI3Segment("+push+verify.token");
+	private static final XRI3Segment XRI_SUBSCRIBED = new XRI3Segment("+push+subscribed");
 
 	private static final Log log = LogFactory.getLog(PuSHServlet.class.getName());
 
@@ -99,18 +103,18 @@ public class PuSHServlet implements HttpRequestHandler {
 			return;
 		}
 
-		// find the context
+		// find the topic
 
 		String xri = this.parseXri(request);
 		XdiContext context = this.getContext(xri);
-		Subject subject = this.fetch(context, hubtopic);
+		Subject topicSubject = this.fetch(context, hubtopic);
 
 		// check if the hub.verifytoken is correct for the hub.topic
 
-		boolean channelVerifyTokenCorrect = this.isChannelVerifyTokenCorrect(subject, hubverifytoken);
-		log.debug("channelVerifyTokenCorrect(" + hubtopic + "," + hubverifytoken + "): " + Boolean.toString(channelVerifyTokenCorrect));
+		boolean topicVerifyTokenCorrect = this.isTopicVerifyTokenCorrect(topicSubject, hubverifytoken);
+		log.debug("topicVerifyTokenCorrect(" + hubtopic + "," + hubverifytoken + "): " + Boolean.toString(topicVerifyTokenCorrect));
 
-		if (! channelVerifyTokenCorrect) {
+		if (! topicVerifyTokenCorrect) {
 
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
@@ -120,10 +124,10 @@ public class PuSHServlet implements HttpRequestHandler {
 
 		if (hubmode.equals("subscribe")){
 
-			this.subscribeChannel(context, subject);
+			subscribeTopic(context, topicSubject);
 		} else if (hubmode.equals("unsubscribe")){
 
-			this.unsubscribeChannel(context, subject);
+			unsubscribeTopic(context, topicSubject);
 		}
 
 		// done
@@ -162,18 +166,24 @@ public class PuSHServlet implements HttpRequestHandler {
 
 		if (hubtopic == null) hubtopic = feed.getUri();
 
-		// check if the channel exist. If so, add feeds to the channel
+		// find the topic
 
-		updateChannel(hubtopic, feed);
+		String xri = this.parseXri(request);
+		XdiContext context = this.getContext(xri);
+		Subject topicSubject = this.fetch(context, hubtopic);
+
+		// add feeds to the topic
+
+		addEntries(context, topicSubject, feed);
 
 		// done
 
 		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
-	private boolean isChannelVerifyTokenCorrect(Subject subject, String hubverifytoken) {
+	private boolean isTopicVerifyTokenCorrect(Subject topicSubject, String hubverifytoken) {
 
-		Predicate predicate = subject.getPredicate(XRI_VERIFYTOKEN);
+		Predicate predicate = topicSubject.getPredicate(XRI_VERIFYTOKEN);
 		if (predicate == null) return false;
 
 		Literal literal = predicate.getLiteral();
@@ -182,31 +192,51 @@ public class PuSHServlet implements HttpRequestHandler {
 		return hubverifytoken.equals(literal.getData());
 	}
 
-	private void subscribeChannel(XdiContext context, Subject subject) throws Exception {
+	private static void subscribeTopic(XdiContext context, Subject topicSubject) throws Exception {
+
+		log.debug("Subscribing to topic " + topicSubject.getSubjectXri());
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_SET);
 		Graph operationGraph = operation.createOperationGraph(null);
-		Graph channelsGraph = operationGraph.createStatement(context.getCanonical(), new XRI3Segment("+channels"), (Graph) null).getInnerGraph();
-		channelsGraph.createStatement(subject.getSubjectXri(), XRI_SUBSCRIBED, "true");
+		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
+		topicsGraph.createStatement(topicSubject.getSubjectXri(), XRI_SUBSCRIBED, "true");
 
 		context.send(operation);
 	}
 
-	private void unsubscribeChannel(XdiContext context, Subject subject) throws Exception {
+	private static void unsubscribeTopic(XdiContext context, Subject topicSubject) throws Exception {
+
+		log.debug("Unsubscribing from topic " + topicSubject.getSubjectXri());
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_SET);
 		Graph operationGraph = operation.createOperationGraph(null);
-		Graph channelsGraph = operationGraph.createStatement(context.getCanonical(), new XRI3Segment("+channels"), (Graph) null).getInnerGraph();
-		channelsGraph.createStatement(subject.getSubjectXri(), XRI_SUBSCRIBED, "false");
+		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
+		topicsGraph.createStatement(topicSubject.getSubjectXri(), XRI_SUBSCRIBED, "false");
 
 		context.send(operation);
 	}
 
-	private void updateChannel(String hubtopic, SyndFeed feed){
+	@SuppressWarnings("unchecked")
+	private static void addEntries(XdiContext context, Subject topicSubject, SyndFeed feed) throws Exception {
 
-		//checks if the channel is already created
+		log.debug("Adding entries to topic " + topicSubject.getSubjectXri());
 
-		//NOTE! This code should be changed for your case//
+		List<SyndEntry> syndEntries = (List<SyndEntry>) feed.getEntries();
+
+		// $add
+
+		Operation operation = context.prepareOperation(MessagingConstants.XRI_ADD);
+		Graph operationGraph = operation.createOperationGraph(null);
+		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
+		Graph itemGraph = topicsGraph.createStatement(topicSubject.getSubjectXri(), new XRI3Segment(XRI_ITEM + "$($)"), (Graph) null).getInnerGraph();
+
+		for (SyndEntry syndEntry : syndEntries) {
+
+			Subject subject = itemGraph.createSubject(new XRI3Segment("$"));
+			FeedDictionary.toSubject(subject, syndEntry);
+		}
+
+		context.send(operation);
 	}
 
 	private String parseXri(HttpServletRequest request) throws Exception {
@@ -237,21 +267,22 @@ public class PuSHServlet implements HttpRequestHandler {
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_GET);
 		Graph operationGraph = operation.createOperationGraph(null);
-		Graph channelsGraph = operationGraph.createStatement(context.getCanonical(), new XRI3Segment("+channels"), (Graph) null).getInnerGraph();
-		channelsGraph.createSubject(new XRI3Segment("$(" + hubtopic + ")"));
+		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
+		topicsGraph.createSubject(new XRI3Segment("$(" + hubtopic + ")"));
 
 		MessageResult messageResult = context.send(operation);
 
 		Subject subject = messageResult.getGraph().getSubject(context.getCanonical());
 		if (subject == null) throw new RuntimeException("User " + context.getCanonical() + " not found.");
 
-		Predicate predicate = subject.getPredicate(new XRI3Segment("+channels"));
-		if (predicate == null) throw new RuntimeException("Channels not found.");
+		Predicate predicate = subject.getPredicate(XRI_TOPICS);
+		if (predicate == null) throw new RuntimeException("Topics not found.");
 
 		Graph innerGraph = predicate.getInnerGraph();
-		if (innerGraph == null) throw new RuntimeException("Channels not found.");
+		if (innerGraph == null) throw new RuntimeException("Topics not found.");
 
 		Subject innerSubject = innerGraph.getSubject(new XRI3Segment("$(" + hubtopic + ")"));
+		if (innerSubject == null) throw new RuntimeException("Topic not found.");
 
 		return innerSubject;
 	}
