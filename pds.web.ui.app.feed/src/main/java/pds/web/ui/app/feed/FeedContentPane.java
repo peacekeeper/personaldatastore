@@ -20,16 +20,19 @@ import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 
 import org.eclipse.higgins.xdi4j.Graph;
+import org.eclipse.higgins.xdi4j.Subject;
 import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.types.Timestamps;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
+import pds.dictionary.feed.FeedDictionary;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.web.ui.app.feed.components.EntriesColumn;
-import pds.web.ui.app.feed.subscribe.Subscriber;
+import pds.web.ui.app.feed.util.Discovery;
+import pds.web.ui.app.feed.util.PuSHUtil;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphAddEvent;
@@ -43,7 +46,11 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 	private static final long serialVersionUID = -8925773333194027452L;
 
-	private static final XRI3Segment XRI_VERIFYTOKEN = new XRI3Segment("+verify.token");
+	private static final XRI3Segment XRI_FEED = new XRI3Segment("+ostatus+feed");
+	private static final XRI3Segment XRI_TOPICS = new XRI3Segment("+ostatus+topics");
+	private static final XRI3Segment XRI_ITEM = new XRI3Segment("+item");
+	private static final XRI3Segment XRI_VERIFYTOKEN = new XRI3Segment("+push+verify.token");
+	private static final XRI3Segment XRI_HUB = new XRI3Segment("+push+hub");
 
 	protected ResourceBundle resourceBundle;
 
@@ -52,7 +59,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 	private XRI3Segment subjectXri;
 	private XRI3 address;
 	private XRI3 feedAddress;
-	private XRI3 channelsAddress;
+	private XRI3 topicsAddress;
 
 	private XdiPanel xdiPanel;
 	private EntriesColumn entriesColumn;
@@ -91,7 +98,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 		return new XRI3[] {
 				this.feedAddress,
-				this.channelsAddress
+				this.topicsAddress
 		};
 	}
 
@@ -99,7 +106,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 		return new XRI3[] {
 				new XRI3("" + this.feedAddress + "/$$"),
-				new XRI3("" + this.channelsAddress + "/$$")
+				new XRI3("" + this.topicsAddress + "/$$")
 		};
 	}
 
@@ -159,8 +166,8 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		this.context = context;
 		this.subjectXri = subjectXri;
 		this.address = new XRI3("" + this.subjectXri);
-		this.feedAddress = new XRI3("" + this.subjectXri + "/+feed");
-		this.channelsAddress = new XRI3("" + this.subjectXri + "/+channels");
+		this.feedAddress = new XRI3("" + this.subjectXri + "/" + XRI_FEED);
+		this.topicsAddress = new XRI3("" + this.subjectXri + "/" + XRI_TOPICS);
 
 		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 		this.entriesColumn.setContextAndSubjectXri(context, subjectXri);
@@ -173,13 +180,28 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 	}
 
 	private void onPostActionPerformed(ActionEvent e) {
+		
+		// add the entry
 
 		try {
 
-			this.addEntry(new Date(), this.contentTextField.getText());
+			this.addEntry(this.contentTextField.getText(), this.contentTextField.getText(), new Date());
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
+			return;
+		}
+
+		// publish it
+
+		String hubtopic = this.feedPdsWebApp.getAtomFeedEndpoint() + this.context.getCanonical().toString();
+
+		try {
+
+			PuSHUtil.publish(this.feedPdsWebApp.getHub(), hubtopic);
+		} catch (Exception ex) {
+
+			MessageDialog.problem("Sorry, a problem occurred while publishing an item: " + ex.getMessage(), ex);
 			return;
 		}
 
@@ -188,33 +210,43 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		this.contentTextField.setText("");
 	}
 
-	private void addEntry(Date timestamp, String content) throws XdiException {
-
-		// $add
-
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_ADD);
-		Graph operationGraph = operation.createOperationGraph(null);
-		Graph feedGraph = operationGraph.createStatement(this.subjectXri, new XRI3Segment("+feed"), (Graph) null).getInnerGraph();
-		Graph itemGraph = feedGraph.createStatement(new XRI3Segment("$"), new XRI3Segment("+item$($)"), (Graph) null).getInnerGraph();
-		itemGraph.createStatement(new XRI3Segment("$"), new XRI3Segment("$d"), Timestamps.dateToXri(timestamp));
-		itemGraph.createStatement(new XRI3Segment("$"), new XRI3Segment("$a$xsd$string"), content);
-		this.context.send(operation);
-	}
-
 	private void onSubscribeActionPerformed(ActionEvent e) {
+
+		String hubtopic = this.subscribeTextField.getText();
+		String hub;
+		String hubverifytoken;
+
+		// discover the feed's hub
 
 		try {
 
-			String hubtopic = this.subscribeTextField.getText();
-			
-			String hubverifytoken = Subscriber.subscribe(
-					this.feedPdsWebApp.getHub(), 
-					this.feedPdsWebApp.getPubsubhubbubCallback(), 
-					hubtopic, 
-					null, 
-					null);
 
-			this.addChannel(hubtopic, hubverifytoken);
+			hub = Discovery.getHub(hubtopic);
+		} catch (Exception ex) {
+
+			MessageDialog.problem("Sorry, a problem occurred while discoverying the Feed's hub: " + ex.getMessage(), ex);
+			return;
+		}
+
+		// subscribe to the feed at the hub
+
+		try {
+
+			hubverifytoken = PuSHUtil.subscribe(
+					hub, 
+					this.feedPdsWebApp.getPubsubhubbubEndpoint(), 
+					hubtopic, 
+					this.feedPdsWebApp.getLeaseSeconds(), 
+					null);
+		} catch (Exception ex) {
+
+			MessageDialog.problem("Sorry, a problem occurred while discoverying the Feed's hub: " + ex.getMessage(), ex);
+			return;
+		}
+
+		try {
+
+			this.addTopic(hubtopic, hubverifytoken, hub);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
@@ -226,14 +258,31 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		this.subscribeTextField.setText("");
 	}
 
-	private void addChannel(String hubtopic, String hubverifytoken) throws XdiException {
+	private void addEntry(String title, String description, Date publishedDate) throws XdiException {
 
 		// $add
 
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_ADD);
 		Graph operationGraph = operation.createOperationGraph(null);
-		Graph channelsGraph = operationGraph.createStatement(this.subjectXri, new XRI3Segment("+channels"), (Graph) null).getInnerGraph();
-		channelsGraph.createStatement(new XRI3Segment("$(" + this.subscribeTextField.getText() + ")"), XRI_VERIFYTOKEN, hubverifytoken);
+		Graph feedGraph = operationGraph.createStatement(this.subjectXri, XRI_FEED, (Graph) null).getInnerGraph();
+		Graph itemGraph = feedGraph.createStatement(new XRI3Segment("$"), new XRI3Segment(XRI_ITEM + "$($)"), (Graph) null).getInnerGraph();
+
+		Subject subject = itemGraph.createSubject(new XRI3Segment("$"));
+		FeedDictionary.toSubject(subject, title, description, publishedDate);
+
+		this.context.send(operation);
+	}
+
+	private void addTopic(String hubtopic, String hubverifytoken, String hub) throws XdiException {
+
+		// $add
+
+		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_ADD);
+		Graph operationGraph = operation.createOperationGraph(null);
+		Graph topicsGraph = operationGraph.createStatement(this.subjectXri, XRI_TOPICS, (Graph) null).getInnerGraph();
+		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), XRI_VERIFYTOKEN, hubverifytoken);
+		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), XRI_HUB, hub);
+		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), new XRI3Segment("$d"), Timestamps.dateToXri(new Date()));
 		this.context.send(operation);
 	}
 

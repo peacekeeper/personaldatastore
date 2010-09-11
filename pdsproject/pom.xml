@@ -25,6 +25,7 @@
 		<module>../pds.core.single</module>
 		<module>../pds.core.xri</module>
 		<module>../pds.dictionary</module>
+		<module>../pds.dictionary.feed</module>
 		<module>../pds.profile</module>
 		<module>../pds.web</module>
 		<module>../pds.web.base</module>
@@ -41,6 +42,7 @@
 		<module>../pds.web.ui.app.directxdi</module>
 		<module>../pds.web.ui.app.whisper</module>
 		<module>../pds.endpoint.feed</module>
+		<module>../pds.endpoint.foaf</module>
 		<module>../pds.endpoint.hcard</module>
 		<module>../pds.endpoint.poco</module>
 		<module>../pds.endpoint.pubsubhubbub</module>

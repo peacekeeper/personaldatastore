@@ -1,7 +1,8 @@
-package pds.web.ui.app.feed.subscribe;
+package pds.web.ui.app.feed.util;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,7 +31,7 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
-public class Subscriber {
+public class PuSHUtil {
 
 	private static final DefaultHttpClient httpClient;
 
@@ -75,12 +76,24 @@ public class Subscriber {
 		});
 	}
 
+	private PuSHUtil() { }
+
 	/**
 	 * Sends a subscription request to a hub.
 	 */
 	public static String subscribe(String hub, String hubcallback, String hubtopic, String hubleaseseconds, String hubsecret) throws IOException {
 
+		// check parameters
+
+		new URL(hub);
+		new URL(hubtopic);
+		if (hubcallback == null) throw new NullPointerException();
+
+		// create a hub.verify_token
+
 		String hubverifytoken = makeVerifyToken();
+
+		// POST
 
 		HttpPost httppost = new HttpPost(hub);	
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
@@ -97,9 +110,9 @@ public class Subscriber {
 		httppost.setHeader("Content-type", "application/x-www-form-urlencoded");
 
 		post(httppost);
-		
+
 		// done
-		
+
 		return hubverifytoken;
 	}
 
@@ -108,7 +121,17 @@ public class Subscriber {
 	 */
 	public static String unsubscribe(String hub, String hubcallback, String hubtopic, String hubsecret) throws Exception {
 
+		// check parameters
+
+		new URL(hub);
+		new URL(hubtopic);
+		if (hubcallback == null) throw new NullPointerException();
+
+		// create a hub.verify_token
+
 		String hubverifytoken = makeVerifyToken();
+
+		// POST
 
 		HttpPost httppost = new HttpPost(hub);
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
@@ -126,14 +149,37 @@ public class Subscriber {
 		post(httppost);
 
 		// done
-		
+
 		return hubverifytoken;
+	}
+
+	/**
+	 * Sends a publish request to a hub.
+	 */
+	public static void publish(String hub, String hubtopic) throws Exception {
+
+		// check parameters
+
+		new URL(hub);
+		new URL(hubtopic);
+
+		// POST
+
+		HttpPost httppost = new HttpPost(hub);
+		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+		nvps.add(new BasicNameValuePair("hub.mode", "publish"));
+		nvps.add(new BasicNameValuePair("hub.url", hubtopic));
+
+		httppost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+		httppost.setHeader("Content-type","application/x-www-form-urlencoded");
+
+		post(httppost);
 	}
 
 	/*
 	 * Helper methods
 	 */
-	
+
 	private static void post(HttpPost httppost) throws IOException {
 
 		HttpContext context = new BasicHttpContext();

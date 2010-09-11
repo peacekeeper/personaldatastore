@@ -11,7 +11,9 @@ import pds.xdi.XdiContext;
 public class FeedPdsWebApp implements PdsWebApp {
 
 	private String hub;
-	private String pubsubhubbubCallback;
+	private String pubsubhubbubEndpoint;
+	private String atomFeedEndpoint;
+	private String leaseSeconds;
 
 	@Override
 	public String getName() {
@@ -45,13 +47,35 @@ public class FeedPdsWebApp implements PdsWebApp {
 		this.hub = hub;
 	}
 
-	public String getPubsubhubbubCallback() {
+	public String getPubsubhubbubEndpoint() {
 
-		return this.pubsubhubbubCallback;
+		return this.pubsubhubbubEndpoint;
 	}
 
-	public void setPubsubhubbubCallback(String pubsubhubbubCallback) {
+	public void setPubsubhubbubEndpoint(String pubsubhubbubEndpoint) {
 
-		this.pubsubhubbubCallback = pubsubhubbubCallback;
+		this.pubsubhubbubEndpoint = pubsubhubbubEndpoint;
+		if (! this.pubsubhubbubEndpoint.endsWith("/")) this.pubsubhubbubEndpoint += "/";
+	}
+
+	public String getAtomFeedEndpoint() {
+
+		return this.atomFeedEndpoint;
+	}
+
+	public void setAtomFeedEndpoint(String atomFeedEndpoint) {
+
+		this.atomFeedEndpoint = atomFeedEndpoint;
+		if (! this.atomFeedEndpoint.endsWith("/")) this.atomFeedEndpoint += "/";
+	}
+
+	public String getLeaseSeconds() {
+
+		return this.leaseSeconds;
+	}
+
+	public void setLeaseSeconds(String pubsubhubbubLeaseSeconds) {
+
+		this.leaseSeconds = pubsubhubbubLeaseSeconds;
 	}
 }
