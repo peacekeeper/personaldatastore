@@ -23,6 +23,7 @@ import org.eclipse.higgins.xdi4j.messaging.client.XDIClient;
 import org.eclipse.higgins.xdi4j.messaging.client.http.XDIHttpClient;
 import org.eclipse.higgins.xdi4j.messaging.error.ErrorMessageResult;
 import org.eclipse.higgins.xdi4j.util.CopyUtil;
+import org.eclipse.higgins.xdi4j.util.XriUtil;
 import org.eclipse.higgins.xdi4j.util.iterators.IteratorArrayMaker;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
@@ -289,7 +290,7 @@ public class XdiContext {
 					break;
 				}
 
-				operationAddress = XdiUtil.extractParentXri(operationAddress);
+				operationAddress = XriUtil.extractParentXri(operationAddress);
 				bubbled = true;
 			}
 		}

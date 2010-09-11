@@ -50,8 +50,8 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 	private XRI3Segment predicateXri;
 	private XRI3 address;
 	private XRI3 extensionAddress;
-	private XRI3 restrictionAddress;
 	private XRI3 canonicalAddress;
+	private XRI3 addAddress;
 
 	private boolean readOnly;
 
@@ -125,7 +125,6 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 		return new XRI3[] {
 				this.address,
 				this.extensionAddress,
-				this.restrictionAddress,
 				this.canonicalAddress
 		};
 	}
@@ -133,8 +132,7 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 	public XRI3[] xdiAddAddresses() {
 
 		return new XRI3[] {
-				new XRI3("" + this.extensionAddress + "/$$"),
-				new XRI3("" + this.restrictionAddress + "/$$")
+				this.addAddress
 		};
 	}
 
@@ -191,8 +189,8 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 		this.predicateXri = predicateXri;
 		this.address = new XRI3("" + this.subjectXri + "/" + this.predicateXri);
 		this.extensionAddress = new XRI3("" + this.subjectXri + "/" + Dictionary.makeExtensionPredicate(this.predicateXri));
-		this.restrictionAddress = new XRI3("" + this.subjectXri + "/" + Dictionary.makeRestrictionPredicate(this.predicateXri));
 		this.canonicalAddress = new XRI3("" + this.subjectXri + "/" + Dictionary.makeCanonicalPredicate(this.predicateXri));
+		this.addAddress = new XRI3("" + this.subjectXri + "/" + this.predicateXri + "$($)");
 
 		this.refresh();
 

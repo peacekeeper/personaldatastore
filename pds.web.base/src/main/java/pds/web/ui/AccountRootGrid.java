@@ -50,6 +50,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 	private XdiContext context;
 	private XRI3 address;
 	private XRI3 extensionAddress;
+	private XRI3 addAddress;
 
 	private Button addAccountPersonaButton;
 	private Panel addAccountPersonaPanel;
@@ -112,7 +113,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 	public XRI3[] xdiAddAddresses() {
 
 		return new XRI3[] {
-				new XRI3("" + this.extensionAddress + "/$$")
+				this.addAddress
 		};
 	}
 
@@ -179,6 +180,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		this.context = context;
 		this.address = new XRI3("" + this.context.getCanonical());
 		this.extensionAddress = new XRI3("" + this.context.getCanonical() + "/" + DictionaryConstants.XRI_EXTENSION);
+		this.addAddress = new XRI3("" + this.context.getCanonical() + "$($)");
 
 		this.refresh();
 

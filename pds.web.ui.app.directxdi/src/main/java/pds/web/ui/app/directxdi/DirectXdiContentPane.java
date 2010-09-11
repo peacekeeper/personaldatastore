@@ -105,6 +105,7 @@ public class DirectXdiContentPane extends ContentPane {
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Problem while sending direct XDI: " + ex.getMessage(), ex);
+			return;
 		}
 
 		TransactionEventWindowPane transactionEventWindowPane = new TransactionEventWindowPane();

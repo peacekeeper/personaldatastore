@@ -142,7 +142,7 @@ public class AccountPersonaPanel extends Panel implements XdiGraphListener {
 		this.context = context;
 		this.subjectXri = subjectXri;
 		this.address = new XRI3("" + this.subjectXri);
-		this.nameAddress = new XRI3("" + this.subjectXri + "/$a$xsd$string");
+		this.nameAddress = new XRI3("" + this.subjectXri + "/$a$string");
 
 		this.refresh();
 
