@@ -44,8 +44,6 @@ public class PuSHServlet implements HttpRequestHandler {
 
 	private static final Xdi xdi;
 
-	private String endpoint;
-
 	static {
 
 		try {
@@ -250,17 +248,7 @@ public class PuSHServlet implements HttpRequestHandler {
 
 	private XdiContext getContext(String xri) throws Exception {
 
-		if (this.endpoint != null) {
-
-			String endpoint = this.endpoint;
-			if (! this.endpoint.endsWith("/")) this.endpoint += "/";
-			this.endpoint += xri + "/";
-
-			return xdi.resolveContextManually(endpoint, xri, new XRI3Segment(xri), null);
-		} else {
-
-			return xdi.resolveContextByIname(xri, null);
-		}
+		return xdi.resolveContextByIname(xri, null);
 	}
 
 	private Subject fetch(XdiContext context, String hubtopic) throws Exception {
@@ -285,15 +273,5 @@ public class PuSHServlet implements HttpRequestHandler {
 		if (innerSubject == null) throw new RuntimeException("Topic not found.");
 
 		return innerSubject;
-	}
-
-	public String getEndpoint() {
-
-		return this.endpoint;
-	}
-
-	public void setEndpoint(String endpoint) {
-
-		this.endpoint = endpoint;
 	}
 }	

@@ -5,6 +5,6 @@
 
 	<!-- Servlets -->
 
-	<bean id="JsonPocoServlet" class="pds.endpoint.pubsubhubbub.PuSHServlet" init-method="init" />
+	<bean id="PuSHServlet" class="pds.endpoint.pubsubhubbub.PuSHServlet" init-method="init" />
 
 </beans>
