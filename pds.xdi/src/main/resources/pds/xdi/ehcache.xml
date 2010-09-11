@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        
+<ehcache>
+
+    <diskStore path="java.io.tmpdir"/>
+    <cacheManagerEventListenerFactory class="" properties=""/>
+
+    <defaultCache
+            maxElementsInMemory="10000"
+            eternal="false"
+            timeToIdleSeconds="0"
+            timeToLiveSeconds="120"
+            overflowToDisk="true"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"
+            />
+
+    <cache name="inumberEndpointCache"
+		maxElementsInMemory="5000"
+		eternal="false"
+		overflowToDisk="true"
+		diskPersistent="false" 
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="3600"
+		memoryStoreEvictionPolicy="LRU"
+		diskExpiryThreadIntervalSeconds="60" />
+
+	<cache name="xdiEndpointCache" 
+		maxElementsInMemory="5000" 
+		eternal="false"
+		overflowToDisk="false"
+		diskPersistent="false" 
+		timeToIdleSeconds="60" 
+		timeToLiveSeconds="60" 
+		diskExpiryThreadIntervalSeconds="60" />
+
+</ehcache>

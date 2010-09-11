@@ -195,6 +195,9 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 
 			this.removeAll();
 			this.add(this.addAccountPersonaButton);
+
+			this.addAccountPersonaButton.setVisible(true);
+			this.addAccountPersonaPanel.setVisible(false);
 		}
 	}
 
@@ -266,14 +269,14 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		addAccountPersonaButton = new Button();
 		addAccountPersonaButton.setStyleName("PlainWhite");
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-		"/pds/web/resource/image/accountpersonanew.png");
+				"/pds/web/resource/image/accountpersonanew.png");
 		addAccountPersonaButton.setIcon(imageReference1);
 		addAccountPersonaButton.setText("Create New");
 		addAccountPersonaButton
-		.setInsets(new Insets(new Extent(10, Extent.PX)));
+				.setInsets(new Insets(new Extent(10, Extent.PX)));
 		addAccountPersonaButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onAddAccountPersonaActionPerformed(e);
 			}
@@ -294,13 +297,20 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		column1.add(row1);
 		addAccountPersonaTextField = new TextField();
 		addAccountPersonaTextField.setStyleName("Default");
+		addAccountPersonaTextField.addActionListener(new ActionListener() {
+			private static final long serialVersionUID = 1L;
+	
+			public void actionPerformed(ActionEvent e) {
+				onCreateActionPerformed(e);
+			}
+		});
 		row1.add(addAccountPersonaTextField);
 		Button button1 = new Button();
 		button1.setStyleName("Default");
 		button1.setText("Create");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onCreateActionPerformed(e);
 			}
@@ -311,7 +321,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		button2.setText("Cancel");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onCancelActionPerformed(e);
 			}
