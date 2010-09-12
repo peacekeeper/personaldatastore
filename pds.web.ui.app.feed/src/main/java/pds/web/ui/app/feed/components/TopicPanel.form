@@ -33,7 +33,8 @@
 
 <p n="height">48px</p>
 <p n="width">48px</p>
-<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/app-feed.png</p>
+
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/ui/app/feed/app.png</p>
 </c>
 
 

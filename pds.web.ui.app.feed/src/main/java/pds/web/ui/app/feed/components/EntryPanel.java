@@ -57,8 +57,8 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 	private Button replyButton;
 	private EntryPanelDelegate entryPanelDelegate;
 	private Label timestampLabel;
-	private Label contentLabel;
 
+	private Label contentLabel;
 	/**
 	 * Creates a new <code>AccountPersonaPanel</code>.
 	 */
@@ -246,7 +246,7 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		row1.add(xdiPanel);
 		ImageIcon imageIcon1 = new ImageIcon();
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-				"/pds/web/resource/image/app-feed.png");
+				"/pds/web/ui/app/feed/app.png");
 		imageIcon1.setIcon(imageReference1);
 		imageIcon1.setHeight(new Extent(48, Extent.PX));
 		imageIcon1.setWidth(new Extent(48, Extent.PX));

@@ -33,7 +33,8 @@
 
 <p n="height">48px</p>
 <p n="width">48px</p>
-<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/app-feed.png</p>
+
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/ui/app/feed/app.png</p>
 </c>
 
 
@@ -45,6 +46,7 @@
 <p n="styleName">Default</p>
 <p n="text">...</p>
 </c>
+
 <c i="Component_contentLabel" t="nextapp.echo.app.Label" vis="private">
 <p n="styleName">Default</p>
 <p n="text">...</p>

@@ -25,7 +25,6 @@ import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
-import pds.xdi.XdiNotExistentException;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
@@ -209,10 +208,7 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.hubAddress);
 		MessageResult messageResult = this.context.send(operation);
 
-		String data = Addressing.findLiteralData(messageResult.getGraph(), this.hubAddress);
-		if (data == null) throw new XdiNotExistentException();
-
-		return data;
+		return Addressing.findLiteralData(messageResult.getGraph(), this.hubAddress);
 	}
 
 	private String getSubscribed() throws XdiException {
@@ -222,10 +218,7 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.subscribedAddress);
 		MessageResult messageResult = this.context.send(operation);
 
-		String data = Addressing.findLiteralData(messageResult.getGraph(), this.subscribedAddress);
-		if (data == null) throw new XdiNotExistentException();
-
-		return data;
+		return Addressing.findLiteralData(messageResult.getGraph(), this.subscribedAddress);
 	}
 
 	private String getVerifyToken() throws XdiException {
@@ -235,10 +228,7 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.verifyTokenAddress);
 		MessageResult messageResult = this.context.send(operation);
 
-		String data = Addressing.findLiteralData(messageResult.getGraph(), this.verifyTokenAddress);
-		if (data == null) throw new XdiNotExistentException();
-
-		return data;
+		return Addressing.findLiteralData(messageResult.getGraph(), this.verifyTokenAddress);
 	}
 
 	/**
@@ -258,7 +248,7 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 		row1.add(xdiPanel);
 		ImageIcon imageIcon1 = new ImageIcon();
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-				"/pds/web/resource/image/app-feed.png");
+				"/pds/web/ui/app/feed/app.png");
 		imageIcon1.setIcon(imageReference1);
 		imageIcon1.setHeight(new Extent(48, Extent.PX));
 		imageIcon1.setWidth(new Extent(48, Extent.PX));
