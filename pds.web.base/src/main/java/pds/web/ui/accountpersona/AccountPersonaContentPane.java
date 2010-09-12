@@ -110,6 +110,13 @@ public class AccountPersonaContentPane extends ContentPane implements XdiGraphLi
 		};
 	}
 
+	public XRI3[] xdiSetAddresses() {
+
+		return new XRI3[] {
+				new XRI3("" + this.nameAddress + "/$$")
+		};
+	}
+
 	public XRI3[] xdiDelAddresses() {
 
 		return new XRI3[] {

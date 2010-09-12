@@ -15,7 +15,7 @@ import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
 import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.util.iterators.IteratorListMaker;
-import org.eclipse.higgins.xdi4j.util.iterators.MappingIterator;
+import org.eclipse.higgins.xdi4j.util.iterators.MappingSubjectXrisIterator;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
@@ -32,6 +32,8 @@ import pds.xdi.events.XdiGraphModEvent;
 public class EntriesColumn extends Column implements XdiGraphListener {
 
 	private static final long serialVersionUID = -5106531864010407671L;
+
+	private static final XRI3Segment XRI_FEED = new XRI3Segment("+ostatus+feed");
 
 	protected ResourceBundle resourceBundle;
 
@@ -123,6 +125,11 @@ public class EntriesColumn extends Column implements XdiGraphListener {
 		return new XRI3[0];
 	}
 
+	public XRI3[] xdiSetAddresses() {
+
+		return new XRI3[0];
+	}
+
 	public XRI3[] xdiDelAddresses() {
 
 		return new XRI3[] {
@@ -168,7 +175,7 @@ public class EntriesColumn extends Column implements XdiGraphListener {
 		
 		this.context = context;
 		this.subjectXri = subjectXri;
-		this.address = new XRI3("" + this.subjectXri + "/+feed");
+		this.address = new XRI3("" + this.subjectXri + "/" + XRI_FEED);
 
 		this.refresh();
 
@@ -183,27 +190,20 @@ public class EntriesColumn extends Column implements XdiGraphListener {
 
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET);
 		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(this.subjectXri, new XRI3Segment("+feed"));
+		operationGraph.createStatement(this.subjectXri, XRI_FEED);
 
 		MessageResult messageResult = this.context.send(operation);
 
 		Subject subject = messageResult.getGraph().getSubject(this.subjectXri);
 		if (subject == null) return new ArrayList<XRI3Segment> ();
 
-		Predicate predicate = subject.getPredicate(new XRI3Segment("+feed"));
+		Predicate predicate = subject.getPredicate(XRI_FEED);
 		if (predicate == null) return new ArrayList<XRI3Segment> ();
 
 		Graph innerGraph = predicate.getInnerGraph();
 		if (innerGraph == null) return new ArrayList<XRI3Segment> ();
 
-		return new IteratorListMaker<XRI3Segment> (new MappingIterator<Subject, XRI3Segment> (innerGraph.getSubjects()) {
-
-			@Override
-			public XRI3Segment map(Subject item) {
-
-				return item.getSubjectXri();
-			}
-		}).list();
+		return new IteratorListMaker<XRI3Segment> (new MappingSubjectXrisIterator(innerGraph.getSubjects())).list();
 	}
 
 	/**

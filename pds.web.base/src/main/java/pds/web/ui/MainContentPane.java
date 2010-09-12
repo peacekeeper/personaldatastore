@@ -75,7 +75,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 		super.init();
 
-		// Add PdsWebApps
+		// add PdsWebApps
 
 		for (final PdsWebApp pdsWebApp : PDSApplication.getApp().getServlet().getPdsWebApps()) {
 
@@ -130,14 +130,6 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 	private void refresh(EventObject event) {
 
-		try {
-
-			this.accountRootGrid.setContext(this.context);
-		} catch (Exception ex) {
-
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
-			return;
-		}
 	}
 
 	public XdiContext getContext() {

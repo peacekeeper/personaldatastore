@@ -84,6 +84,8 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 	@Override
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		log.trace(request.getMethod() + ": " + request.getRequestURI());
+
 		try {
 
 			if ("GET".equals(request.getMethod())) this.doGet(request, response);
@@ -97,19 +99,33 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
 	private void doGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+		// find the XDI data
+
+		String xri = this.parseXri(request);
+		XdiContext context = this.getContext(xri);
+		Subject pdsSubject = this.fetch(context);
+
+		if (pdsSubject == null) {
+
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, xri + " not found.");
+			return;
+		}
+
 		Properties properties = new Properties();
-		HCard hCard = this.getHCard(request, properties);
+		HCard hCard = this.convertHCard(xri, context, pdsSubject, properties);
+
+		// output it
 
 		if (this.contentType != null) response.setContentType(this.contentType);
 		Writer writer = response.getWriter();
 
 		if ("html".equals(this.format)) {
 
-			VelocityContext context = new VelocityContext(properties);
-			context.put("hcard", hCard.toHTML());
+			VelocityContext velocityContext = new VelocityContext(properties);
+			velocityContext.put("hcard", hCard.toHTML());
 
 			Reader templateReader = new StringReader(this.html);
-			Velocity.evaluate(context, writer, "html", templateReader);
+			Velocity.evaluate(velocityContext, writer, "html", templateReader);
 			templateReader.close();
 		} else if ("json".equals(this.format)) {
 
@@ -146,20 +162,16 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		MessageResult messageResult = context.send(operation);
 
 		Subject subject = messageResult.getGraph().getSubject(context.getCanonical());
-		if (subject == null) throw new RuntimeException("User " + context.getCanonical() + " not found.");
+		if (subject == null) return null;
 
 		return subject;
 	}
 
-	private HCard getHCard(HttpServletRequest request, Properties properties) throws Exception {
-
-		String xri = this.parseXri(request);
-		XdiContext context = this.getContext(xri);
-		Subject subject = this.fetch(context);
+	private HCard convertHCard(String xri, XdiContext context, Subject pdsSubject, Properties properties) throws Exception {
 
 		String uid = context.getCanonical().toString();
-		String name = Addressing.findLiteralData(subject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
-		String email = Addressing.findLiteralData(subject, new XRI3("$" + PdsDictionary.XRI_EMAIL.toString()));
+		String name = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
+		String email = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_EMAIL.toString()));
 
 		HCardBuilder hCardBuilder = HCard.build(name);
 		hCardBuilder.setUID(uid);
@@ -168,8 +180,8 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
 		properties.put("xri", xri);
 		properties.put("inumber", context.getCanonical().toString());
-		properties.put("x3simple", subject.toString("X3 Simple", null));
-		properties.put("x3standard", subject.toString("X3 Simple", null));
+		properties.put("x3simple", pdsSubject.toString("X3 Simple", null));
+		properties.put("x3standard", pdsSubject.toString("X3 Simple", null));
 		if (name != null) properties.put("name", name);
 		if (email != null) properties.put("email", email);
 

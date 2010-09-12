@@ -114,6 +114,13 @@ public class DataPredicateInstancePanel extends Panel implements XdiGraphListene
 		};
 	}
 
+	public XRI3[] xdiSetAddresses() {
+
+		return new XRI3[] {
+				this.address
+		};
+	}
+
 	public XRI3[] xdiDelAddresses() {
 
 		return new XRI3[] {

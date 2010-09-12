@@ -24,6 +24,7 @@ import org.springframework.web.HttpRequestHandler;
 import pds.dictionary.feed.FeedDictionary;
 import pds.xdi.Xdi;
 import pds.xdi.XdiContext;
+import pds.xdi.XdiException;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -61,6 +62,8 @@ public class PuSHServlet implements HttpRequestHandler {
 
 	@Override
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		log.trace(request.getMethod() + ": " + request.getRequestURI());
 
 		try {
 
@@ -101,20 +104,26 @@ public class PuSHServlet implements HttpRequestHandler {
 			return;
 		}
 
-		// find the topic
+		// find the XDI data
 
 		String xri = this.parseXri(request);
 		XdiContext context = this.getContext(xri);
-		Subject topicSubject = this.fetch(context, hubtopic);
+		Subject pdsSubject = context == null ? null : this.fetch(context, hubtopic);
 
+		if (pdsSubject == null) {
+
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, xri + " not found.");
+			return;
+		}
+		
 		// check if the hub.verifytoken is correct for the hub.topic
 
-		boolean topicVerifyTokenCorrect = this.isTopicVerifyTokenCorrect(topicSubject, hubverifytoken);
+		boolean topicVerifyTokenCorrect = this.isTopicVerifyTokenCorrect(pdsSubject, hubverifytoken);
 		log.debug("topicVerifyTokenCorrect(" + hubtopic + "," + hubverifytoken + "): " + Boolean.toString(topicVerifyTokenCorrect));
 
 		if (! topicVerifyTokenCorrect) {
 
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
 		}
 
@@ -122,10 +131,10 @@ public class PuSHServlet implements HttpRequestHandler {
 
 		if (hubmode.equals("subscribe")){
 
-			subscribeTopic(context, topicSubject);
+			subscribeTopic(context, pdsSubject);
 		} else if (hubmode.equals("unsubscribe")){
 
-			unsubscribeTopic(context, topicSubject);
+			unsubscribeTopic(context, pdsSubject);
 		}
 
 		// done
@@ -164,24 +173,30 @@ public class PuSHServlet implements HttpRequestHandler {
 
 		if (hubtopic == null) hubtopic = feed.getUri();
 
-		// find the topic
+		// find the XDI data
 
 		String xri = this.parseXri(request);
 		XdiContext context = this.getContext(xri);
-		Subject topicSubject = this.fetch(context, hubtopic);
+		Subject pdsSubject = context == null ? null : this.fetch(context, hubtopic);
+
+		if (pdsSubject == null) {
+
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, xri + " not found.");
+			return;
+		}
 
 		// add feeds to the topic
 
-		addEntries(context, topicSubject, feed);
+		addEntries(context, pdsSubject, feed);
 
 		// done
 
 		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
-	private boolean isTopicVerifyTokenCorrect(Subject topicSubject, String hubverifytoken) {
+	private boolean isTopicVerifyTokenCorrect(Subject pdsSubject, String hubverifytoken) {
 
-		Predicate predicate = topicSubject.getPredicate(XRI_VERIFYTOKEN);
+		Predicate predicate = pdsSubject.getPredicate(XRI_VERIFYTOKEN);
 		if (predicate == null) return false;
 
 		Literal literal = predicate.getLiteral();
@@ -190,34 +205,34 @@ public class PuSHServlet implements HttpRequestHandler {
 		return hubverifytoken.equals(literal.getData());
 	}
 
-	private static void subscribeTopic(XdiContext context, Subject topicSubject) throws Exception {
+	private static void subscribeTopic(XdiContext context, Subject pdsSubject) throws Exception {
 
-		log.debug("Subscribing to topic " + topicSubject.getSubjectXri());
+		log.debug("Subscribing to topic " + pdsSubject.getSubjectXri());
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_SET);
 		Graph operationGraph = operation.createOperationGraph(null);
 		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
-		topicsGraph.createStatement(topicSubject.getSubjectXri(), XRI_SUBSCRIBED, "true");
+		topicsGraph.createStatement(pdsSubject.getSubjectXri(), XRI_SUBSCRIBED, "true");
 
 		context.send(operation);
 	}
 
-	private static void unsubscribeTopic(XdiContext context, Subject topicSubject) throws Exception {
+	private static void unsubscribeTopic(XdiContext context, Subject pdsSubject) throws Exception {
 
-		log.debug("Unsubscribing from topic " + topicSubject.getSubjectXri());
+		log.debug("Unsubscribing from topic " + pdsSubject.getSubjectXri());
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_SET);
 		Graph operationGraph = operation.createOperationGraph(null);
 		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
-		topicsGraph.createStatement(topicSubject.getSubjectXri(), XRI_SUBSCRIBED, "false");
+		topicsGraph.createStatement(pdsSubject.getSubjectXri(), XRI_SUBSCRIBED, "false");
 
 		context.send(operation);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static void addEntries(XdiContext context, Subject topicSubject, SyndFeed feed) throws Exception {
+	private static void addEntries(XdiContext context, Subject pdsSubject, SyndFeed feed) throws Exception {
 
-		log.debug("Adding entries to topic " + topicSubject.getSubjectXri());
+		log.debug("Adding entries to topic " + pdsSubject.getSubjectXri());
 
 		List<SyndEntry> syndEntries = (List<SyndEntry>) feed.getEntries();
 
@@ -226,7 +241,7 @@ public class PuSHServlet implements HttpRequestHandler {
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_ADD);
 		Graph operationGraph = operation.createOperationGraph(null);
 		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
-		Graph itemGraph = topicsGraph.createStatement(topicSubject.getSubjectXri(), new XRI3Segment(XRI_ITEM + "$($)"), (Graph) null).getInnerGraph();
+		Graph itemGraph = topicsGraph.createStatement(pdsSubject.getSubjectXri(), new XRI3Segment(XRI_ITEM + "$($)"), (Graph) null).getInnerGraph();
 
 		for (SyndEntry syndEntry : syndEntries) {
 
@@ -246,7 +261,7 @@ public class PuSHServlet implements HttpRequestHandler {
 		return xri;
 	}
 
-	private XdiContext getContext(String xri) throws Exception {
+	private XdiContext getContext(String xri) throws XdiException {
 
 		return xdi.resolveContextByIname(xri, null);
 	}
@@ -261,16 +276,16 @@ public class PuSHServlet implements HttpRequestHandler {
 		MessageResult messageResult = context.send(operation);
 
 		Subject subject = messageResult.getGraph().getSubject(context.getCanonical());
-		if (subject == null) throw new RuntimeException("User " + context.getCanonical() + " not found.");
+		if (subject == null) return null;
 
 		Predicate predicate = subject.getPredicate(XRI_TOPICS);
-		if (predicate == null) throw new RuntimeException("Topics not found.");
+		if (predicate == null) return null;
 
 		Graph innerGraph = predicate.getInnerGraph();
-		if (innerGraph == null) throw new RuntimeException("Topics not found.");
+		if (innerGraph == null) return null;
 
 		Subject innerSubject = innerGraph.getSubject(new XRI3Segment("$(" + hubtopic + ")"));
-		if (innerSubject == null) throw new RuntimeException("Topic not found.");
+		if (innerSubject == null) return null;
 
 		return innerSubject;
 	}

@@ -30,7 +30,9 @@ import org.eclipse.higgins.xdi4j.util.iterators.IteratorListMaker;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
+import pds.web.PDSApplication;
 import pds.web.events.ApplicationContextClosedEvent;
+import pds.web.events.ApplicationContextOpenedEvent;
 import pds.web.events.ApplicationEvent;
 import pds.web.events.ApplicationListener;
 import pds.xdi.XdiContext;
@@ -70,6 +72,10 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 	public void init() {
 
 		super.init();
+
+		// add us as listener
+
+		PDSApplication.getApp().addApplicationListener(this);
 	}
 
 	@Override
@@ -79,7 +85,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 
 		// remove us as listener
 
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+		PDSApplication.getApp().removeApplicationListener(this);
 	}
 
 	private void refresh() {
@@ -113,11 +119,16 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 	public XRI3[] xdiAddAddresses() {
 
 		return new XRI3[] {
-				this.addAddress
+				new XRI3("" + this.addAddress + "/$$")
 		};
 	}
 
 	public XRI3[] xdiModAddresses() {
+
+		return new XRI3[0];
+	}
+
+	public XRI3[] xdiSetAddresses() {
 
 		return new XRI3[0];
 	}
@@ -169,26 +180,6 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		this.add(this.addAccountPersonaButton);
 	}
 
-	public void setContext(XdiContext context) {
-
-		// remove us as listener
-
-		if (this.context != null) this.context.removeXdiGraphListener(this);
-
-		// refresh
-
-		this.context = context;
-		this.address = new XRI3("" + this.context.getCanonical());
-		this.extensionAddress = new XRI3("" + this.context.getCanonical() + "/" + DictionaryConstants.XRI_EXTENSION);
-		this.addAddress = new XRI3("" + this.context.getCanonical() + "$($)");
-
-		this.refresh();
-
-		// add us as listener
-
-		this.context.addXdiGraphListener(this);
-	}
-
 	public void onApplicationEvent(ApplicationEvent applicationEvent) {
 
 		if (applicationEvent instanceof ApplicationContextClosedEvent) {
@@ -198,6 +189,26 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 
 			this.addAccountPersonaButton.setVisible(true);
 			this.addAccountPersonaPanel.setVisible(false);
+
+			// remove us as listener
+
+			if (this.context != null) this.context.removeXdiGraphListener(this);
+		}
+
+		if (applicationEvent instanceof ApplicationContextOpenedEvent) {
+
+			// refresh
+
+			this.context = ((ApplicationContextOpenedEvent) applicationEvent).getContext();
+			this.address = new XRI3("" + this.context.getCanonical());
+			this.extensionAddress = new XRI3("" + this.context.getCanonical() + "/" + DictionaryConstants.XRI_EXTENSION);
+			this.addAddress = new XRI3("" + this.context.getCanonical() + "$($)");
+
+			this.refresh();
+
+			// add us as listener
+
+			this.context.addXdiGraphListener(this);
 		}
 	}
 
@@ -269,14 +280,14 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		addAccountPersonaButton = new Button();
 		addAccountPersonaButton.setStyleName("PlainWhite");
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-				"/pds/web/resource/image/accountpersonanew.png");
+		"/pds/web/resource/image/accountpersonanew.png");
 		addAccountPersonaButton.setIcon(imageReference1);
 		addAccountPersonaButton.setText("Create New");
 		addAccountPersonaButton
-				.setInsets(new Insets(new Extent(10, Extent.PX)));
+		.setInsets(new Insets(new Extent(10, Extent.PX)));
 		addAccountPersonaButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onAddAccountPersonaActionPerformed(e);
 			}
@@ -299,7 +310,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		addAccountPersonaTextField.setStyleName("Default");
 		addAccountPersonaTextField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onCreateActionPerformed(e);
 			}
@@ -310,7 +321,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		button1.setText("Create");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onCreateActionPerformed(e);
 			}
@@ -321,7 +332,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		button2.setText("Cancel");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onCancelActionPerformed(e);
 			}

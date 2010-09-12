@@ -40,6 +40,8 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 
 	private static final long serialVersionUID = -6674403250232180782L;
 
+	private static final XRI3Segment XRI_FEED = new XRI3Segment("+ostatus+feed");
+
 	private static final DateFormat DATEFORMAT = new SimpleDateFormat("HH:mm:ss.SSS");
 
 	protected ResourceBundle resourceBundle;
@@ -118,6 +120,13 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		};
 	}
 
+	public XRI3[] xdiSetAddresses() {
+
+		return new XRI3[] {
+				this.address
+		};
+	}
+
 	public XRI3[] xdiDelAddresses() {
 
 		return new XRI3[] {
@@ -152,9 +161,9 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		this.context = context;
 		this.subjectXri = subjectXri;
 		this.entryXri = entryXri;
-		this.address = new XRI3("" + this.subjectXri + "/+feed//" + this.entryXri);
-		this.timestampAddress = new XRI3("" + this.subjectXri + "/+feed//" + this.entryXri + "/$d");
-		this.contentAddress = new XRI3("" + this.subjectXri + "/+feed//" + this.entryXri + "/$a$xsd$string");
+		this.address = new XRI3("" + this.subjectXri + "/" + XRI_FEED + "//" + this.entryXri);
+		this.timestampAddress = new XRI3("" + this.address + "/$d");
+		this.contentAddress = new XRI3("" + this.address + "/$a$string");
 
 		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 

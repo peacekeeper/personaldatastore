@@ -34,6 +34,7 @@ import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphGetEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
+import pds.xdi.events.XdiGraphSetEvent;
 import pds.xdi.events.XdiTransactionEvent;
 import pds.xdi.events.XdiTransactionFailureEvent;
 import pds.xdi.events.XdiTransactionSuccessEvent;
@@ -51,6 +52,7 @@ public class XdiContext {
 	private final Map<XRI3, List<XdiGraphListener> > xdiGetGraphListeners;
 	private final Map<XRI3, List<XdiGraphListener> > xdiAddGraphListeners;
 	private final Map<XRI3, List<XdiGraphListener> > xdiModGraphListeners;
+	private final Map<XRI3, List<XdiGraphListener> > xdiSetGraphListeners;
 	private final Map<XRI3, List<XdiGraphListener> > xdiDelGraphListeners;
 
 	XdiContext(Xdi xdi, XDIClient xdiClient, String identifier, XRI3Segment canonical, String password) { 
@@ -64,6 +66,7 @@ public class XdiContext {
 		this.xdiGetGraphListeners = new HashMap<XRI3, List<XdiGraphListener> > ();
 		this.xdiAddGraphListeners = new HashMap<XRI3, List<XdiGraphListener> > ();
 		this.xdiModGraphListeners = new HashMap<XRI3, List<XdiGraphListener> > ();
+		this.xdiSetGraphListeners = new HashMap<XRI3, List<XdiGraphListener> > ();
 		this.xdiDelGraphListeners = new HashMap<XRI3, List<XdiGraphListener> > ();
 	}
 
@@ -238,6 +241,7 @@ public class XdiContext {
 		for (XRI3 address : xdiGraphListener.xdiGetAddresses()) this.addXdiGraphListener(this.xdiGetGraphListeners, address, xdiGraphListener);
 		for (XRI3 address : xdiGraphListener.xdiAddAddresses()) this.addXdiGraphListener(this.xdiAddGraphListeners, address, xdiGraphListener);
 		for (XRI3 address : xdiGraphListener.xdiModAddresses()) this.addXdiGraphListener(this.xdiModGraphListeners, address, xdiGraphListener);
+		for (XRI3 address : xdiGraphListener.xdiSetAddresses()) this.addXdiGraphListener(this.xdiSetGraphListeners, address, xdiGraphListener);
 		for (XRI3 address : xdiGraphListener.xdiDelAddresses()) this.addXdiGraphListener(this.xdiDelGraphListeners, address, xdiGraphListener);
 	}
 
@@ -262,6 +266,7 @@ public class XdiContext {
 		for (XRI3 address : xdiGraphListener.xdiGetAddresses()) this.removeXdiGraphListener(this.xdiGetGraphListeners, address, xdiGraphListener);
 		for (XRI3 address : xdiGraphListener.xdiAddAddresses()) this.removeXdiGraphListener(this.xdiAddGraphListeners, address, xdiGraphListener);
 		for (XRI3 address : xdiGraphListener.xdiModAddresses()) this.removeXdiGraphListener(this.xdiModGraphListeners, address, xdiGraphListener);
+		for (XRI3 address : xdiGraphListener.xdiSetAddresses()) this.removeXdiGraphListener(this.xdiSetGraphListeners, address, xdiGraphListener);
 		for (XRI3 address : xdiGraphListener.xdiDelAddresses()) this.removeXdiGraphListener(this.xdiDelGraphListeners, address, xdiGraphListener);
 	}
 
@@ -309,6 +314,7 @@ public class XdiContext {
 		if (MessagingConstants.XRI_GET.equals(operationXri)) return new XdiGraphGetEvent(this);
 		if (MessagingConstants.XRI_ADD.equals(operationXri)) return new XdiGraphAddEvent(this);
 		if (MessagingConstants.XRI_MOD.equals(operationXri)) return new XdiGraphModEvent(this);
+		if (MessagingConstants.XRI_SET.equals(operationXri)) return new XdiGraphSetEvent(this);
 		if (MessagingConstants.XRI_DEL.equals(operationXri)) return new XdiGraphDelEvent(this);
 
 		return null;
@@ -319,8 +325,9 @@ public class XdiContext {
 		if (MessagingConstants.XRI_GET.equals(operationXri)) return this.xdiGetGraphListeners;
 		if (MessagingConstants.XRI_ADD.equals(operationXri)) return this.xdiAddGraphListeners;
 		if (MessagingConstants.XRI_MOD.equals(operationXri)) return this.xdiModGraphListeners;
+		if (MessagingConstants.XRI_SET.equals(operationXri)) return this.xdiSetGraphListeners;
 		if (MessagingConstants.XRI_DEL.equals(operationXri)) return this.xdiDelGraphListeners;
 
-		return null;
+		return new HashMap<XRI3, List<XdiGraphListener> > ();
 	}
 }

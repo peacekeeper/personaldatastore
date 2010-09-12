@@ -104,6 +104,13 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 		};
 	}
 
+	public XRI3[] xdiSetAddresses() {
+
+		return new XRI3[] {
+				this.address
+		};
+	}
+
 	public XRI3[] xdiDelAddresses() {
 
 		return new XRI3[] {

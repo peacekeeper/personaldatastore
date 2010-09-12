@@ -55,6 +55,8 @@ public class PocoServlet implements HttpRequestHandler {
 	@Override
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		log.trace(request.getMethod() + ": " + request.getRequestURI());
+
 		try {
 
 			if ("GET".equals(request.getMethod())) this.doGet(request, response);
@@ -68,7 +70,21 @@ public class PocoServlet implements HttpRequestHandler {
 
 	private void doGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		Poco poco = this.getPoco(request);
+		// find the XDI data
+
+		String xri = this.parseXri(request);
+		XdiContext context = this.getContext(xri);
+		Subject pdsSubject = this.fetch(context);
+
+		if (pdsSubject == null) {
+
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, xri + " not found.");
+			return;
+		}
+
+		Poco poco = this.convertPoco(xri, context, pdsSubject);
+
+		// output it
 
 		if (this.contentType != null) response.setContentType(this.contentType);
 		Writer writer = response.getWriter();
@@ -111,24 +127,20 @@ public class PocoServlet implements HttpRequestHandler {
 		MessageResult messageResult = context.send(operation);
 
 		Subject subject = messageResult.getGraph().getSubject(context.getCanonical());
-		if (subject == null) throw new RuntimeException("User " + context.getCanonical() + " not found.");
+		if (subject == null) return null;
 
 		return subject;
 	}
 
-	private Poco getPoco(HttpServletRequest request) throws Exception {
-
-		String xri = this.parseXri(request);
-		XdiContext context = this.getContext(xri);
-		Subject subject = this.fetch(context);
+	private Poco convertPoco(String xri, XdiContext context, Subject pdsSubject) throws Exception {
 
 		String id = context.getCanonical().toString();
 		String profileurl = "http://xri.net/" + context.getCanonical().toString();
-		String displayname = Addressing.findLiteralData(subject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
-		String nameFormatted = Addressing.findLiteralData(subject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
-		String birthday = Addressing.findLiteralData(subject, new XRI3("$" + PdsDictionary.XRI_DATE_OF_BIRTH.toString()));
-		String gender = Addressing.findLiteralData(subject, new XRI3("$" + PdsDictionary.XRI_GENDER.toString()));
-		String email = Addressing.findLiteralData(subject, new XRI3("$" + PdsDictionary.XRI_EMAIL.toString()));
+		String displayname = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
+		String nameFormatted = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
+		String birthday = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_DATE_OF_BIRTH.toString()));
+		String gender = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_GENDER.toString()));
+		String email = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_EMAIL.toString()));
 
 		return new Poco(id, profileurl, displayname, nameFormatted, birthday, gender, email);
 	}

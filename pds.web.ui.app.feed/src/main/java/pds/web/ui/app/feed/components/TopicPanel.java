@@ -1,9 +1,5 @@
 package pds.web.ui.app.feed.components;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 import nextapp.echo.app.Alignment;
@@ -22,7 +18,6 @@ import org.eclipse.higgins.xdi4j.addressing.Addressing;
 import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
 import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.types.Timestamps;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
@@ -36,30 +31,31 @@ import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import echopoint.ImageIcon;
 
-public class ChannelPanel extends Panel implements XdiGraphListener {
+public class TopicPanel extends Panel implements XdiGraphListener {
 
 	private static final long serialVersionUID = -6674403250232180782L;
-
-	private static final DateFormat DATEFORMAT = new SimpleDateFormat("HH:mm:ss.SSS");
 
 	protected ResourceBundle resourceBundle;
 
 	private XdiContext context;
 	private XRI3Segment subjectXri;
-	private XRI3Segment entryXri;
+	private XRI3Segment topicXri;
 	private XRI3 address;
-	private XRI3 timestampAddress;
-	private XRI3 contentAddress;
+	private XRI3 hubAddress;
+	private XRI3 subscribedAddress;
+	private XRI3 verifyTokenAddress;
 
 	private XdiPanel xdiPanel;
-	private EntryPanelDelegate entryPanelDelegate;
+	private TopicPanelDelegate topicPanelDelegate;
+	private Label hubLabel;
 	private Label subscribedLabel;
 
-	private Label hubLabel;
+	private Label verifyTokenLabel;
+
 	/**
 	 * Creates a new <code>AccountPersonaPanel</code>.
 	 */
-	public ChannelPanel() {
+	public TopicPanel() {
 		super();
 
 		// Add design-time configured components.
@@ -78,7 +74,7 @@ public class ChannelPanel extends Panel implements XdiGraphListener {
 		super.dispose();
 
 		// remove us as listener
-		
+
 		if (this.context != null) this.context.removeXdiGraphListener(this);
 	}
 
@@ -86,11 +82,13 @@ public class ChannelPanel extends Panel implements XdiGraphListener {
 
 		try {
 
-			Date timestamp = this.getTimestamp();
-			String content = this.getContent();
+			String hub = this.getHub();
+			String subscribed = this.getSubscribed();
+			String verifyToken = this.getVerifyToken();
 
-///			this.timestampLabel.setText(DATEFORMAT.format(timestamp));
-//			this.contentLabel.setText(content);
+			this.hubLabel.setText(hub);
+			this.subscribedLabel.setText(subscribed);
+			this.verifyTokenLabel.setText(verifyToken);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
@@ -111,6 +109,13 @@ public class ChannelPanel extends Panel implements XdiGraphListener {
 	}
 
 	public XRI3[] xdiModAddresses() {
+
+		return new XRI3[] {
+				this.address
+		};
+	}
+
+	public XRI3[] xdiSetAddresses() {
 
 		return new XRI3[] {
 				this.address
@@ -140,20 +145,21 @@ public class ChannelPanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	public void setContextAndSubjectXriAndEntryXri(XdiContext context, XRI3Segment subjectXri, XRI3Segment entryXri) {
+	public void setContextAndSubjectXriAndTopicXri(XdiContext context, XRI3Segment subjectXri, XRI3Segment topicXri) {
 
 		// remove us as listener
-		
+
 		if (this.context != null) this.context.removeXdiGraphListener(this);
 
 		// refresh
-		
+
 		this.context = context;
 		this.subjectXri = subjectXri;
-		this.entryXri = entryXri;
-		this.address = new XRI3("" + this.subjectXri + "/+feed//" + this.entryXri);
-		this.timestampAddress = new XRI3("" + this.subjectXri + "/+feed//" + this.entryXri + "/$d");
-		this.contentAddress = new XRI3("" + this.subjectXri + "/+feed//" + this.entryXri + "/$a$xsd$string");
+		this.topicXri = topicXri;
+		this.address = new XRI3("" + this.subjectXri + "/+ostatus+topics//" + this.topicXri);
+		this.hubAddress = new XRI3("" + this.address + "/+push+hub");
+		this.subscribedAddress = new XRI3("" + this.address + "/+push+subscribed");
+		this.verifyTokenAddress = new XRI3("" + this.address + "/+push+verify.token");
 
 		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 
@@ -164,56 +170,72 @@ public class ChannelPanel extends Panel implements XdiGraphListener {
 		this.context.addXdiGraphListener(this);
 	}
 
-	public void setEntryPanelDelegate(EntryPanelDelegate entryPanelDelegate) {
+	public void setTopicPanelDelegate(TopicPanelDelegate topicPanelDelegate) {
 
-		this.entryPanelDelegate = entryPanelDelegate;
+		this.topicPanelDelegate = topicPanelDelegate;
 	}
 
-	public EntryPanelDelegate getEntryPanelDelegate() {
+	public TopicPanelDelegate getTopicPanelDelegate() {
 
-		return this.entryPanelDelegate;
+		return this.topicPanelDelegate;
+	}
+
+	private void onResubscribeActionPerformed(ActionEvent e) {
+
+		if (this.topicPanelDelegate != null) {
+
+			this.topicPanelDelegate.onResubscribeActionPerformed(e);
+		}
 	}
 
 	private void onUnsubscribeButton(ActionEvent e) {
-	
-			if (this.entryPanelDelegate != null) {
-	
-				this.entryPanelDelegate.onReplyActionPerformed(e);
-			}
-		}
 
-	public static interface EntryPanelDelegate {
+		if (this.topicPanelDelegate != null) {
 
-		public void onReplyActionPerformed(ActionEvent e);
-	}
-
-	private Date getTimestamp() throws XdiException {
-
-		// $get
-
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.timestampAddress);
-		MessageResult messageResult = this.context.send(operation);
-
-		XRI3Segment referenceXri = Addressing.findReferenceXri(messageResult.getGraph(), this.timestampAddress);
-		if (referenceXri == null) throw new XdiNotExistentException();
-
-		try {
-
-			return Timestamps.xriToDate(referenceXri);
-		} catch (ParseException ex) {
-
-			throw new XdiException("Cannot parse timestamp: " + ex.getMessage(), ex);
+			this.topicPanelDelegate.onUnsubscribeActionPerformed(e);
 		}
 	}
 
-	private String getContent() throws XdiException {
+	public static interface TopicPanelDelegate {
+
+		public void onResubscribeActionPerformed(ActionEvent e);
+		public void onUnsubscribeActionPerformed(ActionEvent e);
+	}
+
+	private String getHub() throws XdiException {
 
 		// $get
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.contentAddress);
+		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.hubAddress);
 		MessageResult messageResult = this.context.send(operation);
 
-		String data = Addressing.findLiteralData(messageResult.getGraph(), this.contentAddress);
+		String data = Addressing.findLiteralData(messageResult.getGraph(), this.hubAddress);
+		if (data == null) throw new XdiNotExistentException();
+
+		return data;
+	}
+
+	private String getSubscribed() throws XdiException {
+
+		// $get
+
+		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.subscribedAddress);
+		MessageResult messageResult = this.context.send(operation);
+
+		String data = Addressing.findLiteralData(messageResult.getGraph(), this.subscribedAddress);
+		if (data == null) throw new XdiNotExistentException();
+
+		return data;
+	}
+
+	private String getVerifyToken() throws XdiException {
+
+		// $get
+
+		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.verifyTokenAddress);
+		MessageResult messageResult = this.context.send(operation);
+
+		String data = Addressing.findLiteralData(messageResult.getGraph(), this.verifyTokenAddress);
 		if (data == null) throw new XdiNotExistentException();
 
 		return data;
@@ -266,6 +288,17 @@ public class ChannelPanel extends Panel implements XdiGraphListener {
 		subscribedLabel.setStyleName("Default");
 		subscribedLabel.setText("...");
 		row3.add(subscribedLabel);
+		Row row5 = new Row();
+		row5.setCellSpacing(new Extent(10, Extent.PX));
+		column1.add(row5);
+		Label label3 = new Label();
+		label3.setStyleName("Default");
+		label3.setText("Verify Token:");
+		row5.add(label3);
+		verifyTokenLabel = new Label();
+		verifyTokenLabel.setStyleName("Default");
+		verifyTokenLabel.setText("...");
+		row5.add(verifyTokenLabel);
 		Row row4 = new Row();
 		row4.setCellSpacing(new Extent(10, Extent.PX));
 		column1.add(row4);
@@ -291,9 +324,5 @@ public class ChannelPanel extends Panel implements XdiGraphListener {
 			}
 		});
 		row4.add(button1);
-	}
-
-	private void onResubscribeActionPerformed(ActionEvent e) {
-		//TODO Implement.
 	}
 }

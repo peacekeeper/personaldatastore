@@ -96,6 +96,13 @@ public class AccountPersonaPanel extends Panel implements XdiGraphListener {
 		};
 	}
 
+	public XRI3[] xdiSetAddresses() {
+
+		return new XRI3[] {
+				new XRI3("" + this.nameAddress + "/$$")
+		};
+	}
+
 	public XRI3[] xdiDelAddresses() {
 
 		return new XRI3[] {

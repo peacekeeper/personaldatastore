@@ -9,6 +9,8 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -17,9 +19,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-public class Discovery {
+public class PuSHDiscovery {
 
-	private Discovery() { }
+	private static final Log log = LogFactory.getLog(PuSHDiscovery.class);
+	
+	private PuSHDiscovery() { }
 
 	public static String getHub(String feedurl) throws Exception {
 
@@ -50,6 +54,7 @@ public class Discovery {
 			}	
 
 			if (hub == null || hub.equals("")) return null;
+			log.debug("Discovered hub: " + hub);
 
 			return hub;
 		} catch (XPathExpressionException ex) {
@@ -78,6 +83,7 @@ public class Discovery {
 			}
 
 			if (topic == null || topic.equals("")) return null;
+			log.debug("Discovered topic: " + topic);
 
 			return topic;
 		} catch (XPathExpressionException ex) {

@@ -2,6 +2,7 @@ package pds.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -217,8 +218,9 @@ public class PDSApplication extends ApplicationInstance {
 
 	public void fireApplicationEvent(ApplicationEvent applicationEvent) {
 
-		for (ApplicationListener applicationListener : this.applicationListeners) {
+		for (Iterator<ApplicationListener> applicationListeners = this.applicationListeners.iterator(); applicationListeners.hasNext(); ) {
 
+			ApplicationListener applicationListener = applicationListeners.next();
 			applicationListener.onApplicationEvent(applicationEvent);
 		}
 	}

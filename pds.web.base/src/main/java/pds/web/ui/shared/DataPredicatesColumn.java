@@ -104,6 +104,11 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 		return new XRI3[0];
 	}
 
+	public XRI3[] xdiSetAddresses() {
+
+		return new XRI3[0];
+	}
+
 	public XRI3[] xdiDelAddresses() {
 
 		return new XRI3[] {

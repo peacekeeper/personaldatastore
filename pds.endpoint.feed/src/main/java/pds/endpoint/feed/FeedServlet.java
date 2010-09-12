@@ -18,6 +18,8 @@ import org.eclipse.higgins.xdi4j.Subject;
 import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
 import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
+import org.eclipse.higgins.xdi4j.util.iterators.MappingIterator;
+import org.eclipse.higgins.xdi4j.util.iterators.NotNullIterator;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.resolve.Resolver;
 import org.springframework.web.HttpRequestHandler;
@@ -67,6 +69,8 @@ public class FeedServlet implements HttpRequestHandler {
 	@Override
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		log.trace(request.getMethod() + ": " + request.getRequestURI());
+		
 		try {
 
 			if ("GET".equals(request.getMethod())) this.doGet(request, response);
@@ -80,8 +84,22 @@ public class FeedServlet implements HttpRequestHandler {
 
 	private void doGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		SyndFeed feed = this.getFeed(request);
+		// find the XDI data
+		
+		String xri = this.parseXri(request);
+		XdiContext context = this.getContext(xri);
+		Iterator<Subject> pdsSubjects = context == null ? null : this.fetch(context);
 
+		if (pdsSubjects == null) {
+
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, xri + " not found.");
+			return;
+		}
+
+		SyndFeed feed = this.convertFeed(xri, context, pdsSubjects);
+
+		// output it
+		
 		if (this.contentType != null) response.setContentType(this.contentType);
 		Writer writer = response.getWriter();
 
@@ -115,22 +133,31 @@ public class FeedServlet implements HttpRequestHandler {
 		MessageResult messageResult = context.send(operation);
 
 		Subject subject = messageResult.getGraph().getSubject(context.getCanonical());
-		if (subject == null) throw new RuntimeException("User " + context.getCanonical() + " not found.");
+		if (subject == null) return null;
 
 		Predicate predicate = subject.getPredicate(XRI_FEED);
-		if (predicate == null) throw new RuntimeException("Feed not found.");
+		if (predicate == null) return null;
 
 		Graph innerGraph = predicate.getInnerGraph();
-		if (innerGraph == null) throw new RuntimeException("Feed not found.");
+		if (innerGraph == null) return null;
 
-		return innerGraph.getSubjects();
+		Subject innerSubject = innerGraph.getSubject(new XRI3Segment("$"));
+		if (innerSubject == null) return null;
+
+		return new NotNullIterator<Subject> (new MappingIterator<Predicate, Subject> (innerSubject.getPredicates()) {
+
+			@Override
+			public Subject map(Predicate predicate) {
+
+				Graph graph = predicate.getInnerGraph();
+				if (graph == null) return null;
+
+				return graph.getSubject(new XRI3Segment("$"));
+			}
+		});
 	}
 
-	private SyndFeed getFeed(HttpServletRequest request) throws Exception {
-
-		String xri = this.parseXri(request);
-		XdiContext context = this.getContext(xri);
-		Iterator<Subject> subjects = this.fetch(context);
+	private SyndFeed convertFeed(String xri, XdiContext context, Iterator<Subject> pdsSubjects) throws Exception {
 
 		SyndFeed feed = new SyndFeedImpl();
 		feed.setFeedType(this.format);
@@ -152,9 +179,9 @@ public class FeedServlet implements HttpRequestHandler {
 
 		List<SyndEntry> entries = new ArrayList<SyndEntry> ();
 
-		while (subjects.hasNext()) {
+		while (pdsSubjects.hasNext()) {
 
-			Subject subject = subjects.next();
+			Subject subject = pdsSubjects.next();
 
 			try {
 
@@ -213,7 +240,7 @@ public class FeedServlet implements HttpRequestHandler {
 		return this.selfEndpoint;
 	}
 
-	public void setSelfFeedEndpoint(String selfEndpoint) {
+	public void setSelfEndpoint(String selfEndpoint) {
 
 		this.selfEndpoint = selfEndpoint;
 		if (! this.selfEndpoint.endsWith("/")) this.selfEndpoint += "/";

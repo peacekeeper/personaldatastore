@@ -20,7 +20,7 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.web.ui.MessageDialog;
-import pds.web.ui.app.feed.components.EntryPanel.EntryPanelDelegate;
+import pds.web.ui.app.feed.components.TopicPanel.TopicPanelDelegate;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphAddEvent;
@@ -29,9 +29,11 @@ import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
 
-public class ChannelsColumn extends Column implements XdiGraphListener {
+public class TopicsColumn extends Column implements XdiGraphListener {
 
 	private static final long serialVersionUID = -5106531864010407671L;
+
+	private static final XRI3Segment XRI_TOPICS = new XRI3Segment("+ostatus+topics");
 
 	protected ResourceBundle resourceBundle;
 
@@ -42,7 +44,7 @@ public class ChannelsColumn extends Column implements XdiGraphListener {
 	/**
 	 * Creates a new <code>DataPredicatesColumn</code>.
 	 */
-	public ChannelsColumn() {
+	public TopicsColumn() {
 		super();
 
 		// Add design-time configured components.
@@ -61,7 +63,7 @@ public class ChannelsColumn extends Column implements XdiGraphListener {
 		super.dispose();
 
 		// remove us as listener
-		
+
 		if (this.context != null) this.context.removeXdiGraphListener(this);
 	}
 
@@ -69,18 +71,18 @@ public class ChannelsColumn extends Column implements XdiGraphListener {
 
 		try {
 
-			// get list of entry XRIs
+			// get list of topic XRIs
 
-			List<XRI3Segment> entryXris;
+			List<XRI3Segment> topicXris;
 
-			entryXris = this.getEntryXris();
+			topicXris = this.getTopicXris();
 
 			// add them
 
 			this.removeAll();
-			for (XRI3Segment entryXri : entryXris) {
+			for (XRI3Segment topicXri : topicXris) {
 
-				this.addEntryPanel(entryXri);
+				this.addTopicPanel(topicXri);
 			}
 		} catch (Exception ex) {
 
@@ -89,19 +91,24 @@ public class ChannelsColumn extends Column implements XdiGraphListener {
 		}
 	}
 
-	private void addEntryPanel(XRI3Segment entryXri) {
+	private void addTopicPanel(XRI3Segment topicXri) {
 
-		EntryPanel entryPanel = new EntryPanel();
-		entryPanel.setContextAndSubjectXriAndEntryXri(this.context, this.subjectXri, entryXri);
-		entryPanel.setEntryPanelDelegate(new EntryPanelDelegate() {
+		TopicPanel topicPanel = new TopicPanel();
+		topicPanel.setContextAndSubjectXriAndTopicXri(this.context, this.subjectXri, topicXri);
+		topicPanel.setTopicPanelDelegate(new TopicPanelDelegate() {
 
 			@Override
-			public void onReplyActionPerformed(ActionEvent e) {
+			public void onResubscribeActionPerformed(ActionEvent e) {
+
+			}
+
+			@Override
+			public void onUnsubscribeActionPerformed(ActionEvent e) {
 
 			}
 		});
 
-		this.add(entryPanel);
+		this.add(topicPanel);
 	}
 
 	public XRI3[] xdiGetAddresses() {
@@ -119,6 +126,11 @@ public class ChannelsColumn extends Column implements XdiGraphListener {
 	}
 
 	public XRI3[] xdiModAddresses() {
+
+		return new XRI3[0];
+	}
+
+	public XRI3[] xdiSetAddresses() {
 
 		return new XRI3[0];
 	}
@@ -161,14 +173,14 @@ public class ChannelsColumn extends Column implements XdiGraphListener {
 	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
 
 		// remove us as listener
-		
+
 		if (this.context != null) this.context.removeXdiGraphListener(this);
 
 		// refresh
-		
+
 		this.context = context;
 		this.subjectXri = subjectXri;
-		this.address = new XRI3("" + this.subjectXri + "/+feed");
+		this.address = new XRI3("" + this.subjectXri + "/" + XRI_TOPICS);
 
 		this.refresh();
 
@@ -177,20 +189,20 @@ public class ChannelsColumn extends Column implements XdiGraphListener {
 		this.context.addXdiGraphListener(this);
 	}
 
-	private List<XRI3Segment> getEntryXris() throws XdiException {
+	private List<XRI3Segment> getTopicXris() throws XdiException {
 
 		// $get
 
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET);
 		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(this.subjectXri, new XRI3Segment("+feed"));
+		operationGraph.createStatement(this.subjectXri, XRI_TOPICS);
 
 		MessageResult messageResult = this.context.send(operation);
 
 		Subject subject = messageResult.getGraph().getSubject(this.subjectXri);
 		if (subject == null) return new ArrayList<XRI3Segment> ();
 
-		Predicate predicate = subject.getPredicate(new XRI3Segment("+feed"));
+		Predicate predicate = subject.getPredicate(XRI_TOPICS);
 		if (predicate == null) return new ArrayList<XRI3Segment> ();
 
 		Graph innerGraph = predicate.getInnerGraph();

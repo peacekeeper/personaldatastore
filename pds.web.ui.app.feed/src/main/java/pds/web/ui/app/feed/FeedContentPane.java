@@ -31,7 +31,7 @@ import pds.dictionary.feed.FeedDictionary;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.web.ui.app.feed.components.EntriesColumn;
-import pds.web.ui.app.feed.util.Discovery;
+import pds.web.ui.app.feed.util.PuSHDiscovery;
 import pds.web.ui.app.feed.util.PuSHUtil;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
@@ -41,6 +41,8 @@ import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
 import echopoint.ImageIcon;
+import nextapp.echo.app.Panel;
+import pds.web.ui.app.feed.components.TopicsColumn;
 
 public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
@@ -48,7 +50,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 	private static final XRI3Segment XRI_FEED = new XRI3Segment("+ostatus+feed");
 	private static final XRI3Segment XRI_TOPICS = new XRI3Segment("+ostatus+topics");
-	private static final XRI3Segment XRI_ITEM = new XRI3Segment("+item");
+	private static final XRI3Segment XRI_ENTRY = new XRI3Segment("+entry");
 	private static final XRI3Segment XRI_VERIFYTOKEN = new XRI3Segment("+push+verify.token");
 	private static final XRI3Segment XRI_HUB = new XRI3Segment("+push+hub");
 
@@ -62,9 +64,10 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 	private XRI3 topicsAddress;
 
 	private XdiPanel xdiPanel;
+	private TextField subscribeTextField;
 	private EntriesColumn entriesColumn;
 	private TextField contentTextField;
-	private TextField subscribeTextField;
+	private TopicsColumn topicsColumn;
 
 	/**
 	 * Creates a new <code>AddressBookContentPane</code>.
@@ -111,6 +114,11 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 	}
 
 	public XRI3[] xdiModAddresses() {
+
+		return new XRI3[0];
+	}
+
+	public XRI3[] xdiSetAddresses() {
 
 		return new XRI3[0];
 	}
@@ -171,6 +179,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 		this.entriesColumn.setContextAndSubjectXri(context, subjectXri);
+		this.topicsColumn.setContextAndSubjectXri(context, subjectXri);
 
 		this.refresh();
 
@@ -213,18 +222,33 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 	private void onSubscribeActionPerformed(ActionEvent e) {
 
 		String hubtopic = this.subscribeTextField.getText();
-		String hub;
-		String hubverifytoken;
 
 		// discover the feed's hub
 
+		String hub;
+
 		try {
 
-
-			hub = Discovery.getHub(hubtopic);
+			hub = PuSHDiscovery.getHub(hubtopic);
+			if (hub == null) throw new RuntimeException("No hub found.");
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while discoverying the Feed's hub: " + ex.getMessage(), ex);
+			return;
+		}
+
+		// create a hub.verify_token
+
+		String hubverifytoken = PuSHUtil.makeVerifyToken();
+
+		// add the topic
+		
+		try {
+
+			this.addTopic(hubtopic, hubverifytoken, hub);
+		} catch (Exception ex) {
+
+			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
 
@@ -234,24 +258,16 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 			String pubsubhubbubEndpoint = this.feedPdsWebApp.getPubsubhubbubEndpoint() + this.context.getCanonical();
 
-			hubverifytoken = PuSHUtil.subscribe(
+			PuSHUtil.subscribe(
 					hub, 
 					pubsubhubbubEndpoint, 
 					hubtopic, 
 					this.feedPdsWebApp.getLeaseSeconds(), 
-					null);
+					null,
+					hubverifytoken);
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while discoverying the Feed's hub: " + ex.getMessage(), ex);
-			return;
-		}
-
-		try {
-
-			this.addTopic(hubtopic, hubverifytoken, hub);
-		} catch (Exception ex) {
-
-			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while subscribing to the feed: " + ex.getMessage(), ex);
 			return;
 		}
 
@@ -267,9 +283,8 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_ADD);
 		Graph operationGraph = operation.createOperationGraph(null);
 		Graph feedGraph = operationGraph.createStatement(this.subjectXri, XRI_FEED, (Graph) null).getInnerGraph();
-		Graph itemGraph = feedGraph.createStatement(new XRI3Segment("$"), new XRI3Segment(XRI_ITEM + "$($)"), (Graph) null).getInnerGraph();
 
-		Subject subject = itemGraph.createSubject(new XRI3Segment("$"));
+		Subject subject = feedGraph.createSubject(new XRI3Segment(XRI_ENTRY.toString() + "$($)"));
 		FeedDictionary.toSubject(subject, title, description, publishedDate);
 
 		this.context.send(operation);
@@ -285,6 +300,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), XRI_VERIFYTOKEN, hubverifytoken);
 		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), XRI_HUB, hub);
 		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), new XRI3Segment("$d"), Timestamps.dateToXri(new Date()));
+
 		this.context.send(operation);
 	}
 
@@ -312,7 +328,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		row1.add(row2);
 		ImageIcon imageIcon2 = new ImageIcon();
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-		"/pds/web/ui/app/feed/app.png");
+				"/pds/web/ui/app/feed/app.png");
 		imageIcon2.setIcon(imageReference1);
 		imageIcon2.setHeight(new Extent(48, Extent.PX));
 		imageIcon2.setWidth(new Extent(48, Extent.PX));
@@ -326,35 +342,20 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		row1.add(row3);
 		xdiPanel = new XdiPanel();
 		row3.add(xdiPanel);
-		SplitPane splitPane2 = new SplitPane();
-		splitPane2.setStyleName("Default");
-		ResourceImageReference imageReference2 = new ResourceImageReference(
-		"/pds/web/resource/image/separator-blue.png");
-		splitPane2.setSeparatorHorizontalImage(new FillImage(imageReference2));
-		splitPane2.setOrientation(SplitPane.ORIENTATION_HORIZONTAL_LEFT_RIGHT);
-		splitPane2.setSeparatorWidth(new Extent(10, Extent.PX));
-		splitPane2.setResizable(true);
-		splitPane2.setSeparatorVisible(true);
-		splitPane1.add(splitPane2);
 		Column column1 = new Column();
-		column1.setCellSpacing(new Extent(10, Extent.PX));
-		splitPane2.add(column1);
-		Label label3 = new Label();
-		label3.setStyleName("Default");
-		label3.setText("What's up?");
-		column1.add(label3);
+		splitPane1.add(column1);
 		Row row5 = new Row();
 		row5.setCellSpacing(new Extent(10, Extent.PX));
 		column1.add(row5);
 		Label label4 = new Label();
 		label4.setStyleName("Default");
-		label4.setText("Content:");
+		label4.setText("What's up?");
 		row5.add(label4);
 		contentTextField = new TextField();
 		contentTextField.setStyleName("Default");
 		contentTextField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onPostActionPerformed(e);
 			}
@@ -365,24 +366,39 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button1.setText("Post!");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onPostActionPerformed(e);
 			}
 		});
 		row5.add(button1);
+		Panel panel1 = new Panel();
+		column1.add(panel1);
+		SplitPane splitPane2 = new SplitPane();
+		splitPane2.setStyleName("Default");
+		ResourceImageReference imageReference2 = new ResourceImageReference(
+				"/pds/web/resource/image/separator-blue.png");
+		splitPane2.setSeparatorHorizontalImage(new FillImage(imageReference2));
+		splitPane2.setOrientation(SplitPane.ORIENTATION_HORIZONTAL_LEFT_RIGHT);
+		splitPane2.setSeparatorWidth(new Extent(10, Extent.PX));
+		splitPane2.setResizable(true);
+		splitPane2.setSeparatorVisible(true);
+		panel1.add(splitPane2);
+		Column column2 = new Column();
+		column2.setCellSpacing(new Extent(10, Extent.PX));
+		splitPane2.add(column2);
 		Row row4 = new Row();
 		row4.setCellSpacing(new Extent(10, Extent.PX));
-		column1.add(row4);
+		column2.add(row4);
 		Label label2 = new Label();
 		label2.setStyleName("Default");
-		label2.setText("Subscribe:");
+		label2.setText("Subscribe to a topic:");
 		row4.add(label2);
 		subscribeTextField = new TextField();
 		subscribeTextField.setStyleName("Default");
 		subscribeTextField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onSubscribeActionPerformed(e);
 			}
@@ -393,12 +409,14 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button2.setText("Subscribe");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onSubscribeActionPerformed(e);
 			}
 		});
 		row4.add(button2);
+		topicsColumn = new TopicsColumn();
+		column2.add(topicsColumn);
 		entriesColumn = new EntriesColumn();
 		splitPane2.add(entriesColumn);
 	}

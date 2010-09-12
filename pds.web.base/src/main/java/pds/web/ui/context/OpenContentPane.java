@@ -115,6 +115,13 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 		};
 	}
 
+	public XRI3[] xdiSetAddresses() {
+
+		return new XRI3[] {
+				new XRI3("" + this.address + "/$$")
+		};
+	}
+
 	public XRI3[] xdiDelAddresses() {
 
 		return new XRI3[] {

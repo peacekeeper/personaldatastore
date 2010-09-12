@@ -65,6 +65,18 @@
 </c>
 <p n="cellSpacing">10px</p>
 </c>
+<c i="Component_row5" t="nextapp.echo.app.Row">
+<c i="Component_label3" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+<p n="text">Verify Token:</p>
+</c>
+<c i="Component_verifyTokenLabel" t="nextapp.echo.app.Label" vis="private">
+<p n="styleName">Default</p>
+<p n="text">...</p>
+</c>
+<p n="cellSpacing">10px</p>
+</c>
 <c i="Component_row4" t="nextapp.echo.app.Row">
 <p n="cellSpacing">10px</p>
 <c i="Component_button2" t="nextapp.echo.app.Button">

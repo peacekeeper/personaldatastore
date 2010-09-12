@@ -49,6 +49,8 @@ public class FoafServlet implements HttpRequestHandler {
 	@Override
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		log.trace(request.getMethod() + ": " + request.getRequestURI());
+
 		try {
 
 			if ("GET".equals(request.getMethod())) this.doGet(request, response);
@@ -62,7 +64,21 @@ public class FoafServlet implements HttpRequestHandler {
 
 	private void doGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		String foaf = this.getFoaf(request);
+		// find the XDI data
+
+		String xri = this.parseXri(request);
+		XdiContext context = this.getContext(xri);
+		Subject pdsSubject = this.fetch(context);
+
+		if (pdsSubject == null) {
+
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, xri + " not found.");
+			return;
+		}
+
+		String foaf = this.convertFoaf(xri, context, pdsSubject);
+
+		// output it
 
 		response.setContentType("application/rdf+xml");
 		Writer writer = response.getWriter();
@@ -97,24 +113,20 @@ public class FoafServlet implements HttpRequestHandler {
 		MessageResult messageResult = context.send(operation);
 
 		Subject subject = messageResult.getGraph().getSubject(context.getCanonical());
-		if (subject == null) throw new RuntimeException("User " + context.getCanonical() + " not found.");
+		if (subject == null) return null;
 
 		return subject;
 	}
 
-	private String getFoaf(HttpServletRequest request) throws Exception {
-
-		String xri = this.parseXri(request);
-		XdiContext context = this.getContext(xri);
-		Subject subject = this.fetch(context);
-
-/*		String id = context.getCanonical().toString();
+	private String convertFoaf(String xri, XdiContext context, Subject pdsSubject) throws Exception {
+/*
+		String id = context.getCanonical().toString();
 		String profileurl = "http://xri.net/" + context.getCanonical().toString();
-		String displayname = Addressing.findLiteralData(subject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
-		String nameFormatted = Addressing.findLiteralData(subject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
-		String birthday = Addressing.findLiteralData(subject, new XRI3("$" + PdsDictionary.XRI_DATE_OF_BIRTH.toString()));
-		String gender = Addressing.findLiteralData(subject, new XRI3("$" + PdsDictionary.XRI_GENDER.toString()));
-		String email = Addressing.findLiteralData(subject, new XRI3("$" + PdsDictionary.XRI_EMAIL.toString()));
+		String displayname = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
+		String nameFormatted = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
+		String birthday = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_DATE_OF_BIRTH.toString()));
+		String gender = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_GENDER.toString()));
+		String email = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_EMAIL.toString()));
 */
 		return "todo";
 	}

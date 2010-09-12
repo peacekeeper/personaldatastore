@@ -52,24 +52,15 @@
 <p n="separatorVisible">false</p>
 <p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM</p>
 
-<c i="Component_splitPane2" t="nextapp.echo.app.SplitPane">
-<p n="styleName">Default</p>
+
 <c i="Component_column1" t="nextapp.echo.app.Column">
-
-
-
-<p n="cellSpacing">10px</p>
-<c i="Component_label3" t="nextapp.echo.app.Label">
-<p n="styleName">Default</p>
-
-<p n="text">What's up?</p>
-</c>
 <c i="Component_row5" t="nextapp.echo.app.Row">
 <p n="cellSpacing">10px</p>
 <c i="Component_label4" t="nextapp.echo.app.Label">
 <p n="styleName">Default</p>
 
-<p n="text">Content:</p>
+
+<p n="text">What's up?</p>
 </c>
 <c i="Component_contentTextField" t="nextapp.echo.app.TextField" vis="private">
 <p n="styleName">Default</p>
@@ -77,6 +68,7 @@
 <h n="actionPerformed" v="onPostActionPerformed"/>
 </e>
 </c>
+
 <c i="Component_button1" t="nextapp.echo.app.Button">
 <p n="styleName">Default</p>
 <p n="text">Post!</p>
@@ -85,10 +77,21 @@
 </e>
 </c>
 </c>
+<c i="Component_panel1" t="nextapp.echo.app.Panel">
+<c i="Component_splitPane2" t="nextapp.echo.app.SplitPane">
+<p n="styleName">Default</p>
+<c i="Component_column2" t="nextapp.echo.app.Column">
+
+
+
+<p n="cellSpacing">10px</p>
+
+
 <c i="Component_row4" t="nextapp.echo.app.Row">
 <c i="Component_label2" t="nextapp.echo.app.Label">
 <p n="styleName">Default</p>
-<p n="text">Subscribe:</p>
+
+<p n="text">Subscribe to a topic:</p>
 </c>
 <p n="cellSpacing">10px</p>
 <c i="Component_subscribeTextField" t="nextapp.echo.app.TextField" vis="private">
@@ -106,6 +109,7 @@
 </e>
 </c>
 </c>
+<c i="Component_topicsColumn" t="pds.web.ui.app.feed.components.TopicsColumn" vis="private"/>
 </c>
 
 <p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_HORIZONTAL_LEFT_RIGHT</p>
@@ -117,6 +121,8 @@
 </p>
 
 <c i="Component_entriesColumn" t="pds.web.ui.app.feed.components.EntriesColumn" vis="private"/>
+</c>
+</c>
 </c>
 </c>
 <p n="insets">10px</p>
