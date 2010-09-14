@@ -15,6 +15,7 @@ import org.eclipse.higgins.xdi4j.Literal;
 import org.eclipse.higgins.xdi4j.Predicate;
 import org.eclipse.higgins.xdi4j.Subject;
 import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
+import org.eclipse.higgins.xdi4j.messaging.Message;
 import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
@@ -210,24 +211,38 @@ public class PuSHServlet implements HttpRequestHandler {
 
 		log.debug("Subscribing to topic " + pdsSubject.getSubjectXri());
 
-		Operation operation = context.prepareOperation(MessagingConstants.XRI_SET);
+		// $set and $del
+
+		Message message = context.prepareMessage();
+		Operation operation = message.createOperation(MessagingConstants.XRI_SET);
 		Graph operationGraph = operation.createOperationGraph(null);
 		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
 		topicsGraph.createStatement(pdsSubject.getSubjectXri(), XRI_SUBSCRIBED, "true");
+		Operation operation2 = message.createOperation(MessagingConstants.XRI_DEL);
+		Graph operationGraph2 = operation2.createOperationGraph(null);
+		Graph topicsGraph2 = operationGraph2.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
+		topicsGraph2.createStatement(pdsSubject.getSubjectXri(), XRI_VERIFYTOKEN);
 
-		context.send(operation);
+		context.send(message);
 	}
 
 	private static void unsubscribeTopic(XdiContext context, Subject pdsSubject) throws Exception {
 
 		log.debug("Unsubscribing from topic " + pdsSubject.getSubjectXri());
 
-		Operation operation = context.prepareOperation(MessagingConstants.XRI_SET);
+		// $set and $del
+		
+		Message message = context.prepareMessage();
+		Operation operation = message.createOperation(MessagingConstants.XRI_SET);
 		Graph operationGraph = operation.createOperationGraph(null);
 		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
 		topicsGraph.createStatement(pdsSubject.getSubjectXri(), XRI_SUBSCRIBED, "false");
+		Operation operation2 = message.createOperation(MessagingConstants.XRI_DEL);
+		Graph operationGraph2 = operation2.createOperationGraph(null);
+		Graph topicsGraph2 = operationGraph2.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
+		topicsGraph2.createStatement(pdsSubject.getSubjectXri(), XRI_VERIFYTOKEN);
 
-		context.send(operation);
+		context.send(message);
 	}
 
 	@SuppressWarnings("unchecked")

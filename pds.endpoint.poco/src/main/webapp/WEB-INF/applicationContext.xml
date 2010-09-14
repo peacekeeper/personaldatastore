@@ -5,12 +5,6 @@
 
 	<!-- Servlets -->
 
-	<bean id="JsonPocoServlet" class="pds.endpoint.poco.PocoServlet" init-method="init">
-		<property name="format" value="json" />
-	</bean>
-
-	<bean id="XmlPocoServlet" class="pds.endpoint.poco.PocoServlet" init-method="init">
-		<property name="format" value="xml" />
-	</bean>
+	<bean id="PocoServlet" class="pds.endpoint.poco.PocoServlet" init-method="init" />
 
 </beans>

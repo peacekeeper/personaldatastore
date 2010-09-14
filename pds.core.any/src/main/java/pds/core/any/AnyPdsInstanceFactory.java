@@ -44,6 +44,12 @@ public class AnyPdsInstanceFactory implements PdsInstanceFactory {
 		return new AnyPdsInstance(target, canonical, this.endpoints);
 	}
 
+	@Override
+	public String[] getAllMountTargets(PdsInstance pdsInstance) throws PdsException {
+
+		return new String[] { ((AnyPdsInstance) pdsInstance).getCanonical().toString() + "/" };
+	}
+
 	public String[] getEndpoints() {
 
 		return this.endpoints;

@@ -4,22 +4,26 @@ package pds.endpoint.poco;
 public class Poco {
 
 	private String id;
-	private String profileurl;
-	private String displayname;
+	private String profileUrl;
+	private String preferredUsername;
+	private String displayName;
 	private String nameFormatted;
 	private String birthday;
 	private String gender;
 	private String email;
+	private String url;
 
-	public Poco(String id, String profileurl, String displayname, String nameFormatted, String birthday, String gender, String email) {
+	public Poco(String id, String profileUrl, String preferredUsername, String displayName, String nameFormatted, String birthday, String gender, String email, String url) {
 
 		this.id = id;
-		this.profileurl = profileurl;
-		this.displayname = displayname;
+		this.profileUrl = profileUrl;
+		this.preferredUsername = preferredUsername;
+		this.displayName = displayName;
 		this.nameFormatted = nameFormatted;
 		this.birthday = birthday;
 		this.gender = gender;
 		this.email = email;
+		this.url = url;
 	}
 
 	public String toJSON() {
@@ -29,9 +33,11 @@ public class Poco {
 		buffer.append("{\n");
 		buffer.append("  \"entry\": {\n");
 
-		if (this.profileurl != null) buffer.append("    \"profileUrl\": \"" + this.profileurl + "\",\n");
+		if (this.profileUrl != null) buffer.append("    \"profileUrl\": \"" + this.profileUrl + "\",\n");
 
-		if (this.displayname != null) buffer.append("    \"displayName\": \"" + this.displayname + "\",\n");
+		if (this.preferredUsername != null) buffer.append("    \"preferredUsername\": \"" + this.preferredUsername + "\",\n");
+
+		if (this.displayName != null) buffer.append("    \"displayName\": \"" + this.displayName + "\",\n");
 
 		if (this.nameFormatted != null) {
 
@@ -52,6 +58,14 @@ public class Poco {
 			buffer.append("    } ],\n");
 		}
 
+		if (this.url != null) {
+
+			buffer.append("    \"urls\": [ {\n");
+			buffer.append("      \"value\": \"" + this.url + "\",\n");
+			buffer.append("      \"primary\": \"true\"\n");
+			buffer.append("    } ],\n");
+		}
+
 		if (this.id != null) buffer.append("    \"id\": \"" + this.id + "\"\n");
 
 		buffer.append("  }\n");
@@ -67,9 +81,11 @@ public class Poco {
 		buffer.append("<response>\n");
 		buffer.append("  <entry>\n");
 
-		if (this.profileurl != null) buffer.append("    <profileUrl>" + this.profileurl + "</profileUrl>\n");
+		if (this.profileUrl != null) buffer.append("    <profileUrl>" + this.profileUrl + "</profileUrl>\n");
 
-		if (this.displayname != null) buffer.append("    <displayName>" + this.displayname + "</displayName>\n");
+		if (this.preferredUsername != null) buffer.append("    <preferredUsername>" + this.preferredUsername + "</preferredUsername>\n");
+
+		if (this.displayName != null) buffer.append("    <displayName>" + this.displayName + "</displayName>\n");
 
 		if (this.nameFormatted != null) {
 
@@ -88,6 +104,14 @@ public class Poco {
 			buffer.append("      <value>" + this.email + "</value>\n");
 			buffer.append("      <primary>true</primary>\n");
 			buffer.append("    </emails>\n");
+		}
+
+		if (this.email != null) {
+
+			buffer.append("    <urls>\n");
+			buffer.append("      <value>" + this.url + "</value>\n");
+			buffer.append("      <primary>true</primary>\n");
+			buffer.append("    </urls>\n");
 		}
 
 		if (this.id != null) buffer.append("    <id>" + this.id + "</id>\n");

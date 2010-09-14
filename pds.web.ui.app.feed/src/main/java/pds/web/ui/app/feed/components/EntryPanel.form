@@ -19,35 +19,24 @@
 
 
 <p n="cellSpacing">10px</p>
-<c i="Component_imageIcon1" t="echopoint.ImageIcon">
 
-
-
-
-
-
-
-
-
-
-
-<p n="height">48px</p>
-<p n="width">48px</p>
-
-<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/ui/app/feed/app.png</p>
-</c>
 
 
 
 
 <c i="Component_column1" t="nextapp.echo.app.Column">
 <p n="cellSpacing">5px</p>
+
+<c i="Component_nameLabel" t="nextapp.echo.app.Label" vis="private">
+<p n="styleName">Default</p>
+<p n="text">...</p>
+</c>
 <c i="Component_timestampLabel" t="nextapp.echo.app.Label" vis="private">
 <p n="styleName">Default</p>
 <p n="text">...</p>
 </c>
 
-<c i="Component_contentLabel" t="nextapp.echo.app.Label" vis="private">
+<c i="Component_titleLabel" t="nextapp.echo.app.Label" vis="private">
 <p n="styleName">Default</p>
 <p n="text">...</p>
 </c>
@@ -55,10 +44,11 @@
 <c i="Component_replyButton" t="nextapp.echo.app.Button" vis="private">
 
 <p n="styleName">Plain</p>
-<p n="text">...</p>
+
 <e t="action">
 <h n="actionPerformed" v="onReplyActionPerformed"/>
 </e>
+<p n="text">Reply</p>
 </c>
 
 

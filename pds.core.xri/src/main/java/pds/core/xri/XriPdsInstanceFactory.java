@@ -15,6 +15,7 @@ import javax.servlet.FilterConfig;
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
+import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.base.PdsException;
 import pds.core.base.PdsInstance;
@@ -95,6 +96,16 @@ public class XriPdsInstanceFactory implements PdsInstanceFactory {
 		// instantiate a PDS instance for the xri
 
 		return new XriPdsInstance(target, this, xri, user, this.endpoints);
+	}
+
+	public String[] getAllMountTargets(PdsInstance pdsInstance) throws PdsException {
+
+		XRI3Segment[] aliases = ((XriPdsInstance) pdsInstance).getAliases();
+		String[] allTargets = new String[aliases.length];
+
+		for (int i=0; i<allTargets.length; i++) allTargets[i] = aliases[i].toString() + "/";
+
+		return allTargets;
 	}
 
 	public String[] getEndpoints() {

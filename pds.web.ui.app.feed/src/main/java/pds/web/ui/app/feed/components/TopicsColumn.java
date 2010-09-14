@@ -41,6 +41,8 @@ public class TopicsColumn extends Column implements XdiGraphListener {
 	private XRI3Segment subjectXri;
 	private XRI3 address;
 
+	private TopicPanelDelegate topicPanelDelegate;
+
 	/**
 	 * Creates a new <code>DataPredicatesColumn</code>.
 	 */
@@ -98,13 +100,21 @@ public class TopicsColumn extends Column implements XdiGraphListener {
 		topicPanel.setTopicPanelDelegate(new TopicPanelDelegate() {
 
 			@Override
-			public void onResubscribeActionPerformed(ActionEvent e) {
+			public void onTopicActionPerformed(ActionEvent e, XRI3Segment topicXri) {
 
+				TopicsColumn.this.topicPanelDelegate.onTopicActionPerformed(e, topicXri);
 			}
 
 			@Override
-			public void onUnsubscribeActionPerformed(ActionEvent e) {
+			public void onResubscribeActionPerformed(ActionEvent e, XRI3Segment subjectXri) {
 
+				TopicsColumn.this.topicPanelDelegate.onResubscribeActionPerformed(e, subjectXri);
+			}
+
+			@Override
+			public void onUnsubscribeActionPerformed(ActionEvent e, XRI3Segment subjectXri) {
+
+				TopicsColumn.this.topicPanelDelegate.onUnsubscribeActionPerformed(e, subjectXri);
 			}
 		});
 
@@ -187,6 +197,16 @@ public class TopicsColumn extends Column implements XdiGraphListener {
 		// add us as listener
 
 		this.context.addXdiGraphListener(this);
+	}
+
+	public void setTopicPanelDelegate(TopicPanelDelegate topicPanelDelegate) {
+
+		this.topicPanelDelegate = topicPanelDelegate;
+	}
+
+	public TopicPanelDelegate getTopicPanelDelegate() {
+
+		return this.topicPanelDelegate;
 	}
 
 	private List<XRI3Segment> getTopicXris() throws XdiException {

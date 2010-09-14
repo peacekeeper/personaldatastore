@@ -42,6 +42,12 @@ public class SinglePdsInstanceFactory implements PdsInstanceFactory {
 		return new SinglePdsInstance(target, this.canonical, this.aliases, this.endpoints);
 	}
 
+	@Override
+	public String[] getAllMountTargets(PdsInstance pdsInstance) throws PdsException {
+
+		return new String[] { "" };
+	}
+
 	public XRI3Segment getCanonical() {
 
 		return this.canonical;

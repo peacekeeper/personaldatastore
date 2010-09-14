@@ -106,7 +106,7 @@ public class PdsFilter implements Filter {
 
 			EndpointRegistry endpointRegistry = this.endpointServlet.getEndpointRegistry();
 
-			MessagingTarget messagingTarget = endpointRegistry.findMessagingTargetByPath(target, true);
+			MessagingTarget messagingTarget = endpointRegistry.getMessagingTarget(target);
 			if (messagingTarget != null) {
 
 				log.debug("Already have messaging target for \"" + target + "\"");
@@ -145,7 +145,12 @@ public class PdsFilter implements Filter {
 				log.debug("Creating messaging target for PDS instance " + pdsInstance.getClass().getSimpleName());
 
 				messagingTarget = this.createMessagingTarget(endpointRegistry, pdsInstance);
-				endpointRegistry.registerMessagingTarget(target, messagingTarget);
+				
+				String[] allMountTargets = pdsInstanceFactory.getAllMountTargets(pdsInstance);
+				for (String mountTarget : allMountTargets) {
+					
+					endpointRegistry.registerMessagingTarget(mountTarget, messagingTarget);
+				}
 
 				log.info("Successfully registered messaging target at \"" + target + "\"");
 			} catch (Exception ex) {

@@ -7,23 +7,13 @@
 	<!-- SPRING SERVLET -->
 
 	<servlet>
-		<servlet-name>JsonPocoServlet</servlet-name>
-		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>XmlPocoServlet</servlet-name>
+		<servlet-name>PocoServlet</servlet-name>
 		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>JsonPocoServlet</servlet-name>
-		<url-pattern>/json/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>XmlPocoServlet</servlet-name>
-		<url-pattern>/xml/*</url-pattern>
+		<servlet-name>PocoServlet</servlet-name>
+		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- SPRING -->

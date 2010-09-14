@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
+import java.net.URI;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -45,9 +46,6 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
 	private static final Xdi xdi;
 
-	private String format;
-	private String contentType;
-
 	private String html;
 
 	static {
@@ -70,8 +68,6 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 	}
 
 	public void init() throws Exception {
-
-		if (this.format == null) throw new Exception("Please specify a format in the servlet's init parameters.");
 
 		BufferedReader reader = new BufferedReader(new FileReader(new File(this.servletContext.getRealPath("/WEB-INF/html.vm"))));
 		String line;
@@ -103,7 +99,7 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
 		String xri = this.parseXri(request);
 		XdiContext context = this.getContext(xri);
-		Subject pdsSubject = this.fetch(context);
+		Subject pdsSubject = context == null ? null : this.fetch(context);
 
 		if (pdsSubject == null) {
 
@@ -114,12 +110,24 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		Properties properties = new Properties();
 		HCard hCard = this.convertHCard(xri, context, pdsSubject, properties);
 
+		// determine content type
+
+		String contentType;
+
+		if (request.getHeader("Accept").contains("application/json")) {
+
+			contentType = "application/json";
+		} else {
+
+			contentType = "text/html";
+		}
+
 		// output it
 
-		if (this.contentType != null) response.setContentType(this.contentType);
+		response.setContentType(contentType);
 		Writer writer = response.getWriter();
 
-		if ("html".equals(this.format)) {
+		if ("text/html".equals(contentType)) {
 
 			VelocityContext velocityContext = new VelocityContext(properties);
 			velocityContext.put("hcard", hCard.toHTML());
@@ -127,7 +135,7 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 			Reader templateReader = new StringReader(this.html);
 			Velocity.evaluate(velocityContext, writer, "html", templateReader);
 			templateReader.close();
-		} else if ("json".equals(this.format)) {
+		} else if ("application/json".equals(contentType)) {
 
 			writer.write(hCard.toJSON());
 		}
@@ -175,7 +183,7 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
 		HCardBuilder hCardBuilder = HCard.build(name);
 		hCardBuilder.setUID(uid);
-
+		hCardBuilder.addURL(new URI("http://xri2xrd.net/" + context.getCanonical().toString()));
 		if (email != null) hCardBuilder.addEmail(new HCard.Email(email));
 
 		properties.put("xri", xri);
@@ -186,18 +194,5 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		if (email != null) properties.put("email", email);
 
 		return hCardBuilder.done();
-	}
-
-	public String getFormat() {
-
-		return this.format;
-	}
-
-	public void setFormat(String format) {
-
-		this.format = format;
-
-		if ("json".equals(format)) this.contentType = "application/json";
-		if ("html".equals(format)) this.contentType = "text/html";
 	}
 }

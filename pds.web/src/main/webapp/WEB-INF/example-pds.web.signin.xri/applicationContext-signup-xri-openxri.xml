@@ -25,10 +25,11 @@
 
 		<!-- Where the other PDS components are deployed -->
 
-		<property name="feedEndpoint" value="http://yourserver.com/pds-endpoont-feed/" />
-		<property name="hcardEndpoint" value="http://yourserver.com/pds-endpoont-hcard/" />
-		<property name="pocoEndpoint" value="http://yourserver.com/pds-endpoont-poco/" />
-		<property name="salmonEndpoint" value="http://yourserver.com/pds-endpoont-salmon/" />
+		<property name="feedEndpoint" value="http://yourserver.com/pds-endpoint-feed/" />
+		<property name="hcardEndpoint" value="http://yourserver.com/pds-endpoint-hcard/" />
+		<property name="pocoEndpoint" value="http://yourserver.com/pds-endpoint-poco/" />
+		<property name="salmonEndpoint" value="http://yourserver.com/pds-endpoint-salmon/" />
+		<property name="foafEndpoint" value="http://yourserver.com/pds-endpoint-foaf/" />
 
 		<!-- The following are settings for issuing certificates to new XRIs. -->
 

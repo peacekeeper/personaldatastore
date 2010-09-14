@@ -13,6 +13,7 @@ import nextapp.echo.app.Row;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.RowLayoutData;
+import nextapp.echo.extras.app.ToolTipContainer;
 
 import org.eclipse.higgins.xdi4j.addressing.Addressing;
 import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
@@ -28,7 +29,6 @@ import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
-import echopoint.ImageIcon;
 
 public class TopicPanel extends Panel implements XdiGraphListener {
 
@@ -44,12 +44,11 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 	private XRI3 subscribedAddress;
 	private XRI3 verifyTokenAddress;
 
-	private XdiPanel xdiPanel;
 	private TopicPanelDelegate topicPanelDelegate;
-	private Label hubLabel;
-	private Label subscribedLabel;
 
-	private Label verifyTokenLabel;
+	private XdiPanel xdiPanel;
+	private Label hubLabel;
+	private Label nameLabel;
 
 	/**
 	 * Creates a new <code>AccountPersonaPanel</code>.
@@ -85,9 +84,8 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 			String subscribed = this.getSubscribed();
 			String verifyToken = this.getVerifyToken();
 
+			this.nameLabel.setText(this.subjectXri.toString());
 			this.hubLabel.setText(hub);
-			this.subscribedLabel.setText(subscribed);
-			this.verifyTokenLabel.setText(verifyToken);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
@@ -183,22 +181,31 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 
 		if (this.topicPanelDelegate != null) {
 
-			this.topicPanelDelegate.onResubscribeActionPerformed(e);
+			this.topicPanelDelegate.onResubscribeActionPerformed(e, this.topicXri);
 		}
 	}
 
-	private void onUnsubscribeButton(ActionEvent e) {
+	private void onUnsubscribeActionPerformed(ActionEvent e) {
 
 		if (this.topicPanelDelegate != null) {
 
-			this.topicPanelDelegate.onUnsubscribeActionPerformed(e);
+			this.topicPanelDelegate.onUnsubscribeActionPerformed(e, this.topicXri);
+		}
+	}
+
+	private void onTopicActionPerformed(ActionEvent e) {
+
+		if (this.topicPanelDelegate != null) {
+
+			this.topicPanelDelegate.onTopicActionPerformed(e, this.topicXri);
 		}
 	}
 
 	public static interface TopicPanelDelegate {
 
-		public void onResubscribeActionPerformed(ActionEvent e);
-		public void onUnsubscribeActionPerformed(ActionEvent e);
+		public void onTopicActionPerformed(ActionEvent e, XRI3Segment topicXri);
+		public void onResubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri);
+		public void onUnsubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri);
 	}
 
 	private String getHub() throws XdiException {
@@ -237,67 +244,53 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 	 * Contents will be overwritten.
 	 */
 	private void initComponents() {
-		Row row1 = new Row();
-		row1.setCellSpacing(new Extent(10, Extent.PX));
-		add(row1);
+		Column column1 = new Column();
+		column1.setCellSpacing(new Extent(5, Extent.PX));
+		add(column1);
+		Row row3 = new Row();
+		row3.setCellSpacing(new Extent(10, Extent.PX));
+		column1.add(row3);
 		xdiPanel = new XdiPanel();
 		RowLayoutData xdiPanelLayoutData = new RowLayoutData();
 		xdiPanelLayoutData.setAlignment(new Alignment(Alignment.DEFAULT,
 				Alignment.CENTER));
 		xdiPanel.setLayoutData(xdiPanelLayoutData);
-		row1.add(xdiPanel);
-		ImageIcon imageIcon1 = new ImageIcon();
+		row3.add(xdiPanel);
+		ToolTipContainer toolTipContainer2 = new ToolTipContainer();
+		row3.add(toolTipContainer2);
+		Button button3 = new Button();
+		button3.setStyleName("Plain");
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-				"/pds/web/ui/app/feed/app.png");
-		imageIcon1.setIcon(imageReference1);
-		imageIcon1.setHeight(new Extent(48, Extent.PX));
-		imageIcon1.setWidth(new Extent(48, Extent.PX));
-		row1.add(imageIcon1);
-		Column column1 = new Column();
-		column1.setCellSpacing(new Extent(5, Extent.PX));
-		row1.add(column1);
-		Row row2 = new Row();
-		row2.setCellSpacing(new Extent(10, Extent.PX));
-		column1.add(row2);
-		Label label1 = new Label();
-		label1.setStyleName("Default");
-		label1.setText("Hub: ");
-		row2.add(label1);
+		"/pds/web/ui/app/feed/app.png");
+		button3.setIcon(imageReference1);
+		button3.addActionListener(new ActionListener() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				onTopicActionPerformed(e);
+			}
+		});
+		toolTipContainer2.add(button3);
+		Panel panel2 = new Panel();
+		panel2.setStyleName("Tooltip");
+		toolTipContainer2.add(panel2);
 		hubLabel = new Label();
 		hubLabel.setStyleName("Default");
 		hubLabel.setText("...");
-		row2.add(hubLabel);
-		Row row3 = new Row();
-		row3.setCellSpacing(new Extent(10, Extent.PX));
-		column1.add(row3);
-		Label label2 = new Label();
-		label2.setStyleName("Default");
-		label2.setText("Subscribed:");
-		row3.add(label2);
-		subscribedLabel = new Label();
-		subscribedLabel.setStyleName("Default");
-		subscribedLabel.setText("...");
-		row3.add(subscribedLabel);
-		Row row5 = new Row();
-		row5.setCellSpacing(new Extent(10, Extent.PX));
-		column1.add(row5);
-		Label label3 = new Label();
-		label3.setStyleName("Default");
-		label3.setText("Verify Token:");
-		row5.add(label3);
-		verifyTokenLabel = new Label();
-		verifyTokenLabel.setStyleName("Default");
-		verifyTokenLabel.setText("...");
-		row5.add(verifyTokenLabel);
+		panel2.add(hubLabel);
+		nameLabel = new Label();
+		nameLabel.setStyleName("Default");
+		nameLabel.setText("...");
+		row3.add(nameLabel);
 		Row row4 = new Row();
 		row4.setCellSpacing(new Extent(10, Extent.PX));
 		column1.add(row4);
 		Button button2 = new Button();
-		button2.setStyleName("Default");
+		button2.setStyleName("Plain");
 		button2.setText("Resubscribe");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onResubscribeActionPerformed(e);
 			}
@@ -308,9 +301,9 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 		button1.setText("Unsubscribe");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
-				onUnsubscribeButton(e);
+				onUnsubscribeActionPerformed(e);
 			}
 		});
 		row4.add(button1);

@@ -12,7 +12,6 @@ import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.RowLayoutData;
 
-import org.eclipse.higgins.xdi4j.addressing.Addressing;
 import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
@@ -21,7 +20,6 @@ import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.xdi.XdiContext;
-import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
@@ -178,8 +176,7 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 
 			// $del
 
-			Operation operation = this.context.prepareOperation(MessagingConstants.XRI_DEL);
-			operation.createOperationGraph(Addressing.convertAddressToGraph(this.address));
+			Operation operation = this.context.prepareOperation(MessagingConstants.XRI_DEL, this.address);
 
 			this.context.send(operation);
 		} catch (Exception ex) {

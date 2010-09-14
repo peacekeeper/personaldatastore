@@ -37,7 +37,7 @@ import org.apache.http.protocol.HttpContext;
 
 public class PuSHUtil {
 
-	private static final Log log = LogFactory.getLog(PuSHDiscovery.class);
+	private static final Log log = LogFactory.getLog(PuSHUtil.class);
 
 	private static final DefaultHttpClient httpClient;
 
@@ -167,14 +167,14 @@ public class PuSHUtil {
 		httppost.setHeader("Content-type", "application/x-www-form-urlencoded");
 
 		String line = new BufferedReader(new InputStreamReader(httppost.getEntity().getContent())).readLine();
-		log.debug("POSTing " + line + " to " + httppost.getURI());
 
 		HttpContext context = new BasicHttpContext();
 
 		HttpResponse httpresponse = httpClient.execute(httppost, context);
 
 		if (httpresponse == null) throw new IOException("No HTTP Response from Hub.");
-		if (httpresponse.getStatusLine().getStatusCode() != 200) throw new IOException("Got HTTP Error from Hub: " + httpresponse.getStatusLine().getStatusCode() + " (" + httpresponse.getStatusLine().getReasonPhrase() + ")");
+		log.debug("POSTed " + line + " to " + httppost.getURI() + " --> " + httpresponse.getStatusLine().getStatusCode());
+		if (httpresponse.getStatusLine().getStatusCode() >= 300) throw new IOException("Got HTTP Error from Hub: " + httpresponse.getStatusLine().getStatusCode() + " (" + httpresponse.getStatusLine().getReasonPhrase() + ")");
 
 		HttpEntity entity = httpresponse.getEntity();
 		if (entity != null) entity.consumeContent();

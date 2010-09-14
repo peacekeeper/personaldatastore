@@ -28,6 +28,7 @@ public abstract class AbstractXriSignUpMethod implements XriSignUpMethod {
 	private String hcardEndpoint;
 	private String pocoEndpoint;
 	private String salmonEndpoint;
+	private String foafEndpoint;
 	private X509Certificate brokerCertificate;
 	private PrivateKey brokerPrivateKey;
 	private String userCertificateValidity;
@@ -138,6 +139,17 @@ public abstract class AbstractXriSignUpMethod implements XriSignUpMethod {
 
 		this.salmonEndpoint = salmonEndpoint;
 		if (! this.salmonEndpoint.endsWith("/")) this.salmonEndpoint += "/";
+	}
+
+	public String getFoafEndpoint() {
+
+		return this.foafEndpoint;
+	}
+
+	public void setFoafEndpoint(String foafEndpoint) {
+
+		this.foafEndpoint = foafEndpoint;
+		if (! this.foafEndpoint.endsWith("/")) this.foafEndpoint += "/";
 	}
 
 	public X509Certificate getBrokerCertificate() {

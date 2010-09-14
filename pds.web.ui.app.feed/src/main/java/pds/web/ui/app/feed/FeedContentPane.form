@@ -53,6 +53,12 @@
 <p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM</p>
 
 
+
+<c i="Component_splitPane2" t="nextapp.echo.app.SplitPane">
+<p n="styleName">Default</p>
+<p n="resizable">false</p>
+<p n="separatorVisible">false</p>
+<p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM</p>
 <c i="Component_column1" t="nextapp.echo.app.Column">
 <c i="Component_row5" t="nextapp.echo.app.Row">
 <p n="cellSpacing">10px</p>
@@ -76,17 +82,21 @@
 <h n="actionPerformed" v="onPostActionPerformed"/>
 </e>
 </c>
+<c i="Component_button3" t="nextapp.echo.app.Button">
+<p n="text">Go to Feed</p>
+<e t="action">
+<h n="actionPerformed" v="onGotoFeedActionPerformed"/>
+</e>
+<p n="styleName">Plain</p>
 </c>
-<c i="Component_panel1" t="nextapp.echo.app.Panel">
-<c i="Component_splitPane2" t="nextapp.echo.app.SplitPane">
-<p n="styleName">Default</p>
-<c i="Component_column2" t="nextapp.echo.app.Column">
-
-
-
-<p n="cellSpacing">10px</p>
-
-
+<c i="Component_button4" t="nextapp.echo.app.Button">
+<p n="text">Go to Mentions</p>
+<e t="action">
+<h n="actionPerformed" v="onGotoMentionsActionPerformed"/>
+</e>
+<p n="styleName">Plain</p>
+</c>
+</c>
 <c i="Component_row4" t="nextapp.echo.app.Row">
 <c i="Component_label2" t="nextapp.echo.app.Label">
 <p n="styleName">Default</p>
@@ -109,8 +119,14 @@
 </e>
 </c>
 </c>
-<c i="Component_topicsColumn" t="pds.web.ui.app.feed.components.TopicsColumn" vis="private"/>
+<p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+<p n="maximumSize">10px</p>
+<p n="minimumSize">10px</p>
+</p>
 </c>
+<c i="Component_splitPane3" t="nextapp.echo.app.SplitPane">
+<p n="styleName">Default</p>
+
 
 <p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_HORIZONTAL_LEFT_RIGHT</p>
 <p n="resizable">true</p>
@@ -120,8 +136,9 @@
 <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/separator-blue.png</fi>
 </p>
 
+
+<c i="Component_topicsColumn" t="pds.web.ui.app.feed.components.TopicsColumn" vis="private"/>
 <c i="Component_entriesColumn" t="pds.web.ui.app.feed.components.EntriesColumn" vis="private"/>
-</c>
 </c>
 </c>
 </c>

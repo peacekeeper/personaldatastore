@@ -10,13 +10,17 @@ import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.higgins.xdi4j.Graph;
+import org.eclipse.higgins.xdi4j.Predicate;
 import org.eclipse.higgins.xdi4j.Subject;
 import org.eclipse.higgins.xdi4j.addressing.Addressing;
 import org.eclipse.higgins.xdi4j.types.Timestamps;
+import org.eclipse.higgins.xdi4j.util.iterators.SelectingIterator;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.jdom.Namespace;
 
+import pds.dictionary.PdsDictionary;
 import pds.xdi.XdiContext;
 
 import com.sun.syndication.feed.synd.SyndContent;
@@ -32,11 +36,12 @@ import com.sun.syndication.feed.synd.SyndFeedImpl;
 public class FeedDictionary {
 
 	private static final String DEFAULT_ACTIVITYVERB = "http://activitystrea.ms/schema/1.0/post";
-	private static final String DEFAULT_ACTIVTYOBJECTTYPE = "http://activitystrea.ms/schema/1.0/note";
+	private static final String DEFAULT_ACTIVITYOBJECTTYPE = "http://activitystrea.ms/schema/1.0/note";
 
-	private static final Namespace NAMESPACE_XDI = Namespace.getNamespace("xdi", "http://xdi.oasis-open.org");
 	private static final Namespace NAMESPACE_ATOM = Namespace.getNamespace("http://www.w3.org/2005/Atom");
+	private static final Namespace NAMESPACE_XDI = Namespace.getNamespace("xdi", "http://xdi.oasis-open.org");
 	private static final Namespace NAMESPACE_ACTIVITYSTREAMS = Namespace.getNamespace("activity", "http://activitystrea.ms/spec/1.0/");
+	private static final Namespace NAMESPACE_POCO = Namespace.getNamespace("poco", "http://portablecontacts.net/spec/1.0");
 
 	private static final Log log = LogFactory.getLog(FeedDictionary.class.getName());
 
@@ -45,7 +50,7 @@ public class FeedDictionary {
 	/**
 	 * Retrieves a feed from a list of XDI subjects plus some extra information.
 	 */
-	public static SyndFeed toFeed(String xri, XdiContext context, Iterator<Subject> pdsSubjects, String format, String contentType, String hub, String selfEndpoint, String salmonEndpoint) {
+	public static SyndFeed toFeed(String xri, XdiContext context, Subject pdsSubject, String format, String contentType, String hub, String selfEndpoint, String salmonEndpoint) {
 
 		SyndFeed feed = new SyndFeedImpl();
 		feed.setFeedType(format);
@@ -55,28 +60,44 @@ public class FeedDictionary {
 		feed.setDescription("Feed for " + xri);
 
 		List<org.jdom.Element> foreignElements = new ArrayList<org.jdom.Element> ();
-		foreignElements.add(makeLinkElement("alternate", "http://xri2xrd.net/" + context.getCanonical() + "/", "text/html", null));
-		foreignElements.add(makeLinkElement("hub", hub, null, "PubSubHubbub"));
-		foreignElements.add(makeLinkElement("salmon-reply", salmonEndpoint, null, "Salmon Replies"));
-		foreignElements.add(makeLinkElement("salmon-mention", salmonEndpoint, null, "Salmon Mentions"));
-		foreignElements.add(makeLinkElement("self", selfEndpoint, contentType, null));
+		foreignElements.add(makeActivitySubject(pdsSubject));
+		foreignElements.add(makeLink("alternate", "http://xri2xrd.net/" + context.getCanonical() + "/", "text/html", null));
+		foreignElements.add(makeLink("hub", hub, null, "PubSubHubbub"));
+		foreignElements.add(makeLink("salmon-reply", salmonEndpoint, null, "Salmon Replies"));
+		foreignElements.add(makeLink("salmon-mention", salmonEndpoint, null, "Salmon Mentions"));
+		foreignElements.add(makeLink("self", selfEndpoint, contentType, null));
 		feed.setForeignMarkup(foreignElements);
 
 		List<SyndEntry> entries = new ArrayList<SyndEntry> ();
 
-		while (pdsSubjects.hasNext()) {
+		Predicate predicate = pdsSubject.getPredicate(new XRI3Segment("+ostatus+feed"));
+		if (predicate == null) return null;
 
-			Subject subject = pdsSubjects.next();
+		Graph innerGraph = predicate.getInnerGraph();
+		if (innerGraph == null) return null;
+
+		Iterator<Subject> entrySubjects = new SelectingIterator<Subject> (innerGraph.getSubjects()) {
+
+			@Override
+			public boolean select(Subject entrySuubject) {
+
+				return entrySuubject.getSubjectXri().toString().startsWith("+entry$");
+			}
+		};
+
+		while (entrySubjects.hasNext()) {
+
+			Subject entrySubject = entrySubjects.next();
 
 			try {
 
-				SyndEntry entry = toEntry(subject, contentType, selfEndpoint);
+				SyndEntry entry = toEntry(pdsSubject, entrySubject, contentType, selfEndpoint);
 				entries.add(entry);
 
-				log.debug("Added entry for " + subject.getSubjectXri());
+				log.debug("Added entry for " + entrySubject.getSubjectXri());
 			} catch (Exception ex) {
 
-				log.warn("Skipping entry " + subject.getSubjectXri() + ": " + ex.getMessage(), ex);
+				log.warn("Skipping entry " + entrySubject.getSubjectXri() + ": " + ex.getMessage(), ex);
 			}
 		}
 
@@ -88,35 +109,50 @@ public class FeedDictionary {
 	/**
 	 * Stores a feed entry as an XDI subject.
 	 */
-	public static void fromEntry(Subject subject, String title, String description, Date publishedDate) {
+	public static void fromEntry(Subject entrySubject, String title, String description, Date publishedDate, String activityVerb, String activityObjectType) {
 
-		subject.createStatement(new XRI3Segment("$d"), Timestamps.dateToXri(publishedDate));
-		subject.createStatement(new XRI3Segment("+title"), title);
-		subject.createStatement(new XRI3Segment("+description"), title);
+		if (activityVerb == null) activityVerb = DEFAULT_ACTIVITYVERB;
+		if (activityObjectType == null) activityObjectType = DEFAULT_ACTIVITYOBJECTTYPE;
+		
+		if (publishedDate != null) entrySubject.createStatement(new XRI3Segment("$d"), Timestamps.dateToXri(publishedDate));
+		if (title != null) entrySubject.createStatement(new XRI3Segment("+title"), title);
+		if (description != null) entrySubject.createStatement(new XRI3Segment("+description"), description);
+		if (activityVerb != null) entrySubject.createStatement(new XRI3Segment("+activity+verb"), activityVerb);
+		if (activityObjectType != null) entrySubject.createStatement(new XRI3Segment("+activity+object.type"), activityObjectType);
 	}
 
 	/**
 	 * Stores a feed entry as an XDI subject.
 	 */
-	public static void fromEntry(Subject subject, SyndEntry syndEntry) {
+	@SuppressWarnings("unchecked")
+	public static void fromEntry(Subject entrySubject, SyndEntry syndEntry) {
 
-		fromEntry(
-				subject,
-				syndEntry.getTitle(),
-				syndEntry.getDescription().getValue(),
-				syndEntry.getPublishedDate());
+		String title = syndEntry.getTitle();
+		String description = syndEntry.getDescription() == null ? null : syndEntry.getDescription().getValue();
+		Date publishedDate = syndEntry.getPublishedDate();
+
+		String activityVerb = null;
+		String activityObjectType = null;
+		List<org.jdom.Element> foreignMarkup = (List<org.jdom.Element>) syndEntry.getForeignMarkup();
+		for (org.jdom.Element foreignElement : foreignMarkup) {
+			
+			if (foreignElement.getNamespace().equals(NAMESPACE_ACTIVITYSTREAMS) && foreignElement.getName().equals("verb")) activityVerb = foreignElement.getText();
+			if (foreignElement.getNamespace().equals(NAMESPACE_ACTIVITYSTREAMS) && foreignElement.getName().equals("object-type")) activityObjectType = foreignElement.getText();
+		}
+
+		fromEntry(entrySubject, title, description, publishedDate, activityVerb, activityObjectType);
 	}
 
 	/**
 	 * Retrieves a feed entry from an XDI subject.
 	 */
-	public static SyndEntry toEntry(Subject subject, String contentType, String selfEndpoint) throws Exception {
+	public static SyndEntry toEntry(Subject pdsSubject, Subject entrySubject, String contentType, String selfEndpoint) throws Exception {
 
-		Date publishedDate = getEntryPublishedDate(subject);
-		String title = getEntryTitle(subject);
-		String description = getEntryDescription(subject);
-		String activityVerb = getEntryActivityVerb(subject);
-		String activityObjectType = getEntryActivityObjectType(subject);
+		Date publishedDate = getEntryPublishedDate(entrySubject);
+		String title = getEntryTitle(entrySubject);
+		String description = getEntryDescription(entrySubject);
+		String activityVerb = getEntryActivityVerb(entrySubject);
+		String activityObjectType = getEntryActivityObjectType(entrySubject);
 
 		SyndContent syndDescription = new SyndContentImpl();
 		syndDescription.setType("text/plain");
@@ -127,12 +163,12 @@ public class FeedDictionary {
 		syndEntry.setTitle(title);
 		syndEntry.setDescription(syndDescription);
 		syndEntry.setContents(Collections.singletonList(syndDescription));
-		syndEntry.setAuthor(subject.getContainingGraph().getPredicate().getSubject().toString());
+		syndEntry.setAuthor(entrySubject.getContainingGraph().getPredicate().getSubject().toString());
 
 		List<org.jdom.Element> foreignMarkup = new ArrayList<org.jdom.Element> ();
-		foreignMarkup.add(makeIdElement(subject));
-		foreignMarkup.add(makeSourceElement(subject, contentType, selfEndpoint));
-		foreignMarkup.add(makeXdiElement(subject, "X3 Standard", null));
+		foreignMarkup.add(makeId(entrySubject));
+		foreignMarkup.add(makeSourceElement(pdsSubject, contentType, selfEndpoint));
+		foreignMarkup.add(makeXdiElement(entrySubject, "X3 Standard", null));
 		foreignMarkup.add(makeActivityVerb(activityVerb));
 		foreignMarkup.add(makeActivityObjectType(activityObjectType));
 		syndEntry.setForeignMarkup(foreignMarkup);
@@ -144,62 +180,72 @@ public class FeedDictionary {
 	 * Helper methods for reading data from XDI.
 	 */
 
-	public static String getEntryTitle(Subject subject) {
+	public static String getEntryTitle(Subject entrySubject) {
 
-		return Addressing.findLiteralData(subject, new XRI3("+title"));
+		return Addressing.findLiteralData(entrySubject, new XRI3("+title"));
 	}
 
-	public static String getEntryDescription(Subject subject) {
+	public static String getEntryDescription(Subject entrySubject) {
 
-		return Addressing.findLiteralData(subject, new XRI3("+description"));
+		return Addressing.findLiteralData(entrySubject, new XRI3("+description"));
 	}
 
-	public static Date getEntryPublishedDate(Subject subject) throws ParseException {
+	public static Date getEntryPublishedDate(Subject entrySubject) throws ParseException {
 
-		return Timestamps.xriToDate(Addressing.findReferenceXri(subject, new XRI3("$d")));
+		return Timestamps.xriToDate(Addressing.findReferenceXri(entrySubject, new XRI3("$d")));
 	}
 
-	public static String getEntryActivityVerb(Subject subject) {
+	public static String getEntryActivityVerb(Subject entrySubject) {
 
-		String activityVerb = Addressing.findLiteralData(subject, new XRI3("+activity+verb"));
+		String activityVerb = Addressing.findLiteralData(entrySubject, new XRI3("+activity+verb"));
 
 		return activityVerb != null ? activityVerb : DEFAULT_ACTIVITYVERB;
 	}
 
-	public static String getEntryActivityObjectType(Subject subject) {
+	public static String getEntryActivityObjectType(Subject entrySubject) {
 
-		String activityVerb = Addressing.findLiteralData(subject, new XRI3("+activity+object.type"));
+		String activityVerb = Addressing.findLiteralData(entrySubject, new XRI3("+activity+object.type"));
 
-		return activityVerb != null ? activityVerb : DEFAULT_ACTIVTYOBJECTTYPE;
+		return activityVerb != null ? activityVerb : DEFAULT_ACTIVITYOBJECTTYPE;
 	}
 
 	/*
 	 * Helper methods for constructing XML elements.
 	 */
 
-	private static org.jdom.Element makeIdElement(Subject subject) {
+	private static org.jdom.Element makeId(Subject subject) {
 
 		org.jdom.Element element;
 		element = new org.jdom.Element("id", NAMESPACE_ATOM);
-		element.setText(Addressing.getAddress(subject, false).toString());
+		element.setText("http://xri2xrd.net/" + Addressing.getAddress(subject, false).toString());
 
 		return element;
 	}
 
-	private static org.jdom.Element makeSourceElement(Subject subject, String contentType, String selfEndpoint) {
+	private static org.jdom.Element makeActivitySubject(Subject pdsSubject) {
+
+		String preferredUsername = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
+		String displayName = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
+
+		org.jdom.Element element;
+		element = new org.jdom.Element("subject", NAMESPACE_ACTIVITYSTREAMS);
+		if (preferredUsername != null) element.addContent(makePoco("preferredUsername", preferredUsername));
+		if (displayName != null) element.addContent(makePoco("displayName", displayName));
+		element.addContent(makeLink("alternate", "http://xri2xrd.net/" + pdsSubject.getSubjectXri(), "text/html", null));
+		element.addContent(makeId(pdsSubject));
+		element.addContent(makeActivityObjectType("http://activitystrea.ms/schema/1.0/person"));
+
+		return element;
+
+	}
+
+	private static org.jdom.Element makeSourceElement(Subject pdsSubject, String contentType, String selfEndpoint) {
 
 		org.jdom.Element element;
 		element = new org.jdom.Element("source", NAMESPACE_ATOM);
-		org.jdom.Element innerElement1;
-		innerElement1 = new org.jdom.Element("id", NAMESPACE_ATOM);
-		innerElement1.setText(selfEndpoint);
-		element.addContent(innerElement1);
-		org.jdom.Element innerElement2;
-		innerElement2 = new org.jdom.Element("title", NAMESPACE_ATOM);
-		innerElement2.setText(subject.getContainingGraph().getPredicate().getSubject().getSubjectXri().toString());
-		element.addContent(innerElement2);
-		element.addContent(makeLinkElement("alternate", "http://xri2xrd.net/" + subject.getSubjectXri(), "text/html", null));
-		element.addContent(makeLinkElement("self", selfEndpoint, contentType, null));
+		element.addContent(makeId(pdsSubject));
+		element.addContent(makeLink("alternate", "http://xri2xrd.net/" + pdsSubject.getSubjectXri(), "text/html", null));
+		element.addContent(makeLink("self", selfEndpoint, contentType, null));
 
 		return element;
 	}
@@ -232,14 +278,23 @@ public class FeedDictionary {
 		return element;
 	}
 
-	private static org.jdom.Element makeLinkElement(String rel, String href, String type, String title) {
+	private static org.jdom.Element makeLink(String rel, String href, String type, String title) {
 
 		org.jdom.Element element;
-		element = new org.jdom.Element("link");
+		element = new org.jdom.Element("link", NAMESPACE_ATOM);
 		if (rel != null) element.setAttribute("rel", rel);
 		if (href != null) element.setAttribute("href", href);
 		if (type != null) element.setAttribute("type", type);
 		if (title != null) element.setAttribute("title", title);
+
+		return element;
+	}
+
+	private static org.jdom.Element makePoco(String tagName, String value) {
+
+		org.jdom.Element element;
+		element = new org.jdom.Element(tagName, NAMESPACE_POCO);
+		element.setText(value);
 
 		return element;
 	}

@@ -12,7 +12,6 @@ import nextapp.echo.app.Column;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.Label;
 import nextapp.echo.app.Panel;
-import nextapp.echo.app.ResourceImageReference;
 import nextapp.echo.app.Row;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
@@ -30,35 +29,31 @@ import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
-import pds.xdi.XdiNotExistentException;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
-import echopoint.ImageIcon;
 
 public class EntryPanel extends Panel implements XdiGraphListener {
 
 	private static final long serialVersionUID = -6674403250232180782L;
-
-	private static final XRI3Segment XRI_FEED = new XRI3Segment("+ostatus+feed");
 
 	private static final DateFormat DATEFORMAT = new SimpleDateFormat("HH:mm:ss.SSS");
 
 	protected ResourceBundle resourceBundle;
 
 	private XdiContext context;
-	private XRI3Segment subjectXri;
-	private XRI3Segment entryXri;
 	private XRI3 address;
 	private XRI3 timestampAddress;
-	private XRI3 contentAddress;
+	private XRI3 titleAddress;
 
 	private XdiPanel xdiPanel;
 	private Button replyButton;
 	private EntryPanelDelegate entryPanelDelegate;
 	private Label timestampLabel;
+	private Label titleLabel;
 
-	private Label contentLabel;
+	private Label nameLabel;
+
 	/**
 	 * Creates a new <code>AccountPersonaPanel</code>.
 	 */
@@ -81,7 +76,7 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		super.dispose();
 
 		// remove us as listener
-		
+
 		if (this.context != null) this.context.removeXdiGraphListener(this);
 	}
 
@@ -90,10 +85,11 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		try {
 
 			Date timestamp = this.getTimestamp();
-			String content = this.getContent();
+			String title = this.getTitle();
 
+			this.nameLabel.setText(this.address.toString());
 			if (timestamp != null) this.timestampLabel.setText(DATEFORMAT.format(timestamp));
-			if (content != null) this.contentLabel.setText(content);
+			if (title != null) this.titleLabel.setText(title);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
@@ -150,20 +146,18 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	public void setContextAndSubjectXriAndEntryXri(XdiContext context, XRI3Segment subjectXri, XRI3Segment entryXri) {
+	public void setContextAndAddress(XdiContext context, XRI3 address) {
 
 		// remove us as listener
-		
+
 		if (this.context != null) this.context.removeXdiGraphListener(this);
 
 		// refresh
-		
+
 		this.context = context;
-		this.subjectXri = subjectXri;
-		this.entryXri = entryXri;
-		this.address = new XRI3("" + this.subjectXri + "/" + XRI_FEED + "//" + this.entryXri);
+		this.address = address;
 		this.timestampAddress = new XRI3("" + this.address + "/$d");
-		this.contentAddress = new XRI3("" + this.address + "/$a$string");
+		this.titleAddress = new XRI3("" + this.address + "/+title");
 
 		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 
@@ -215,14 +209,14 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	private String getContent() throws XdiException {
+	private String getTitle() throws XdiException {
 
 		// $get
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.contentAddress);
+		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.titleAddress);
 		MessageResult messageResult = this.context.send(operation);
 
-		return Addressing.findLiteralData(messageResult.getGraph(), this.contentAddress);
+		return Addressing.findLiteralData(messageResult.getGraph(), this.titleAddress);
 	}
 
 	/**
@@ -240,27 +234,24 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 				Alignment.CENTER));
 		xdiPanel.setLayoutData(xdiPanelLayoutData);
 		row1.add(xdiPanel);
-		ImageIcon imageIcon1 = new ImageIcon();
-		ResourceImageReference imageReference1 = new ResourceImageReference(
-				"/pds/web/ui/app/feed/app.png");
-		imageIcon1.setIcon(imageReference1);
-		imageIcon1.setHeight(new Extent(48, Extent.PX));
-		imageIcon1.setWidth(new Extent(48, Extent.PX));
-		row1.add(imageIcon1);
 		Column column1 = new Column();
 		column1.setCellSpacing(new Extent(5, Extent.PX));
 		row1.add(column1);
+		nameLabel = new Label();
+		nameLabel.setStyleName("Default");
+		nameLabel.setText("...");
+		column1.add(nameLabel);
 		timestampLabel = new Label();
 		timestampLabel.setStyleName("Default");
 		timestampLabel.setText("...");
 		column1.add(timestampLabel);
-		contentLabel = new Label();
-		contentLabel.setStyleName("Default");
-		contentLabel.setText("...");
-		column1.add(contentLabel);
+		titleLabel = new Label();
+		titleLabel.setStyleName("Default");
+		titleLabel.setText("...");
+		column1.add(titleLabel);
 		replyButton = new Button();
 		replyButton.setStyleName("Plain");
-		replyButton.setText("...");
+		replyButton.setText("Reply");
 		replyButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
 	

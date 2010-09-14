@@ -5,12 +5,6 @@
 
 	<!-- Servlets -->
 
-	<bean id="JsonHcardServlet" class="pds.endpoint.hcard.HcardServlet" init-method="init">
-		<property name="format" value="json" />
-	</bean>
-
-	<bean id="HtmlHcardServlet" class="pds.endpoint.hcard.HcardServlet" init-method="init">
-		<property name="format" value="html" />
-	</bean>
+	<bean id="HcardServlet" class="pds.endpoint.hcard.HcardServlet" init-method="init" />
 
 </beans>

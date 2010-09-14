@@ -2,7 +2,6 @@ package pds.endpoint.feed;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,16 +10,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.Predicate;
 import org.eclipse.higgins.xdi4j.Subject;
 import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
 import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.util.iterators.SelectingIterator;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.resolve.Resolver;
 import org.springframework.web.HttpRequestHandler;
 
+import pds.dictionary.PdsDictionary;
 import pds.dictionary.feed.FeedDictionary;
 import pds.xdi.Xdi;
 import pds.xdi.XdiContext;
@@ -83,9 +81,9 @@ public class FeedServlet implements HttpRequestHandler {
 
 		String xri = this.parseXri(request);
 		XdiContext context = this.getContext(xri);
-		Iterator<Subject> pdsSubjects = context == null ? null : this.fetch(context);
+		Subject pdsSubject = context == null ? null : this.fetch(context);
 
-		if (pdsSubjects == null) {
+		if (pdsSubject == null) {
 
 			response.sendError(HttpServletResponse.SC_NOT_FOUND, xri + " not found.");
 			return;
@@ -94,7 +92,7 @@ public class FeedServlet implements HttpRequestHandler {
 		String salmonEndpoint = this.salmonEndpoint + context.getCanonical();
 		String selfEndpoint = this.selfEndpoint + context.getCanonical();
 
-		SyndFeed feed = FeedDictionary.toFeed(xri, context, pdsSubjects, this.format, this.contentType, this.hub, selfEndpoint, salmonEndpoint);
+		SyndFeed feed = FeedDictionary.toFeed(xri, context, pdsSubject, this.format, this.contentType, this.hub, selfEndpoint, salmonEndpoint);
 
 		// output it
 
@@ -122,31 +120,22 @@ public class FeedServlet implements HttpRequestHandler {
 		return xdi.resolveContextByIname(xri, null);
 	}
 
-	private Iterator<Subject> fetch(XdiContext context) throws Exception {
+	private Subject fetch(XdiContext context) throws Exception {
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_GET);
 		Graph operationGraph = operation.createOperationGraph(null);
 		operationGraph.createStatement(context.getCanonical(), XRI_FEED);
+		operationGraph.createStatement(context.getCanonical(), new XRI3Segment("$" + PdsDictionary.XRI_NAME.toString()));
+		operationGraph.createStatement(context.getCanonical(), new XRI3Segment("$" + PdsDictionary.XRI_DATE_OF_BIRTH.toString()));
+		operationGraph.createStatement(context.getCanonical(), new XRI3Segment("$" + PdsDictionary.XRI_GENDER.toString()));
+		operationGraph.createStatement(context.getCanonical(), new XRI3Segment("$" + PdsDictionary.XRI_EMAIL.toString()));
 
 		MessageResult messageResult = context.send(operation);
 
 		Subject subject = messageResult.getGraph().getSubject(context.getCanonical());
 		if (subject == null) return null;
-
-		Predicate predicate = subject.getPredicate(XRI_FEED);
-		if (predicate == null) return null;
-
-		Graph innerGraph = predicate.getInnerGraph();
-		if (innerGraph == null) return null;
-
-		return new SelectingIterator<Subject> (innerGraph.getSubjects()) {
-
-			@Override
-			public boolean select(Subject subject) {
-
-				return subject.getSubjectXri().toString().startsWith("+entry$");
-			}
-		};
+		
+		return subject;
 	}
 
 	public String getFormat() {
@@ -158,8 +147,8 @@ public class FeedServlet implements HttpRequestHandler {
 
 		this.format = format;
 
-		if ("rss_2.0".equals(format)) this.contentType = "application/rdf+xml";
-		if ("atom_1.0".equals(format)) this.contentType = "application/rdf+xml";
+		if ("rss_2.0".equals(format)) this.contentType = "application/rss+xml";
+		if ("atom_1.0".equals(format)) this.contentType = "application/atom+xml";
 	}
 
 	public String getHub() {

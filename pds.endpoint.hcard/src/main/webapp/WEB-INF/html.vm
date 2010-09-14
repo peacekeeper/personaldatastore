@@ -36,8 +36,8 @@ pre {
 <body>
 <table cellspacing="0" cellpadding="0" border="0">
 <tr>
-<td valign="center"><img src="../images/pds.png" style="margin: 10px"></td>
-<td valign="center"><img src="../images/microformats.png" style="margin: 10px"></td>
+<td valign="center"><img src="images/pds.png" style="margin: 10px"></td>
+<td valign="center"><img src="images/microformats.png" style="margin: 10px"></td>
 <td valign="center"><h1>hCard for $xri</h1></td>
 </tr>
 </table>

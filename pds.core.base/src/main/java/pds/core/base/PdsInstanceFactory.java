@@ -15,8 +15,8 @@ public interface PdsInstanceFactory {
 	public void init(FilterConfig filterConfig) throws PdsException;
 
 	/**
-	 * Given a raw request path, returns the XDI4j messaging target path where
-	 * the PDS instance will be mounted.
+	 * Given a raw request path, returns the XDI4j messaging target path to which
+	 * the request applies.
 	 */
 	public String getTarget(String path);
 
@@ -24,4 +24,10 @@ public interface PdsInstanceFactory {
 	 * Returns a PDS instance for a given XDI4j messaging target path.
 	 */
 	public PdsInstance getPdsInstance(String target) throws PdsException;
+
+	/**
+	 * Returns all XDI4j messaging target paths at which the PDS instance
+	 * will be mounted.
+	 */
+	public String[] getAllMountTargets(PdsInstance pdsInstance) throws PdsException;
 }

@@ -7,23 +7,13 @@
 	<!-- SPRING SERVLET -->
 
 	<servlet>
-		<servlet-name>JsonHcardServlet</servlet-name>
-		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>HtmlHcardServlet</servlet-name>
+		<servlet-name>HcardServlet</servlet-name>
 		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>JsonHcardServlet</servlet-name>
-		<url-pattern>/json/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>HtmlHcardServlet</servlet-name>
-		<url-pattern>/html/*</url-pattern>
+		<servlet-name>HcardServlet</servlet-name>
+		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- SPRING -->

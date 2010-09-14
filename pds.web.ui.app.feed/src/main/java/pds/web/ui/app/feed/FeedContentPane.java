@@ -31,6 +31,8 @@ import pds.dictionary.feed.FeedDictionary;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.web.ui.app.feed.components.EntriesColumn;
+import pds.web.ui.app.feed.components.TopicPanel.TopicPanelDelegate;
+import pds.web.ui.app.feed.components.TopicsColumn;
 import pds.web.ui.app.feed.util.PuSHDiscovery;
 import pds.web.ui.app.feed.util.PuSHUtil;
 import pds.xdi.XdiContext;
@@ -41,14 +43,13 @@ import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
 import echopoint.ImageIcon;
-import nextapp.echo.app.Panel;
-import pds.web.ui.app.feed.components.TopicsColumn;
 
 public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 	private static final long serialVersionUID = -8925773333194027452L;
 
 	private static final XRI3Segment XRI_FEED = new XRI3Segment("+ostatus+feed");
+	private static final XRI3Segment XRI_MENTIONS = new XRI3Segment("+ostatus+mentions");
 	private static final XRI3Segment XRI_TOPICS = new XRI3Segment("+ostatus+topics");
 	private static final XRI3Segment XRI_ENTRY = new XRI3Segment("+entry");
 	private static final XRI3Segment XRI_VERIFYTOKEN = new XRI3Segment("+push+verify.token");
@@ -61,13 +62,14 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 	private XRI3Segment subjectXri;
 	private XRI3 address;
 	private XRI3 feedAddress;
+	private XRI3 mentionsAddress;
 	private XRI3 topicsAddress;
 
 	private XdiPanel xdiPanel;
-	private TextField subscribeTextField;
-	private EntriesColumn entriesColumn;
 	private TextField contentTextField;
+	private TextField subscribeTextField;
 	private TopicsColumn topicsColumn;
+	private EntriesColumn entriesColumn;
 
 	/**
 	 * Creates a new <code>AddressBookContentPane</code>.
@@ -83,6 +85,8 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 	public void init() {
 
 		super.init();
+
+		this.topicsColumn.setTopicPanelDelegate(new MyTopicPanelDelegate());
 	}
 
 	@Override
@@ -174,11 +178,12 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		this.context = context;
 		this.subjectXri = subjectXri;
 		this.address = new XRI3("" + this.subjectXri);
-		this.feedAddress = new XRI3("" + this.subjectXri + "/" + XRI_FEED);
-		this.topicsAddress = new XRI3("" + this.subjectXri + "/" + XRI_TOPICS);
+		this.feedAddress = new XRI3("" + this.address + "/" + XRI_FEED);
+		this.mentionsAddress = new XRI3("" + this.address + "/" + XRI_MENTIONS);
+		this.topicsAddress = new XRI3("" + this.address + "/" + XRI_TOPICS);
 
 		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
-		this.entriesColumn.setContextAndSubjectXri(context, subjectXri);
+		this.entriesColumn.setContextAndAddress(context, this.feedAddress);
 		this.topicsColumn.setContextAndSubjectXri(context, subjectXri);
 
 		this.refresh();
@@ -189,7 +194,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 	}
 
 	private void onPostActionPerformed(ActionEvent e) {
-		
+
 		// add the entry
 
 		try {
@@ -242,7 +247,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		String hubverifytoken = PuSHUtil.makeVerifyToken();
 
 		// add the topic
-		
+
 		try {
 
 			this.addTopic(hubtopic, hubverifytoken, hub);
@@ -276,6 +281,16 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		this.subscribeTextField.setText("");
 	}
 
+	private void onGotoFeedActionPerformed(ActionEvent e) {
+
+		this.entriesColumn.setContextAndAddress(this.context, this.feedAddress);
+	}
+
+	private void onGotoMentionsActionPerformed(ActionEvent e) {
+
+		this.entriesColumn.setContextAndAddress(this.context, this.mentionsAddress);
+	}
+
 	private void addEntry(String title, String description, Date publishedDate) throws XdiException {
 
 		// $add
@@ -285,7 +300,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		Graph feedGraph = operationGraph.createStatement(this.subjectXri, XRI_FEED, (Graph) null).getInnerGraph();
 
 		Subject subject = feedGraph.createSubject(new XRI3Segment(XRI_ENTRY.toString() + "$($)"));
-		FeedDictionary.fromEntry(subject, title, description, publishedDate);
+		FeedDictionary.fromEntry(subject, title, description, publishedDate, null, null);
 
 		this.context.send(operation);
 	}
@@ -303,6 +318,27 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 		this.context.send(operation);
 	}
+
+	private class MyTopicPanelDelegate implements TopicPanelDelegate {
+
+		@Override
+		public void onTopicActionPerformed(ActionEvent e, XRI3Segment topicXri) {
+
+			XRI3 topicAddress = new XRI3("" + FeedContentPane.this.topicsAddress + "//" + topicXri + "/+entries");
+
+			FeedContentPane.this.entriesColumn.setContextAndAddress(FeedContentPane.this.context, topicAddress);
+		}
+
+		@Override
+		public void onResubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri) {
+
+		}
+
+		@Override
+		public void onUnsubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri) {
+
+		}
+	};
 
 	/**
 	 * Configures initial state of component.
@@ -328,7 +364,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		row1.add(row2);
 		ImageIcon imageIcon2 = new ImageIcon();
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-				"/pds/web/ui/app/feed/app.png");
+		"/pds/web/ui/app/feed/app.png");
 		imageIcon2.setIcon(imageReference1);
 		imageIcon2.setHeight(new Extent(48, Extent.PX));
 		imageIcon2.setWidth(new Extent(48, Extent.PX));
@@ -342,8 +378,18 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		row1.add(row3);
 		xdiPanel = new XdiPanel();
 		row3.add(xdiPanel);
+		SplitPane splitPane2 = new SplitPane();
+		splitPane2.setStyleName("Default");
+		splitPane2.setOrientation(SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM);
+		splitPane2.setResizable(false);
+		splitPane2.setSeparatorVisible(false);
+		splitPane1.add(splitPane2);
 		Column column1 = new Column();
-		splitPane1.add(column1);
+		SplitPaneLayoutData column1LayoutData = new SplitPaneLayoutData();
+		column1LayoutData.setMinimumSize(new Extent(10, Extent.PX));
+		column1LayoutData.setMaximumSize(new Extent(10, Extent.PX));
+		column1.setLayoutData(column1LayoutData);
+		splitPane2.add(column1);
 		Row row5 = new Row();
 		row5.setCellSpacing(new Extent(10, Extent.PX));
 		column1.add(row5);
@@ -355,7 +401,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		contentTextField.setStyleName("Default");
 		contentTextField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onPostActionPerformed(e);
 			}
@@ -366,30 +412,37 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button1.setText("Post!");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onPostActionPerformed(e);
 			}
 		});
 		row5.add(button1);
-		Panel panel1 = new Panel();
-		column1.add(panel1);
-		SplitPane splitPane2 = new SplitPane();
-		splitPane2.setStyleName("Default");
-		ResourceImageReference imageReference2 = new ResourceImageReference(
-				"/pds/web/resource/image/separator-blue.png");
-		splitPane2.setSeparatorHorizontalImage(new FillImage(imageReference2));
-		splitPane2.setOrientation(SplitPane.ORIENTATION_HORIZONTAL_LEFT_RIGHT);
-		splitPane2.setSeparatorWidth(new Extent(10, Extent.PX));
-		splitPane2.setResizable(true);
-		splitPane2.setSeparatorVisible(true);
-		panel1.add(splitPane2);
-		Column column2 = new Column();
-		column2.setCellSpacing(new Extent(10, Extent.PX));
-		splitPane2.add(column2);
+		Button button3 = new Button();
+		button3.setStyleName("Plain");
+		button3.setText("Go to Feed");
+		button3.addActionListener(new ActionListener() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				onGotoFeedActionPerformed(e);
+			}
+		});
+		row5.add(button3);
+		Button button4 = new Button();
+		button4.setStyleName("Plain");
+		button4.setText("Go to Mentions");
+		button4.addActionListener(new ActionListener() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				onGotoMentionsActionPerformed(e);
+			}
+		});
+		row5.add(button4);
 		Row row4 = new Row();
 		row4.setCellSpacing(new Extent(10, Extent.PX));
-		column2.add(row4);
+		column1.add(row4);
 		Label label2 = new Label();
 		label2.setStyleName("Default");
 		label2.setText("Subscribe to a topic:");
@@ -398,7 +451,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		subscribeTextField.setStyleName("Default");
 		subscribeTextField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onSubscribeActionPerformed(e);
 			}
@@ -409,15 +462,25 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button2.setText("Subscribe");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onSubscribeActionPerformed(e);
 			}
 		});
 		row4.add(button2);
+		SplitPane splitPane3 = new SplitPane();
+		splitPane3.setStyleName("Default");
+		ResourceImageReference imageReference2 = new ResourceImageReference(
+		"/pds/web/resource/image/separator-blue.png");
+		splitPane3.setSeparatorHorizontalImage(new FillImage(imageReference2));
+		splitPane3.setOrientation(SplitPane.ORIENTATION_HORIZONTAL_LEFT_RIGHT);
+		splitPane3.setSeparatorWidth(new Extent(10, Extent.PX));
+		splitPane3.setResizable(true);
+		splitPane3.setSeparatorVisible(true);
+		splitPane2.add(splitPane3);
 		topicsColumn = new TopicsColumn();
-		column2.add(topicsColumn);
+		splitPane3.add(topicsColumn);
 		entriesColumn = new EntriesColumn();
-		splitPane2.add(entriesColumn);
+		splitPane3.add(entriesColumn);
 	}
 }

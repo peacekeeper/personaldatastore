@@ -33,9 +33,6 @@ public class PocoServlet implements HttpRequestHandler {
 
 	private static final Xdi xdi;
 
-	private String format;
-	private String contentType;
-
 	static {
 
 		try {
@@ -49,7 +46,6 @@ public class PocoServlet implements HttpRequestHandler {
 
 	public void init() throws Exception {
 
-		if (this.format == null) throw new ServletException("Please specify a format in the servlet's init parameters.");
 	}
 
 	@Override
@@ -74,7 +70,7 @@ public class PocoServlet implements HttpRequestHandler {
 
 		String xri = this.parseXri(request);
 		XdiContext context = this.getContext(xri);
-		Subject pdsSubject = this.fetch(context);
+		Subject pdsSubject = context == null ? null : this.fetch(context);
 
 		if (pdsSubject == null) {
 
@@ -84,15 +80,27 @@ public class PocoServlet implements HttpRequestHandler {
 
 		Poco poco = this.convertPoco(xri, context, pdsSubject);
 
+		// determine content type
+
+		String contentType;
+
+		if (request.getHeader("Accept").contains("application/xml")) {
+
+			contentType = "application/xml";
+		} else {
+
+			contentType = "application/json";
+		}
+
 		// output it
 
-		if (this.contentType != null) response.setContentType(this.contentType);
+		response.setContentType(contentType);
 		Writer writer = response.getWriter();
 
-		if ("xml".equals(this.format)) {
+		if ("application/xml".equals(contentType)) {
 
 			writer.write(poco.toXML());
-		} else if ("json".equals(this.format)) {
+		} else if ("application/json".equals(contentType)) {
 
 			writer.write(poco.toJSON());
 		}
@@ -135,26 +143,15 @@ public class PocoServlet implements HttpRequestHandler {
 	private Poco convertPoco(String xri, XdiContext context, Subject pdsSubject) throws Exception {
 
 		String id = context.getCanonical().toString();
-		String profileurl = "http://xri.net/" + context.getCanonical().toString();
-		String displayname = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
+		String profileUrl = "http://xri2xrd.net/" + context.getCanonical().toString();
+		String preferredUsername = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
+		String displayName = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
 		String nameFormatted = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
 		String birthday = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_DATE_OF_BIRTH.toString()));
 		String gender = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_GENDER.toString()));
 		String email = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_EMAIL.toString()));
+		String url = "http://xri2xrd.net/" + context.getCanonical().toString();
 
-		return new Poco(id, profileurl, displayname, nameFormatted, birthday, gender, email);
-	}
-
-	public String getFormat() {
-
-		return this.format;
-	}
-
-	public void setFormat(String format) {
-
-		this.format = format;
-
-		if ("json".equals(format)) this.contentType = "application/json";
-		if ("html".equals(format)) this.contentType = "text/html";
+		return new Poco(id, profileUrl, preferredUsername, displayName, nameFormatted, birthday, gender, email, url);
 	}
 }
