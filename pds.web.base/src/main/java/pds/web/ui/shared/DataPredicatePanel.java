@@ -22,6 +22,7 @@ import org.eclipse.higgins.xdi4j.Graph;
 import org.eclipse.higgins.xdi4j.Subject;
 import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
 import org.eclipse.higgins.xdi4j.dictionary.Dictionary;
+import org.eclipse.higgins.xdi4j.messaging.Message;
 import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.util.iterators.IteratorListMaker;
@@ -275,13 +276,18 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 
 	private void addDataPredicateInstance(final String value) throws XdiException {
 
-		XRI3Segment dataPredicateInstanceXri = new XRI3Segment("" + this.predicateXri + "$($)");
+		XRI3Segment dataPredicateInstanceAddXri = new XRI3Segment("" + this.predicateXri + "$($)");
+		XRI3Segment dataPredicateInstanceSetXri = new XRI3Segment("$" + this.predicateXri);
 
-		// $add
+		// $add and $set
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_ADD);
+		Message message = this.context.prepareMessage();
+		Operation operation = message.createOperation(MessagingConstants.XRI_ADD);
 		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(this.subjectXri, dataPredicateInstanceXri, value);
+		operationGraph.createStatement(this.subjectXri, dataPredicateInstanceAddXri, value);
+		Operation operation2 = message.createOperation(MessagingConstants.XRI_SET);
+		Graph operationGraph2 = operation2.createOperationGraph(null);
+		operationGraph2.createStatement(this.subjectXri, dataPredicateInstanceSetXri, value);
 		this.context.send(operation);
 	}
 

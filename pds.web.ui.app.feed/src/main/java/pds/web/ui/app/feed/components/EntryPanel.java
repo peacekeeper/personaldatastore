@@ -92,8 +92,8 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 			Date timestamp = this.getTimestamp();
 			String content = this.getContent();
 
-			this.timestampLabel.setText(DATEFORMAT.format(timestamp));
-			this.contentLabel.setText(content);
+			if (timestamp != null) this.timestampLabel.setText(DATEFORMAT.format(timestamp));
+			if (content != null) this.contentLabel.setText(content);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
@@ -205,11 +205,10 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		MessageResult messageResult = this.context.send(operation);
 
 		XRI3Segment referenceXri = Addressing.findReferenceXri(messageResult.getGraph(), this.timestampAddress);
-		if (referenceXri == null) throw new XdiNotExistentException();
 
 		try {
 
-			return Timestamps.xriToDate(referenceXri);
+			return referenceXri == null ? null : Timestamps.xriToDate(referenceXri);
 		} catch (ParseException ex) {
 
 			throw new XdiException("Cannot parse timestamp: " + ex.getMessage(), ex);
@@ -223,10 +222,7 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.contentAddress);
 		MessageResult messageResult = this.context.send(operation);
 
-		String data = Addressing.findLiteralData(messageResult.getGraph(), this.contentAddress);
-		if (data == null) throw new XdiNotExistentException();
-
-		return data;
+		return Addressing.findLiteralData(messageResult.getGraph(), this.contentAddress);
 	}
 
 	/**
