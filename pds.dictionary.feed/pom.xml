@@ -65,6 +65,12 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>pdsproject</groupId>
+			<artifactId>pds.xdi</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>net.java.dev</groupId>
 			<artifactId>rome</artifactId>
 			<version>1.0</version>

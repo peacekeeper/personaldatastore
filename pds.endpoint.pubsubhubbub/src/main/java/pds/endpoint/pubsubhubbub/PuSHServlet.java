@@ -37,7 +37,8 @@ public class PuSHServlet implements HttpRequestHandler {
 	private static final long serialVersionUID = -1912598515775509417L;
 
 	private static final XRI3Segment XRI_TOPICS = new XRI3Segment("+ostatus+topics");
-	private static final XRI3Segment XRI_ITEM = new XRI3Segment("+item");
+	private static final XRI3Segment XRI_ENTRIES = new XRI3Segment("+entries");
+	private static final XRI3Segment XRI_ENTRY = new XRI3Segment("+entry");
 	private static final XRI3Segment XRI_VERIFYTOKEN = new XRI3Segment("+push+verify.token");
 	private static final XRI3Segment XRI_SUBSCRIBED = new XRI3Segment("+push+subscribed");
 
@@ -185,7 +186,7 @@ public class PuSHServlet implements HttpRequestHandler {
 			return;
 		}
 
-		// add feeds to the topic
+		// add entries to the topic
 
 		addEntries(context, pdsSubject, feed);
 
@@ -241,12 +242,12 @@ public class PuSHServlet implements HttpRequestHandler {
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_ADD);
 		Graph operationGraph = operation.createOperationGraph(null);
 		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
-		Graph itemGraph = topicsGraph.createStatement(pdsSubject.getSubjectXri(), new XRI3Segment(XRI_ITEM + "$($)"), (Graph) null).getInnerGraph();
+		Graph entriesGraph = topicsGraph.createStatement(pdsSubject.getSubjectXri(), XRI_ENTRIES, (Graph) null).getInnerGraph();
 
 		for (SyndEntry syndEntry : syndEntries) {
 
-			Subject subject = itemGraph.createSubject(new XRI3Segment("$"));
-			FeedDictionary.toSubject(subject, syndEntry);
+			Subject subject = entriesGraph.createSubject(new XRI3Segment(XRI_ENTRY + "$($)"));
+			FeedDictionary.fromEntry(subject, syndEntry);
 		}
 
 		context.send(operation);

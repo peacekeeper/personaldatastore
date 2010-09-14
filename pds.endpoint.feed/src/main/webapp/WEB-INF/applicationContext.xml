@@ -13,7 +13,7 @@
 	</bean>
 
 	<bean id="AtomFeedServlet" class="pds.endpoint.feed.FeedServlet" init-method="init">
-		<property name="format" value="atom_2.0" />
+		<property name="format" value="atom_1.0" />
 		<property name="hub" value="http://pubsubhubbub.appspot.com/" />
 		<property name="selfEndpoint" value="http://ginger.freexri.com:11080/pds-endpoint-feed/atom/" />
 		<property name="salmonEndpoint" value="http://ginger.freexri.com:11080/pds-endpoint-salmon/" />

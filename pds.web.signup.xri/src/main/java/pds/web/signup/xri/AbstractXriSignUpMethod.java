@@ -24,6 +24,10 @@ public abstract class AbstractXriSignUpMethod implements XriSignUpMethod {
 	private pds.store.xri.XriStore xriStore;
 	private pds.store.user.Store userStore;
 	private String[] endpoints;
+	private String feedEndpoint;
+	private String hcardEndpoint;
+	private String pocoEndpoint;
+	private String salmonEndpoint;
 	private X509Certificate brokerCertificate;
 	private PrivateKey brokerPrivateKey;
 	private String userCertificateValidity;
@@ -90,6 +94,50 @@ public abstract class AbstractXriSignUpMethod implements XriSignUpMethod {
 	public void setEndpoints(String[] endpoints) {
 
 		this.endpoints = endpoints;
+	}
+
+	public String getFeedEndpoint() {
+
+		return this.feedEndpoint;
+	}
+
+	public void setFeedEndpoint(String feedEndpoint) {
+
+		this.feedEndpoint = feedEndpoint;
+		if (! this.feedEndpoint.endsWith("/")) this.feedEndpoint += "/";
+	}
+
+	public String getHcardEndpoint() {
+
+		return this.hcardEndpoint;
+	}
+
+	public void setHcardEndpoint(String hcardEndpoint) {
+
+		this.hcardEndpoint = hcardEndpoint;
+		if (! this.hcardEndpoint.endsWith("/")) this.hcardEndpoint += "/";
+	}
+
+	public String getPocoEndpoint() {
+
+		return this.pocoEndpoint;
+	}
+
+	public void setPocoEndpoint(String pocoEndpoint) {
+
+		this.pocoEndpoint = pocoEndpoint;
+		if (! this.pocoEndpoint.endsWith("/")) this.pocoEndpoint += "/";
+	}
+
+	public String getSalmonEndpoint() {
+
+		return this.salmonEndpoint;
+	}
+
+	public void setSalmonEndpoint(String salmonEndpoint) {
+
+		this.salmonEndpoint = salmonEndpoint;
+		if (! this.salmonEndpoint.endsWith("/")) this.salmonEndpoint += "/";
 	}
 
 	public X509Certificate getBrokerCertificate() {

@@ -54,6 +54,13 @@ public class XriWizard {
 		xri.deleteAllServices();
 		List<Service> services = new ArrayList<Service> ();
 
+		// set up XRDS SEP
+
+		Service xrdsService = new Service();
+		xrdsService.addMediaType("application/xrds+xml", null, Boolean.FALSE);
+		xrdsService.addURI("http://xri.net/" + xri.getCanonicalID().getValue() + "?_xrd_r=application/xrds+xml");
+		services.add(xrdsService);
+
 		// set up XDI SEP(s)
 
 		String[] endpoints = xriSignUpMethod.getEndpoints();
@@ -71,6 +78,53 @@ public class XriWizard {
 		services.add(
 				new XDIService(
 						uris));
+
+		// set up PDS SEPs
+
+		Service hcardJsonService = new Service();
+		hcardJsonService.addType("http://microformats.org/profile/hcard", null, Boolean.TRUE);
+		hcardJsonService.addMediaType("application/json", null, Boolean.FALSE);
+		hcardJsonService.addURI(xriSignUpMethod.getHcardEndpoint() + "json/" + xri.getCanonicalID().getValue());
+		services.add(hcardJsonService);
+
+		Service hcardHtmlService = new Service();
+		hcardHtmlService.addType("http://microformats.org/profile/hcard", null, Boolean.TRUE);
+		hcardHtmlService.addMediaType("text/html", null, Boolean.FALSE);
+		hcardHtmlService.addURI(xriSignUpMethod.getHcardEndpoint() + "html/" + xri.getCanonicalID().getValue());
+		services.add(hcardHtmlService);
+
+		Service pocoJsonService = new Service();
+		pocoJsonService.addType("http://portablecontacts.net/spec/1.0#me", null, Boolean.TRUE);
+		pocoJsonService.addMediaType("application/json", null, Boolean.FALSE);
+		pocoJsonService.addURI(xriSignUpMethod.getPocoEndpoint() + "json/" + xri.getCanonicalID().getValue());
+		services.add(pocoJsonService);
+
+		Service pocoXmlService = new Service();
+		pocoXmlService.addType("http://portablecontacts.net/spec/1.0#me", null, Boolean.TRUE);
+		pocoXmlService.addMediaType("application/xml", null, Boolean.FALSE);
+		pocoXmlService.addURI(xriSignUpMethod.getPocoEndpoint() + "xml/" + xri.getCanonicalID().getValue());
+		services.add(pocoXmlService);
+
+		Service feedAtomService = new Service();
+		feedAtomService.addType("http://schemas.google.com/g/2010#updates-from", null, Boolean.TRUE);
+		feedAtomService.addMediaType("application/atom+xml", null, Boolean.FALSE);
+		feedAtomService.addURI(xriSignUpMethod.getFeedEndpoint() + "atom/" + xri.getCanonicalID().getValue());
+		services.add(feedAtomService);
+
+		Service salmonService = new Service();
+		salmonService.addType("salmon", null, Boolean.TRUE);
+		salmonService.addURI(xriSignUpMethod.getSalmonEndpoint() + "salmon/" + xri.getCanonicalID().getValue());
+		services.add(salmonService);
+
+		Service salmonRepliesService = new Service();
+		salmonRepliesService.addType("http://salmon-protocol.org/ns/salmon-replies", null, Boolean.TRUE);
+		salmonRepliesService.addURI(xriSignUpMethod.getSalmonEndpoint() + "salmon/" + xri.getCanonicalID().getValue());
+		services.add(salmonRepliesService);
+
+		Service salmonMentionsService = new Service();
+		salmonMentionsService.addType("http://salmon-protocol.org/ns/salmon-mention", null, Boolean.TRUE);
+		salmonMentionsService.addURI(xriSignUpMethod.getSalmonEndpoint() + "salmon/" + xri.getCanonicalID().getValue());
+		services.add(salmonMentionsService);
 
 		// set up keys/certificate and SEP 
 

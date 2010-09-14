@@ -285,7 +285,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		Graph feedGraph = operationGraph.createStatement(this.subjectXri, XRI_FEED, (Graph) null).getInnerGraph();
 
 		Subject subject = feedGraph.createSubject(new XRI3Segment(XRI_ENTRY.toString() + "$($)"));
-		FeedDictionary.toSubject(subject, title, description, publishedDate);
+		FeedDictionary.fromEntry(subject, title, description, publishedDate);
 
 		this.context.send(operation);
 	}
