@@ -63,8 +63,12 @@ public class FeedDictionary {
 		foreignElements.add(makeActivitySubject(pdsSubject));
 		foreignElements.add(makeLink("alternate", "http://xri2xrd.net/" + context.getCanonical() + "/", "text/html", null));
 		foreignElements.add(makeLink("hub", hub, null, "PubSubHubbub"));
-		foreignElements.add(makeLink("salmon-reply", salmonEndpoint, null, "Salmon Replies"));
-		foreignElements.add(makeLink("salmon-mention", salmonEndpoint, null, "Salmon Mentions"));
+		foreignElements.add(makeLink("salmon", salmonEndpoint, null, null));
+		foreignElements.add(makeLink("salmon-reply", salmonEndpoint, null, null));
+		foreignElements.add(makeLink("salmon-mention", salmonEndpoint, null, null));
+		foreignElements.add(makeLink("http://salmon-protocol.org/ns/salmon-replies", salmonEndpoint, null, null));
+		foreignElements.add(makeLink("http://salmon-protocol.org/ns/salmon-mention", salmonEndpoint, null, null));
+
 		foreignElements.add(makeLink("self", selfEndpoint, contentType, null));
 		feed.setForeignMarkup(foreignElements);
 
@@ -113,7 +117,7 @@ public class FeedDictionary {
 
 		if (activityVerb == null) activityVerb = DEFAULT_ACTIVITYVERB;
 		if (activityObjectType == null) activityObjectType = DEFAULT_ACTIVITYOBJECTTYPE;
-		
+
 		if (publishedDate != null) entrySubject.createStatement(new XRI3Segment("$d"), Timestamps.dateToXri(publishedDate));
 		if (title != null) entrySubject.createStatement(new XRI3Segment("+title"), title);
 		if (description != null) entrySubject.createStatement(new XRI3Segment("+description"), description);
@@ -135,7 +139,7 @@ public class FeedDictionary {
 		String activityObjectType = null;
 		List<org.jdom.Element> foreignMarkup = (List<org.jdom.Element>) syndEntry.getForeignMarkup();
 		for (org.jdom.Element foreignElement : foreignMarkup) {
-			
+
 			if (foreignElement.getNamespace().equals(NAMESPACE_ACTIVITYSTREAMS) && foreignElement.getName().equals("verb")) activityVerb = foreignElement.getText();
 			if (foreignElement.getNamespace().equals(NAMESPACE_ACTIVITYSTREAMS) && foreignElement.getName().equals("object-type")) activityObjectType = foreignElement.getText();
 		}

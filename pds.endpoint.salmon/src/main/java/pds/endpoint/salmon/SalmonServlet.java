@@ -1,6 +1,7 @@
 package pds.endpoint.salmon;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,6 +27,10 @@ import pds.xdi.Xdi;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
 
+import com.cliqset.salmon.MagicEnvelope;
+import com.cliqset.salmon.Salmon;
+import com.cliqset.salmon.dataparser.AbderaDataParser;
+import com.cliqset.salmon.keyfinder.OpenXRDKeyFinder;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
@@ -34,14 +39,15 @@ public class SalmonServlet implements HttpRequestHandler {
 
 	private static final long serialVersionUID = -1912598515775509417L;
 
-//	private static final XRI3Segment XRI_TOPICS = new XRI3Segment("+ostatus+topics");
+	//	private static final XRI3Segment XRI_TOPICS = new XRI3Segment("+ostatus+topics");
 	private static final XRI3Segment XRI_MENTIONS = new XRI3Segment("+salmon+mentions");
-//	private static final XRI3Segment XRI_ENTRIES = new XRI3Segment("+entries");
+	//	private static final XRI3Segment XRI_ENTRIES = new XRI3Segment("+entries");
 	private static final XRI3Segment XRI_ENTRY = new XRI3Segment("+entry");
 
 	private static final Log log = LogFactory.getLog(SalmonServlet.class.getName());
 
 	private static final Xdi xdi;
+	private static final Salmon salmon;
 
 	static {
 
@@ -52,6 +58,14 @@ public class SalmonServlet implements HttpRequestHandler {
 
 			throw new RuntimeException("Cannot initialize XDI: " + ex.getMessage(), ex);
 		}
+
+		try {
+
+			salmon = new Salmon().withKeyFinder(new OpenXRDKeyFinder()).withDataParser(new AbderaDataParser());
+		} catch (Exception ex) {
+
+			throw new RuntimeException("Cannot initialize Salmon: " + ex.getMessage(), ex);
+		}
 	}
 
 	public void init() throws Exception {
@@ -61,7 +75,7 @@ public class SalmonServlet implements HttpRequestHandler {
 	@Override
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		log.trace(request.getMethod() + ": " + request.getRequestURI());
+		log.trace(request.getMethod() + ": " + request.getRequestURI() + ", Content-Type: " + request.getContentType() + ", Content-Length: " + request.getContentLength());
 
 		try {
 
@@ -77,17 +91,32 @@ public class SalmonServlet implements HttpRequestHandler {
 	@SuppressWarnings("unchecked")
 	private void doPost(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		// receive an atom feed
+		// receive a magic signature envelope
 
-		if (! request.getContentType().contains("application/atom+xml")) {
+		if (! request.getContentType().contains("application/magic-envelope+xml")) {
 
 			response.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
 			return;
 		}
 
+		// verify and decode the salmon
+
+		byte[] data;
+
+		try {
+
+			MagicEnvelope magicEnvelope = MagicEnvelope.fromInputStream(request.getInputStream());
+			data = salmon.verify(magicEnvelope);
+		} catch (Exception ex) {
+
+			log.warn("Cannot verify Salmon: " + ex.getMessage(), ex);
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
+
 		// create the new SyndEntry object
 
-		InputStream stream = request.getInputStream();
+		InputStream stream = new ByteArrayInputStream(data);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
 		String buffer, line;
 		buffer = "<feed xml:lang=\"en-US\" xmlns=\"http://www.w3.org/2005/Atom\">";
@@ -140,16 +169,20 @@ public class SalmonServlet implements HttpRequestHandler {
 		Graph operationGraph = operation.createOperationGraph(null);
 		Graph mentionsGraph = operationGraph.createStatement(context.getCanonical(), XRI_MENTIONS, (Graph) null).getInnerGraph();
 
+		int i = 1;
+
 		for (SyndEntry syndEntry : syndEntries) {
 
-			Subject subject = mentionsGraph.createSubject(new XRI3Segment(XRI_ENTRY + "$($)"));
+			Subject subject = mentionsGraph.createSubject(new XRI3Segment(XRI_ENTRY + "$($" + i + ")"));
 			FeedDictionary.fromEntry(subject, syndEntry);
+
+			i++;
 		}
 
 		context.send(operation);
 	}
 
-/*	@SuppressWarnings("unchecked")
+	/*	@SuppressWarnings("unchecked")
 	private static void addEntries(XdiContext context, Subject pdsSubject, SyndFeed feed) throws Exception {
 
 		log.debug("Adding entries to topic " + pdsSubject.getSubjectXri());
@@ -210,7 +243,7 @@ public class SalmonServlet implements HttpRequestHandler {
 		return innerSubject;
 	}*/
 
-/*	private Subject fetch(XdiContext context, String hubtopic) throws Exception {
+	/*	private Subject fetch(XdiContext context, String hubtopic) throws Exception {
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_GET);
 		Graph operationGraph = operation.createOperationGraph(null);

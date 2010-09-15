@@ -80,7 +80,7 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 	@Override
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		log.trace(request.getMethod() + ": " + request.getRequestURI());
+		log.trace(request.getMethod() + ": " + request.getRequestURI() + ", Content-Type: " + request.getContentType() + ", Content-Length: " + request.getContentLength());
 
 		try {
 
@@ -180,6 +180,8 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		String uid = context.getCanonical().toString();
 		String name = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
 		String email = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_EMAIL.toString()));
+
+		if (name == null) name = uid;
 
 		HCardBuilder hCardBuilder = HCard.build(name);
 		hCardBuilder.setUID(uid);

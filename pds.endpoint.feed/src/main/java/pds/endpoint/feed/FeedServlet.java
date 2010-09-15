@@ -62,7 +62,7 @@ public class FeedServlet implements HttpRequestHandler {
 	@Override
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		log.trace(request.getMethod() + ": " + request.getRequestURI());
+		log.trace(request.getMethod() + ": " + request.getRequestURI() + ", Content-Type: " + request.getContentType() + ", Content-Length: " + request.getContentLength());
 
 		try {
 

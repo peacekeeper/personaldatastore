@@ -4,4 +4,22 @@
 
 	<display-name>pds.endpoint.salmon</display-name>
 
+	<!-- SPRING SERVLET -->
+
+	<servlet>
+		<servlet-name>SalmonServlet</servlet-name>
+		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>SalmonServlet</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- SPRING -->
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
 </web-app>
