@@ -120,8 +120,10 @@
 </c>
 </c>
 <p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
-<p n="maximumSize">10px</p>
-<p n="minimumSize">10px</p>
+
+
+<p n="maximumSize">70px</p>
+<p n="minimumSize">70px</p>
 </p>
 </c>
 <c i="Component_splitPane3" t="nextapp.echo.app.SplitPane">

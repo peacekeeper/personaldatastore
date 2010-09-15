@@ -1,5 +1,6 @@
 package pds.web.ui.app.feed;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -26,6 +27,8 @@ import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.types.Timestamps;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import org.openxrd.xrd.core.Link;
+import org.openxrd.xrd.core.XRD;
 
 import pds.dictionary.feed.FeedDictionary;
 import pds.web.components.xdi.XdiPanel;
@@ -35,6 +38,7 @@ import pds.web.ui.app.feed.components.TopicPanel.TopicPanelDelegate;
 import pds.web.ui.app.feed.components.TopicsColumn;
 import pds.web.ui.app.feed.util.PuSHDiscovery;
 import pds.web.ui.app.feed.util.PuSHUtil;
+import pds.web.ui.app.feed.util.WebfingerDiscovery;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphAddEvent;
@@ -54,6 +58,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 	private static final XRI3Segment XRI_ENTRY = new XRI3Segment("+entry");
 	private static final XRI3Segment XRI_VERIFYTOKEN = new XRI3Segment("+push+verify.token");
 	private static final XRI3Segment XRI_HUB = new XRI3Segment("+push+hub");
+	private static final XRI3Segment XRI_NAME = new XRI3Segment("+name");
 
 	protected ResourceBundle resourceBundle;
 
@@ -226,7 +231,46 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 	private void onSubscribeActionPerformed(ActionEvent e) {
 
-		String hubtopic = this.subscribeTextField.getText();
+		// determine the user URI
+
+		String userUri = this.subscribeTextField.getText();
+
+		if ((! userUri.startsWith("http://")) &&
+				(! userUri.startsWith("https://")) &&
+				(! userUri.startsWith("acct:"))) {
+
+			if (userUri.contains("@"))
+				userUri = "acct:" + userUri;
+			else
+				userUri = "http://" + userUri;
+		}
+
+		// discover the topic URI
+
+		String hubtopic = null;
+
+		try {
+
+			XRD xrd = WebfingerDiscovery.discoverXRD(URI.create(userUri));
+
+			if (xrd != null) {
+
+				Link link = WebfingerDiscovery.discoverLink(xrd, "http://schemas.google.com/g/2010#updates-from", null);
+				if (link == null) link = WebfingerDiscovery.discoverLink(xrd, "alternate", "application/atom+xml");
+
+				if (link != null) hubtopic = link.getHref();
+			}
+
+			if (hubtopic == null) {
+
+				MessageDialog.problem("Sorry, this does not seem to be a valid user to subscribe to.", null);
+				return;
+			}
+		} catch (Exception ex) {
+
+			MessageDialog.problem("Sorry, a problem occurred while discovering the user's feed: " + ex.getMessage(), ex);
+			return;
+		}
 
 		// discover the feed's hub
 
@@ -238,7 +282,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 			if (hub == null) throw new RuntimeException("No hub found.");
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, a problem occurred while discoverying the Feed's hub: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, a problem occurred while discovering the Feed's hub: " + ex.getMessage(), ex);
 			return;
 		}
 
@@ -250,7 +294,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 		try {
 
-			this.addTopic(hubtopic, hubverifytoken, hub);
+			this.addTopic(hubtopic, hubverifytoken, hub, userUri);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
@@ -305,7 +349,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		this.context.send(operation);
 	}
 
-	private void addTopic(String hubtopic, String hubverifytoken, String hub) throws XdiException {
+	private void addTopic(String hubtopic, String hubverifytoken, String hub, String name) throws XdiException {
 
 		// $add
 
@@ -313,6 +357,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		Graph operationGraph = operation.createOperationGraph(null);
 		Graph topicsGraph = operationGraph.createStatement(this.subjectXri, XRI_TOPICS, (Graph) null).getInnerGraph();
 		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), XRI_VERIFYTOKEN, hubverifytoken);
+		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), XRI_NAME, name);
 		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), XRI_HUB, hub);
 		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), new XRI3Segment("$d"), Timestamps.dateToXri(new Date()));
 
@@ -338,7 +383,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		public void onUnsubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri) {
 
 		}
-	};
+	}
 
 	/**
 	 * Configures initial state of component.
@@ -364,7 +409,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		row1.add(row2);
 		ImageIcon imageIcon2 = new ImageIcon();
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-		"/pds/web/ui/app/feed/app.png");
+				"/pds/web/ui/app/feed/app.png");
 		imageIcon2.setIcon(imageReference1);
 		imageIcon2.setHeight(new Extent(48, Extent.PX));
 		imageIcon2.setWidth(new Extent(48, Extent.PX));
@@ -386,8 +431,8 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		splitPane1.add(splitPane2);
 		Column column1 = new Column();
 		SplitPaneLayoutData column1LayoutData = new SplitPaneLayoutData();
-		column1LayoutData.setMinimumSize(new Extent(10, Extent.PX));
-		column1LayoutData.setMaximumSize(new Extent(10, Extent.PX));
+		column1LayoutData.setMinimumSize(new Extent(70, Extent.PX));
+		column1LayoutData.setMaximumSize(new Extent(70, Extent.PX));
 		column1.setLayoutData(column1LayoutData);
 		splitPane2.add(column1);
 		Row row5 = new Row();
@@ -401,7 +446,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		contentTextField.setStyleName("Default");
 		contentTextField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onPostActionPerformed(e);
 			}
@@ -412,7 +457,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button1.setText("Post!");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onPostActionPerformed(e);
 			}
@@ -423,7 +468,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button3.setText("Go to Feed");
 		button3.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onGotoFeedActionPerformed(e);
 			}
@@ -434,7 +479,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button4.setText("Go to Mentions");
 		button4.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onGotoMentionsActionPerformed(e);
 			}
@@ -451,7 +496,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		subscribeTextField.setStyleName("Default");
 		subscribeTextField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onSubscribeActionPerformed(e);
 			}
@@ -462,7 +507,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button2.setText("Subscribe");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onSubscribeActionPerformed(e);
 			}
@@ -471,7 +516,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		SplitPane splitPane3 = new SplitPane();
 		splitPane3.setStyleName("Default");
 		ResourceImageReference imageReference2 = new ResourceImageReference(
-		"/pds/web/resource/image/separator-blue.png");
+				"/pds/web/resource/image/separator-blue.png");
 		splitPane3.setSeparatorHorizontalImage(new FillImage(imageReference2));
 		splitPane3.setOrientation(SplitPane.ORIENTATION_HORIZONTAL_LEFT_RIGHT);
 		splitPane3.setSeparatorWidth(new Extent(10, Extent.PX));

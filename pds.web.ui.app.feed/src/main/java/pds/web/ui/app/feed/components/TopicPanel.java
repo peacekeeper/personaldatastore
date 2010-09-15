@@ -40,6 +40,7 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 	private XRI3Segment subjectXri;
 	private XRI3Segment topicXri;
 	private XRI3 address;
+	private XRI3 nameAddress;
 	private XRI3 hubAddress;
 	private XRI3 subscribedAddress;
 	private XRI3 verifyTokenAddress;
@@ -80,11 +81,12 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 
 		try {
 
+			String name = this.getName();
 			String hub = this.getHub();
 			String subscribed = this.getSubscribed();
 			String verifyToken = this.getVerifyToken();
 
-			this.nameLabel.setText(this.subjectXri.toString());
+			this.nameLabel.setText(name);
 			this.hubLabel.setText(hub);
 		} catch (Exception ex) {
 
@@ -154,6 +156,7 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 		this.subjectXri = subjectXri;
 		this.topicXri = topicXri;
 		this.address = new XRI3("" + this.subjectXri + "/+ostatus+topics//" + this.topicXri);
+		this.nameAddress = new XRI3("" + this.address + "/+name");
 		this.hubAddress = new XRI3("" + this.address + "/+push+hub");
 		this.subscribedAddress = new XRI3("" + this.address + "/+push+subscribed");
 		this.verifyTokenAddress = new XRI3("" + this.address + "/+push+verify.token");
@@ -206,6 +209,16 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 		public void onTopicActionPerformed(ActionEvent e, XRI3Segment topicXri);
 		public void onResubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri);
 		public void onUnsubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri);
+	}
+
+	private String getName() throws XdiException {
+
+		// $get
+
+		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.nameAddress);
+		MessageResult messageResult = this.context.send(operation);
+
+		return Addressing.findLiteralData(messageResult.getGraph(), this.nameAddress);
 	}
 
 	private String getHub() throws XdiException {

@@ -28,6 +28,8 @@ import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
+import nextapp.echo.app.Insets;
+import nextapp.echo.app.Extent;
 
 public class TopicsColumn extends Column implements XdiGraphListener {
 
@@ -244,5 +246,7 @@ public class TopicsColumn extends Column implements XdiGraphListener {
 	 * Contents will be overwritten.
 	 */
 	private void initComponents() {
+		this.setInsets(new Insets(new Extent(10, Extent.PX)));
+		this.setCellSpacing(new Extent(10, Extent.PX));
 	}
 }

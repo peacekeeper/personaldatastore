@@ -2,5 +2,7 @@
 <form rbi="resourceBundle">
 <c i="Component_column1" t="nextapp.echo.app.Column">
 
+<p n="insets">10px</p>
+<p n="cellSpacing">10px</p>
 </c>
 </form>

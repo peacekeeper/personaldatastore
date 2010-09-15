@@ -259,10 +259,14 @@ public class PuSHServlet implements HttpRequestHandler {
 		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
 		Graph entriesGraph = topicsGraph.createStatement(pdsSubject.getSubjectXri(), XRI_ENTRIES, (Graph) null).getInnerGraph();
 
+		int i = 1;
+		
 		for (SyndEntry syndEntry : syndEntries) {
 
-			Subject subject = entriesGraph.createSubject(new XRI3Segment(XRI_ENTRY + "$($)"));
+			Subject subject = entriesGraph.createSubject(new XRI3Segment(XRI_ENTRY + "$($" + i + ")"));
 			FeedDictionary.fromEntry(subject, syndEntry);
+
+			i++;
 		}
 
 		context.send(operation);
