@@ -8,14 +8,13 @@ import nextapp.echo.app.Column;
 import nextapp.echo.app.event.ActionEvent;
 
 import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.Subject;
 import org.eclipse.higgins.xdi4j.addressing.Addressing;
 import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
 import org.eclipse.higgins.xdi4j.messaging.MessageResult;
 import org.eclipse.higgins.xdi4j.messaging.Operation;
+import org.eclipse.higgins.xdi4j.multivalue.MultiSubjects;
 import org.eclipse.higgins.xdi4j.util.iterators.EmptyIterator;
 import org.eclipse.higgins.xdi4j.util.iterators.MappingSubjectXrisIterator;
-import org.eclipse.higgins.xdi4j.util.iterators.SelectingIterator;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
@@ -70,9 +69,7 @@ public class EntriesColumn extends Column implements XdiGraphListener {
 
 			// get list of entry XRIs
 
-			Iterator<XRI3Segment> entryXris;
-
-			entryXris = this.getEntryXris();
+			Iterator<XRI3Segment> entryXris = this.getEntryXris();
 
 			// add them
 
@@ -102,7 +99,7 @@ public class EntriesColumn extends Column implements XdiGraphListener {
 			}
 		});
 
-		this.add(entryPanel);
+		this.add(entryPanel, 0);
 	}
 
 	public XRI3[] xdiGetAddresses() {
@@ -192,15 +189,7 @@ public class EntriesColumn extends Column implements XdiGraphListener {
 		Graph innerGraph = Addressing.findInnerGraph(messageResult.getGraph(), this.address);
 		if (innerGraph == null) return new EmptyIterator<XRI3Segment> ();
 
-		return new MappingSubjectXrisIterator(
-				new SelectingIterator<Subject> (innerGraph.getSubjects()) {
-
-					@Override
-					public boolean select(Subject subject) {
-
-						return subject.getSubjectXri().toString().startsWith("+entry$");
-					}
-				});
+		return new MappingSubjectXrisIterator(MultiSubjects.getMultiSubjects(innerGraph, new XRI3Segment("+entry")));
 	}
 
 	/**

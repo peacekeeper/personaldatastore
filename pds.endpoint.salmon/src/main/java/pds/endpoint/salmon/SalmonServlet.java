@@ -2,6 +2,7 @@ package pds.endpoint.salmon;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,14 +24,15 @@ import org.openxri.resolve.Resolver;
 import org.springframework.web.HttpRequestHandler;
 
 import pds.dictionary.feed.FeedDictionary;
+import pds.discovery.xrd.LRDDOpenXRDKeyFinder;
 import pds.xdi.Xdi;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
 
 import com.cliqset.salmon.MagicEnvelope;
+import com.cliqset.salmon.MagicSigUtil;
 import com.cliqset.salmon.Salmon;
 import com.cliqset.salmon.dataparser.AbderaDataParser;
-import com.cliqset.salmon.keyfinder.OpenXRDKeyFinder;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
@@ -39,8 +41,9 @@ public class SalmonServlet implements HttpRequestHandler {
 
 	private static final long serialVersionUID = -1912598515775509417L;
 
+//	private static final XRI3Segment XRI_FEED = new XRI3Segment("+ostatus+feed");
+	private static final XRI3Segment XRI_MENTIONS = new XRI3Segment("+ostatus+mentions");
 	//	private static final XRI3Segment XRI_TOPICS = new XRI3Segment("+ostatus+topics");
-	private static final XRI3Segment XRI_MENTIONS = new XRI3Segment("+salmon+mentions");
 	//	private static final XRI3Segment XRI_ENTRIES = new XRI3Segment("+entries");
 	private static final XRI3Segment XRI_ENTRY = new XRI3Segment("+entry");
 
@@ -61,7 +64,7 @@ public class SalmonServlet implements HttpRequestHandler {
 
 		try {
 
-			salmon = new Salmon().withKeyFinder(new OpenXRDKeyFinder()).withDataParser(new AbderaDataParser());
+			salmon = new Salmon().withKeyFinder(new LRDDOpenXRDKeyFinder()).withDataParser(new AbderaDataParser());
 		} catch (Exception ex) {
 
 			throw new RuntimeException("Cannot initialize Salmon: " + ex.getMessage(), ex);
@@ -101,11 +104,16 @@ public class SalmonServlet implements HttpRequestHandler {
 
 		// verify and decode the salmon
 
+		byte[] post = new byte[request.getContentLength()];
+		new DataInputStream(request.getInputStream()).readFully(post);
+		log.debug("POST data: " + new String(post));
+		
 		byte[] data;
 
 		try {
 
-			MagicEnvelope magicEnvelope = MagicEnvelope.fromInputStream(request.getInputStream());
+			MagicEnvelope magicEnvelope = MagicEnvelope.fromInputStream(new ByteArrayInputStream(post));
+			//data = MagicSigUtil.decode(magicEnvelope.getData().getValue());
 			data = salmon.verify(magicEnvelope);
 		} catch (Exception ex) {
 
@@ -119,20 +127,23 @@ public class SalmonServlet implements HttpRequestHandler {
 		InputStream stream = new ByteArrayInputStream(data);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
 		String buffer, line;
-		buffer = "<feed xml:lang=\"en-US\" xmlns=\"http://www.w3.org/2005/Atom\">";
-		while ((line = reader.readLine()) != null) buffer += line + "\n";
+		buffer = "<feed xml:lang=\"en-US\" xmlns=\"http://www.w3.org/2005/Atom\" xmlns:thr=\"http://purl.org/syndication/thread/1.0\" xmlns:georss=\"http://www.georss.org/georss\" xmlns:activity=\"http://activitystrea.ms/spec/1.0/\" xmlns:media=\"http://purl.org/syndication/atommedia\" xmlns:poco=\"http://portablecontacts.net/spec/1.0\" xmlns:ostatus=\"http://ostatus.org/schema/1.0\" xmlns:statusnet=\"http://status.net/schema/api/1/\">";
+		while ((line = reader.readLine()) != null) buffer += line.replaceAll("<\\?.*\\?>", "");
 		buffer += "</feed>";
+		log.debug("Assembled Salmon feed: " + buffer.toString());
 
 		SyndFeedInput input = new SyndFeedInput();
 		SyndFeed feed = input.build(new StringReader(buffer));
 
-		List<SyndEntry> entries = (List<SyndEntry>) feed.getEntries().get(0);
+		List<SyndEntry> entries = (List<SyndEntry>) feed.getEntries();
 		if (entries.size() < 1) {
 
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No feed entries.");
 			return;
 		}
 
+		log.debug("Found " + entries.size() + " feed entries in Salmon.");
+		
 		// find the XDI data
 
 		String xri = this.parseXri(request);

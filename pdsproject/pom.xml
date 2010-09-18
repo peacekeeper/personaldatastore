@@ -26,6 +26,7 @@
 		<module>../pds.core.xri</module>
 		<module>../pds.dictionary</module>
 		<module>../pds.dictionary.feed</module>
+		<module>../pds.discovery</module>
 		<module>../pds.profile</module>
 		<module>../pds.web</module>
 		<module>../pds.web.base</module>

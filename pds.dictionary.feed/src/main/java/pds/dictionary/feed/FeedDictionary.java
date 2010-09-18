@@ -14,8 +14,8 @@ import org.eclipse.higgins.xdi4j.Graph;
 import org.eclipse.higgins.xdi4j.Predicate;
 import org.eclipse.higgins.xdi4j.Subject;
 import org.eclipse.higgins.xdi4j.addressing.Addressing;
+import org.eclipse.higgins.xdi4j.multivalue.MultiSubjects;
 import org.eclipse.higgins.xdi4j.types.Timestamps;
-import org.eclipse.higgins.xdi4j.util.iterators.SelectingIterator;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.jdom.Namespace;
@@ -55,39 +55,35 @@ public class FeedDictionary {
 		SyndFeed feed = new SyndFeedImpl();
 		feed.setFeedType(format);
 
+		// add feed data
+
 		feed.setTitle(xri);
 		feed.setLink("http://xri2xrd.net/" + context.getCanonical());
 		feed.setDescription("Feed for " + xri);
 
 		List<org.jdom.Element> foreignElements = new ArrayList<org.jdom.Element> ();
 		foreignElements.add(makeActivitySubject(pdsSubject));
-		foreignElements.add(makeLink("alternate", "http://xri2xrd.net/" + context.getCanonical() + "/", "text/html", null));
 		foreignElements.add(makeLink("hub", hub, null, "PubSubHubbub"));
-		foreignElements.add(makeLink("salmon", salmonEndpoint, null, null));
-		foreignElements.add(makeLink("salmon-reply", salmonEndpoint, null, null));
-		foreignElements.add(makeLink("salmon-mention", salmonEndpoint, null, null));
-		foreignElements.add(makeLink("http://salmon-protocol.org/ns/salmon-replies", salmonEndpoint, null, null));
-		foreignElements.add(makeLink("http://salmon-protocol.org/ns/salmon-mention", salmonEndpoint, null, null));
+		foreignElements.add(makeLink("salmon", salmonEndpoint, null, "Salmon"));
+		foreignElements.add(makeLink("salmon-reply", salmonEndpoint, null, "Salmon Replies"));
+		foreignElements.add(makeLink("salmon-mention", salmonEndpoint, null, "Salmon Mention"));
+		foreignElements.add(makeLink("http://salmon-protocol.org/ns/salmon-replies", salmonEndpoint, null, "Salmon Replies"));
+		foreignElements.add(makeLink("http://salmon-protocol.org/ns/salmon-mention", salmonEndpoint, null, "Salmon Mention"));
 
 		foreignElements.add(makeLink("self", selfEndpoint, contentType, null));
 		feed.setForeignMarkup(foreignElements);
 
+		// add entries
+
 		List<SyndEntry> entries = new ArrayList<SyndEntry> ();
 
 		Predicate predicate = pdsSubject.getPredicate(new XRI3Segment("+ostatus+feed"));
-		if (predicate == null) return null;
+		if (predicate == null) return feed;
 
 		Graph innerGraph = predicate.getInnerGraph();
-		if (innerGraph == null) return null;
+		if (innerGraph == null) return feed;
 
-		Iterator<Subject> entrySubjects = new SelectingIterator<Subject> (innerGraph.getSubjects()) {
-
-			@Override
-			public boolean select(Subject entrySuubject) {
-
-				return entrySuubject.getSubjectXri().toString().startsWith("+entry$");
-			}
-		};
+		Iterator<Subject> entrySubjects = MultiSubjects.getMultiSubjects(innerGraph, new XRI3Segment("+entry"));
 
 		while (entrySubjects.hasNext()) {
 
@@ -96,7 +92,7 @@ public class FeedDictionary {
 			try {
 
 				SyndEntry entry = toEntry(pdsSubject, entrySubject, contentType, selfEndpoint);
-				entries.add(entry);
+				entries.add(0, entry);
 
 				log.debug("Added entry for " + entrySubject.getSubjectXri());
 			} catch (Exception ex) {
@@ -113,7 +109,7 @@ public class FeedDictionary {
 	/**
 	 * Stores a feed entry as an XDI subject.
 	 */
-	public static void fromEntry(Subject entrySubject, String title, String description, Date publishedDate, String activityVerb, String activityObjectType) {
+	public static void fromEntry(Subject entrySubject, String title, String description, String content, String contentType, Date publishedDate, String activityVerb, String activityObjectType) {
 
 		if (activityVerb == null) activityVerb = DEFAULT_ACTIVITYVERB;
 		if (activityObjectType == null) activityObjectType = DEFAULT_ACTIVITYOBJECTTYPE;
@@ -121,6 +117,8 @@ public class FeedDictionary {
 		if (publishedDate != null) entrySubject.createStatement(new XRI3Segment("$d"), Timestamps.dateToXri(publishedDate));
 		if (title != null) entrySubject.createStatement(new XRI3Segment("+title"), title);
 		if (description != null) entrySubject.createStatement(new XRI3Segment("+description"), description);
+		if (content != null) entrySubject.createStatement(new XRI3Segment("+content"), content);
+		if (contentType != null) entrySubject.createStatement(new XRI3Segment("+contenttype"), contentType);
 		if (activityVerb != null) entrySubject.createStatement(new XRI3Segment("+activity+verb"), activityVerb);
 		if (activityObjectType != null) entrySubject.createStatement(new XRI3Segment("+activity+object.type"), activityObjectType);
 	}
@@ -135,6 +133,14 @@ public class FeedDictionary {
 		String description = syndEntry.getDescription() == null ? null : syndEntry.getDescription().getValue();
 		Date publishedDate = syndEntry.getPublishedDate();
 
+		String content = null;
+		String contentType = null;
+		if (syndEntry.getContents() != null && syndEntry.getContents().size() > 0) {
+
+			content = ((SyndContent) syndEntry.getContents().get(0)).getValue();
+			contentType = ((SyndContent) syndEntry.getContents().get(0)).getType();
+		}
+
 		String activityVerb = null;
 		String activityObjectType = null;
 		List<org.jdom.Element> foreignMarkup = (List<org.jdom.Element>) syndEntry.getForeignMarkup();
@@ -144,7 +150,7 @@ public class FeedDictionary {
 			if (foreignElement.getNamespace().equals(NAMESPACE_ACTIVITYSTREAMS) && foreignElement.getName().equals("object-type")) activityObjectType = foreignElement.getText();
 		}
 
-		fromEntry(entrySubject, title, description, publishedDate, activityVerb, activityObjectType);
+		fromEntry(entrySubject, title, description, content, contentType, publishedDate, activityVerb, activityObjectType);
 	}
 
 	/**

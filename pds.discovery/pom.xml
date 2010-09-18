@@ -7,19 +7,29 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pdsproject</groupId>
-	<artifactId>pds.web.ui.app.feed</artifactId>
+	<artifactId>pds.discovery</artifactId>
 	<packaging>jar</packaging>
 	<version>0.1-SNAPSHOT</version>
-	<name>pds.web.ui.app.feed</name>
+	<name>pds.discovery</name>
 	<build>
-		<resources>
-			<resource>
-				<directory>${basedir}/src/main/java</directory>
-				<includes>
-					<include>**/*.png</include>
-				</includes>
-			</resource>
-		</resources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.1</version>
+				<executions>
+					<execution>
+						<id>dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<includeScope>runtime</includeScope>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 	<dependencies>
 		<dependency>
@@ -35,27 +45,9 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>pdsproject</groupId>
-			<artifactId>pds.web.base</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>pdsproject</groupId>
-			<artifactId>pds.discovery</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>pdsproject</groupId>
-			<artifactId>pds.dictionary.feed</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.openxrd</groupId>
-			<artifactId>openxrd</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<groupId>com.cliqset</groupId>
+			<artifactId>java-salmon-simple</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>

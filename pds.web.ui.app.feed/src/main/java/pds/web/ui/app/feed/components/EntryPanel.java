@@ -32,6 +32,7 @@ import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
+import nextapp.echo.app.Insets;
 
 public class EntryPanel extends Panel implements XdiGraphListener {
 
@@ -45,6 +46,7 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 	private XRI3 address;
 	private XRI3 timestampAddress;
 	private XRI3 titleAddress;
+	private XRI3 contentAddress;
 
 	private XdiPanel xdiPanel;
 	private Button replyButton;
@@ -86,10 +88,11 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 
 			Date timestamp = this.getTimestamp();
 			String title = this.getTitle();
+			String content = this.getContent();
 
-			this.nameLabel.setText(this.address.toString());
 			if (timestamp != null) this.timestampLabel.setText(DATEFORMAT.format(timestamp));
 			if (title != null) this.titleLabel.setText(title);
+			if (content != null) this.nameLabel.setText(content);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
@@ -158,6 +161,7 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		this.address = address;
 		this.timestampAddress = new XRI3("" + this.address + "/$d");
 		this.titleAddress = new XRI3("" + this.address + "/+title");
+		this.contentAddress = new XRI3("" + this.address + "/+content");
 
 		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 
@@ -219,12 +223,23 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		return Addressing.findLiteralData(messageResult.getGraph(), this.titleAddress);
 	}
 
+	private String getContent() throws XdiException {
+
+		// $get
+
+		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.contentAddress);
+		MessageResult messageResult = this.context.send(operation);
+
+		return Addressing.findLiteralData(messageResult.getGraph(), this.contentAddress);
+	}
+
 	/**
 	 * Configures initial state of component.
 	 * WARNING: AUTO-GENERATED METHOD.
 	 * Contents will be overwritten.
 	 */
 	private void initComponents() {
+		this.setInsets(new Insets(new Extent(5, Extent.PX)));
 		Row row1 = new Row();
 		row1.setCellSpacing(new Extent(10, Extent.PX));
 		add(row1);
@@ -246,7 +261,7 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		timestampLabel.setText("...");
 		column1.add(timestampLabel);
 		titleLabel = new Label();
-		titleLabel.setStyleName("Default");
+		titleLabel.setStyleName("Bold");
 		titleLabel.setText("...");
 		column1.add(titleLabel);
 		replyButton = new Button();

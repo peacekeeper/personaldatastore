@@ -108,15 +108,15 @@ public class TopicsColumn extends Column implements XdiGraphListener {
 			}
 
 			@Override
-			public void onResubscribeActionPerformed(ActionEvent e, XRI3Segment subjectXri) {
+			public void onResubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri, String hub) {
 
-				TopicsColumn.this.topicPanelDelegate.onResubscribeActionPerformed(e, subjectXri);
+				TopicsColumn.this.topicPanelDelegate.onResubscribeActionPerformed(e, topicXri, hub);
 			}
 
 			@Override
-			public void onUnsubscribeActionPerformed(ActionEvent e, XRI3Segment subjectXri) {
+			public void onUnsubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri, String hub) {
 
-				TopicsColumn.this.topicPanelDelegate.onUnsubscribeActionPerformed(e, subjectXri);
+				TopicsColumn.this.topicPanelDelegate.onUnsubscribeActionPerformed(e, topicXri, hub);
 			}
 		});
 
@@ -246,7 +246,5 @@ public class TopicsColumn extends Column implements XdiGraphListener {
 	 * Contents will be overwritten.
 	 */
 	private void initComponents() {
-		this.setInsets(new Insets(new Extent(10, Extent.PX)));
-		this.setCellSpacing(new Extent(10, Extent.PX));
 	}
 }

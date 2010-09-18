@@ -68,13 +68,12 @@
 
 <p n="text">What's up?</p>
 </c>
-<c i="Component_contentTextField" t="nextapp.echo.app.TextField" vis="private">
-<p n="styleName">Default</p>
-<e t="action">
-<h n="actionPerformed" v="onPostActionPerformed"/>
-</e>
-</c>
 
+
+<c i="Component_contentTextArea" t="nextapp.echo.app.TextArea" vis="private">
+<p n="styleName">Default</p>
+<p n="height">50px</p>
+</c>
 <c i="Component_button1" t="nextapp.echo.app.Button">
 <p n="styleName">Default</p>
 <p n="text">Post!</p>
@@ -82,20 +81,8 @@
 <h n="actionPerformed" v="onPostActionPerformed"/>
 </e>
 </c>
-<c i="Component_button3" t="nextapp.echo.app.Button">
-<p n="text">Go to Feed</p>
-<e t="action">
-<h n="actionPerformed" v="onGotoFeedActionPerformed"/>
-</e>
-<p n="styleName">Plain</p>
-</c>
-<c i="Component_button4" t="nextapp.echo.app.Button">
-<p n="text">Go to Mentions</p>
-<e t="action">
-<h n="actionPerformed" v="onGotoMentionsActionPerformed"/>
-</e>
-<p n="styleName">Plain</p>
-</c>
+
+
 </c>
 <c i="Component_row4" t="nextapp.echo.app.Row">
 <c i="Component_label2" t="nextapp.echo.app.Label">
@@ -122,9 +109,12 @@
 <p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
 
 
-<p n="maximumSize">70px</p>
-<p n="minimumSize">70px</p>
+
+
+<p n="maximumSize">100px</p>
+<p n="minimumSize">100px</p>
 </p>
+<p n="cellSpacing">10px</p>
 </c>
 <c i="Component_splitPane3" t="nextapp.echo.app.SplitPane">
 <p n="styleName">Default</p>
@@ -139,7 +129,29 @@
 </p>
 
 
+
+
+<c i="Component_column2" t="nextapp.echo.app.Column">
 <c i="Component_topicsColumn" t="pds.web.ui.app.feed.components.TopicsColumn" vis="private"/>
+<p n="cellSpacing">10px</p>
+<c i="Component_row6" t="nextapp.echo.app.Row">
+<c i="Component_button4" t="nextapp.echo.app.Button">
+<p n="text">Go to Feed</p>
+<e t="action">
+<h n="actionPerformed" v="onGotoFeedActionPerformed"/>
+</e>
+<p n="styleName">Plain</p>
+</c>
+<c i="Component_button3" t="nextapp.echo.app.Button">
+
+<e t="action">
+<h n="actionPerformed" v="onGotoMentionsActionPerformed"/>
+</e>
+<p n="styleName">Plain</p>
+<p n="text">Go to Mentions</p>
+</c>
+</c>
+</c>
 <c i="Component_entriesColumn" t="pds.web.ui.app.feed.components.EntriesColumn" vis="private"/>
 </c>
 </c>

@@ -117,7 +117,7 @@ public class PuSHServlet implements HttpRequestHandler {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND, xri + " not found.");
 			return;
 		}
-		
+
 		// check if the hub.verifytoken is correct for the hub.topic
 
 		boolean topicVerifyTokenCorrect = this.isTopicVerifyTokenCorrect(pdsSubject, hubverifytoken);
@@ -231,7 +231,7 @@ public class PuSHServlet implements HttpRequestHandler {
 		log.debug("Unsubscribing from topic " + pdsSubject.getSubjectXri());
 
 		// $set and $del
-		
+
 		Message message = context.prepareMessage();
 		Operation operation = message.createOperation(MessagingConstants.XRI_SET);
 		Graph operationGraph = operation.createOperationGraph(null);
@@ -260,7 +260,7 @@ public class PuSHServlet implements HttpRequestHandler {
 		Graph entriesGraph = topicsGraph.createStatement(pdsSubject.getSubjectXri(), XRI_ENTRIES, (Graph) null).getInnerGraph();
 
 		int i = 1;
-		
+
 		for (SyndEntry syndEntry : syndEntries) {
 
 			Subject subject = entriesGraph.createSubject(new XRI3Segment(XRI_ENTRY + "$($" + i + ")"));

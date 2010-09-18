@@ -1,7 +1,6 @@
-package pds.web.ui.app.feed.util;
+package pds.discovery.xrd;
 
 import java.net.URI;
-import java.net.URLEncoder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,9 +9,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.opensaml.xml.ConfigurationException;
 import org.opensaml.xml.parse.BasicParserPool;
 import org.openxrd.DefaultBootstrap;
-import org.openxrd.discovery.DiscoveryException;
 import org.openxrd.discovery.DiscoveryManager;
-import org.openxrd.discovery.impl.AbstractHttpDiscoveryMethod;
 import org.openxrd.discovery.impl.BasicDiscoveryManager;
 import org.openxrd.discovery.impl.HostMetaDiscoveryMethod;
 import org.openxrd.discovery.impl.HtmlLinkDiscoveryMethod;
@@ -20,12 +17,12 @@ import org.openxrd.discovery.impl.HttpHeaderDiscoveryMethod;
 import org.openxrd.xrd.core.Link;
 import org.openxrd.xrd.core.XRD;
 
-public class WebfingerDiscovery {
+public class XRDDiscovery {
 
-	private static final Log log = LogFactory.getLog(WebfingerDiscovery.class);
+	private static final Log log = LogFactory.getLog(XRDDiscovery.class);
 
 	private static DiscoveryManager lrddDiscoveryManager;
-	private static HostMetaDiscoveryMethod webfingerDiscoveryMethod;
+	private static LRDDDiscoveryMethod webfingerDiscoveryMethod;
 	private static final HttpClient httpClient = new DefaultHttpClient();
 
 	static {
@@ -42,29 +39,26 @@ public class WebfingerDiscovery {
 
 		lrddDiscoveryManager = new BasicDiscoveryManager();
 
-		HostMetaDiscoveryMethod hostMeta = new HostMetaDiscoveryMethod();
+		LRDDDiscoveryMethod hostMeta = new LRDDDiscoveryMethod(new HostMetaDiscoveryMethod());
 		hostMeta.setHttpClient(httpClient);
 		hostMeta.setParserPool(new BasicParserPool());
 		lrddDiscoveryManager.getDiscoveryMethods().add(hostMeta);
 
-		HttpHeaderDiscoveryMethod header = new HttpHeaderDiscoveryMethod();
+		LRDDDiscoveryMethod header = new LRDDDiscoveryMethod(new HttpHeaderDiscoveryMethod());
 		header.setHttpClient(httpClient);
 		header.setParserPool(new BasicParserPool());
 		lrddDiscoveryManager.getDiscoveryMethods().add(header);
 
-		HtmlLinkDiscoveryMethod link = new HtmlLinkDiscoveryMethod();
+		LRDDDiscoveryMethod link = new LRDDDiscoveryMethod(new HtmlLinkDiscoveryMethod());
 		link.setHttpClient(httpClient);
 		link.setParserPool(new BasicParserPool());
 		lrddDiscoveryManager.getDiscoveryMethods().add(link);
 
 		// Webfinger discovery
 
-		webfingerDiscoveryMethod = new HostMetaDiscoveryMethod();
+		webfingerDiscoveryMethod = new LRDDDiscoveryMethod(new HostMetaDiscoveryMethod());
 		webfingerDiscoveryMethod.setHttpClient(httpClient);
 		webfingerDiscoveryMethod.setParserPool(new BasicParserPool());
-
-		hostMeta.setHttpClient(httpClient);
-		hostMeta.setParserPool(new BasicParserPool());
 	}
 
 	public static XRD discoverXRD(URI uri) throws Exception {
@@ -78,9 +72,7 @@ public class WebfingerDiscovery {
 			xrd = lrddDiscoveryManager.discover(uri);
 		} else if (uri.toString().startsWith("acct:") && uri.toString().contains("@")) {
 
-			URI hostUri = URI.create("http://" + uri.toString().substring(uri.toString().indexOf("@") + 1));
-			log.debug("Trying to discover <XRD> from " + hostUri);
-			xrd = webfingerDiscoveryMethod.discoverXRD(hostUri);
+			xrd = webfingerDiscoveryMethod.discoverXRD(uri);
 		} else {
 
 			throw new IllegalArgumentException("Can only discover via LRDD and Webfinger.");
@@ -93,32 +85,12 @@ public class WebfingerDiscovery {
 
 		log.debug("<XRD> from " + uri + " with " + xrd.getLinks().size() + " links");
 
-		// LRDD?
-
-		Link lrddLink = discoverLink(xrd, "lrdd", null);
-		String template = lrddLink == null ? null : lrddLink.getTemplate();
-		log.debug("LRDD template (raw): " + template);
-
-		if (template != null) {
-
-			template = template.replace("{uri}", URLEncoder.encode(uri.toString(), "UTF-8"));
-			log.debug("LRDD template (replaced): " + template);
-
-			LRDDDiscoveryMethod lrdd = new LRDDDiscoveryMethod();
-			lrdd.setHttpClient(httpClient);
-			lrdd.setParserPool(new BasicParserPool());
-
-			xrd = lrdd.discoverXRD(URI.create(template));
-
-			log.debug("LRDD <XRD> from " + template + " with " + xrd.getLinks().size() + " links");
-		}
-
 		// done
 
 		return xrd;
 	}
 
-	public static Link discoverLink(XRD xrd, String rel, String type) {
+	public static Link selectLink(XRD xrd, String rel, String type) {
 
 		if (xrd == null || rel == null) return null;
 
@@ -138,18 +110,5 @@ public class WebfingerDiscovery {
 		log.debug("No matching <Link>");
 
 		return null;
-	}
-
-	private static class LRDDDiscoveryMethod extends AbstractHttpDiscoveryMethod {
-
-		private LRDDDiscoveryMethod() {
-
-		}
-
-		@Override
-		public URI getXRDLocation(URI uri) throws DiscoveryException {
-
-			return uri;
-		}
 	}
 }

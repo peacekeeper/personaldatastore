@@ -61,7 +61,6 @@ public class TransactionEventContentPane extends ContentPane  {
 
 	private void refresh(EventObject event) {
 
-		System.err.println("ME: " + this.transactionEvent.getMessageEnvelope());
 		this.messageEnvelopeGraphContentPane.setGraph(this.transactionEvent.getMessageEnvelope().getGraph());
 		this.beginTimestampLabel.setText(DATEFORMAT.format(this.transactionEvent.getBeginTimestamp()));
 		this.endTimestampLabel.setText(DATEFORMAT.format(this.transactionEvent.getEndTimestamp()));

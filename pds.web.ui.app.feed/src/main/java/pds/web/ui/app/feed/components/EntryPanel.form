@@ -37,8 +37,9 @@
 </c>
 
 <c i="Component_titleLabel" t="nextapp.echo.app.Label" vis="private">
-<p n="styleName">Default</p>
+
 <p n="text">...</p>
+<p n="styleName">Bold</p>
 </c>
 </c>
 <c i="Component_replyButton" t="nextapp.echo.app.Button" vis="private">
@@ -53,5 +54,6 @@
 
 
 </c>
+<p n="insets">5px</p>
 </c>
 </form>
