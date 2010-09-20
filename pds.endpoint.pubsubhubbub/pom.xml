@@ -33,26 +33,6 @@
 					</systemproperties>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>execution1</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>net.java.dev</groupId>
-							<artifactId>rome</artifactId>
-							<version>1.0</version>
-							<packaging>jar</packaging>
-							<file>${basedir}/../pdsproject/lib/rome-1.0.jar</file>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -84,18 +64,6 @@
 			<groupId>pdsproject</groupId>
 			<artifactId>pds.xdi</artifactId>
 			<version>0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.java.dev</groupId>
-			<artifactId>rome</artifactId>
-			<version>1.0</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jdom</groupId>
-			<artifactId>jdom</artifactId>
-			<version>1.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

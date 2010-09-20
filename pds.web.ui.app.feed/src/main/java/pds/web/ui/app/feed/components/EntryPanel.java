@@ -10,6 +10,7 @@ import nextapp.echo.app.Alignment;
 import nextapp.echo.app.Button;
 import nextapp.echo.app.Column;
 import nextapp.echo.app.Extent;
+import nextapp.echo.app.Insets;
 import nextapp.echo.app.Label;
 import nextapp.echo.app.Panel;
 import nextapp.echo.app.Row;
@@ -25,6 +26,8 @@ import org.eclipse.higgins.xdi4j.types.Timestamps;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
+import pds.dictionary.feed.FeedDictionary;
+import pds.web.components.HtmlLabel;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.xdi.XdiContext;
@@ -32,7 +35,6 @@ import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
-import nextapp.echo.app.Insets;
 
 public class EntryPanel extends Panel implements XdiGraphListener {
 
@@ -44,17 +46,14 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 
 	private XdiContext context;
 	private XRI3 address;
-	private XRI3 timestampAddress;
-	private XRI3 titleAddress;
-	private XRI3 contentAddress;
 
 	private XdiPanel xdiPanel;
 	private Button replyButton;
 	private EntryPanelDelegate entryPanelDelegate;
-	private Label timestampLabel;
 	private Label titleLabel;
-
 	private Label nameLabel;
+	private Label timestampLabel;
+	private HtmlLabel contentHtmlLabel;
 
 	/**
 	 * Creates a new <code>AccountPersonaPanel</code>.
@@ -86,13 +85,15 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 
 		try {
 
+			String name = this.getName();
 			Date timestamp = this.getTimestamp();
 			String title = this.getTitle();
 			String content = this.getContent();
 
+			if (name != null) this.nameLabel.setText(name);
 			if (timestamp != null) this.timestampLabel.setText(DATEFORMAT.format(timestamp));
 			if (title != null) this.titleLabel.setText(title);
-			if (content != null) this.nameLabel.setText(content);
+			if (content != null) this.contentHtmlLabel.setHtml(content);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
@@ -159,9 +160,6 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 
 		this.context = context;
 		this.address = address;
-		this.timestampAddress = new XRI3("" + this.address + "/$d");
-		this.titleAddress = new XRI3("" + this.address + "/+title");
-		this.contentAddress = new XRI3("" + this.address + "/+content");
 
 		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 
@@ -199,10 +197,11 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 
 		// $get
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.timestampAddress);
+		XRI3 address = new XRI3("" + this.address + "/" + FeedDictionary.XRI_PUBLISHED_DATE);
+		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, address);
 		MessageResult messageResult = this.context.send(operation);
 
-		XRI3Segment referenceXri = Addressing.findReferenceXri(messageResult.getGraph(), this.timestampAddress);
+		XRI3Segment referenceXri = Addressing.findReferenceXri(messageResult.getGraph(), address);
 
 		try {
 
@@ -213,24 +212,53 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		}
 	}
 
+	private String getName() throws XdiException {
+
+		// $get
+
+		XRI3 addressAuthorName = new XRI3("" + this.address + "/" + FeedDictionary.XRI_AUTHOR_NAME);
+		XRI3 addressActivityActorDisplayName = new XRI3("" + this.address + "/" + FeedDictionary.XRI_ACTIVITY_ACTOR_DISPLAY_NAME);
+		XRI3 addressActivityActorGivenName = new XRI3("" + this.address + "/" + FeedDictionary.XRI_ACTIVITY_ACTOR_GIVEN_NAME);
+		XRI3 addressActivityActorFamilyName = new XRI3("" + this.address + "/" + FeedDictionary.XRI_ACTIVITY_ACTOR_FAMILY_NAME);
+		XRI3[] addresses = new XRI3[] { addressAuthorName, addressActivityActorDisplayName, addressActivityActorGivenName, addressActivityActorFamilyName };
+		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, addresses);
+		MessageResult messageResult = this.context.send(operation);
+
+		String authorName = Addressing.findLiteralData(messageResult.getGraph(), addressAuthorName);
+		if (authorName != null) return authorName;
+
+		String activityActorDisplayName = Addressing.findLiteralData(messageResult.getGraph(), addressActivityActorDisplayName);
+		if (activityActorDisplayName != null) return activityActorDisplayName;
+
+		String activityActorGivenName = Addressing.findLiteralData(messageResult.getGraph(), addressActivityActorGivenName);
+		String activityActorFamilyName = Addressing.findLiteralData(messageResult.getGraph(), addressActivityActorFamilyName);
+		if (activityActorGivenName != null && activityActorFamilyName != null) return activityActorGivenName + activityActorFamilyName;
+		if (activityActorFamilyName != null) return activityActorFamilyName;
+		if (activityActorGivenName != null) return activityActorGivenName;
+
+		return null;
+	}
+
 	private String getTitle() throws XdiException {
 
 		// $get
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.titleAddress);
+		XRI3 address = new XRI3("" + this.address + "/" + FeedDictionary.XRI_TITLE);
+		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, address);
 		MessageResult messageResult = this.context.send(operation);
 
-		return Addressing.findLiteralData(messageResult.getGraph(), this.titleAddress);
+		return Addressing.findLiteralData(messageResult.getGraph(), address);
 	}
 
 	private String getContent() throws XdiException {
 
 		// $get
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.contentAddress);
+		XRI3 address = new XRI3("" + this.address + "/" + FeedDictionary.XRI_CONTENT);
+		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, address);
 		MessageResult messageResult = this.context.send(operation);
 
-		return Addressing.findLiteralData(messageResult.getGraph(), this.contentAddress);
+		return Addressing.findLiteralData(messageResult.getGraph(), address);
 	}
 
 	/**
@@ -252,18 +280,24 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		Column column1 = new Column();
 		column1.setCellSpacing(new Extent(5, Extent.PX));
 		row1.add(column1);
+		Row row2 = new Row();
+		row2.setCellSpacing(new Extent(10, Extent.PX));
+		column1.add(row2);
 		nameLabel = new Label();
 		nameLabel.setStyleName("Default");
 		nameLabel.setText("...");
-		column1.add(nameLabel);
+		row2.add(nameLabel);
 		timestampLabel = new Label();
 		timestampLabel.setStyleName("Default");
 		timestampLabel.setText("...");
-		column1.add(timestampLabel);
+		row2.add(timestampLabel);
 		titleLabel = new Label();
 		titleLabel.setStyleName("Bold");
 		titleLabel.setText("...");
 		column1.add(titleLabel);
+		contentHtmlLabel = new HtmlLabel();
+		contentHtmlLabel.setHtml("    ");
+		column1.add(contentHtmlLabel);
 		replyButton = new Button();
 		replyButton.setStyleName("Plain");
 		replyButton.setText("Reply");

@@ -30,8 +30,6 @@ public class FeedServlet implements HttpRequestHandler {
 
 	private static final long serialVersionUID = 9135016266076360503L;
 
-	private static final XRI3Segment XRI_FEED = new XRI3Segment("+ostatus+feed");
-
 	private static final Log log = LogFactory.getLog(FeedServlet.class.getName());
 
 	private static final Xdi xdi;
@@ -92,7 +90,7 @@ public class FeedServlet implements HttpRequestHandler {
 		String salmonEndpoint = this.salmonEndpoint + context.getCanonical();
 		String selfEndpoint = this.selfEndpoint + context.getCanonical();
 
-		SyndFeed feed = FeedDictionary.toFeed(xri, context, pdsSubject, this.format, this.contentType, this.hub, selfEndpoint, salmonEndpoint);
+		SyndFeed feed = FeedDictionary.toFeed(xri, pdsSubject, this.format, this.contentType, this.hub, selfEndpoint, salmonEndpoint);
 
 		// output it
 
@@ -124,7 +122,7 @@ public class FeedServlet implements HttpRequestHandler {
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_GET);
 		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(context.getCanonical(), XRI_FEED);
+		operationGraph.createStatement(context.getCanonical(), FeedDictionary.XRI_FEED);
 		operationGraph.createStatement(context.getCanonical(), new XRI3Segment("$" + PdsDictionary.XRI_NAME.toString()));
 		operationGraph.createStatement(context.getCanonical(), new XRI3Segment("$" + PdsDictionary.XRI_DATE_OF_BIRTH.toString()));
 		operationGraph.createStatement(context.getCanonical(), new XRI3Segment("$" + PdsDictionary.XRI_GENDER.toString()));
@@ -134,7 +132,7 @@ public class FeedServlet implements HttpRequestHandler {
 
 		Subject subject = messageResult.getGraph().getSubject(context.getCanonical());
 		if (subject == null) return null;
-		
+
 		return subject;
 	}
 

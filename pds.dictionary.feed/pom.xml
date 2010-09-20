@@ -89,6 +89,24 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.cliqset.abdera</groupId>
+			<artifactId>abdera-extensions-activitystreams</artifactId>
+			<version>0.0.1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.abdera</groupId>
+			<artifactId>abdera-core</artifactId>
+			<version>1.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.abdera</groupId>
+			<artifactId>abdera-extensions-geo</artifactId>
+			<version>1.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.eclipse.higgins</groupId>
 			<artifactId>xdi4j</artifactId>
 			<version>1.0.800</version>

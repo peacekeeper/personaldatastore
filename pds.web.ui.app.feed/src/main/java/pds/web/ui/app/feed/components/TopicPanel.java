@@ -48,13 +48,15 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 
 	private TopicPanelDelegate topicPanelDelegate;
 
-	private XdiPanel xdiPanel;
-	private Label hubLabel;
-	private Label nameLabel;
-
 	private String name;
 	private String hub;
-	
+
+	private XdiPanel xdiPanel;
+
+	private Label hubLabel;
+
+	private Label nameLabel;
+
 	/**
 	 * Creates a new <code>AccountPersonaPanel</code>.
 	 */
@@ -260,12 +262,9 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 	 */
 	private void initComponents() {
 		this.setInsets(new Insets(new Extent(5, Extent.PX)));
-		Column column1 = new Column();
-		column1.setCellSpacing(new Extent(5, Extent.PX));
-		add(column1);
 		Row row3 = new Row();
 		row3.setCellSpacing(new Extent(10, Extent.PX));
-		column1.add(row3);
+		add(row3);
 		xdiPanel = new XdiPanel();
 		RowLayoutData xdiPanelLayoutData = new RowLayoutData();
 		xdiPanelLayoutData.setAlignment(new Alignment(Alignment.DEFAULT,
@@ -294,13 +293,15 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 		hubLabel.setStyleName("Default");
 		hubLabel.setText("...");
 		panel2.add(hubLabel);
+		Column column2 = new Column();
+		row3.add(column2);
 		nameLabel = new Label();
 		nameLabel.setStyleName("Default");
 		nameLabel.setText("...");
-		row3.add(nameLabel);
+		column2.add(nameLabel);
 		Row row4 = new Row();
 		row4.setCellSpacing(new Extent(10, Extent.PX));
-		column1.add(row4);
+		column2.add(row4);
 		Button button2 = new Button();
 		button2.setStyleName("Plain");
 		button2.setText("Resubscribe");

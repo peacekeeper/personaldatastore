@@ -1,4 +1,4 @@
-package pds.discovery.xrd;
+package pds.endpoint.salmon;
 
 
 import java.io.ByteArrayOutputStream;
@@ -24,6 +24,8 @@ import org.openxrd.discovery.impl.HttpHeaderDiscoveryMethod;
 import org.openxrd.xrd.core.Link;
 import org.openxrd.xrd.core.XRD;
 
+import pds.discovery.xrd.LRDDDiscoveryMethod;
+
 import com.cliqset.salmon.KeyFinder;
 import com.cliqset.salmon.MagicKey;
 import com.cliqset.salmon.SalmonException;
@@ -34,35 +36,35 @@ public class LRDDOpenXRDKeyFinder implements KeyFinder {
 	private static final String SCHEME_DATA = "data";
 	private static final String SCHEME_HTTP = "http";
 	private static final String SCHEME_HTTPS = "https";
-	
+
 	private static DiscoveryManager discoveryManager;
 	private static final HttpClient httpClient = new DefaultHttpClient();
-	
+
 	static {
 		try {
 			DefaultBootstrap.bootstrap();
 		} catch (ConfigurationException e) {
 			e.printStackTrace();
 		}
-		
+
 		discoveryManager = new BasicDiscoveryManager();
-		
+
 		LRDDDiscoveryMethod hostMeta = new LRDDDiscoveryMethod(new HostMetaDiscoveryMethod());
-	    hostMeta.setHttpClient(httpClient);
-	    hostMeta.setParserPool(new BasicParserPool());
+		hostMeta.setHttpClient(httpClient);
+		hostMeta.setParserPool(new BasicParserPool());
 		discoveryManager.getDiscoveryMethods().add(hostMeta);
-		
+
 		LRDDDiscoveryMethod header = new LRDDDiscoveryMethod(new HttpHeaderDiscoveryMethod());
 		header.setHttpClient(httpClient);
-	    header.setParserPool(new BasicParserPool());
-		
+		header.setParserPool(new BasicParserPool());
+
 		discoveryManager.getDiscoveryMethods().add(header);
-		
+
 		LRDDDiscoveryMethod link = new LRDDDiscoveryMethod(new HtmlLinkDiscoveryMethod());
 		link.setHttpClient(httpClient);
-	    link.setParserPool(new BasicParserPool());
-		
-	    discoveryManager.getDiscoveryMethods().add(link);
+		link.setParserPool(new BasicParserPool());
+
+		discoveryManager.getDiscoveryMethods().add(link);
 	}
 
 	public List<MagicKey> findKeys(URI signerUri) throws SalmonException {
@@ -75,14 +77,14 @@ public class LRDDOpenXRDKeyFinder implements KeyFinder {
 				magicKeys.add(fetchKey(URI.create(link.getHref())));
 			}
 		}
-		
+
 		return magicKeys;
 	}
-	
+
 	private MagicKey fetchKey(URI uri) throws SalmonException {
 		if (SCHEME_DATA.equals(uri.getScheme())) {
 			String data = uri.getSchemeSpecificPart();
-			
+
 			if (data.contains(",")) {
 				String[] split = data.split(",");
 				byte[] dataBytes = null;

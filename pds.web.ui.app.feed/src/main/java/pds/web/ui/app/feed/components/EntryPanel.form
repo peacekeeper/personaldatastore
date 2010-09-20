@@ -27,6 +27,10 @@
 <c i="Component_column1" t="nextapp.echo.app.Column">
 <p n="cellSpacing">5px</p>
 
+
+
+
+<c i="Component_row2" t="nextapp.echo.app.Row">
 <c i="Component_nameLabel" t="nextapp.echo.app.Label" vis="private">
 <p n="styleName">Default</p>
 <p n="text">...</p>
@@ -35,11 +39,15 @@
 <p n="styleName">Default</p>
 <p n="text">...</p>
 </c>
-
+<p n="cellSpacing">10px</p>
+</c>
 <c i="Component_titleLabel" t="nextapp.echo.app.Label" vis="private">
 
 <p n="text">...</p>
 <p n="styleName">Bold</p>
+</c>
+<c i="Component_contentHtmlLabel" t="pds.web.components.HtmlLabel" vis="private">
+<p n="html">    </p>
 </c>
 </c>
 <c i="Component_replyButton" t="nextapp.echo.app.Button" vis="private">

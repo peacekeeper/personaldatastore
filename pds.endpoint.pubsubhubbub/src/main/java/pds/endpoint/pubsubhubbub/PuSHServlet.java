@@ -2,12 +2,19 @@ package pds.endpoint.pubsubhubbub;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.abdera.Abdera;
+import org.apache.abdera.model.Document;
+import org.apache.abdera.model.Element;
+import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Feed;
+import org.apache.abdera.parser.Parser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.higgins.xdi4j.Graph;
@@ -27,7 +34,9 @@ import pds.xdi.Xdi;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
 
-import com.sun.syndication.feed.synd.SyndEntry;
+import com.cliqset.abdera.ext.activity.ActivityEntry;
+import com.cliqset.abdera.ext.activity.ActivityExtensionFactory;
+import com.cliqset.abdera.ext.serviceprovider.ServiceProviderExtensionFactory;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.feed.synd.SyndLinkImpl;
 import com.sun.syndication.io.SyndFeedInput;
@@ -37,15 +46,10 @@ public class PuSHServlet implements HttpRequestHandler {
 
 	private static final long serialVersionUID = -1912598515775509417L;
 
-	private static final XRI3Segment XRI_TOPICS = new XRI3Segment("+ostatus+topics");
-	private static final XRI3Segment XRI_ENTRIES = new XRI3Segment("+entries");
-	private static final XRI3Segment XRI_ENTRY = new XRI3Segment("+entry");
-	private static final XRI3Segment XRI_VERIFYTOKEN = new XRI3Segment("+push+verify.token");
-	private static final XRI3Segment XRI_SUBSCRIBED = new XRI3Segment("+push+subscribed");
-
 	private static final Log log = LogFactory.getLog(PuSHServlet.class.getName());
 
 	private static final Xdi xdi;
+	private static final Abdera abdera;
 
 	static {
 
@@ -56,6 +60,10 @@ public class PuSHServlet implements HttpRequestHandler {
 
 			throw new RuntimeException("Cannot initialize XDI: " + ex.getMessage(), ex);
 		}
+
+		abdera = new Abdera();
+		abdera.getFactory().registerExtension(new ActivityExtensionFactory());
+		abdera.getFactory().registerExtension(new ServiceProviderExtensionFactory());
 	}
 
 	public void init() throws Exception {
@@ -147,17 +155,51 @@ public class PuSHServlet implements HttpRequestHandler {
 		response.getWriter().close();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void doPost(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		// receive an atom or an RSS feed
 
-		if ((! request.getContentType().contains("application/atom+xml")) && 
-				(! request.getContentType().contains("application/rss+xml"))) {
+		if (request.getContentType().contains("application/atom+xml")) this.doPostAtom(request, response);
+		else if (request.getContentType().contains("application/rss+xml")) this.doPostRss(request, response);
+		else response.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "Need application/atom+xml or application/rss+xml");
+	}
 
-			response.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+	private void doPostAtom(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		// create the Feed object
+
+		Reader reader = request.getReader();
+		Parser parser = abdera.getParser();
+		Document<Element> document = parser.parse(reader);
+		Feed feed = (Feed) document.getRoot();
+
+		String hubtopic = feed.getSelfLink().getHref().toString();
+
+		if (hubtopic == null) hubtopic = feed.getId().toString();
+
+		// find the XDI data
+
+		String xri = this.parseXri(request);
+		XdiContext context = this.getContext(xri);
+		Subject pdsSubject = context == null ? null : this.fetch(context, hubtopic);
+
+		if (pdsSubject == null) {
+
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, xri + " not found.");
 			return;
 		}
+
+		// add entries to the topic
+
+		addEntries(context, pdsSubject, feed);
+
+		// done
+
+		response.setStatus(HttpServletResponse.SC_OK);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void doPostRss(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		// create the new SyndFeed object
 
@@ -198,7 +240,7 @@ public class PuSHServlet implements HttpRequestHandler {
 
 	private boolean isTopicVerifyTokenCorrect(Subject pdsSubject, String hubverifytoken) {
 
-		Predicate predicate = pdsSubject.getPredicate(XRI_VERIFYTOKEN);
+		Predicate predicate = pdsSubject.getPredicate(FeedDictionary.XRI_VERIFYTOKEN);
 		if (predicate == null) return false;
 
 		Literal literal = predicate.getLiteral();
@@ -216,12 +258,12 @@ public class PuSHServlet implements HttpRequestHandler {
 		Message message = context.prepareMessage();
 		Operation operation = message.createOperation(MessagingConstants.XRI_SET);
 		Graph operationGraph = operation.createOperationGraph(null);
-		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
-		topicsGraph.createStatement(pdsSubject.getSubjectXri(), XRI_SUBSCRIBED, "true");
+		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), FeedDictionary.XRI_TOPICS, (Graph) null).getInnerGraph();
+		topicsGraph.createStatement(pdsSubject.getSubjectXri(), FeedDictionary.XRI_SUBSCRIBED, "true");
 		Operation operation2 = message.createOperation(MessagingConstants.XRI_DEL);
 		Graph operationGraph2 = operation2.createOperationGraph(null);
-		Graph topicsGraph2 = operationGraph2.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
-		topicsGraph2.createStatement(pdsSubject.getSubjectXri(), XRI_VERIFYTOKEN);
+		Graph topicsGraph2 = operationGraph2.createStatement(context.getCanonical(), FeedDictionary.XRI_TOPICS, (Graph) null).getInnerGraph();
+		topicsGraph2.createStatement(pdsSubject.getSubjectXri(), FeedDictionary.XRI_VERIFYTOKEN);
 
 		context.send(message);
 	}
@@ -235,41 +277,45 @@ public class PuSHServlet implements HttpRequestHandler {
 		Message message = context.prepareMessage();
 		Operation operation = message.createOperation(MessagingConstants.XRI_SET);
 		Graph operationGraph = operation.createOperationGraph(null);
-		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
-		topicsGraph.createStatement(pdsSubject.getSubjectXri(), XRI_SUBSCRIBED, "false");
+		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), FeedDictionary.XRI_TOPICS, (Graph) null).getInnerGraph();
+		topicsGraph.createStatement(pdsSubject.getSubjectXri(), FeedDictionary.XRI_SUBSCRIBED, "false");
 		Operation operation2 = message.createOperation(MessagingConstants.XRI_DEL);
 		Graph operationGraph2 = operation2.createOperationGraph(null);
-		Graph topicsGraph2 = operationGraph2.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
-		topicsGraph2.createStatement(pdsSubject.getSubjectXri(), XRI_VERIFYTOKEN);
+		Graph topicsGraph2 = operationGraph2.createStatement(context.getCanonical(), FeedDictionary.XRI_TOPICS, (Graph) null).getInnerGraph();
+		topicsGraph2.createStatement(pdsSubject.getSubjectXri(), FeedDictionary.XRI_VERIFYTOKEN);
 
 		context.send(message);
 	}
 
-	@SuppressWarnings("unchecked")
-	private static void addEntries(XdiContext context, Subject pdsSubject, SyndFeed feed) throws Exception {
+	private static void addEntries(XdiContext context, Subject pdsSubject, Feed feed) throws Exception {
 
 		log.debug("Adding entries to topic " + pdsSubject.getSubjectXri());
 
-		List<SyndEntry> syndEntries = (List<SyndEntry>) feed.getEntries();
+		List<Entry> entries = feed.getEntries();
 
 		// $add
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_ADD);
 		Graph operationGraph = operation.createOperationGraph(null);
-		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
-		Graph entriesGraph = topicsGraph.createStatement(pdsSubject.getSubjectXri(), XRI_ENTRIES, (Graph) null).getInnerGraph();
+		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), FeedDictionary.XRI_TOPICS, (Graph) null).getInnerGraph();
+		Graph entriesGraph = topicsGraph.createStatement(pdsSubject.getSubjectXri(), FeedDictionary.XRI_ENTRIES, (Graph) null).getInnerGraph();
 
 		int i = 1;
 
-		for (SyndEntry syndEntry : syndEntries) {
+		for (Entry entry : entries) {
 
-			Subject subject = entriesGraph.createSubject(new XRI3Segment(XRI_ENTRY + "$($" + i + ")"));
-			FeedDictionary.fromEntry(subject, syndEntry);
+			Subject subject = entriesGraph.createSubject(new XRI3Segment(FeedDictionary.XRI_ENTRY + "$($" + i + ")"));
+			FeedDictionary.fromEntry(subject, new ActivityEntry(entry));
 
 			i++;
 		}
 
 		context.send(operation);
+	}
+
+	private static void addEntries(XdiContext context, Subject pdsSubject, SyndFeed syndFeed) throws Exception {
+
+		throw new RuntimeException("Sorry, RSS is not currently supported.");
 	}
 
 	private String parseXri(HttpServletRequest request) throws Exception {
@@ -290,7 +336,7 @@ public class PuSHServlet implements HttpRequestHandler {
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_GET);
 		Graph operationGraph = operation.createOperationGraph(null);
-		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), XRI_TOPICS, (Graph) null).getInnerGraph();
+		Graph topicsGraph = operationGraph.createStatement(context.getCanonical(), FeedDictionary.XRI_TOPICS, (Graph) null).getInnerGraph();
 		topicsGraph.createSubject(new XRI3Segment("$(" + hubtopic + ")"));
 
 		MessageResult messageResult = context.send(operation);
@@ -298,7 +344,7 @@ public class PuSHServlet implements HttpRequestHandler {
 		Subject subject = messageResult.getGraph().getSubject(context.getCanonical());
 		if (subject == null) return null;
 
-		Predicate predicate = subject.getPredicate(XRI_TOPICS);
+		Predicate predicate = subject.getPredicate(FeedDictionary.XRI_TOPICS);
 		if (predicate == null) return null;
 
 		Graph innerGraph = predicate.getInnerGraph();

@@ -8,13 +8,8 @@
 
 
 
-<c i="Component_column1" t="nextapp.echo.app.Column">
-<p n="cellSpacing">5px</p>
 
-
-
-
-
+<p n="insets">5px</p>
 <c i="Component_row3" t="nextapp.echo.app.Row">
 
 <c i="Component_xdiPanel" t="pds.web.components.xdi.XdiPanel" vis="private">
@@ -43,11 +38,12 @@
 </c>
 </c>
 </c>
+
+<p n="cellSpacing">10px</p>
+<c i="Component_column2" t="nextapp.echo.app.Column">
 <c i="Component_nameLabel" t="nextapp.echo.app.Label" vis="private">
 <p n="styleName">Default</p>
 <p n="text">...</p>
-</c>
-<p n="cellSpacing">10px</p>
 </c>
 <c i="Component_row4" t="nextapp.echo.app.Row">
 <p n="cellSpacing">10px</p>
@@ -70,6 +66,6 @@
 </c>
 </c>
 </c>
-<p n="insets">5px</p>
+</c>
 </c>
 </form>

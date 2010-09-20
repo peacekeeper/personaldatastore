@@ -163,6 +163,19 @@ public class XdiContext {
 		return operation;
 	}
 
+	public Operation prepareOperation(XRI3Segment operationXri, XRI3[] operationAddresses) {
+
+		Operation operation = this.prepareOperation(operationXri);
+		Graph operationGraph = operation.createOperationGraph(null);
+
+		for (XRI3 operationAddress : operationAddresses) {
+
+			CopyUtil.copyStatement(Addressing.convertAddressToStatement(operationAddress), operationGraph, null);
+		}
+
+		return operation;
+	}
+
 	public Operation prepareOperation(XRI3Segment operationXri, XRI3 operationAddress) {
 
 		Operation operation = this.prepareOperation(operationXri);

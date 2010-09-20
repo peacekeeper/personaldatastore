@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+import javax.activation.MimeType;
+
 import nextapp.echo.app.Alignment;
 import nextapp.echo.app.Button;
 import nextapp.echo.app.Column;
@@ -20,6 +22,8 @@ import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 
+import org.apache.abdera.i18n.iri.IRI;
+import org.apache.abdera.model.Text.Type;
 import org.eclipse.higgins.xdi4j.Graph;
 import org.eclipse.higgins.xdi4j.Subject;
 import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
@@ -63,6 +67,9 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 	private static final XRI3Segment XRI_HUB = new XRI3Segment("+push+hub");
 	private static final XRI3Segment XRI_NAME = new XRI3Segment("+name");
 
+	private static final IRI ACTIVITY_VERB = new IRI("http://activitystrea.ms/schema/1.0/post");
+	private static final IRI ACTIVITY_OBJECTTYPE = new IRI("http://activitystrea.ms/schema/1.0/note");
+
 	protected ResourceBundle resourceBundle;
 
 	private FeedPdsWebApp feedPdsWebApp;
@@ -76,9 +83,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 	private XdiPanel xdiPanel;
 	private TextField subscribeTextField;
 	private TextArea contentTextArea;
-
 	private TopicsColumn topicsColumn;
-
 	private EntriesColumn entriesColumn;
 
 	/**
@@ -211,7 +216,25 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 		try {
 
-			this.addEntry(this.contentTextArea.getText(), this.contentTextArea.getText(), this.contentTextArea.getText(), "text/plain", new Date());
+			this.addEntry(
+					null,	// activityId
+					ACTIVITY_VERB,	// activityVerb
+					this.contentTextArea.getText(),	// title
+					this.contentTextArea.getText(),	// summary
+					null,	// summaryType
+					this.contentTextArea.getText(),	// content
+					new MimeType("text/plain"),	// contentMimeType 
+					new Date(),	// publishedDate
+					new Date(),	// updatedDate
+					null, // editedDate
+					null,	// authorName
+					null,	// authorEmail
+					null,	// authorUri
+					ACTIVITY_OBJECTTYPE,	// activityObjectType
+					null,	// activityActorGivenName
+					null,	// activityActorFamilyName
+					null,	// activityActorPreferredUserName
+					null);	// activityActorDisplayName
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
@@ -348,7 +371,25 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		this.entriesColumn.setContextAndAddress(this.context, this.mentionsAddress);
 	}
 
-	private void addEntry(String title, String description, String content, String contentType, Date publishedDate) throws XdiException {
+	private void addEntry(
+			IRI activityId, 
+			IRI activityVerb, 
+			String title, 
+			String summary, 
+			Type summaryType, 
+			String content, 
+			MimeType contentMimeType, 
+			Date publishedDate, 
+			Date updatedDate, 
+			Date editedDate, 
+			String authorName,
+			String authorEmail,
+			IRI authorUri,
+			IRI activityObjectType,
+			String activityActorGivenName,
+			String activityActorFamilyName,
+			String activityActorPreferredUsername,
+			String activityActorDisplayName) throws XdiException {
 
 		// $add
 
@@ -357,7 +398,26 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		Graph feedGraph = operationGraph.createStatement(this.subjectXri, XRI_FEED, (Graph) null).getInnerGraph();
 
 		Subject subject = feedGraph.createSubject(new XRI3Segment(XRI_ENTRY.toString() + "$($)"));
-		FeedDictionary.fromEntry(subject, title, description, content, contentType, publishedDate, null, null);
+		FeedDictionary.fromEntry(
+				subject,
+				activityId, 
+				activityVerb, 
+				title, 
+				summary,
+				summaryType,
+				content, 
+				contentMimeType, 
+				publishedDate, 
+				updatedDate, 
+				editedDate, 
+				authorName,
+				authorEmail,
+				authorUri,
+				activityObjectType,
+				activityActorGivenName,
+				activityActorFamilyName,
+				activityActorPreferredUsername,
+				activityActorDisplayName);
 
 		this.context.send(operation);
 	}

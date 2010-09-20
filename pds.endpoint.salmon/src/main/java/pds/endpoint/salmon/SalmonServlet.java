@@ -2,17 +2,21 @@ package pds.endpoint.salmon;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.abdera.Abdera;
+import org.apache.abdera.model.Document;
+import org.apache.abdera.model.Element;
+import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Feed;
+import org.apache.abdera.parser.Parser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.higgins.xdi4j.Graph;
@@ -24,33 +28,26 @@ import org.openxri.resolve.Resolver;
 import org.springframework.web.HttpRequestHandler;
 
 import pds.dictionary.feed.FeedDictionary;
-import pds.discovery.xrd.LRDDOpenXRDKeyFinder;
 import pds.xdi.Xdi;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
 
+import com.cliqset.abdera.ext.activity.ActivityEntry;
+import com.cliqset.abdera.ext.activity.ActivityExtensionFactory;
+import com.cliqset.abdera.ext.serviceprovider.ServiceProviderExtensionFactory;
 import com.cliqset.salmon.MagicEnvelope;
-import com.cliqset.salmon.MagicSigUtil;
 import com.cliqset.salmon.Salmon;
 import com.cliqset.salmon.dataparser.AbderaDataParser;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.io.SyndFeedInput;
 
 public class SalmonServlet implements HttpRequestHandler {	 
 
 	private static final long serialVersionUID = -1912598515775509417L;
 
-//	private static final XRI3Segment XRI_FEED = new XRI3Segment("+ostatus+feed");
-	private static final XRI3Segment XRI_MENTIONS = new XRI3Segment("+ostatus+mentions");
-	//	private static final XRI3Segment XRI_TOPICS = new XRI3Segment("+ostatus+topics");
-	//	private static final XRI3Segment XRI_ENTRIES = new XRI3Segment("+entries");
-	private static final XRI3Segment XRI_ENTRY = new XRI3Segment("+entry");
-
 	private static final Log log = LogFactory.getLog(SalmonServlet.class.getName());
 
 	private static final Xdi xdi;
 	private static final Salmon salmon;
+	private static final Abdera abdera;
 
 	static {
 
@@ -69,6 +66,10 @@ public class SalmonServlet implements HttpRequestHandler {
 
 			throw new RuntimeException("Cannot initialize Salmon: " + ex.getMessage(), ex);
 		}
+
+		abdera = new Abdera();
+		abdera.getFactory().registerExtension(new ActivityExtensionFactory());
+		abdera.getFactory().registerExtension(new ServiceProviderExtensionFactory());
 	}
 
 	public void init() throws Exception {
@@ -91,36 +92,32 @@ public class SalmonServlet implements HttpRequestHandler {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void doPost(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		// receive a magic signature envelope
 
 		if (! request.getContentType().contains("application/magic-envelope+xml")) {
 
-			response.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+			response.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "Need application/magic-envelope+xml");
 			return;
 		}
 
 		// verify and decode the salmon
 
-		byte[] post = new byte[request.getContentLength()];
-		new DataInputStream(request.getInputStream()).readFully(post);
-		log.debug("POST data: " + new String(post));
-		
 		byte[] data;
 
 		try {
 
-			MagicEnvelope magicEnvelope = MagicEnvelope.fromInputStream(new ByteArrayInputStream(post));
+			MagicEnvelope magicEnvelope = MagicEnvelope.fromInputStream(request.getInputStream());
 			//data = MagicSigUtil.decode(magicEnvelope.getData().getValue());
 			data = salmon.verify(magicEnvelope);
 		} catch (Exception ex) {
 
 			log.warn("Cannot verify Salmon: " + ex.getMessage(), ex);
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Cannot verify Salmon: " + ex.getMessage());
 			return;
 		}
+
 
 		// create the new SyndEntry object
 
@@ -132,10 +129,15 @@ public class SalmonServlet implements HttpRequestHandler {
 		buffer += "</feed>";
 		log.debug("Assembled Salmon feed: " + buffer.toString());
 
-		SyndFeedInput input = new SyndFeedInput();
-		SyndFeed feed = input.build(new StringReader(buffer));
+		Parser parser = abdera.getParser();
+		Document<Element> document = parser.parse(stream);
+		Feed feed = (Feed) document.getRoot();
 
-		List<SyndEntry> entries = (List<SyndEntry>) feed.getEntries();
+		String hubtopic = feed.getSelfLink().getHref().toString();
+
+		if (hubtopic == null) hubtopic = feed.getId().toString();
+
+		List<Entry> entries = feed.getEntries();
 		if (entries.size() < 1) {
 
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No feed entries.");
@@ -143,7 +145,7 @@ public class SalmonServlet implements HttpRequestHandler {
 		}
 
 		log.debug("Found " + entries.size() + " feed entries in Salmon.");
-		
+
 		// find the XDI data
 
 		String xri = this.parseXri(request);
@@ -167,25 +169,24 @@ public class SalmonServlet implements HttpRequestHandler {
 		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
-	@SuppressWarnings("unchecked")
-	private static void addMentions(XdiContext context, SyndFeed feed) throws Exception {
+	private static void addMentions(XdiContext context, Feed feed) throws Exception {
 
 		log.debug("Adding mentions");
 
-		List<SyndEntry> syndEntries = (List<SyndEntry>) feed.getEntries();
+		List<Entry> entries = feed.getEntries();
 
 		// $add
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_ADD);
 		Graph operationGraph = operation.createOperationGraph(null);
-		Graph mentionsGraph = operationGraph.createStatement(context.getCanonical(), XRI_MENTIONS, (Graph) null).getInnerGraph();
+		Graph mentionsGraph = operationGraph.createStatement(context.getCanonical(), FeedDictionary.XRI_MENTIONS, (Graph) null).getInnerGraph();
 
 		int i = 1;
 
-		for (SyndEntry syndEntry : syndEntries) {
+		for (Entry entry : entries) {
 
-			Subject subject = mentionsGraph.createSubject(new XRI3Segment(XRI_ENTRY + "$($" + i + ")"));
-			FeedDictionary.fromEntry(subject, syndEntry);
+			Subject subject = mentionsGraph.createSubject(new XRI3Segment(FeedDictionary.XRI_ENTRY + "$($" + i + ")"));
+			FeedDictionary.fromEntry(subject, new ActivityEntry(entry));
 
 			i++;
 		}
