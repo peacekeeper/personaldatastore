@@ -145,10 +145,10 @@ public class PdsFilter implements Filter {
 				log.debug("Creating messaging target for PDS instance " + pdsInstance.getClass().getSimpleName());
 
 				messagingTarget = this.createMessagingTarget(endpointRegistry, pdsInstance);
-				
+
 				String[] allMountTargets = pdsInstanceFactory.getAllMountTargets(pdsInstance);
 				for (String mountTarget : allMountTargets) {
-					
+
 					endpointRegistry.registerMessagingTarget(mountTarget, messagingTarget);
 				}
 

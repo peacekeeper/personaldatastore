@@ -213,7 +213,7 @@ public class XdiContext {
 
 			if (operation.isWriteOperation()) {
 
-				XRI3[] operationAddresses = new IteratorArrayMaker<XRI3> (Addressing.getAddresses(operation.getOperationGraph(), operation.getOperationGraph())).array(new XRI3[0]);
+				XRI3[] operationAddresses = new IteratorArrayMaker<XRI3> (Addressing.getAddresses(operation.getOperationGraph(), operation.getOperationGraph(), true)).array(new XRI3[0]);
 				XRI3Segment operationXri = operation.getOperationXri();
 
 				this.fireXdiGraphEvent(operationAddresses, operationXri);

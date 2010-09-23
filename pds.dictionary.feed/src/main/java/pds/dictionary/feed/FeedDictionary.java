@@ -333,7 +333,15 @@ public class FeedDictionary {
 
 	private static org.jdom.Element makeActivitySubject(Subject pdsSubject) {
 
-		String preferredUsername = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
+		String preferredUsername = pdsSubject.getSubjectXri().toString();
+
+		for (XRI3Segment referenceXri : Addressing.findReferenceXris(pdsSubject, new XRI3("$is"))) {
+
+			if (referenceXri.toString().startsWith("=!") || referenceXri.toString().startsWith("@!")) continue;
+			preferredUsername = referenceXri.toString();
+			break;
+		}
+
 		String displayName = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
 
 		org.jdom.Element element;

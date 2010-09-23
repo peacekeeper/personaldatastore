@@ -173,9 +173,9 @@ public class PuSHServlet implements HttpRequestHandler {
 		Document<Element> document = parser.parse(reader);
 		Feed feed = (Feed) document.getRoot();
 
-		String hubtopic = feed.getSelfLink().getHref().toString();
-
-		if (hubtopic == null) hubtopic = feed.getId().toString();
+		String hubtopic = null;
+		if (hubtopic == null && feed.getSelfLink() != null) hubtopic = feed.getSelfLink().getHref().toString();
+		if (hubtopic == null && feed.getId() != null) hubtopic = feed.getId().toString();
 
 		// find the XDI data
 

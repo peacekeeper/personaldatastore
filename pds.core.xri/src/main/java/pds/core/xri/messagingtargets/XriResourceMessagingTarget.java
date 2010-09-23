@@ -16,6 +16,7 @@ import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceMessagingTarget;
 import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.authn.PasswordAuthenticationMessageInterceptor;
 import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.authn.PasswordAuthenticationMessageInterceptor.PasswordValidator;
 import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.authz.ProtectedAddressInterceptor;
+import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.authz.ProtectedResultInterceptor;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
@@ -91,20 +92,30 @@ public class XriResourceMessagingTarget extends ResourceMessagingTarget {
 
 		// add a ProtectedAddressInterceptor
 
-		List<XRI3> protectedGetAddresses = new ArrayList<XRI3> ();
 		List<XRI3> protectedModAddresses = new ArrayList<XRI3> ();
 
 		for (XRI3Segment alias : this.pdsInstance.getAliases()) {
 
-			protectedGetAddresses.add(new XRI3(alias.toString() + "/$password"));
-			protectedGetAddresses.add(new XRI3(alias.toString() + "/$key$private"));
 			protectedModAddresses.add(new XRI3(alias.toString() + "/$password"));
 		}
 
 		ProtectedAddressInterceptor protectedAddressInterceptor = new ProtectedAddressInterceptor();
-		protectedAddressInterceptor.setProtectedGetAddresses(protectedGetAddresses.toArray(new XRI3[protectedGetAddresses.size()]));
-		protectedAddressInterceptor.setProtectedModAddresses(protectedGetAddresses.toArray(new XRI3[protectedModAddresses.size()]));
+		protectedAddressInterceptor.setProtectedModAddresses(protectedModAddresses.toArray(new XRI3[protectedModAddresses.size()]));
 		this.getAddressInterceptors().add(protectedAddressInterceptor);
+
+		// add a ProtectedResultInterceptor
+
+		List<XRI3> protectedResultAddresses = new ArrayList<XRI3> ();
+
+		for (XRI3Segment alias : this.pdsInstance.getAliases()) {
+
+			protectedResultAddresses.add(new XRI3(alias.toString() + "/$password"));
+			protectedResultAddresses.add(new XRI3(alias.toString() + "/$key$private"));
+		}
+
+		ProtectedResultInterceptor protectedResultInterceptor = new ProtectedResultInterceptor();
+		protectedResultInterceptor.setProtectedResultAddresses(protectedResultAddresses.toArray(new XRI3[protectedResultAddresses.size()]));
+		this.getResultInterceptors().add(protectedResultInterceptor);
 	}
 
 	@Override

@@ -26,6 +26,8 @@ import nextapp.echo.filetransfer.model.Upload;
 
 import org.eclipse.higgins.xdi4j.Graph;
 import org.eclipse.higgins.xdi4j.Statement;
+import org.eclipse.higgins.xdi4j.Subject;
+import org.eclipse.higgins.xdi4j.addressing.Addressing;
 import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
 import org.eclipse.higgins.xdi4j.impl.memory.MemoryGraphFactory;
 import org.eclipse.higgins.xdi4j.io.XDIReaderRegistry;
@@ -33,8 +35,11 @@ import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.util.CopyUtil;
 import org.eclipse.higgins.xdi4j.util.CopyUtil.CopyStatementStrategy;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
+import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
+import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;
+import pds.web.logger.Logger;
 import pds.web.ui.MessageDialog;
 import pds.xdi.XdiContext;
 import echopoint.ImageIcon;
@@ -184,6 +189,8 @@ public class DataImportContentPane extends ContentPane {
 
 	private void onImportActionPerformed(ActionEvent e) {
 
+		Logger logger = PDSApplication.getApp().getLogger();
+
 		if (this.graph == null) {
 
 			MessageDialog.problem("Please upload an XDI file first for importing Personal Data!", null);
@@ -208,12 +215,27 @@ public class DataImportContentPane extends ContentPane {
 
 		Graph importGraph = MemoryGraphFactory.getInstance().openGraph();
 
+		final XRI3Segment oldInumber = Addressing.findReferenceXri(this.graph, new XRI3("$/$is($xdi$v$1)"));
+		final XRI3Segment newInumber = this.context.getCanonical();
+
+		logger.info("Importing from " + oldInumber + " to " + newInumber, null);
+
 		CopyUtil.copyStatements(this.graph, importGraph, new CopyStatementStrategy() {
 
 			@Override
 			public boolean doCopy(Statement statement, Graph graph) {
 
+				if (statement.getSubject().getSubjectXri().equals(new XRI3Segment("$"))) return false;
+
 				return true;
+			}
+
+			@Override
+			public XRI3Segment replaceSubjectXri(Subject subject) {
+
+				if (subject.getSubjectXri().equals(oldInumber)) return newInumber;
+
+				return super.replaceSubjectXri(subject);
 			}
 		});
 
@@ -221,13 +243,17 @@ public class DataImportContentPane extends ContentPane {
 
 		try {
 
-			Operation operation = this.context.prepareOperation(MessagingConstants.XRI_ADD, this.graph);
+			Operation operation = this.context.prepareOperation(MessagingConstants.XRI_ADD, importGraph);
 			this.context.send(operation);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
 			return;
 		}
+
+		// done
+
+		MessageDialog.info("Your Personal Data has been successfully imported!");
 	}
 
 	/**
@@ -257,7 +283,7 @@ public class DataImportContentPane extends ContentPane {
 		row2.add(row3);
 		ImageIcon imageIcon2 = new ImageIcon();
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-				"/pds/web/resource/image/data-import.png");
+		"/pds/web/resource/image/data-import.png");
 		imageIcon2.setIcon(imageReference1);
 		imageIcon2.setHeight(new Extent(48, Extent.PX));
 		imageIcon2.setWidth(new Extent(48, Extent.PX));
@@ -305,7 +331,7 @@ public class DataImportContentPane extends ContentPane {
 		uploadSelect.setId("imageFileUploadSelect");
 		uploadSelect.addUploadListener(new UploadListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void uploadComplete(UploadEvent e) {
 				onUploadComplete(e);
 			}
@@ -342,7 +368,7 @@ public class DataImportContentPane extends ContentPane {
 		button2.setText("Reset");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onResetActionPerformed(e);
 			}
@@ -356,7 +382,7 @@ public class DataImportContentPane extends ContentPane {
 		importButton.setText("Import my Personal Data");
 		importButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onImportActionPerformed(e);
 			}

@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -130,12 +131,12 @@ public class SalmonServlet implements HttpRequestHandler {
 		log.debug("Assembled Salmon feed: " + buffer.toString());
 
 		Parser parser = abdera.getParser();
-		Document<Element> document = parser.parse(stream);
+		Document<Element> document = parser.parse(new StringReader(buffer.toString()));
 		Feed feed = (Feed) document.getRoot();
 
-		String hubtopic = feed.getSelfLink().getHref().toString();
-
-		if (hubtopic == null) hubtopic = feed.getId().toString();
+		String hubtopic = null;
+		if (hubtopic == null && feed.getSelfLink() != null) hubtopic = feed.getSelfLink().getHref().toString();
+		if (hubtopic == null && feed.getId() != null) hubtopic = feed.getId().toString();
 
 		List<Entry> entries = feed.getEntries();
 		if (entries.size() < 1) {
