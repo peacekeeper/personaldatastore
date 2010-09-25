@@ -58,10 +58,14 @@
 <h n="actionPerformed" v="onReplyActionPerformed"/>
 </e>
 <p n="text">Reply</p>
+<p n="visible">false</p>
 </c>
 
 
 </c>
 <p n="insets">5px</p>
+<p n="border">
+<b b="2px dashed #babdb6" l="1px none #000000" r="1px none #000000" t="1px none #000000"/>
+</p>
 </c>
 </form>

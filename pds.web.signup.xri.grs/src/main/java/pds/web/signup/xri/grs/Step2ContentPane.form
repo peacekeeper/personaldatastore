@@ -234,9 +234,10 @@
 <p n="insets">4px</p>
 </c>
 <c i="Component_acceptCheckBox" t="nextapp.echo.app.CheckBox" vis="private">
-<p n="text">I accept the Terms of Service.</p>
+
 <p n="styleName">Default</p>
 <p n="insets">5px 0px</p>
+<p n="text">I accept the Terms of Service (see http://fullxri.com)</p>
 </c>
 <c i="Component_mpayPanel" t="pds.web.signup.xri.grs.components.mpay.MpayPanel" vis="private">
 <p n="layoutData" t="nextapp.echo.app.layout.ColumnLayoutData">

@@ -35,6 +35,8 @@ import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
+import nextapp.echo.app.Border;
+import nextapp.echo.app.Color;
 
 public class EntryPanel extends Panel implements XdiGraphListener {
 
@@ -268,6 +270,15 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 	 */
 	private void initComponents() {
 		this.setInsets(new Insets(new Extent(5, Extent.PX)));
+		this.setBorder(new Border(new Border.Side[] {
+				new Border.Side(new Extent(1, Extent.PX), Color.BLACK,
+						Border.STYLE_NONE),
+				new Border.Side(new Extent(1, Extent.PX), Color.BLACK,
+						Border.STYLE_NONE),
+				new Border.Side(new Extent(2, Extent.PX), new Color(0xbabdb6),
+						Border.STYLE_DASHED),
+				new Border.Side(new Extent(1, Extent.PX), Color.BLACK,
+						Border.STYLE_NONE) }));
 		Row row1 = new Row();
 		row1.setCellSpacing(new Extent(10, Extent.PX));
 		add(row1);
@@ -301,6 +312,7 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		replyButton = new Button();
 		replyButton.setStyleName("Plain");
 		replyButton.setText("Reply");
+		replyButton.setVisible(false);
 		replyButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
 	

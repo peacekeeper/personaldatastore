@@ -45,7 +45,7 @@ public class FeedWindowPane extends WindowPane {
 	 */
 	private void initComponents() {
 		this.setStyleName("Blue");
-		this.setTitle("Feed");
+		this.setTitle("Network");
 		this.setHeight(new Extent(600, Extent.PX));
 		this.setMinimizeEnabled(false);
 		this.setMaximizeEnabled(true);

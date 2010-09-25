@@ -16,7 +16,8 @@
 
 
 <p n="styleName">Blue</p>
-<p n="title">Feed</p>
+
 <p n="defaultCloseOperation">nextapp.echo.app.WindowPane.DISPOSE_ON_CLOSE</p>
+<p n="title">Network</p>
 </c>
 </form>

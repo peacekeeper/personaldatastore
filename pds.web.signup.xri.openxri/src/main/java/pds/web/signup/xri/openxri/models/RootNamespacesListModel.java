@@ -63,17 +63,18 @@ public class RootNamespacesListModel extends AbstractListModel {
 			throw new RuntimeException(ex);
 		}
 
-		// remove xris with an invisible attribute
+		// remove xris with an invisible attribute, and @ xris
 
 		try {
 
 			for (Iterator<Xri> i = xris.iterator(); i.hasNext(); ) {
 
 				Xri xri = i.next();
-				if (! xri.hasXriAttribute(ATTRIBUTE_KEY_INVISIBLE)) {
 
-					this.list.add(xri.getFullName());
-				}
+				if (xri.getFullName().startsWith("@")) continue;
+				if (xri.hasXriAttribute(ATTRIBUTE_KEY_INVISIBLE)) continue;
+
+				this.list.add(xri.getFullName());
 			}
 		} catch (XriStoreException ex) {
 

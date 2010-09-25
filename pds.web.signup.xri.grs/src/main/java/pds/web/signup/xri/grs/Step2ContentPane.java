@@ -635,9 +635,9 @@ public class Step2ContentPane extends ContentPane {
 		ContentPane contentPane1 = new ContentPane();
 		SplitPaneLayoutData contentPane1LayoutData = new SplitPaneLayoutData();
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-		"/pds/web/signup/xri/grs/stripes.png");
+				"/pds/web/signup/xri/grs/stripes.png");
 		contentPane1LayoutData
-		.setBackgroundImage(new FillImage(imageReference1));
+				.setBackgroundImage(new FillImage(imageReference1));
 		contentPane1.setLayoutData(contentPane1LayoutData);
 		splitPane2.add(contentPane1);
 		Column column2 = new Column();
@@ -810,7 +810,8 @@ public class Step2ContentPane extends ContentPane {
 		grid1.add(countrySelectField);
 		acceptCheckBox = new CheckBox();
 		acceptCheckBox.setStyleName("Default");
-		acceptCheckBox.setText("I accept the Terms of Service.");
+		acceptCheckBox
+				.setText("I accept the Terms of Service (see http://fullxri.com)");
 		acceptCheckBox.setInsets(new Insets(new Extent(0, Extent.PX),
 				new Extent(5, Extent.PX)));
 		column2.add(acceptCheckBox);
@@ -843,7 +844,7 @@ public class Step2ContentPane extends ContentPane {
 		passwordField.setStyleName("Default");
 		passwordField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onRegisterActionPerformed(e);
 			}
@@ -854,7 +855,7 @@ public class Step2ContentPane extends ContentPane {
 		registerButton.setText("Register the name");
 		registerButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onRegisterActionPerformed(e);
 			}
@@ -865,7 +866,7 @@ public class Step2ContentPane extends ContentPane {
 		button1.setText("Back");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onBackActionPerformed(e);
 			}

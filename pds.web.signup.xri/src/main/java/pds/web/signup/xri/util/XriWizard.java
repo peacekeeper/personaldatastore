@@ -11,6 +11,7 @@ import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.bouncycastle.asn1.x509.X509Name;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.openxri.xml.CertificateService;
+import org.openxri.xml.DefaultService;
 import org.openxri.xml.SEPUri;
 import org.openxri.xml.Service;
 import org.openxri.xml.XDIService;
@@ -81,6 +83,9 @@ public class XriWizard {
 						uris));
 
 		// set up PDS SEPs
+
+		Service defaultService = new DefaultService(URI.create("http://xri2xrd.net/" + xri.getCanonicalID().getValue()));
+		services.add(defaultService);
 
 		Service hcardService = new Service();
 		hcardService.addType("http://microformats.org/profile/hcard", null, Boolean.TRUE);
@@ -161,6 +166,13 @@ public class XriWizard {
 		services.add(
 				new CertificateService(
 						userCertificate));
+
+		String publicKeyModulus = new String(new Base64(0, null, true).encode(((RSAPublicKey) userCertificate.getPublicKey()).getModulus().toByteArray()));
+		String publicKeyExponent = new String(new Base64(0, null, true).encode(((RSAPublicKey) userCertificate.getPublicKey()).getPublicExponent().toByteArray()));
+		Service magicPublicKeyService = new Service();
+		magicPublicKeyService.addType("magic-public-key", null, Boolean.TRUE);
+		magicPublicKeyService.addURI("data:application/magic-public-key,RSA." + publicKeyModulus + "." + publicKeyExponent,null, SEPUri.APPEND_NONE);
+		services.add(magicPublicKeyService);
 
 		// add service endpoints
 

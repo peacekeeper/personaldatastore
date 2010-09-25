@@ -33,7 +33,8 @@
 
 <p n="styleName">Header</p>
 
-<p n="text">Feed</p>
+
+<p n="text">Network</p>
 </c>
 <p n="cellSpacing">10px</p>
 </c>
@@ -44,9 +45,12 @@
 </p>
 </c>
 <p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
-<p n="maximumSize">70px</p>
-<p n="minimumSize">70px</p>
+
+
+<p n="maximumSize">65px</p>
+<p n="minimumSize">65px</p>
 </p>
+<p n="insets">0px 0px 10px 0px</p>
 </c>
 <p n="resizable">false</p>
 <p n="separatorVisible">false</p>
@@ -73,6 +77,12 @@
 <c i="Component_contentTextArea" t="nextapp.echo.app.TextArea" vis="private">
 <p n="styleName">Default</p>
 <p n="height">50px</p>
+<p n="font">
+<f sz="12pt">
+<tf>sans-serif</tf>
+</f>
+</p>
+<p n="width">400px</p>
 </c>
 <c i="Component_button1" t="nextapp.echo.app.Button">
 <p n="styleName">Default</p>
@@ -100,10 +110,11 @@
 
 <c i="Component_button2" t="nextapp.echo.app.Button">
 <p n="styleName">Default</p>
-<p n="text">Subscribe</p>
+
 <e t="action">
 <h n="actionPerformed" v="onSubscribeActionPerformed"/>
 </e>
+<p n="text">Subscribe!</p>
 </c>
 </c>
 <p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
@@ -132,25 +143,31 @@
 
 
 <c i="Component_column2" t="nextapp.echo.app.Column">
-<c i="Component_topicsColumn" t="pds.web.ui.app.feed.components.TopicsColumn" vis="private"/>
-<p n="cellSpacing">10px</p>
 <c i="Component_row6" t="nextapp.echo.app.Row">
 <c i="Component_button4" t="nextapp.echo.app.Button">
-<p n="text">Go to Feed</p>
+
 <e t="action">
 <h n="actionPerformed" v="onGotoFeedActionPerformed"/>
 </e>
-<p n="styleName">Plain</p>
+
+<p n="styleName">Default</p>
+<p n="text">YOUR Messages</p>
 </c>
 <c i="Component_button3" t="nextapp.echo.app.Button">
 
 <e t="action">
 <h n="actionPerformed" v="onGotoMentionsActionPerformed"/>
 </e>
-<p n="styleName">Plain</p>
-<p n="text">Go to Mentions</p>
+
+
+<p n="styleName">Default</p>
+<p n="text">Messages about YOU</p>
 </c>
+<p n="cellSpacing">10px</p>
 </c>
+<c i="Component_topicsColumn" t="pds.web.ui.app.feed.components.TopicsColumn" vis="private"/>
+<p n="cellSpacing">10px</p>
+
 </c>
 <c i="Component_entriesColumn" t="pds.web.ui.app.feed.components.EntriesColumn" vis="private"/>
 </c>

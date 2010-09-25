@@ -54,6 +54,7 @@ import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
 import echopoint.ImageIcon;
 import nextapp.echo.app.TextArea;
+import nextapp.echo.app.Font;
 
 public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
@@ -590,9 +591,11 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		splitPane1.setSeparatorVisible(false);
 		add(splitPane1);
 		Row row1 = new Row();
+		row1.setInsets(new Insets(new Extent(0, Extent.PX), new Extent(0,
+				Extent.PX), new Extent(0, Extent.PX), new Extent(10, Extent.PX)));
 		SplitPaneLayoutData row1LayoutData = new SplitPaneLayoutData();
-		row1LayoutData.setMinimumSize(new Extent(70, Extent.PX));
-		row1LayoutData.setMaximumSize(new Extent(70, Extent.PX));
+		row1LayoutData.setMinimumSize(new Extent(65, Extent.PX));
+		row1LayoutData.setMaximumSize(new Extent(65, Extent.PX));
 		row1.setLayoutData(row1LayoutData);
 		splitPane1.add(row1);
 		Row row2 = new Row();
@@ -600,14 +603,14 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		row1.add(row2);
 		ImageIcon imageIcon2 = new ImageIcon();
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-		"/pds/web/ui/app/feed/app.png");
+				"/pds/web/ui/app/feed/app.png");
 		imageIcon2.setIcon(imageReference1);
 		imageIcon2.setHeight(new Extent(48, Extent.PX));
 		imageIcon2.setWidth(new Extent(48, Extent.PX));
 		row2.add(imageIcon2);
 		Label label1 = new Label();
 		label1.setStyleName("Header");
-		label1.setText("Feed");
+		label1.setText("Network");
 		row2.add(label1);
 		Row row3 = new Row();
 		row3.setAlignment(new Alignment(Alignment.RIGHT, Alignment.DEFAULT));
@@ -637,13 +640,16 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		contentTextArea = new TextArea();
 		contentTextArea.setStyleName("Default");
 		contentTextArea.setHeight(new Extent(50, Extent.PX));
+		contentTextArea.setFont(new Font(new Font.Typeface("sans-serif"),
+				Font.PLAIN, new Extent(12, Extent.PT)));
+		contentTextArea.setWidth(new Extent(400, Extent.PX));
 		row5.add(contentTextArea);
 		Button button1 = new Button();
 		button1.setStyleName("Default");
 		button1.setText("Post!");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onPostActionPerformed(e);
 			}
@@ -660,7 +666,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		subscribeTextField.setStyleName("Default");
 		subscribeTextField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onSubscribeActionPerformed(e);
 			}
@@ -668,10 +674,10 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		row4.add(subscribeTextField);
 		Button button2 = new Button();
 		button2.setStyleName("Default");
-		button2.setText("Subscribe");
+		button2.setText("Subscribe!");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onSubscribeActionPerformed(e);
 			}
@@ -680,7 +686,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		SplitPane splitPane3 = new SplitPane();
 		splitPane3.setStyleName("Default");
 		ResourceImageReference imageReference2 = new ResourceImageReference(
-		"/pds/web/resource/image/separator-blue.png");
+				"/pds/web/resource/image/separator-blue.png");
 		splitPane3.setSeparatorHorizontalImage(new FillImage(imageReference2));
 		splitPane3.setOrientation(SplitPane.ORIENTATION_HORIZONTAL_LEFT_RIGHT);
 		splitPane3.setSeparatorWidth(new Extent(10, Extent.PX));
@@ -690,32 +696,33 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		Column column2 = new Column();
 		column2.setCellSpacing(new Extent(10, Extent.PX));
 		splitPane3.add(column2);
-		topicsColumn = new TopicsColumn();
-		column2.add(topicsColumn);
 		Row row6 = new Row();
+		row6.setCellSpacing(new Extent(10, Extent.PX));
 		column2.add(row6);
 		Button button4 = new Button();
-		button4.setStyleName("Plain");
-		button4.setText("Go to Feed");
+		button4.setStyleName("Default");
+		button4.setText("YOUR Messages");
 		button4.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onGotoFeedActionPerformed(e);
 			}
 		});
 		row6.add(button4);
 		Button button3 = new Button();
-		button3.setStyleName("Plain");
-		button3.setText("Go to Mentions");
+		button3.setStyleName("Default");
+		button3.setText("Messages about YOU");
 		button3.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onGotoMentionsActionPerformed(e);
 			}
 		});
 		row6.add(button3);
+		topicsColumn = new TopicsColumn();
+		column2.add(topicsColumn);
 		entriesColumn = new EntriesColumn();
 		splitPane3.add(entriesColumn);
 	}
