@@ -48,6 +48,10 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
 	private String html;
 
+	private String rssFeedEndpoint;
+	private String atomFeedEndpoint;
+	private String foafEndpoint;
+
 	static {
 
 		try {
@@ -73,7 +77,7 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		String line;
 
 		this.html = "";
-		while ((line = reader.readLine()) != null) this.html += line;
+		while ((line = reader.readLine()) != null) this.html += line + "\n";
 		reader.close();
 	}
 
@@ -131,6 +135,9 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
 			VelocityContext velocityContext = new VelocityContext(properties);
 			velocityContext.put("hcard", hCard.toHTML());
+			if (this.rssFeedEndpoint != null) velocityContext.put("rssFeedEndpoint", this.rssFeedEndpoint);
+			if (this.atomFeedEndpoint != null) velocityContext.put("atomFeedEndpoint", this.atomFeedEndpoint);
+			if (this.foafEndpoint != null) velocityContext.put("foafEndpoint", this.foafEndpoint);
 
 			Reader templateReader = new StringReader(this.html);
 			Velocity.evaluate(velocityContext, writer, "html", templateReader);
@@ -196,5 +203,38 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		if (email != null) properties.put("email", email);
 
 		return hCardBuilder.done();
+	}
+
+	public String getRssFeedEndpoint() {
+
+		return this.rssFeedEndpoint;
+	}
+
+	public void setRssFeedEndpoint(String rssFeedEndpoint) {
+
+		this.rssFeedEndpoint = rssFeedEndpoint;
+		if (! this.rssFeedEndpoint.endsWith("/")) this.rssFeedEndpoint += "/";
+	}
+
+	public String getAtomFeedEndpoint() {
+
+		return this.atomFeedEndpoint;
+	}
+
+	public void setAtomFeedEndpoint(String atomFeedEndpoint) {
+
+		this.atomFeedEndpoint = atomFeedEndpoint;
+		if (! this.atomFeedEndpoint.endsWith("/")) this.atomFeedEndpoint += "/";
+	}
+
+	public String getFoafEndpoint() {
+
+		return this.foafEndpoint;
+	}
+
+	public void setFoafEndpoint(String foafEndpoint) {
+
+		this.foafEndpoint = foafEndpoint;
+		if (! this.foafEndpoint.endsWith("/")) this.foafEndpoint += "/";
 	}
 }

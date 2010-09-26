@@ -2,5 +2,9 @@
 <form rbi="resourceBundle">
 <c i="Component_column1" t="nextapp.echo.app.Column">
 
+<c i="Component_emptyLabel" t="nextapp.echo.app.Label" vis="private">
+<p n="styleName">Default</p>
+<p n="text">There are no updates right now.</p>
+</c>
 </c>
 </form>

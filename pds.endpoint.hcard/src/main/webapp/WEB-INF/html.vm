@@ -32,6 +32,13 @@ pre {
 	background-color: lightgray;
 }
 </style>
+#if ($inumber)
+	<link href="$rssFeedEndpoint$inumber" rel="alternate" type="application/rss+xml" />
+	<link href="$atomFeedEndpoint$inumber" rel="alternate" type="application/atom+xml" />
+	<link href="$foafEndpoint$inumber" rel="meta" type="application/rdf+xml" />
+	<link href="http://xri2xrd.net/$inumber" rel="lrdd" type="application/xrd+xml" />
+	<meta http-equiv="X-XRDS-Location" content="http://xri.net/$inumber?_xrd_r=application/xrds+xml;sep=false">
+#end
 </head>
 <body>
 <table cellspacing="0" cellpadding="0" border="0">

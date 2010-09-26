@@ -25,6 +25,7 @@
 
 		<!-- Where the other PDS components are deployed -->
 
+		<property name="profileEndpoint" value="http://yourserver.com/pds-endpoint-hcard/" />
 		<property name="feedEndpoint" value="http://yourserver.com/pds-endpoint-feed/" />
 		<property name="hcardEndpoint" value="http://yourserver.com/pds-endpoint-hcard/" />
 		<property name="pocoEndpoint" value="http://yourserver.com/pds-endpoint-poco/" />

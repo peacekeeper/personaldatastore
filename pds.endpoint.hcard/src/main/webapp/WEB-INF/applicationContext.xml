@@ -5,6 +5,10 @@
 
 	<!-- Servlets -->
 
-	<bean id="HcardServlet" class="pds.endpoint.hcard.HcardServlet" init-method="init" />
+	<bean id="HcardServlet" class="pds.endpoint.hcard.HcardServlet" init-method="init">
+		<property name="rssFeedEndpoint" value="http://ginger.freexri.com:8188/pds-endpoint-feed/rss/" />
+		<property name="atomFeedEndpoint" value="http://ginger.freexri.com:8188/pds-endpoint-feed/atom/" />
+		<property name="foafEndpoint" value="http://ginger.freexri.com:8188/pds-endpoint-foaf/" />
+	</bean>
 
 </beans>

@@ -24,6 +24,7 @@ public abstract class AbstractXriSignUpMethod implements XriSignUpMethod {
 	private pds.store.xri.XriStore xriStore;
 	private pds.store.user.Store userStore;
 	private String[] endpoints;
+	private String profileEndpoint;
 	private String feedEndpoint;
 	private String hcardEndpoint;
 	private String pocoEndpoint;
@@ -95,6 +96,17 @@ public abstract class AbstractXriSignUpMethod implements XriSignUpMethod {
 	public void setEndpoints(String[] endpoints) {
 
 		this.endpoints = endpoints;
+	}
+
+	public String getProfileEndpoint() {
+
+		return this.profileEndpoint;
+	}
+
+	public void setProfileEndpoint(String profileEndpoint) {
+
+		this.profileEndpoint = profileEndpoint;
+		if (! this.profileEndpoint.endsWith("/")) this.profileEndpoint += "/";
 	}
 
 	public String getFeedEndpoint() {

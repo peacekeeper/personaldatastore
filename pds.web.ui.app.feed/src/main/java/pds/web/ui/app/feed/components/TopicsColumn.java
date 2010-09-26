@@ -30,6 +30,7 @@ import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
 import nextapp.echo.app.Insets;
 import nextapp.echo.app.Extent;
+import nextapp.echo.app.Label;
 
 public class TopicsColumn extends Column implements XdiGraphListener {
 
@@ -44,6 +45,8 @@ public class TopicsColumn extends Column implements XdiGraphListener {
 	private XRI3 address;
 
 	private TopicPanelDelegate topicPanelDelegate;
+
+	private Label emptyLabel;
 
 	/**
 	 * Creates a new <code>DataPredicatesColumn</code>.
@@ -77,16 +80,21 @@ public class TopicsColumn extends Column implements XdiGraphListener {
 
 			// get list of topic XRIs
 
-			List<XRI3Segment> topicXris;
-
-			topicXris = this.getTopicXris();
+			List<XRI3Segment> topicXris = this.getTopicXris();
 
 			// add them
 
 			this.removeAll();
-			for (XRI3Segment topicXri : topicXris) {
 
-				this.addTopicPanel(topicXri);
+			if (! topicXris.isEmpty()) {
+
+				for (XRI3Segment topicXri : topicXris) {
+
+					this.addTopicPanel(topicXri);
+				}
+			} else {
+
+				this.add(this.emptyLabel);
 			}
 		} catch (Exception ex) {
 
@@ -246,5 +254,9 @@ public class TopicsColumn extends Column implements XdiGraphListener {
 	 * Contents will be overwritten.
 	 */
 	private void initComponents() {
+		emptyLabel = new Label();
+		emptyLabel.setStyleName("Default");
+		emptyLabel.setText("You are not subscribed to any people right now.");
+		add(emptyLabel);
 	}
 }

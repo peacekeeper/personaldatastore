@@ -98,7 +98,8 @@
 <c i="Component_label2" t="nextapp.echo.app.Label">
 <p n="styleName">Default</p>
 
-<p n="text">Subscribe to a topic:</p>
+
+<p n="text">Subscribe to someone:</p>
 </c>
 <p n="cellSpacing">10px</p>
 <c i="Component_subscribeTextField" t="nextapp.echo.app.TextField" vis="private">
@@ -122,8 +123,10 @@
 
 
 
-<p n="maximumSize">100px</p>
-<p n="minimumSize">100px</p>
+
+
+<p n="maximumSize">110px</p>
+<p n="minimumSize">110px</p>
 </p>
 <p n="cellSpacing">10px</p>
 </c>

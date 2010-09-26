@@ -98,6 +98,7 @@ public class PuSHDiscovery {
 		HttpGet httpget = new HttpGet(feed);
 		ResponseHandler<String> responseHandler = new BasicResponseHandler();
 		String responseBody = httpclient.execute(httpget, responseHandler);
+		log.debug("Feed content: " + responseBody);
 
 		httpclient.getConnectionManager().shutdown();
 

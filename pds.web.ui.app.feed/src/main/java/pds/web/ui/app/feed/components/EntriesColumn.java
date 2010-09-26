@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import nextapp.echo.app.Column;
+import nextapp.echo.app.Label;
 import nextapp.echo.app.event.ActionEvent;
 
 import org.eclipse.higgins.xdi4j.Graph;
@@ -36,6 +37,8 @@ public class EntriesColumn extends Column implements XdiGraphListener {
 
 	private XdiContext context;
 	private XRI3 address;
+
+	private Label emptyLabel;
 
 	/**
 	 * Creates a new <code>DataPredicatesColumn</code>.
@@ -74,11 +77,18 @@ public class EntriesColumn extends Column implements XdiGraphListener {
 			// add them
 
 			this.removeAll();
-			while (entryXris.hasNext()) {
 
-				XRI3Segment entryXri = entryXris.next();
+			if (entryXris.hasNext()) {
 
-				this.addEntryPanel(entryXri);
+				while (entryXris.hasNext()) {
+
+					XRI3Segment entryXri = entryXris.next();
+
+					this.addEntryPanel(entryXri);
+				}
+			} else {
+
+				this.add(this.emptyLabel);
 			}
 		} catch (Exception ex) {
 
@@ -198,5 +208,9 @@ public class EntriesColumn extends Column implements XdiGraphListener {
 	 * Contents will be overwritten.
 	 */
 	private void initComponents() {
+		emptyLabel = new Label();
+		emptyLabel.setStyleName("Default");
+		emptyLabel.setText("There are no updates right now.");
+		add(emptyLabel);
 	}
 }

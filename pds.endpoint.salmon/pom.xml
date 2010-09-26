@@ -138,6 +138,14 @@
 					<groupId>org.bouncycastle</groupId>
 					<artifactId>bcprov-jdk15</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>com.sun.xml.bind</groupId>
+					<artifactId>jaxb-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.xml.bind</groupId>
+					<artifactId>jaxb-impl</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>

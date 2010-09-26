@@ -4,5 +4,9 @@
 
 
 
+<c i="Component_emptyLabel" t="nextapp.echo.app.Label" vis="private">
+<p n="styleName">Default</p>
+<p n="text">You are not subscribed to any people right now.</p>
+</c>
 </c>
 </form>

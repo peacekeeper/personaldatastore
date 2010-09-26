@@ -2,12 +2,13 @@ package pds.web.ui.app.feed.components;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
 
 import nextapp.echo.app.Alignment;
+import nextapp.echo.app.Border;
 import nextapp.echo.app.Button;
+import nextapp.echo.app.Color;
 import nextapp.echo.app.Column;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.Insets;
@@ -35,14 +36,12 @@ import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
-import nextapp.echo.app.Border;
-import nextapp.echo.app.Color;
 
 public class EntryPanel extends Panel implements XdiGraphListener {
 
 	private static final long serialVersionUID = -6674403250232180782L;
 
-	private static final DateFormat DATEFORMAT = new SimpleDateFormat("HH:mm:ss.SSS");
+	private static final DateFormat DATEFORMAT = DateFormat.getDateTimeInstance();
 
 	protected ResourceBundle resourceBundle;
 

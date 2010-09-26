@@ -43,7 +43,7 @@ public class XriWizard {
 		try {
 
 			keyPairGenerator = KeyPairGenerator.getInstance("RSA", "BC");
-			keyPairGenerator.initialize(2048);
+			keyPairGenerator.initialize(1024);
 
 			certificateGenerator = new X509V3CertificateGenerator();
 		} catch (Exception ex) {
@@ -84,7 +84,7 @@ public class XriWizard {
 
 		// set up PDS SEPs
 
-		Service defaultService = new DefaultService(URI.create("http://xri2xrd.net/" + xri.getCanonicalID().getValue()));
+		Service defaultService = new DefaultService(URI.create(xriSignUpMethod.getProfileEndpoint() + xri.getCanonicalID().getValue()));
 		services.add(defaultService);
 
 		Service hcardService = new Service();

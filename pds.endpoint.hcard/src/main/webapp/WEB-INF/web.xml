@@ -21,7 +21,6 @@
 		<url-pattern>/images/*</url-pattern>
 	</servlet-mapping>
 
-
 	<!-- SPRING -->
 
 	<listener>

@@ -456,7 +456,8 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_DEL);
 		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(this.subjectXri, XRI_TOPICS);
+		Graph topicsGraph = operationGraph.createStatement(this.subjectXri, XRI_TOPICS, (Graph) null).getInnerGraph();
+		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), XRI_VERIFYTOKEN);
 
 		this.context.send(operation);
 	}
@@ -626,8 +627,8 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		Column column1 = new Column();
 		column1.setCellSpacing(new Extent(10, Extent.PX));
 		SplitPaneLayoutData column1LayoutData = new SplitPaneLayoutData();
-		column1LayoutData.setMinimumSize(new Extent(100, Extent.PX));
-		column1LayoutData.setMaximumSize(new Extent(100, Extent.PX));
+		column1LayoutData.setMinimumSize(new Extent(110, Extent.PX));
+		column1LayoutData.setMaximumSize(new Extent(110, Extent.PX));
 		column1.setLayoutData(column1LayoutData);
 		splitPane2.add(column1);
 		Row row5 = new Row();
@@ -660,7 +661,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		column1.add(row4);
 		Label label2 = new Label();
 		label2.setStyleName("Default");
-		label2.setText("Subscribe to a topic:");
+		label2.setText("Subscribe to someone:");
 		row4.add(label2);
 		subscribeTextField = new TextField();
 		subscribeTextField.setStyleName("Default");
