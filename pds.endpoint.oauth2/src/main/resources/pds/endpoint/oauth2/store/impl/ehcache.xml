@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        
+<ehcache>
+
+    <diskStore path="./pds-endpoint-oauth2/"/>
+
+    <defaultCache />
+
+    <cache name="authorizationCodeCache"
+		maxElementsInMemory="10000"
+		eternal="false"
+		diskPersistent="false" 
+		timeToIdleSeconds="0"
+		memoryStoreEvictionPolicy="LRU"
+		overflowToDisk="true"
+		diskExpiryThreadIntervalSeconds="60" />
+
+    <cache name="accessTokenCache"
+		maxElementsInMemory="10000"
+		eternal="false"
+		diskPersistent="false" 
+		timeToIdleSeconds="0"
+		memoryStoreEvictionPolicy="LRU"
+		overflowToDisk="true"
+		diskExpiryThreadIntervalSeconds="60" />
+
+    <cache name="refreshTokenCache"
+		maxElementsInMemory="10000"
+		eternal="false"
+		diskPersistent="false" 
+		timeToIdleSeconds="0"
+		memoryStoreEvictionPolicy="LRU"
+		overflowToDisk="true"
+		diskExpiryThreadIntervalSeconds="60" />
+
+</ehcache>

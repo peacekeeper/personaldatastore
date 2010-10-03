@@ -48,6 +48,7 @@
 		<module>../pds.endpoint.poco</module>
 		<module>../pds.endpoint.pubsubhubbub</module>
 		<module>../pds.endpoint.salmon</module>
+		<module>../pds.endpoint.oauth2</module>
 		<module>../pds.store.user</module>
 		<module>../pds.store.xri</module>
 		<module>../pds.store.xri.openxri</module>

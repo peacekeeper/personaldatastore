@@ -1,0 +1,41 @@
+<p>We have received a request for access to your Personal Data Server.</p>
+
+<p>Request target: <span class="highlight">$session.getAttribute("redirect_uri")</span></p>
+
+<p>Requested permissions:</p>
+
+<ul>
+#foreach($scope in $session.getAttribute("scope"))
+    <li class="highlight">$scope</li>
+#end
+</ul>
+
+#if ($error)
+	<p class="error">$error</p>
+#end
+
+<p>Please authenticate to your PDS to continue:</p>
+
+<form action="authorization" method="post">
+
+	<center>
+	<table cellpadding="10">
+	#if ($request.getParameter("iname"))
+		#set ($iname = $request.getParameter("iname"))
+		<tr><td>I-Name:</td><td><input name="iname" type="text" value="$iname"></td></tr>
+	#else
+		<tr><td>I-Name:</td><td><input name="iname" type="text"></td></tr>
+	#end
+
+	#if ($request.getParameter("password"))
+		#set ($password = $request.getParameter("password"))
+		<tr><td>Password:</td><td><input name="password" type="password" value="$password"></td></tr>
+	#else
+		<tr><td>Password:</td><td><input name="password" type="password"></td></tr>
+	#end
+	</table>
+	</center>
+
+	<p style="text-align:right"><input type="submit" value="Continue >>>"></p>
+
+</form>

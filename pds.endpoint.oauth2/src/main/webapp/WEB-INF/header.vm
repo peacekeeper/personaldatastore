@@ -1,0 +1,55 @@
+<html>
+
+<head>
+	<title>Personal Data Server Authorization</title>
+	<link rel="stylesheet" href="style.css" type="text/css" /> 
+	<style type="text/css">
+		* {
+			font-size: 12pt;
+			font-family: 'Lucida Grande', sans-serif;
+			font-weight:bold;
+			color:white;
+		}
+		body {
+			background-color:darkgray;
+			text-align:center;
+		}
+		#panel {
+			margin-top:60px;
+			margin-left:auto;
+			margin-right:auto;
+			background-image:url(images/back.jpg);
+			padding:10px;
+			width:800px;
+			border:5px outset lightgray;
+			text-align:left;
+		}
+		p {
+			font-size: 1em;
+		}
+		input {
+			color: black;
+			padding: 3px;
+		}
+		.highlight {
+			color: #4fa4f1;
+		}
+		.error {
+			color: #fe605f;
+		}
+	</style>
+</head>
+
+<body>
+
+<div id="panel">
+
+<div style="float:right">
+<center>
+<img src="images/oauth.png"><br>
+OAuth 2.0
+</center>
+</div>
+
+<p><img src="images/pds-logo.png">&nbsp;&nbsp;<img src="images/pds-text.png"></p>
+

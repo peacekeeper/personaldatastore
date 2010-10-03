@@ -52,9 +52,11 @@ public class Xdi {
 
 		this.resolver = resolver;
 		
-		CacheManager cacheManager = CacheManager.create(Xdi.class.getResourceAsStream("ehcache.xml"));
+		CacheManager cacheManager = new CacheManager(Xdi.class.getResourceAsStream("ehcache.xml"));
 		this.inumberEndpointCache = cacheManager.getCache("inumberEndpointCache");
+		if (this.inumberEndpointCache == null) throw new NullPointerException("No inumberEndpointCache.");
 		this.xdiEndpointCache = cacheManager.getCache("xdiEndpointCache");
+		if (this.xdiEndpointCache == null) throw new NullPointerException("No xdiEndpointCache.");
 
 		this.xdiListeners = new ArrayList<XdiListener> ();
 	}

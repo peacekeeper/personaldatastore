@@ -1,0 +1,279 @@
+body {
+margin:0;
+padding: 0;
+font-family:trebuchet ms,arial,sans-serif;
+
+}
+.header {
+margin:0;
+padding: 0;
+margin-top:1em;
+border-bottom: 0.05em solid #d30000;
+ }
+.header  .logo {
+background: #ffffff ;
+padding-left:0em;
+height: 2.5em;
+margin-left:1em;
+}
+#formresult {
+margin: 2em;
+}
+.picture {
+border:0.05em solid #000000;
+margin: 1em;
+padding: 0;
+}
+.header h2 {
+margin:0;
+padding:0;
+font-size:0.9em;
+font-weight:normal;
+color : #b1b1b1;
+}
+.header h1 {
+margin:0;
+padding:0;
+font-size:1.2em;
+font-weight:normal;
+color : #b1b1b1;
+
+}
+
+.header h1 a {
+color: #000000;
+text-decoration:none;
+}
+.header h1 a:hover {
+color: #d30000;
+}
+.headercontainer {
+width: 44em;
+padding-left:0em;
+margin: 0 auto;
+}
+.contactinfo {
+float:right;
+color: #575757;
+font-size:0.8em;
+margin:0;
+padding: 0;
+margin-right:0.2em;
+}
+
+a {
+color:#182bbf;
+text-decoration:none;
+}
+
+a:hover {
+color: #D30000;
+text-decoration:underline;
+}
+.navigation{
+margin-top:0.5em; 
+background: #D30000 ;
+}
+.navigation ul {
+
+text-align:center;
+margin:0;
+padding: 0 0.5em;
+}
+.navigation ul li { 
+display:inline;
+margin:0;
+padding: 0
+
+}
+p {
+margin: 0.6em;
+text-align:justify;
+}
+
+.navigation ul li a {
+ padding:0 0.7em;
+ font-size:0.8em;
+background:#D30000;
+color: #ffffff;
+}
+.navigation ul li a:hover {text-decoration:none; color: #D30000;background: #fff}
+.container {
+width: 43.9em;
+margin: 0 auto 2em auto;
+border-left: 0.05em solid #d30000;
+border-right: 0.05em solid #d30000;
+border-bottom: 0.05em solid #d30000;
+
+
+}
+.outercontainer {
+margin:0;
+padding:0;
+background: #ffffff url(images/grad.gif) repeat-x;
+}
+.container h2 {
+color: #d30000;
+font-size:1.3em;
+padding: 0.3em 0.4em 0.1em 0.4em;
+margin: 0;
+}
+.container h3 {
+font-size: 1.0em;
+padding: 0.1em 0.6em;
+font-weight: normal;
+}
+h3,h4,h5,h6 {
+color: #d30000;
+} 
+p,.container ul li {
+font-size:0.8em;
+line-height:1.6em;
+}
+
+.displaybox h2 {
+padding:0;
+}
+.a3colitem {
+width: 33.2%;
+float:left;
+ }
+.a3colitemend {
+width: 33.2%;
+float:left;
+
+}
+.a3cols {
+margin:1em 0.2em 1em 0.2em;
+ padding-bottom:20em;
+
+}
+.colinner {
+margin: 0 0.2em 0.2em 0.2em;
+padding: 0 0.2em 0.2em 0.2em;  
+}
+.footer {
+text-align:center;
+border-top:0.05em solid #d30000;
+clear: both;
+font-size:0.7em;
+padding: 1em;
+color: #363636;
+}
+.footer a {
+color: #000000;
+font-weight:bold;
+}
+.colinner {
+font-size: 0.9em;
+text-align:justify;
+color: #363636;
+}
+.colinner h2 {
+margin-bottom: 0;
+}
+.colinner p {
+margin: 0.6em;
+}
+.colinner b {
+font-weight:bold;
+color: #000000;
+}
+.readmore {
+text-align:right;
+font-size:0.8em; 
+
+}
+.innercontainer {
+margin:0 0.1em 0.1em 0.1em;
+padding: 1em 20px 1em 20px;
+background:#ffffff;
+}
+.porta img {
+margin-top: 25px;
+border:1px solid black;
+
+}
+.porta {
+display: block;
+text-align:center;
+}
+
+.inte {  
+border-right:1px solid #D1D1D1;
+border-top:1px solid #E6E5E5;
+border-left:1px solid #E6E5E5;
+border-bottom:1px solid #E6E5E5;
+background: #F7F7F7;
+color: #ff0000;
+font-size:12px;
+text-align:left;
+width: 200px;
+padding:2px;
+}
+
+.inae {
+border-right:1px solid #D1D1D1;
+border-top:1px solid #E6E5E5;
+border-left:1px solid #E6E5E5;
+border-bottom:1px solid #E6E5E5;
+background: #F7F7F7;
+color: #ff0000;
+font-size:12px;
+text-align:left;
+width: 200px;
+height: 75px;
+padding:2px;
+
+}
+textarea,input {
+font-family:trebuchet ms,sans-serif;
+}
+
+div.card {
+        border: 2px solid gray;
+        margin-left: 20px;
+        margin-bottom: 10px;
+        width: 450px;
+        height: 80px;
+        cursor: hand;
+}
+
+div.cardselected {
+        border: 2px solid gray;
+        margin-left: 20px;
+        margin-bottom: 10px;
+        width: 450px;
+        height: 80px;
+        background-color: #ff8;
+        cursor: hand;
+}
+
+img.cardimage {
+        border: none;
+        width: 90px;
+        height: 60px;
+        float: left;
+        margin: 10px;
+}
+
+div.cardname {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-top: 10px;
+}
+
+div.cards {
+        margin-left: 20px;
+}
+
+div.cards a {
+        text-decoration: none;
+        color: black;
+}
+
+div.error {
+	color: red;
+	font-size: 10pt;
+	margin: 5px 0 5px 0;
+}

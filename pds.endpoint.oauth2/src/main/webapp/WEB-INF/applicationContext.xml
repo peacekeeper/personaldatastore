@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<!-- Servlets -->
+
+	<bean id="AuthorizationServlet" class="pds.endpoint.oauth2.AuthorizationServlet">
+		<property name="clientAuthenticator" ref="clientAuthenticator" />
+	</bean>
+
+	<bean id="ScopeServlet" class="pds.endpoint.oauth2.ScopeServlet">
+		<property name="oauthStore" ref="oauthStore" />
+		<property name="oauthIssuer" ref="oauthIssuer" />
+	</bean>
+
+	<bean id="TokenServlet" class="pds.endpoint.oauth2.TokenServlet">
+		<property name="clientAuthenticator" ref="clientAuthenticator" />
+		<property name="oauthStore" ref="oauthStore" />
+		<property name="oauthIssuer" ref="oauthIssuer" />
+	</bean>
+
+	<!-- Client Authenticator -->
+
+	<bean id="clientAuthenticator" class="pds.endpoint.oauth2.client.impl.AllClientAuthenticator" />
+
+	<!-- OAuth Store -->
+
+	<bean id="oauthStore" class="pds.endpoint.oauth2.store.impl.EhCacheOAuthStore">
+		<property name="defaultAuthorizationCodeTtl" value="60" />
+		<property name="defaultAccessTokenTtl" value="3600" />
+		<property name="defaultRefreshTokenTtl" value="3600" />
+	</bean>
+
+	<!-- OAuth Issuer -->
+
+	<bean id="oauthIssuer" class="net.smartam.leeloo.as.issuer.OAuthIssuerImpl">
+		<constructor-arg>
+			<bean class="net.smartam.leeloo.as.issuer.MD5Generator" />
+		</constructor-arg>
+	</bean>
+
+</beans>

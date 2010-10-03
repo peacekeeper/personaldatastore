@@ -1,0 +1,40 @@
+<p>We have received a request for access to your Personal Data Server.</p>
+
+<p>Request target: <span class="highlight">$session.getAttribute("redirect_uri")</span></p>
+
+<p>Requested permissions:</p>
+
+<ul>
+#foreach($scope in $session.getAttribute("scope"))
+    <li class="highlight">$scope</li>
+#end
+</ul>
+
+#if ($error)
+	<p class="error">$error</p>
+#end
+
+<p>Please select a persona from your PDS:</p>
+
+<form action="scope" method="post">
+
+	<center>
+	<table border="0" cellpadding="5">
+	<tr>
+	<td><input type="radio" name="accountpersona" checked></td>
+	<td><img src="images/accountroot.png"></td>
+	<td>Account Root</td>
+	</tr>
+	#foreach($persona in $session.getAttribute("personas"))
+		<tr>
+		<td><input type="radio" name="accountpersona"></td>
+		<td><img src="images/accountpersona.png"></td>
+		<td>$persona</td>
+		</tr>
+	#end
+	</table>
+	</center>
+
+	<p style="text-align:right"><input type="submit" value="Authorize Access."></p>
+
+</form>
