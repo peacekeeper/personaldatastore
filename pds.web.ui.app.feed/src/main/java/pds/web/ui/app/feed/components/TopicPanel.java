@@ -1,11 +1,13 @@
 package pds.web.ui.app.feed.components;
 
+import java.net.URI;
 import java.util.ResourceBundle;
 
 import nextapp.echo.app.Alignment;
 import nextapp.echo.app.Button;
 import nextapp.echo.app.Column;
 import nextapp.echo.app.Extent;
+import nextapp.echo.app.Insets;
 import nextapp.echo.app.Label;
 import nextapp.echo.app.Panel;
 import nextapp.echo.app.ResourceImageReference;
@@ -29,7 +31,6 @@ import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
-import nextapp.echo.app.Insets;
 
 public class TopicPanel extends Panel implements XdiGraphListener {
 
@@ -43,18 +44,14 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 	private XRI3 address;
 	private XRI3 nameAddress;
 	private XRI3 hubAddress;
-	private XRI3 subscribedAddress;
-	private XRI3 verifyTokenAddress;
 
 	private TopicPanelDelegate topicPanelDelegate;
 
 	private String name;
-	private String hub;
+	private URI hub;
 
 	private XdiPanel xdiPanel;
-
 	private Label hubLabel;
-
 	private Label nameLabel;
 
 	/**
@@ -91,7 +88,7 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 			this.hub = this.getHub();
 
 			this.nameLabel.setText(this.name);
-			this.hubLabel.setText(this.hub);
+			this.hubLabel.setText(this.hub.toString());
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
@@ -162,8 +159,6 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 		this.address = new XRI3("" + this.subjectXri + "/+ostatus+topics//" + this.topicXri);
 		this.nameAddress = new XRI3("" + this.address + "/+name");
 		this.hubAddress = new XRI3("" + this.address + "/+push+hub");
-		this.subscribedAddress = new XRI3("" + this.address + "/+push+subscribed");
-		this.verifyTokenAddress = new XRI3("" + this.address + "/+push+verify.token");
 
 		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 
@@ -211,8 +206,8 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 	public static interface TopicPanelDelegate {
 
 		public void onTopicActionPerformed(ActionEvent e, XRI3Segment topicXri);
-		public void onResubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri, String hub);
-		public void onUnsubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri, String hub);
+		public void onResubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri, URI hub);
+		public void onUnsubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri, URI hub);
 	}
 
 	private String getName() throws XdiException {
@@ -225,34 +220,14 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 		return Addressing.findLiteralData(messageResult.getGraph(), this.nameAddress);
 	}
 
-	private String getHub() throws XdiException {
+	private URI getHub() throws XdiException {
 
 		// $get
 
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.hubAddress);
 		MessageResult messageResult = this.context.send(operation);
 
-		return Addressing.findLiteralData(messageResult.getGraph(), this.hubAddress);
-	}
-
-	private String getSubscribed() throws XdiException {
-
-		// $get
-
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.subscribedAddress);
-		MessageResult messageResult = this.context.send(operation);
-
-		return Addressing.findLiteralData(messageResult.getGraph(), this.subscribedAddress);
-	}
-
-	private String getVerifyToken() throws XdiException {
-
-		// $get
-
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.verifyTokenAddress);
-		MessageResult messageResult = this.context.send(operation);
-
-		return Addressing.findLiteralData(messageResult.getGraph(), this.verifyTokenAddress);
+		return URI.create(Addressing.findLiteralData(messageResult.getGraph(), this.hubAddress));
 	}
 
 	/**

@@ -1,11 +1,13 @@
 package pds.web.ui.app.feed.components;
 
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import nextapp.echo.app.Column;
+import nextapp.echo.app.Label;
 import nextapp.echo.app.event.ActionEvent;
 
 import org.eclipse.higgins.xdi4j.Graph;
@@ -28,9 +30,6 @@ import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
-import nextapp.echo.app.Insets;
-import nextapp.echo.app.Extent;
-import nextapp.echo.app.Label;
 
 public class TopicsColumn extends Column implements XdiGraphListener {
 
@@ -116,13 +115,13 @@ public class TopicsColumn extends Column implements XdiGraphListener {
 			}
 
 			@Override
-			public void onResubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri, String hub) {
+			public void onResubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri, URI hub) {
 
 				TopicsColumn.this.topicPanelDelegate.onResubscribeActionPerformed(e, topicXri, hub);
 			}
 
 			@Override
-			public void onUnsubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri, String hub) {
+			public void onUnsubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri, URI hub) {
 
 				TopicsColumn.this.topicPanelDelegate.onUnsubscribeActionPerformed(e, topicXri, hub);
 			}

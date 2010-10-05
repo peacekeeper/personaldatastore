@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,13 +88,12 @@ public class PuSHUtil {
 
 	/**
 	 * Sends a subscription request to a hub.
+	 * @throws URISyntaxException 
 	 */
-	public static void subscribe(String hub, String hubcallback, String hubtopic, String hubleaseseconds, String hubsecret, String hubverifytoken) throws IOException {
+	public static void subscribe(URI hub, URI hubcallback, URI hubtopic, String hubleaseseconds, String hubsecret, String hubverifytoken) throws IOException {
 
 		// check parameters
 
-		new URL(hub);
-		new URL(hubtopic);
 		if (hubcallback == null) throw new NullPointerException();
 
 		// POST
@@ -100,8 +101,8 @@ public class PuSHUtil {
 		HttpPost httppost = new HttpPost(hub);	
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("hub.mode", "subscribe"));
-		nvps.add(new BasicNameValuePair("hub.callback", hubcallback));
-		nvps.add(new BasicNameValuePair("hub.topic", hubtopic));
+		nvps.add(new BasicNameValuePair("hub.callback", hubcallback.toString()));
+		nvps.add(new BasicNameValuePair("hub.topic", hubtopic.toString()));
 		nvps.add(new BasicNameValuePair("hub.verify", "async"));
 		nvps.add(new BasicNameValuePair("hub.verify", "sync"));
 		if (hubleaseseconds != null) nvps.add(new BasicNameValuePair("hub.lease_seconds", hubleaseseconds));
@@ -114,12 +115,10 @@ public class PuSHUtil {
 	/**
 	 * Sends an unsubscription request to a hub.
 	 */
-	public static void unsubscribe(String hub, String hubcallback, String hubtopic, String hubsecret, String hubverifytoken) throws Exception {
+	public static void unsubscribe(URI hub, URI hubcallback, URI hubtopic, String hubsecret, String hubverifytoken) throws IOException {
 
 		// check parameters
 
-		new URL(hub);
-		new URL(hubtopic);
 		if (hubcallback == null) throw new NullPointerException();
 
 		// POST
@@ -127,8 +126,8 @@ public class PuSHUtil {
 		HttpPost httppost = new HttpPost(hub);
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("hub.mode", "unsubscribe"));
-		nvps.add(new BasicNameValuePair("hub.callback", hubcallback));
-		nvps.add(new BasicNameValuePair("hub.topic", hubtopic));
+		nvps.add(new BasicNameValuePair("hub.callback", hubcallback.toString()));
+		nvps.add(new BasicNameValuePair("hub.topic", hubtopic.toString()));
 		nvps.add(new BasicNameValuePair("hub.verify", "async"));
 		nvps.add(new BasicNameValuePair("hub.verify", "sync"));
 		if (hubsecret != null) nvps.add(new BasicNameValuePair("hub.hub_secret", hubsecret));

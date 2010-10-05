@@ -34,9 +34,18 @@
 							<name>slf4j</name>
 							<value>false</value>
 						</systemproperty>
+						<systemproperty>
+							<name>log4j.configuration</name>
+							<value>file:${basedir}/src/main/resources/log4j.properties</value>
+						</systemproperty>
 					</systemproperties>
 				</configuration>
 				<dependencies>
+					<dependency>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+						<version>1.2.15</version>
+					</dependency>
 					<dependency>
 						<groupId>commons-dbcp</groupId>
 						<artifactId>commons-dbcp</artifactId>

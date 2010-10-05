@@ -2,6 +2,7 @@ package pds.web.ui.app.feed;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.activation.MimeType;
@@ -12,11 +13,13 @@ import nextapp.echo.app.Column;
 import nextapp.echo.app.ContentPane;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.FillImage;
+import nextapp.echo.app.Font;
 import nextapp.echo.app.Insets;
 import nextapp.echo.app.Label;
 import nextapp.echo.app.ResourceImageReference;
 import nextapp.echo.app.Row;
 import nextapp.echo.app.SplitPane;
+import nextapp.echo.app.TextArea;
 import nextapp.echo.app.TextField;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
@@ -31,10 +34,12 @@ import org.eclipse.higgins.xdi4j.messaging.Operation;
 import org.eclipse.higgins.xdi4j.types.Timestamps;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
 import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
-import org.openxrd.xrd.core.Link;
+import org.htmlparser.Tag;
 import org.openxrd.xrd.core.XRD;
 
 import pds.dictionary.feed.FeedDictionary;
+import pds.discovery.feed.FeedDiscovery;
+import pds.discovery.html.HTMLDiscovery;
 import pds.discovery.xrd.XRDDiscovery;
 import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;
@@ -43,7 +48,6 @@ import pds.web.ui.MessageDialog;
 import pds.web.ui.app.feed.components.EntriesColumn;
 import pds.web.ui.app.feed.components.TopicPanel.TopicPanelDelegate;
 import pds.web.ui.app.feed.components.TopicsColumn;
-import pds.web.ui.app.feed.util.PuSHDiscovery;
 import pds.web.ui.app.feed.util.PuSHUtil;
 import pds.xdi.XdiContext;
 import pds.xdi.XdiException;
@@ -53,8 +57,6 @@ import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
 import echopoint.ImageIcon;
-import nextapp.echo.app.TextArea;
-import nextapp.echo.app.Font;
 
 public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
@@ -264,57 +266,81 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 		Logger logger = PDSApplication.getApp().getLogger();
 
-		String hubcallback = this.feedPdsWebApp.getPubsubhubbubEndpoint() + this.context.getCanonical();
+		URI hubcallback = URI.create(this.feedPdsWebApp.getPubsubhubbubEndpoint() + this.context.getCanonical());
 		String hubleaseseconds = this.feedPdsWebApp.getLeaseSeconds();
 
 		// determine the user URI
 
-		String userUri = this.subscribeTextField.getText();
+		String userUriString = this.subscribeTextField.getText();
 
-		if ((! userUri.startsWith("http://")) &&
-				(! userUri.startsWith("https://")) &&
-				(! userUri.startsWith("acct:"))) {
+		if ((! userUriString.startsWith("http://")) &&
+				(! userUriString.startsWith("https://")) &&
+				(! userUriString.startsWith("acct:"))) {
 
-			if (userUri.contains("@"))
-				userUri = "acct:" + userUri;
+			if (userUriString.contains("@"))
+				userUriString = "acct:" + userUriString;
 			else
-				userUri = "http://" + userUri;
+				userUriString = "http://" + userUriString;
 		}
 
-		// discover the topic URI
+		URI userUri = URI.create(userUriString);
+		
+		// discover the topic URI (via HTML)
 
-		String hubtopic = null;
+		URI hubtopic = null;
 
-		try {
+		if ("http".equals(userUri.getScheme()) || "https".equals(userUri.getScheme())) {
 
-			XRD xrd = XRDDiscovery.discoverXRD(URI.create(userUri));
+			try {
+				
+				List<Tag> links = HTMLDiscovery.discoverLinks(userUri);
 
-			if (xrd != null) {
+				hubtopic = HTMLDiscovery.selectLinkHref(userUri, links, "http://schemas.google.com/g/2010#updates-from", "application/atom+xml");
+				if (hubtopic == null) hubtopic = HTMLDiscovery.selectLinkHref(userUri, links, "alternate", "application/atom+xml");
+				if (hubtopic == null) hubtopic = HTMLDiscovery.selectLinkHref(userUri, links, "updates", "application/atom+xml");
+			} catch (Exception ex) {
 
-				Link link = XRDDiscovery.selectLink(xrd, "http://schemas.google.com/g/2010#updates-from", null);
-				if (link == null) link = XRDDiscovery.selectLink(xrd, "alternate", "application/atom+xml");
-
-				if (link != null) hubtopic = link.getHref();
-			}
-
-			if (hubtopic == null) {
-
-				MessageDialog.problem("Sorry, this does not seem to be a valid user to subscribe to.", null);
+				MessageDialog.problem("Sorry, a problem occurred while discovering the user's feed: " + ex.getMessage(), ex);
 				return;
 			}
-		} catch (Exception ex) {
+		}
 
-			MessageDialog.problem("Sorry, a problem occurred while discovering the user's feed: " + ex.getMessage(), ex);
+		// discover the topic URI (via XRD)
+
+		if (hubtopic == null) {
+
+			try {
+
+				XRD xrd = XRDDiscovery.discoverXRD(userUri);
+
+				if (xrd != null) {
+
+					hubtopic = XRDDiscovery.selectLinkHref(xrd, "http://schemas.google.com/g/2010#updates-from", null);
+					if (hubtopic == null) hubtopic = XRDDiscovery.selectLinkHref(xrd, "alternate", "application/atom+xml");
+					if (hubtopic == null) hubtopic = XRDDiscovery.selectLinkHref(xrd, "updates", "application/atom+xml");
+				}
+			} catch (Exception ex) {
+
+				MessageDialog.problem("Sorry, a problem occurred while discovering the user's feed: " + ex.getMessage(), ex);
+				return;
+			}
+		}
+
+		// still no topic found?
+
+		if (hubtopic == null) {
+
+			MessageDialog.problem("Sorry, this does not seem to be a valid user to subscribe to.", null);
 			return;
 		}
 
 		// discover the feed's hub
 
-		String hub;
+		URI hub;
 
 		try {
 
-			hub = PuSHDiscovery.getHub(hubtopic);
+			hub = FeedDiscovery.discoverHub(hubtopic);
 			if (hub == null) throw new RuntimeException("No hub found.");
 		} catch (Exception ex) {
 
@@ -330,7 +356,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 
 		try {
 
-			this.addTopic(hubtopic, hubverifytoken, hub, userUri);
+			this.addTopic(hubtopic, hubverifytoken, hub, userUri.toString());
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
@@ -423,7 +449,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		this.context.send(operation);
 	}
 
-	private void addTopic(String hubtopic, String hubverifytoken, String hub, String name) throws XdiException {
+	private void addTopic(URI hubtopic, String hubverifytoken, URI hub, String name) throws XdiException {
 
 		// $add
 
@@ -432,13 +458,13 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		Graph topicsGraph = operationGraph.createStatement(this.subjectXri, XRI_TOPICS, (Graph) null).getInnerGraph();
 		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), XRI_VERIFYTOKEN, hubverifytoken);
 		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), XRI_NAME, name);
-		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), XRI_HUB, hub);
+		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), XRI_HUB, hub.toString());
 		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), new XRI3Segment("$d"), Timestamps.dateToXri(new Date()));
 
 		this.context.send(operation);
 	}
 
-	private void setTopicVerifyToken(String hubtopic, String hubverifytoken) throws XdiException {
+	private void setTopicVerifyToken(URI hubtopic, String hubverifytoken) throws XdiException {
 
 		// $set
 
@@ -450,7 +476,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		this.context.send(operation);
 	}
 
-	private void deleteTopic(String hubtopic) throws XdiException {
+	private void deleteTopic(URI hubtopic) throws XdiException {
 
 		// $del
 
@@ -473,12 +499,12 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		}
 
 		@Override
-		public void onResubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri, String hub) {
+		public void onResubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri, URI hub) {
 
 			Logger logger = PDSApplication.getApp().getLogger();
 
-			String hubtopic = topicXri.getFirstSubSegment().getXRef().getIRI();
-			String hubcallback = FeedContentPane.this.feedPdsWebApp.getPubsubhubbubEndpoint() + FeedContentPane.this.context.getCanonical();
+			URI hubtopic = URI.create(topicXri.getFirstSubSegment().getXRef().getIRI());
+			URI hubcallback = URI.create(FeedContentPane.this.feedPdsWebApp.getPubsubhubbubEndpoint() + FeedContentPane.this.context.getCanonical());
 			String hubleaseseconds = FeedContentPane.this.feedPdsWebApp.getLeaseSeconds();
 
 			// create a hub.verify_token
@@ -521,12 +547,12 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		}
 
 		@Override
-		public void onUnsubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri, String hub) {
+		public void onUnsubscribeActionPerformed(ActionEvent e, XRI3Segment topicXri, URI hub) {
 
 			Logger logger = PDSApplication.getApp().getLogger();
 
-			String hubtopic = topicXri.getFirstSubSegment().getXRef().getIRI();
-			String hubcallback = FeedContentPane.this.feedPdsWebApp.getPubsubhubbubEndpoint() + FeedContentPane.this.context.getCanonical();
+			URI hubtopic = URI.create(topicXri.getFirstSubSegment().getXRef().getIRI());
+			URI hubcallback = URI.create(FeedContentPane.this.feedPdsWebApp.getPubsubhubbubEndpoint() + FeedContentPane.this.context.getCanonical());
 
 			// create a hub.verify_token
 
@@ -604,7 +630,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		row1.add(row2);
 		ImageIcon imageIcon2 = new ImageIcon();
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-				"/pds/web/ui/app/feed/app.png");
+		"/pds/web/ui/app/feed/app.png");
 		imageIcon2.setIcon(imageReference1);
 		imageIcon2.setHeight(new Extent(48, Extent.PX));
 		imageIcon2.setWidth(new Extent(48, Extent.PX));
@@ -650,7 +676,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button1.setText("Post!");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onPostActionPerformed(e);
 			}
@@ -667,7 +693,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		subscribeTextField.setStyleName("Default");
 		subscribeTextField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onSubscribeActionPerformed(e);
 			}
@@ -678,7 +704,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button2.setText("Subscribe!");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onSubscribeActionPerformed(e);
 			}
@@ -687,7 +713,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		SplitPane splitPane3 = new SplitPane();
 		splitPane3.setStyleName("Default");
 		ResourceImageReference imageReference2 = new ResourceImageReference(
-				"/pds/web/resource/image/separator-blue.png");
+		"/pds/web/resource/image/separator-blue.png");
 		splitPane3.setSeparatorHorizontalImage(new FillImage(imageReference2));
 		splitPane3.setOrientation(SplitPane.ORIENTATION_HORIZONTAL_LEFT_RIGHT);
 		splitPane3.setSeparatorWidth(new Extent(10, Extent.PX));
@@ -705,7 +731,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button4.setText("YOUR Messages");
 		button4.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onGotoFeedActionPerformed(e);
 			}
@@ -716,7 +742,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button3.setText("Messages about YOU");
 		button3.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onGotoMentionsActionPerformed(e);
 			}

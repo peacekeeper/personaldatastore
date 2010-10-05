@@ -17,6 +17,12 @@ import org.openxrd.discovery.impl.HttpHeaderDiscoveryMethod;
 import org.openxrd.xrd.core.Link;
 import org.openxrd.xrd.core.XRD;
 
+/**
+ * This class can:
+ * 
+ * - Discover an <XRD> from an http(s):// or acct: URI.
+ * - Select a <Link> with a given rel and type from an <XRD>.
+ */
 public class XRDDiscovery {
 
 	private static final Log log = LogFactory.getLog(XRDDiscovery.class);
@@ -63,9 +69,11 @@ public class XRDDiscovery {
 
 	public static XRD discoverXRD(URI uri) throws Exception {
 
-		XRD xrd;
+		if (uri == null) throw new NullPointerException("No URI provided.");
 
 		log.debug("Trying to discover <XRD> from " + uri);
+
+		XRD xrd;
 
 		if (uri.toString().startsWith("http://") || uri.toString().startsWith("https://")) {
 
@@ -78,32 +86,36 @@ public class XRDDiscovery {
 			throw new IllegalArgumentException("Can only discover via LRDD and Webfinger.");
 		}
 
-		if (xrd == null) {
-
-			throw new RuntimeException("No XRD document.");
-		}
-
-		log.debug("<XRD> from " + uri + " with " + xrd.getLinks().size() + " links");
+		if (xrd == null) return null;
 
 		// done
+
+		log.debug("<XRD> from " + uri + " with " + xrd.getLinks().size() + " links");
 
 		return xrd;
 	}
 
-	public static Link selectLink(XRD xrd, String rel, String type) {
+	public static URI selectLinkHref(XRD xrd, String rel, String type) {
 
-		if (xrd == null || rel == null) return null;
+		if (xrd == null || rel == null) throw new NullPointerException("No <XRD> or rel provided.");
 
 		log.debug("Looking for <Link> with rel=" + rel + " and type=" + type);
 
 		for (Link link : xrd.getLinks()) {
 
-			log.debug("Trying to match <Link> with rel=" + link.getRel() + " and type="  + link.getType());
+			String linkRel = link.getRel();
+			String linkType = link.getType();
+			
+			log.debug("Trying to match <Link> with rel=" + linkRel + " and type="  + linkType);
 
-			if (link.getRel().equals(rel) &&
-					(type == null || link.getType().equals(type))) {
+			if (rel.equals(linkRel) &&
+					(type == null || type.equals(linkType))) {
 
-				return link;
+				URI href = URI.create(link.getHref());
+				
+				log.debug("Match! URI: " + href.toString());
+
+				return href;
 			}
 		}
 
