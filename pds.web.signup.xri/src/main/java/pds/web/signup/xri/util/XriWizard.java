@@ -106,18 +106,10 @@ public class XriWizard {
 
 		Service salmonService = new Service();
 		salmonService.addType("salmon", null, Boolean.TRUE);
+		salmonService.addType("http://salmon-protocol.org/ns/salmon-replies", null, Boolean.TRUE);
+		salmonService.addType("http://salmon-protocol.org/ns/salmon-mention", null, Boolean.TRUE);
 		salmonService.addURI(xriSignUpMethod.getSalmonEndpoint() + xri.getCanonicalID().getValue(), null, SEPUri.APPEND_NONE);
 		services.add(salmonService);
-
-		Service salmonRepliesService = new Service();
-		salmonRepliesService.addType("http://salmon-protocol.org/ns/salmon-replies", null, Boolean.TRUE);
-		salmonRepliesService.addURI(xriSignUpMethod.getSalmonEndpoint() + xri.getCanonicalID().getValue(), null, SEPUri.APPEND_NONE);
-		services.add(salmonRepliesService);
-
-		Service salmonMentionsService = new Service();
-		salmonMentionsService.addType("http://salmon-protocol.org/ns/salmon-mention", null, Boolean.TRUE);
-		salmonMentionsService.addURI(xriSignUpMethod.getSalmonEndpoint() + xri.getCanonicalID().getValue(), null, SEPUri.APPEND_NONE);
-		services.add(salmonMentionsService);
 
 		Service foafService = new Service();
 		foafService.addType("describedby", null, Boolean.FALSE);
