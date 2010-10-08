@@ -26,8 +26,8 @@ import org.openxrd.xrd.core.XRD;
 
 import pds.discovery.xrd.LRDDDiscoveryMethod;
 
+import com.cliqset.magicsig.MagicKey;
 import com.cliqset.salmon.KeyFinder;
-import com.cliqset.salmon.MagicKey;
 import com.cliqset.salmon.SalmonException;
 
 public class LRDDOpenXRDKeyFinder implements KeyFinder {

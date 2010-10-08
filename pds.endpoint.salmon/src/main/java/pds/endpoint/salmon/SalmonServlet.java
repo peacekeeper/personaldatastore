@@ -36,7 +36,7 @@ import pds.xdi.XdiException;
 import com.cliqset.abdera.ext.activity.ActivityEntry;
 import com.cliqset.abdera.ext.activity.ActivityExtensionFactory;
 import com.cliqset.abdera.ext.serviceprovider.ServiceProviderExtensionFactory;
-import com.cliqset.salmon.MagicEnvelope;
+import com.cliqset.magicsig.MagicEnvelope;
 import com.cliqset.salmon.Salmon;
 import com.cliqset.salmon.dataparser.AbderaDataParser;
 
