@@ -60,6 +60,7 @@
 							<version>0.2-SNAPSHOT</version>
 							<packaging>jar</packaging>
 							<file>${basedir}/../pdsproject/lib/oauth2-authzserver-0.2-SNAPSHOT.jar</file>
+							<pomFile>${basedir}/../pdsproject/lib/oauth2-authzserver-0.2-SNAPSHOT.pom</pomFile>
 						</configuration>
 					</execution>
 					<execution>
@@ -74,6 +75,7 @@
 							<version>0.2-SNAPSHOT</version>
 							<packaging>jar</packaging>
 							<file>${basedir}/../pdsproject/lib/oauth2-common-0.2-SNAPSHOT.jar</file>
+							<pomFile>${basedir}/../pdsproject/lib/oauth2-common-0.2-SNAPSHOT.pom</pomFile>
 						</configuration>
 					</execution>
 				</executions>
