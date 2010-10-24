@@ -59,6 +59,7 @@
 							<version>0.0.1</version>
 							<packaging>jar</packaging>
 							<file>${basedir}/../pdsproject/lib/abdera-extensions-activitystreams-0.0.1.jar</file>
+							<pomFile>${basedir}/../pdsproject/lib/abdera-extensions-activitystreams-0.0.1.pom</pomFile>
 						</configuration>
 					</execution>
 				</executions>

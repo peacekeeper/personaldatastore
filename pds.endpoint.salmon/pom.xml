@@ -70,10 +70,10 @@
 						</goals>
 						<configuration>
 							<groupId>com.cliqset</groupId>
-							<artifactId>java-salmon-simple</artifactId>
+							<artifactId>java-salmon</artifactId>
 							<version>0.0.1-SNAPSHOT</version>
-							<packaging>jar</packaging>
-							<file>${basedir}/../pdsproject/lib/java-salmon-simple-0.0.1-SNAPSHOT.jar</file>
+							<packaging>pom</packaging>
+							<file>${basedir}/../pdsproject/lib/java-salmon-0.0.1-SNAPSHOT.pom</file>
 						</configuration>
 					</execution>
 					<execution>
@@ -84,10 +84,11 @@
 						</goals>
 						<configuration>
 							<groupId>com.cliqset</groupId>
-							<artifactId>java-salmon-core</artifactId>
+							<artifactId>java-salmon-simple</artifactId>
 							<version>0.0.1-SNAPSHOT</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/../pdsproject/lib/java-salmon-core-0.0.1-SNAPSHOT.jar</file>
+							<file>${basedir}/../pdsproject/lib/java-salmon-simple-0.0.1-SNAPSHOT.jar</file>
+							<pomFile>${basedir}/../pdsproject/lib/java-salmon-simple-0.0.1-SNAPSHOT.pom</pomFile>
 						</configuration>
 					</execution>
 					<execution>
@@ -98,10 +99,11 @@
 						</goals>
 						<configuration>
 							<groupId>com.cliqset</groupId>
-							<artifactId>java-salmon-magicsig</artifactId>
+							<artifactId>java-salmon-core</artifactId>
 							<version>0.0.1-SNAPSHOT</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/../pdsproject/lib/java-salmon-magicsig-0.0.1-SNAPSHOT.jar</file>
+							<file>${basedir}/../pdsproject/lib/java-salmon-core-0.0.1-SNAPSHOT.jar</file>
+							<pomFile>${basedir}/../pdsproject/lib/java-salmon-core-0.0.1-SNAPSHOT.pom</pomFile>
 						</configuration>
 					</execution>
 					<execution>
@@ -112,14 +114,30 @@
 						</goals>
 						<configuration>
 							<groupId>com.cliqset</groupId>
-							<artifactId>java-salmon-hostmeta</artifactId>
+							<artifactId>java-salmon-magicsig</artifactId>
 							<version>0.0.1-SNAPSHOT</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/../pdsproject/lib/java-salmon-hostmeta-0.0.1-SNAPSHOT.jar</file>
+							<file>${basedir}/../pdsproject/lib/java-salmon-magicsig-0.0.1-SNAPSHOT.jar</file>
+							<pomFile>${basedir}/../pdsproject/lib/java-salmon-magicsig-0.0.1-SNAPSHOT.pom</pomFile>
 						</configuration>
 					</execution>
 					<execution>
 						<id>execution6</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>com.cliqset</groupId>
+							<artifactId>java-salmon-hostmeta</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<packaging>jar</packaging>
+							<file>${basedir}/../pdsproject/lib/java-salmon-hostmeta-0.0.1-SNAPSHOT.jar</file>
+							<pomFile>${basedir}/../pdsproject/lib/java-salmon-hostmeta-0.0.1-SNAPSHOT.pom</pomFile>
+						</configuration>
+					</execution>
+					<execution>
+						<id>execution7</id>
 						<phase>initialize</phase>
 						<goals>
 							<goal>install-file</goal>
@@ -130,6 +148,7 @@
 							<version>1.0-SNAPSHOT</version>
 							<packaging>jar</packaging>
 							<file>${basedir}/../pdsproject/lib/openxrd-1.0-SNAPSHOT.jar</file>
+							<pomFile>${basedir}/../pdsproject/lib/openxrd-1.0-SNAPSHOT.pom</pomFile>
 						</configuration>
 					</execution>
 				</executions>

@@ -45,6 +45,7 @@
 							<version>1.0-SNAPSHOT</version>
 							<packaging>jar</packaging>
 							<file>${basedir}/../pdsproject/lib/openxrd-1.0-SNAPSHOT.jar</file>
+							<pomFile>${basedir}/../pdsproject/lib/openxrd-1.0-SNAPSHOT.pom</pomFile>
 						</configuration>
 					</execution>
 				</executions>
