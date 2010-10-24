@@ -114,11 +114,11 @@
 						</goals>
 						<configuration>
 							<groupId>com.cliqset</groupId>
-							<artifactId>java-salmon-magicsig</artifactId>
+							<artifactId>java-magicsig</artifactId>
 							<version>0.0.1-SNAPSHOT</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/../pdsproject/lib/java-salmon-magicsig-0.0.1-SNAPSHOT.jar</file>
-							<pomFile>${basedir}/../pdsproject/lib/java-salmon-magicsig-0.0.1-SNAPSHOT.pom</pomFile>
+							<file>${basedir}/../pdsproject/lib/java-magicsig-0.0.1-SNAPSHOT.jar</file>
+							<pomFile>${basedir}/../pdsproject/lib/java-magicsig-0.0.1-SNAPSHOT.pom</pomFile>
 						</configuration>
 					</execution>
 					<execution>
@@ -129,11 +129,11 @@
 						</goals>
 						<configuration>
 							<groupId>com.cliqset</groupId>
-							<artifactId>java-salmon-hostmeta</artifactId>
+							<artifactId>java-hostmeta</artifactId>
 							<version>0.0.1-SNAPSHOT</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/../pdsproject/lib/java-salmon-hostmeta-0.0.1-SNAPSHOT.jar</file>
-							<pomFile>${basedir}/../pdsproject/lib/java-salmon-hostmeta-0.0.1-SNAPSHOT.pom</pomFile>
+							<file>${basedir}/../pdsproject/lib/java-hostmeta-0.0.1-SNAPSHOT.jar</file>
+							<pomFile>${basedir}/../pdsproject/lib/java-hostmeta-0.0.1-SNAPSHOT.pom</pomFile>
 						</configuration>
 					</execution>
 					<execution>
