@@ -44,6 +44,40 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>execution1</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>net.smartam.leeloo</groupId>
+							<artifactId>oauth2-authzserver</artifactId>
+							<version>0.2-SNAPSHOT</version>
+							<packaging>jar</packaging>
+							<file>${basedir}/../pdsproject/lib/oauth2-authzserver-0.2-SNAPSHOT.jar</file>
+						</configuration>
+					</execution>
+					<execution>
+						<id>execution2</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>net.smartam.leeloo</groupId>
+							<artifactId>oauth2-common</artifactId>
+							<version>0.2-SNAPSHOT</version>
+							<packaging>jar</packaging>
+							<file>${basedir}/../pdsproject/lib/oauth2-common-0.2-SNAPSHOT.jar</file>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<repositories>

@@ -47,6 +47,20 @@
 							<file>${basedir}/../pdsproject/lib/rome-1.0.jar</file>
 						</configuration>
 					</execution>
+					<execution>
+						<id>execution2</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>com.cliqset.abdera</groupId>
+							<artifactId>abdera-extensions-activitystreams</artifactId>
+							<version>0.0.1</version>
+							<packaging>jar</packaging>
+							<file>${basedir}/../pdsproject/lib/abdera-extensions-activitystreams-0.0.1.jar</file>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
