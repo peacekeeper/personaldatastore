@@ -22,6 +22,7 @@ import nextapp.echo.extras.app.layout.TabPaneLayoutData;
 import pds.xdi.events.XdiTransactionEvent;
 import pds.xdi.events.XdiTransactionFailureEvent;
 import pds.xdi.events.XdiTransactionSuccessEvent;
+import pds.web.components.xdi.GraphContentPane;
 
 public class TransactionEventContentPane extends ContentPane  {
 
@@ -44,7 +45,7 @@ public class TransactionEventContentPane extends ContentPane  {
 	private Label durationLabel;
 
 	/**
-	 * Creates a new <code>ConfigureAPIsContentPane</code>.
+	 * Creates a new <code>TransactionEventContentPane</code>.
 	 */
 	public TransactionEventContentPane() {
 		super();
@@ -119,8 +120,7 @@ public class TransactionEventContentPane extends ContentPane  {
 		column1.add(row1);
 		Label label1 = new Label();
 		label1.setStyleName("Default");
-		label1
-				.setText("This window displays a raw XDI transaction with your Personal Data Store.");
+		label1.setText("This window displays a raw XDI transaction with your Personal Data Store.");
 		RowLayoutData label1LayoutData = new RowLayoutData();
 		label1LayoutData.setInsets(new Insets(new Extent(10, Extent.PX)));
 		label1.setLayoutData(label1LayoutData);

@@ -5,7 +5,7 @@
 <p n="closable">true</p>
 <p n="maximizeEnabled">true</p>
 <p n="minimizeEnabled">false</p>
-<c i="Component_transactionEventContentPane" t="pds.web.ui.log.TransactionEventContentPane" vis="private"/>
+<c i="Component_transactionEventContentPane" t="pds.web.components.xdi.TransactionEventContentPane" vis="private"/>
 <p n="height">600px</p>
 <p n="width">800px</p>
 
