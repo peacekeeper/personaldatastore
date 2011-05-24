@@ -33,6 +33,7 @@
 		<module>../pds.web.logger</module>
 		<module>../pds.web.tools</module>
 		<module>../pds.web.signin.manual</module>
+		<module>../pds.web.signin.predefined</module>
 		<module>../pds.web.signin.rpxnow</module>
 		<module>../pds.web.signin.xri</module>
 		<module>../pds.web.signup.xri</module>

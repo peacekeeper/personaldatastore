@@ -3,12 +3,20 @@
 	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
-	<!-- SignInMethods -->
+	<!-- PredefinedSignInMethod -->
 
-	<util:list id="signInMethods">
+	<bean id="predefinedSignInMethod" class="pds.web.signin.manual.PredefinedSignInMethod">
 
-		<ref bean="predefinedSignInMethod" />
+		<!-- Predefined contexts. -->
 
-	</util:list>
+		<property name="contexts">
+			<map>
+				<entry key="bob@danube">
+					<value>http://danube/xdi/=(acct:bob@danube)</value>
+				</entry>
+			</map>
+		</property>
+
+	</bean>
 
 </beans>

@@ -39,7 +39,7 @@ public class RpxnowSignInPanel extends Panel implements ExternalCallReceiver {
 	private HtmlLabel rpxnowHtmlLabel;
 
 	/**
-	 * Creates a new <code>LoginContentPane</code>.
+	 * Creates a new <code>RpxnowSignInPanel</code>.
 	 */
 	public RpxnowSignInPanel() {
 		super();

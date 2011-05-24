@@ -39,7 +39,7 @@ public class XriSignInPanel extends Panel {
 	private Column xriSignUpPanelColumn;
 
 	/**
-	 * Creates a new <code>LoginContentPane</code>.
+	 * Creates a new <code>XriSignInPanel</code>.
 	 */
 	public XriSignInPanel() {
 		super();
