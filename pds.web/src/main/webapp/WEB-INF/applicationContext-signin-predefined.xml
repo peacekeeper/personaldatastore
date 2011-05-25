@@ -12,7 +12,7 @@
 		<property name="contexts">
 			<map>
 				<entry key="=danube*bob">
-					<value>http://danube/pds-core/=danube*bob/</value>
+					<value>http://danube/pds-core/=!BDF3.1FB.E70C.3958!271b.72f3.df86.af8f/</value>
 				</entry>
 			</map>
 		</property>
