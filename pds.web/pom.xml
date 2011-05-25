@@ -124,6 +124,12 @@
 		</dependency>
 		<dependency>
 			<groupId>pdsproject</groupId>
+			<artifactId>pds.web.signin.predefined</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>pdsproject</groupId>
 			<artifactId>pds.web.signin.rpxnow</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
