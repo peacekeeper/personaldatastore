@@ -5,14 +5,14 @@
 
 	<!-- PredefinedSignInMethod -->
 
-	<bean id="predefinedSignInMethod" class="pds.web.signin.manual.PredefinedSignInMethod">
+	<bean id="predefinedSignInMethod" class="pds.web.signin.predefined.PredefinedSignInMethod">
 
 		<!-- Predefined contexts. -->
 
 		<property name="contexts">
 			<map>
-				<entry key="bob@danube">
-					<value>http://danube/xdi/=(acct:bob@danube)</value>
+				<entry key="=danube*bob">
+					<value>http://danube/pds-core/=danube*bob/</value>
 				</entry>
 			</map>
 		</property>
