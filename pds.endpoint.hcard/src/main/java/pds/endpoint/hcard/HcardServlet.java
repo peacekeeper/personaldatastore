@@ -101,18 +101,18 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
 		// find the XDI data
 
-		String path = this.parsePath(request);
-		XdiContext context = this.getContext(path);
+		String xri = this.parseXri(request);
+		XdiContext context = this.getContext(xri);
 		Subject pdsSubject = context == null ? null : this.fetch(context);
 
 		if (pdsSubject == null) {
 
-			response.sendError(HttpServletResponse.SC_NOT_FOUND, path + " not found.");
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, xri + " not found.");
 			return;
 		}
 
 		Properties properties = new Properties();
-		HCard hCard = this.convertHCard(path, context, pdsSubject, properties);
+		HCard hCard = this.convertHCard(xri, context, pdsSubject, properties);
 
 		// determine content type
 
@@ -151,31 +151,18 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		writer.close();
 	}
 
-	private String parsePath(HttpServletRequest request) throws Exception {
+	private String parseXri(HttpServletRequest request) throws Exception {
 
-		String requestUri = request.getRequestURI();
-		String contextPath = request.getContextPath(); 
-		String path = requestUri.substring(contextPath.length());
-		if (path.startsWith("/")) path = path.substring(1);
+		String xri = request.getRequestURI();
+		while (xri.length() > 0 && xri.contains("/")) xri = xri.substring(xri.indexOf("/") + 1);
 
-		log.debug("Got request for path " + path);
-		return path;
+		log.debug("Got request for XRI " + xri);
+		return xri;
 	}
 
-	private XdiContext getContext(String path) throws Exception {
+	private XdiContext getContext(String xri) throws Exception {
 
-		boolean xri = false;
-
-		try {
-
-			new XRI3Segment(path);
-			xri = true;
-		} catch (Exception ex) { }
-
-		if (xri)
-			return xdi.resolveContextByIname(path, null);
-		else
-			return xdi.resolveContextByEndpoint(path, null);
+		return xdi.resolveContextByIname(xri, null);
 	}
 
 	private Subject fetch(XdiContext context) throws Exception {
