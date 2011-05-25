@@ -195,7 +195,7 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		return subject;
 	}
 
-	private HCard convertHCard(String identifier, XdiContext context, Subject pdsSubject, Properties properties) throws Exception {
+	private HCard convertHCard(String xri, XdiContext context, Subject pdsSubject, Properties properties) throws Exception {
 
 		String uid = context.getCanonical().toString();
 		String name = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
@@ -208,8 +208,8 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		hCardBuilder.addURL(new URI("http://xri2xrd.net/" + context.getCanonical().toString()));
 		if (email != null) hCardBuilder.addEmail(new HCard.Email(email));
 
-		properties.put("identifier", identifier);
-		properties.put("canonical", context.getCanonical().toString());
+		properties.put("xri", xri);
+		properties.put("inumber", context.getCanonical().toString());
 		properties.put("x3simple", pdsSubject.toString("X3 Simple", null));
 		properties.put("x3standard", pdsSubject.toString("X3 Simple", null));
 		if (name != null) properties.put("name", name);
