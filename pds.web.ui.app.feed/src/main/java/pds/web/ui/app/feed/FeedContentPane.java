@@ -483,7 +483,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_DEL);
 		Graph operationGraph = operation.createOperationGraph(null);
 		Graph topicsGraph = operationGraph.createStatement(this.subjectXri, XRI_TOPICS, (Graph) null).getInnerGraph();
-		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"), XRI_VERIFYTOKEN);
+		topicsGraph.createStatement(new XRI3Segment("$(" + hubtopic + ")"));
 
 		this.context.send(operation);
 	}
