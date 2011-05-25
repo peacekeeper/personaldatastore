@@ -9,6 +9,7 @@ import pds.web.events.ApplicationContextClosedEvent;
 import pds.web.events.ApplicationContextOpenedEvent;
 import pds.web.events.ApplicationEvent;
 import pds.web.events.ApplicationListener;
+import pds.web.ui.context.ClosedContentPane;
 
 public class ContextWindowPane extends WindowPane implements ApplicationListener {
 
@@ -87,7 +88,7 @@ public class ContextWindowPane extends WindowPane implements ApplicationListener
 	private void initComponents() {
 		this.setStyleName("Glass");
 		this.setZIndex(10);
-		this.setTitle("Personal Data Store");
+		this.setTitle("Project Danube");
 		this.setHeight(new Extent(400, Extent.PX));
 		this.setMaximizeEnabled(false);
 		this.setMinimizeEnabled(false);

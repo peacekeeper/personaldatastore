@@ -69,7 +69,7 @@ public class PDSApplication extends ApplicationInstance {
 		this.setStyleSheet(Styles.DEFAULT_STYLE_SHEET);
 
 		this.mainWindow = new MainWindow();
-		this.mainWindow.setTitle("Personal Data Store");
+		this.mainWindow.setTitle("Project Danube");
 		this.mainWindow.setContent(new MainContentPane());
 
 		this.taskQueueHandle = this.createTaskQueue();

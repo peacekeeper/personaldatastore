@@ -221,9 +221,10 @@
 
 
 
-<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/database.png</p>
+
 <p n="height">68px</p>
 <p n="width">68px</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/projectdanube.png</p>
 </c>
 <p n="cellSpacing">10px</p>
 
