@@ -18,7 +18,7 @@ public class FeedPdsWebApp implements PdsWebApp {
 	@Override
 	public String getName() {
 
-		return "Network";
+		return "Federated Social Web";
 	}
 
 	@Override

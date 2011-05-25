@@ -630,14 +630,14 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		row1.add(row2);
 		ImageIcon imageIcon2 = new ImageIcon();
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-		"/pds/web/ui/app/feed/app.png");
+				"/pds/web/ui/app/feed/app.png");
 		imageIcon2.setIcon(imageReference1);
 		imageIcon2.setHeight(new Extent(48, Extent.PX));
 		imageIcon2.setWidth(new Extent(48, Extent.PX));
 		row2.add(imageIcon2);
 		Label label1 = new Label();
 		label1.setStyleName("Header");
-		label1.setText("Network");
+		label1.setText("Federated Social Web");
 		row2.add(label1);
 		Row row3 = new Row();
 		row3.setAlignment(new Alignment(Alignment.RIGHT, Alignment.DEFAULT));
@@ -676,7 +676,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button1.setText("Post!");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onPostActionPerformed(e);
 			}
@@ -693,7 +693,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		subscribeTextField.setStyleName("Default");
 		subscribeTextField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onSubscribeActionPerformed(e);
 			}
@@ -704,7 +704,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button2.setText("Subscribe!");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onSubscribeActionPerformed(e);
 			}
@@ -713,7 +713,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		SplitPane splitPane3 = new SplitPane();
 		splitPane3.setStyleName("Default");
 		ResourceImageReference imageReference2 = new ResourceImageReference(
-		"/pds/web/resource/image/separator-blue.png");
+				"/pds/web/resource/image/separator-blue.png");
 		splitPane3.setSeparatorHorizontalImage(new FillImage(imageReference2));
 		splitPane3.setOrientation(SplitPane.ORIENTATION_HORIZONTAL_LEFT_RIGHT);
 		splitPane3.setSeparatorWidth(new Extent(10, Extent.PX));
@@ -731,7 +731,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button4.setText("YOUR Messages");
 		button4.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onGotoFeedActionPerformed(e);
 			}
@@ -742,7 +742,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		button3.setText("Messages about YOU");
 		button3.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onGotoMentionsActionPerformed(e);
 			}

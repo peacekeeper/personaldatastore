@@ -7,17 +7,20 @@
 <p n="minimizeEnabled">false</p>
 <c i="Component_feedContentPane" t="pds.web.ui.app.feed.FeedContentPane" vis="private"/>
 
-<p n="width">800px</p>
 
 
 
 
-<p n="height">600px</p>
+
+
 
 
 <p n="styleName">Blue</p>
 
 <p n="defaultCloseOperation">nextapp.echo.app.WindowPane.DISPOSE_ON_CLOSE</p>
-<p n="title">Network</p>
+
+<p n="title">Federated Social Web</p>
+<p n="width">1024px</p>
+<p n="height">768px</p>
 </c>
 </form>

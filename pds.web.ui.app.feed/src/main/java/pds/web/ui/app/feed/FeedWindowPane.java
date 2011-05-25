@@ -45,13 +45,13 @@ public class FeedWindowPane extends WindowPane {
 	 */
 	private void initComponents() {
 		this.setStyleName("Blue");
-		this.setTitle("Network");
-		this.setHeight(new Extent(600, Extent.PX));
+		this.setTitle("Federated Social Web");
+		this.setHeight(new Extent(768, Extent.PX));
 		this.setMinimizeEnabled(false);
 		this.setMaximizeEnabled(true);
 		this.setClosable(true);
 		this.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
-		this.setWidth(new Extent(800, Extent.PX));
+		this.setWidth(new Extent(1024, Extent.PX));
 		feedContentPane = new FeedContentPane();
 		add(feedContentPane);
 	}
