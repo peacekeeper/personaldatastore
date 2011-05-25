@@ -101,18 +101,18 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
 		// find the XDI data
 
-		String xri = this.parseXri(request);
-		XdiContext context = this.getContext(xri);
+		String path = this.parsePath(request);
+		XdiContext context = this.getContext(path);
 		Subject pdsSubject = context == null ? null : this.fetch(context);
 
 		if (pdsSubject == null) {
 
-			response.sendError(HttpServletResponse.SC_NOT_FOUND, xri + " not found.");
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, path + " not found.");
 			return;
 		}
 
 		Properties properties = new Properties();
-		HCard hCard = this.convertHCard(xri, context, pdsSubject, properties);
+		HCard hCard = this.convertHCard(path, context, pdsSubject, properties);
 
 		// determine content type
 
@@ -151,18 +151,31 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		writer.close();
 	}
 
-	private String parseXri(HttpServletRequest request) throws Exception {
+	private String parsePath(HttpServletRequest request) throws Exception {
 
-		String xri = request.getRequestURI();
-		while (xri.length() > 0 && xri.contains("/")) xri = xri.substring(xri.indexOf("/") + 1);
+		String requestUri = request.getRequestURI();
+		String contextPath = request.getContextPath(); 
+		String path = requestUri.substring(contextPath.length());
+		if (path.startsWith("/")) path = path.substring(1);
 
-		log.debug("Got request for XRI " + xri);
-		return xri;
+		log.debug("Got request for path " + path);
+		return path;
 	}
 
-	private XdiContext getContext(String xri) throws Exception {
+	private XdiContext getContext(String path) throws Exception {
 
-		return xdi.resolveContextByIname(xri, null);
+		boolean xri = false;
+
+		try {
+
+			new XRI3Segment(path);
+			xri = true;
+		} catch (Exception ex) { }
+
+		if (xri)
+			return xdi.resolveContextByIname(path, null);
+		else
+			return xdi.resolveContextByEndpoint(path, null);
 	}
 
 	private Subject fetch(XdiContext context) throws Exception {
@@ -182,7 +195,7 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		return subject;
 	}
 
-	private HCard convertHCard(String xri, XdiContext context, Subject pdsSubject, Properties properties) throws Exception {
+	private HCard convertHCard(String identifier, XdiContext context, Subject pdsSubject, Properties properties) throws Exception {
 
 		String uid = context.getCanonical().toString();
 		String name = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));
@@ -195,8 +208,8 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		hCardBuilder.addURL(new URI("http://xri2xrd.net/" + context.getCanonical().toString()));
 		if (email != null) hCardBuilder.addEmail(new HCard.Email(email));
 
-		properties.put("xri", xri);
-		properties.put("inumber", context.getCanonical().toString());
+		properties.put("identifier", identifier);
+		properties.put("canonical", context.getCanonical().toString());
 		properties.put("x3simple", pdsSubject.toString("X3 Simple", null));
 		properties.put("x3standard", pdsSubject.toString("X3 Simple", null));
 		if (name != null) properties.put("name", name);

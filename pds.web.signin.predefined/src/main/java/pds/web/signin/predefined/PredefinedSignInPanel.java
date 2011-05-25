@@ -51,9 +51,17 @@ public class PredefinedSignInPanel extends Panel {
 			String endpoint = entry.getValue();
 
 			Button contextButton = new Button();
+			contextButton.setStyleName("Default");
 			contextButton.setText("Sign in as " + identifier);
 			contextButton.set("identifier", identifier);
 			contextButton.set("endpoint", endpoint);
+			contextButton.addActionListener(new ActionListener() {
+				private static final long serialVersionUID = 1L;
+
+				public void actionPerformed(ActionEvent e) {
+					onOpenActionPerformed(e);
+				}
+			});
 
 			this.contextsColumn.add(contextButton);
 		}
@@ -70,7 +78,7 @@ public class PredefinedSignInPanel extends Panel {
 		
 		Xdi xdi = PDSApplication.getApp().getXdi();
 
-		String endpoint = (String) contextButton.get("identifier");
+		String endpoint = (String) contextButton.get("endpoint");
 		if (endpoint == null || endpoint.trim().equals("")) return;
 		if (! endpoint.endsWith("/")) endpoint += "/";
 		if ((! endpoint.toLowerCase().startsWith("http://")) && (! endpoint.toLowerCase().startsWith("https://"))) endpoint = "http://" + endpoint;
@@ -109,16 +117,5 @@ public class PredefinedSignInPanel extends Panel {
 		column2.add(label4);
 		contextsColumn = new Column();
 		column2.add(contextsColumn);
-		Button button2 = new Button();
-		button2.setStyleName("Default");
-		button2.setText("Open Personal Data Store");
-		button2.addActionListener(new ActionListener() {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e) {
-				onOpenActionPerformed(e);
-			}
-		});
-		contextsColumn.add(button2);
 	}
 }

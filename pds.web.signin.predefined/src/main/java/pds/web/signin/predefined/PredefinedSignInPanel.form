@@ -57,15 +57,7 @@
 
 
 <c i="Component_contextsColumn" t="nextapp.echo.app.Column" vis="private">
-<c i="Component_button2" t="nextapp.echo.app.Button">
-<p n="styleName">Default</p>
 
-<e t="action">
-<h n="actionPerformed" v="onOpenActionPerformed"/>
-</e>
-
-<p n="text">Open Personal Data Store</p>
-</c>
 </c>
 </c>
 </c>
