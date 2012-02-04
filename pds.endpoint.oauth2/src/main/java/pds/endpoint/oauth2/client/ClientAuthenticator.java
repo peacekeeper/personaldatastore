@@ -1,6 +1,6 @@
 package pds.endpoint.oauth2.client;
 
-import net.smartam.leeloo.as.request.OAuthRequest;
+import org.apache.amber.oauth2.as.request.OAuthRequest;
 
 public interface ClientAuthenticator {
 

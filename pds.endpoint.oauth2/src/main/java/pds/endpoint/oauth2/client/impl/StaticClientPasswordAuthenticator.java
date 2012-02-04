@@ -2,7 +2,8 @@ package pds.endpoint.oauth2.client.impl;
 
 import java.util.Map;
 
-import net.smartam.leeloo.as.request.OAuthRequest;
+import org.apache.amber.oauth2.as.request.OAuthRequest;
+
 import pds.endpoint.oauth2.client.ClientAuthenticator;
 
 public class StaticClientPasswordAuthenticator implements ClientAuthenticator {

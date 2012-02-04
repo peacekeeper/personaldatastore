@@ -13,12 +13,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.smartam.leeloo.as.issuer.OAuthIssuer;
-import net.smartam.leeloo.as.response.OAuthASResponse;
-import net.smartam.leeloo.as.response.OAuthASResponse.OAuthAuthorizationResponseBuilder;
-import net.smartam.leeloo.common.message.OAuthResponse;
-import net.smartam.leeloo.common.message.types.ResponseType;
-
+import org.apache.amber.oauth2.as.issuer.OAuthIssuer;
+import org.apache.amber.oauth2.as.response.OAuthASResponse;
+import org.apache.amber.oauth2.as.response.OAuthASResponse.OAuthAuthorizationResponseBuilder;
+import org.apache.amber.oauth2.common.message.OAuthResponse;
+import org.apache.amber.oauth2.common.message.types.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.VelocityContext;

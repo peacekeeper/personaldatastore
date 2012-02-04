@@ -8,12 +8,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.smartam.leeloo.as.issuer.OAuthIssuer;
-import net.smartam.leeloo.as.request.OAuthTokenRequest;
-import net.smartam.leeloo.as.response.OAuthASResponse;
-import net.smartam.leeloo.common.exception.OAuthProblemException;
-import net.smartam.leeloo.common.message.OAuthResponse;
-
+import org.apache.amber.oauth2.as.issuer.OAuthIssuer;
+import org.apache.amber.oauth2.as.request.OAuthTokenRequest;
+import org.apache.amber.oauth2.as.response.OAuthASResponse;
+import org.apache.amber.oauth2.common.exception.OAuthProblemException;
+import org.apache.amber.oauth2.common.message.OAuthResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.HttpRequestHandler;
