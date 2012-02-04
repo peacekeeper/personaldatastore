@@ -92,6 +92,20 @@
 							<pomFile>${basedir}/../pdsproject/lib/oauth2-common-0.2-SNAPSHOT.pom</pomFile>
 						</configuration>
 					</execution>
+					<execution>
+						<id>execution3</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>net.smartam.leeloo</groupId>
+							<artifactId>oauth2-parent</artifactId>
+							<version>0.2-SNAPSHOT</version>
+							<packaging>pom</packaging>
+							<file>${basedir}/../pdsproject/lib/oauth2-parent-0.2-SNAPSHOT.pom</file>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
