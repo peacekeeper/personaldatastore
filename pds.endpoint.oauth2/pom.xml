@@ -58,7 +58,7 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-			<plugin>
+<!--			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
 				<executions>
@@ -107,14 +107,19 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+	-		</plugin> -->
 		</plugins>
 	</build>
 	<repositories>
-		<repository>
+<!--		<repository>
 			<id>sonatype-snapshots</id>
 			<name>Sonatype-snapshots</name>
 			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		</repository> -->
+		<repository>
+			<id>apache-snapshots</id>
+			<name>Apache-snapshots</name>
+			<url>http://repository.apache.org/snapshots/</url>
 		</repository>
 	</repositories>
 	<dependencies>
@@ -154,10 +159,16 @@
 			<version>1.6.4</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
+<!--		<dependency>
 			<groupId>net.smartam.leeloo</groupId>
 			<artifactId>oauth2-authzserver</artifactId>
 			<version>0.2-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>-->
+		<dependency>
+			<groupId>org.apache.amber</groupId>
+			<artifactId>oauth2-authzserver</artifactId>
+			<version>0.2-20111111.201615-24</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
