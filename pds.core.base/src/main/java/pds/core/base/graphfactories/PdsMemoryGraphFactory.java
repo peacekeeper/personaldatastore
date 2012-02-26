@@ -2,13 +2,12 @@ package pds.core.base.graphfactories;
 
 import javax.servlet.FilterConfig;
 
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.impl.memory.MemoryGraphFactory;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
-
 import pds.core.base.PdsException;
 import pds.core.base.PdsGraphFactory;
 import pds.core.base.PdsInstance;
+import xdi2.core.Graph;
+import xdi2.core.impl.memory.MemoryGraphFactory;
+import xdi2.core.xri3.impl.XRI3Segment;
 
 public class PdsMemoryGraphFactory implements PdsGraphFactory {
 

@@ -61,27 +61,15 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.higgins</groupId>
-			<artifactId>xdi4j</artifactId>
-			<version>1.0.800</version>
+			<groupId>xdi2</groupId>
+			<artifactId>xdi2-client</artifactId>
+			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.4</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>dom4j</groupId>
-			<artifactId>dom4j</artifactId>
-			<version>1.6.1</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

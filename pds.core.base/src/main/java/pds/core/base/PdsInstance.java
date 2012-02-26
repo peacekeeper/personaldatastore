@@ -1,7 +1,7 @@
 package pds.core.base;
 
-import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractMessagingTarget;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.target.impl.AbstractMessagingTarget;
 
 /**
  * A PdsInstance represents a single PDS account backed by an XDI4j Graph object.

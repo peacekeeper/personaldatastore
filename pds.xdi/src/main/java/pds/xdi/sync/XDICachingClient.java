@@ -35,7 +35,7 @@ public class XDICachingClient implements XDIClient {
 	}
 
 	@Override
-	public MessageResult send(MessageEnvelope messageEnvelope, MessageResult messageResult) throws MessagingException {
+	public MessageResult send(MessageEnvelope messageEnvelope, MessageResult messageResult) throws Xdi2MessagingException {
 
 		return this.xdiClient.send(messageEnvelope, messageResult);
 	}

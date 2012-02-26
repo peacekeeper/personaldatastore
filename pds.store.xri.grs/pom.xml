@@ -6,10 +6,8 @@
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>pdsproject</groupId>
 	<artifactId>pds.store.xri.grs</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1-SNAPSHOT</version>
 	<name>pds.store.xri.grs</name>
 	<build>
 		<plugins>

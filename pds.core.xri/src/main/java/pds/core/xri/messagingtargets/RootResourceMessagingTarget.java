@@ -1,14 +1,9 @@
 package pds.core.xri.messagingtargets;
 
-import org.eclipse.higgins.xdi4j.Subject;
-import org.eclipse.higgins.xdi4j.constants.DictionaryConstants;
-import org.eclipse.higgins.xdi4j.exceptions.MessagingException;
-import org.eclipse.higgins.xdi4j.messaging.Message;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceHandler;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceMessagingTarget;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
-
 import pds.core.xri.XriPdsInstanceFactory;
+import xdi2.core.exceptions.Xdi2MessagingException;
+import xdi2.messaging.target.impl.ResourceHandler;
+import xdi2.messaging.target.impl.ResourceMessagingTarget;
 
 public class RootResourceMessagingTarget extends ResourceMessagingTarget {
 
@@ -20,7 +15,7 @@ public class RootResourceMessagingTarget extends ResourceMessagingTarget {
 	}
 
 	@Override
-	public ResourceHandler getResource(Message message, Subject subject) throws MessagingException {
+	public ResourceHandler getResource(Message message, Subject subject) throws Xdi2MessagingException {
 
 		if (message.getMessageEnvelope().getGraph().containsStatement(subject.getSubjectXri(), DictionaryConstants.XRI_IS_A, new XRI3Segment(subject.getSubjectXri().toString().substring(0, 1)))) {
 

@@ -2,7 +2,7 @@ package pds.core.base;
 
 import javax.servlet.FilterConfig;
 
-import org.eclipse.higgins.xdi4j.Graph;
+import xdi2.core.Graph;
 
 /**
  * This interface is used by PdsFilter to get an XDI4j Graph for a given PdsInstance.

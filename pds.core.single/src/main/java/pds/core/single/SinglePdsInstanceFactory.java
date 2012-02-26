@@ -2,11 +2,10 @@ package pds.core.single;
 
 import javax.servlet.FilterConfig;
 
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
-
 import pds.core.base.PdsException;
 import pds.core.base.PdsInstance;
 import pds.core.base.PdsInstanceFactory;
+import xdi2.core.xri3.impl.XRI3Segment;
 
 public class SinglePdsInstanceFactory implements PdsInstanceFactory {
 

@@ -19,7 +19,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.asn1.x509.X509Name;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
-import org.openxri.xml.CertificateService;
 import org.openxri.xml.Service;
 import org.openxri.xml.XDIService;
 

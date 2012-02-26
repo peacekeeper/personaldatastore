@@ -3,17 +3,14 @@ package pds.core.base.messagingtargets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.higgins.xdi4j.Subject;
-import org.eclipse.higgins.xdi4j.exceptions.MessagingException;
-import org.eclipse.higgins.xdi4j.messaging.Message;
-import org.eclipse.higgins.xdi4j.messaging.server.EndpointRegistry;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceHandler;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceMessagingTarget;
-import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.ReadOnlyAddressInterceptor;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
-
 import pds.core.base.PdsInstance;
+import xdi2.core.ContextNode;
+import xdi2.core.exceptions.Xdi2MessagingException;
+import xdi2.core.xri3.impl.XRI3;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Operation;
+import xdi2.messaging.target.impl.ResourceHandler;
+import xdi2.messaging.target.impl.ResourceMessagingTarget;
 
 public class PdsResourceMessagingTarget extends ResourceMessagingTarget {
 
@@ -21,13 +18,13 @@ public class PdsResourceMessagingTarget extends ResourceMessagingTarget {
 
 	public PdsResourceMessagingTarget() {
 
-		super(true);
+		super();
 	}
 
 	@Override
-	public void init(EndpointRegistry endpointRegistry) throws Exception {
+	public void init() throws Exception {
 
-		super.init(endpointRegistry);
+		super.init();
 
 		// add a ReadOnlyAddressInterceptor
 
@@ -38,19 +35,19 @@ public class PdsResourceMessagingTarget extends ResourceMessagingTarget {
 		readOnlyAddresses.add(new XRI3(canonical + "/$$is"));
 		readOnlyAddresses.add(new XRI3(canonical + "/$is$a"));
 
-		ReadOnlyAddressInterceptor readOnlyAddressInterceptor = new ReadOnlyAddressInterceptor();
+/*	TODO	ReadOnlyAddressInterceptor readOnlyAddressInterceptor = new ReadOnlyAddressInterceptor();
 		readOnlyAddressInterceptor.setReadOnlyAddresses(readOnlyAddresses.toArray(new XRI3[readOnlyAddresses.size()]));
-		this.getAddressInterceptors().add(readOnlyAddressInterceptor);
+		this.getAddressInterceptors().add(readOnlyAddressInterceptor);*/
 	}
 
 	@Override
-	public ResourceHandler getResource(Message message, Subject operationSubject) throws MessagingException {
+	public ResourceHandler getResourceHandler(Operation operation, ContextNode operationContextNode) throws Xdi2MessagingException {
 
 		for (XRI3Segment alias : this.pdsInstance.getAliases()) {
 
-			if (operationSubject.getSubjectXri().equals(alias)) {
+			if (operationContextNode.getXri().equals(alias)) {
 
-				return new PdsSubjectResourceHandler(message, operationSubject, this.pdsInstance);
+				return new PdsSubjectResourceHandler(operation, operationContextNode, this.pdsInstance);
 			}
 		}
 

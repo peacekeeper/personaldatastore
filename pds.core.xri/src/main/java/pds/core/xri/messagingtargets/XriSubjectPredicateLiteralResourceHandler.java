@@ -1,20 +1,13 @@
 package pds.core.xri.messagingtargets;
 
 
-import org.eclipse.higgins.xdi4j.Literal;
-import org.eclipse.higgins.xdi4j.Predicate;
-import org.eclipse.higgins.xdi4j.Subject;
-import org.eclipse.higgins.xdi4j.exceptions.MessagingException;
-import org.eclipse.higgins.xdi4j.messaging.Message;
-import org.eclipse.higgins.xdi4j.messaging.MessageResult;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractResourceHandler;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.ExecutionContext;
-
 import pds.core.xri.XriPdsInstance;
 import pds.store.user.StoreException;
 import pds.store.user.StoreUtil;
 import pds.store.user.User;
+import xdi2.core.exceptions.Xdi2MessagingException;
+import xdi2.messaging.MessageResult;
+import xdi2.messaging.target.impl.AbstractResourceHandler;
 
 public class XriSubjectPredicateLiteralResourceHandler extends AbstractResourceHandler {
 
@@ -28,7 +21,7 @@ public class XriSubjectPredicateLiteralResourceHandler extends AbstractResourceH
 	}
 
 	@Override
-	public boolean executeMod(Operation operation, MessageResult messageResult, ExecutionContext executionContext) throws MessagingException {
+	public boolean executeMod(Operation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 		User user = this.pdsInstance.getUser();
 		pds.store.user.Store userStore = this.pdsInstance.getPdsInstanceFactory().getUserStore();

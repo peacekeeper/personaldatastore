@@ -3,16 +3,13 @@ package pds.core.base.messagingtargets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.exceptions.MessagingException;
-import org.eclipse.higgins.xdi4j.messaging.Message;
-import org.eclipse.higgins.xdi4j.messaging.server.EndpointRegistry;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceHandler;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceMessagingTarget;
-import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.ReadOnlyAddressInterceptor;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
-
 import pds.core.base.PdsInstance;
+import xdi2.core.ContextNode;
+import xdi2.core.exceptions.Xdi2MessagingException;
+import xdi2.core.xri3.impl.XRI3;
+import xdi2.messaging.Operation;
+import xdi2.messaging.target.impl.ResourceHandler;
+import xdi2.messaging.target.impl.ResourceMessagingTarget;
 
 public class ContextResourceMessagingTarget extends ResourceMessagingTarget {
 
@@ -20,13 +17,13 @@ public class ContextResourceMessagingTarget extends ResourceMessagingTarget {
 
 	public ContextResourceMessagingTarget() {
 
-		super(true);
+		super();
 	}
 
 	@Override
-	public void init(EndpointRegistry endpointRegistry) throws Exception {
+	public void init() throws Exception {
 
-		super.init(endpointRegistry);
+		super.init();
 
 		// add a ReadOnlyAddressInterceptor
 
@@ -37,15 +34,15 @@ public class ContextResourceMessagingTarget extends ResourceMessagingTarget {
 		readOnlyAddresses.add(new XRI3("$/$is$a"));
 		readOnlyAddresses.add(new XRI3("$/$is($xdi$v$1)"));
 
-		ReadOnlyAddressInterceptor readOnlyAddressInterceptor = new ReadOnlyAddressInterceptor();
+/* TODO		ReadOnlyAddressInterceptor readOnlyAddressInterceptor = new ReadOnlyAddressInterceptor();
 		readOnlyAddressInterceptor.setReadOnlyAddresses(readOnlyAddresses.toArray(new XRI3[readOnlyAddresses.size()]));
-		this.getAddressInterceptors().add(readOnlyAddressInterceptor);
+		this.getAddressInterceptors().add(readOnlyAddressInterceptor); */
 	}
 
 	@Override
-	public ResourceHandler getResource(Message message, Graph operationGraph) throws MessagingException {
+	public ResourceHandler getResourceHandler(Operation operation, ContextNode operationContextNode) throws Xdi2MessagingException {
 
-		return new ContextGraphResourceHandler(message, operationGraph, this.pdsInstance);
+		return new ContextGraphResourceHandler(operation, operationContextNode, this.pdsInstance);
 	}
 
 	public PdsInstance getPdsInstance() {

@@ -21,7 +21,7 @@ public class Email {
 	private StringWriter stringWriter;
 	private PrintWriter printWriter;
 
-	public Email(String subject, String from, String tos, String server) throws MessagingException {
+	public Email(String subject, String from, String tos, String server) throws Xdi2MessagingException {
 
 		Properties sessionProperties = new Properties();
 		sessionProperties.put("mail.smtp.host", server);
@@ -46,7 +46,7 @@ public class Email {
 		this.printWriter.println();
 	}
 
-	public void send() throws MessagingException {
+	public void send() throws Xdi2MessagingException {
 
 		this.message.setSentDate(new Date());
 

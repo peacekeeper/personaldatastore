@@ -4,13 +4,12 @@ import java.io.IOException;
 
 import javax.servlet.FilterConfig;
 
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.impl.keyvalue.bdb.BDBGraphFactory;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
-
 import pds.core.base.PdsException;
 import pds.core.base.PdsGraphFactory;
 import pds.core.base.PdsInstance;
+import xdi2.core.Graph;
+import xdi2.core.impl.keyvalue.bdb.BDBGraphFactory;
+import xdi2.core.xri3.impl.XRI3Segment;
 
 public class PdsBDBGraphFactory implements PdsGraphFactory {
 

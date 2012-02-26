@@ -1,6 +1,6 @@
 package pds.dictionary;
 
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import xdi2.core.xri3.impl.XRI3Segment;
 
 public class PdsDictionary {
 

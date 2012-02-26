@@ -3,19 +3,10 @@ package pds.core.xri.messagingtargets;
 
 import java.util.List;
 
+import javax.xml.ws.soap.Addressing;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.higgins.xdi4j.Subject;
-import org.eclipse.higgins.xdi4j.addressing.Addressing;
-import org.eclipse.higgins.xdi4j.constants.DictionaryConstants;
-import org.eclipse.higgins.xdi4j.exceptions.MessagingException;
-import org.eclipse.higgins.xdi4j.messaging.Message;
-import org.eclipse.higgins.xdi4j.messaging.MessageResult;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractResourceHandler;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.ExecutionContext;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.GCSAuthority;
 import org.openxri.XRI;
 
@@ -25,6 +16,14 @@ import pds.store.user.StoreUtil;
 import pds.store.xri.Xri;
 import pds.store.xri.XriData;
 import pds.store.xri.XriStoreException;
+import xdi2.core.ContextNode;
+import xdi2.core.exceptions.Xdi2MessagingException;
+import xdi2.core.xri3.impl.XRI3;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.MessageResult;
+import xdi2.messaging.Operation;
+import xdi2.messaging.target.ExecutionContext;
+import xdi2.messaging.target.impl.AbstractResourceHandler;
 
 public class RootSubjectResourceHandler extends AbstractResourceHandler {
 
@@ -32,24 +31,24 @@ public class RootSubjectResourceHandler extends AbstractResourceHandler {
 
 	private XriPdsInstanceFactory pdsInstanceFactory;
 
-	public RootSubjectResourceHandler(Message message, Subject subject, XriPdsInstanceFactory pdsInstanceFactory) {
+	public RootSubjectResourceHandler(Operation operation, ContextNode contextNode, XriPdsInstanceFactory pdsInstanceFactory) {
 
-		super(message, subject);
+		super(operation, contextNode);
 
 		this.pdsInstanceFactory = pdsInstanceFactory;
 	}
 
 	@Override
-	public boolean executeAdd(Operation operation, MessageResult messageResult, ExecutionContext executionContext) throws MessagingException {
+	public boolean executeAdd(Operation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 		pds.store.xri.XriStore xriStore = this.pdsInstanceFactory.getXriStore();
 		pds.store.user.Store userStore = this.pdsInstanceFactory.getUserStore();
 
 		// read information from the message
 
-		String xriString = this.operationSubject.getSubjectXri().toString();
-		String password = Addressing.findLiteralData(this.operationSubject, new XRI3("$password"));
-		String email = Addressing.findLiteralData(this.operationSubject, new XRI3("+email"));
+		String xriString = this.operationContextNode.getSubjectXri().toString();
+		String password = Addressing.findLiteralData(this.operationContextNode, new XRI3("$password"));
+		String email = Addressing.findLiteralData(this.operationContextNode, new XRI3("+email"));
 
 		// try to find parent xri
 
@@ -80,7 +79,7 @@ public class RootSubjectResourceHandler extends AbstractResourceHandler {
 				userStore.createOrUpdateUser(xriString, StoreUtil.hashPass(password), null, xriString, email, Boolean.FALSE);
 			}
 
-			XriData xriData = xriStore.createXriDataFromSubject(this.operationSubject);
+			XriData xriData = xriStore.createXriDataFromSubject(this.operationContextNode);
 
 			xri = xriStore.registerXri(parentXri, localName, xriData, 0);
 			inumber = xri.getCanonicalID().getValue();
@@ -100,13 +99,13 @@ public class RootSubjectResourceHandler extends AbstractResourceHandler {
 	}
 
 	@Override
-	public boolean executeGet(Operation operation, MessageResult messageResult, ExecutionContext executionContext) throws MessagingException {
+	public boolean executeGet(Operation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 		pds.store.xri.XriStore xriStore = this.pdsInstanceFactory.getXriStore();
 
 		// read information from the message
 
-		String xriString = this.operationSubject.getSubjectXri().toString();
+		String xriString = this.operationContextNode.getSubjectXri().toString();
 
 		// retrieve the xri
 
@@ -128,15 +127,15 @@ public class RootSubjectResourceHandler extends AbstractResourceHandler {
 
 			if (xri.getCanonicalID() != null) {
 
-				messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), new XRI3Segment("$$is"), new XRI3Segment(xri.getCanonicalID().getValue()));
+				messageResult.getGraph().createStatement(this.operationContextNode.getSubjectXri(), new XRI3Segment("$$is"), new XRI3Segment(xri.getCanonicalID().getValue()));
 			}
 
-			messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_IS_A, new XRI3Segment(this.operationSubject.getSubjectXri().getFirstSubSegment().getGCS().toString()));
+			messageResult.getGraph().createStatement(this.operationContextNode.getSubjectXri(), DictionaryConstants.XRI_IS_A, new XRI3Segment(this.operationContextNode.getSubjectXri().getFirstSubSegment().getGCS().toString()));
 
 			List<String> aliases = xri.getAliases();
 			for (String alias : aliases) {
 
-				messageResult.getGraph().createStatement(this.operationSubject.getSubjectXri(), DictionaryConstants.XRI_IS, new XRI3Segment(alias));
+				messageResult.getGraph().createStatement(this.operationContextNode.getSubjectXri(), DictionaryConstants.XRI_IS, new XRI3Segment(alias));
 			}
 		} catch (XriStoreException ex) {
 

@@ -1,10 +1,9 @@
 package pds.core.any;
 
-import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractMessagingTarget;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
-
 import pds.core.base.PdsInstance;
 import pds.core.base.impl.AbstractPdsInstance;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.target.impl.AbstractMessagingTarget;
 
 public class AnyPdsInstance extends AbstractPdsInstance implements PdsInstance {
 

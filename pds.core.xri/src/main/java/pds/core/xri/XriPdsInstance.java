@@ -2,8 +2,6 @@ package pds.core.xri;
 
 import java.util.List;
 
-import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractMessagingTarget;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.xml.CanonicalID;
 
 import pds.core.base.PdsInstance;
@@ -12,6 +10,8 @@ import pds.core.xri.messagingtargets.XriResourceMessagingTarget;
 import pds.store.user.User;
 import pds.store.xri.Xri;
 import pds.store.xri.XriStoreException;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.target.impl.AbstractMessagingTarget;
 
 public class XriPdsInstance extends AbstractPdsInstance implements PdsInstance {
 

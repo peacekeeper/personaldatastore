@@ -5,25 +5,15 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.higgins.xdi4j.Literal;
-import org.eclipse.higgins.xdi4j.Predicate;
-import org.eclipse.higgins.xdi4j.Subject;
-import org.eclipse.higgins.xdi4j.exceptions.MessagingException;
-import org.eclipse.higgins.xdi4j.messaging.Message;
-import org.eclipse.higgins.xdi4j.messaging.server.EndpointRegistry;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceHandler;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.ResourceMessagingTarget;
-import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.authn.PasswordAuthenticationMessageInterceptor;
-import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.authn.PasswordAuthenticationMessageInterceptor.PasswordValidator;
-import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.authz.ProtectedAddressInterceptor;
-import org.eclipse.higgins.xdi4j.messaging.server.interceptor.impl.authz.ProtectedResultInterceptor;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.xri.XriPdsInstance;
 import pds.store.user.StoreUtil;
 import pds.store.user.User;
 import pds.store.xri.Xri;
+import xdi2.core.exceptions.Xdi2MessagingException;
+import xdi2.messaging.target.impl.ResourceHandler;
+import xdi2.messaging.target.impl.ResourceMessagingTarget;
+import xdi2.server.EndpointRegistry;
 
 public class XriResourceMessagingTarget extends ResourceMessagingTarget {
 
@@ -46,7 +36,7 @@ public class XriResourceMessagingTarget extends ResourceMessagingTarget {
 		PasswordAuthenticationMessageInterceptor passwordAuthenticationMessageInterceptor = new PasswordAuthenticationMessageInterceptor();
 		passwordAuthenticationMessageInterceptor.setPasswordValidator(new PasswordValidator() {
 
-			public boolean isValidPassword(XRI3Segment senderXri3, String password) throws MessagingException {
+			public boolean isValidPassword(XRI3Segment senderXri3, String password) throws Xdi2MessagingException {
 
 				pds.store.xri.XriStore xriStore = XriResourceMessagingTarget.this.pdsInstance.getPdsInstanceFactory().getXriStore();
 				pds.store.user.Store userStore = XriResourceMessagingTarget.this.pdsInstance.getPdsInstanceFactory().getUserStore();
@@ -119,7 +109,7 @@ public class XriResourceMessagingTarget extends ResourceMessagingTarget {
 	}
 
 	@Override
-	public ResourceHandler getResource(Message message, Subject operationSubject) throws MessagingException {
+	public ResourceHandler getResource(Message message, Subject operationSubject) throws Xdi2MessagingException {
 
 		for (XRI3Segment alias : this.pdsInstance.getAliases()) {
 
@@ -133,7 +123,7 @@ public class XriResourceMessagingTarget extends ResourceMessagingTarget {
 	}
 
 	@Override
-	public ResourceHandler getResource(Message message, Subject operationSubject, Predicate operationPredicate, Literal operationLiteral) throws MessagingException {
+	public ResourceHandler getResource(Message message, Subject operationSubject, Predicate operationPredicate, Literal operationLiteral) throws Xdi2MessagingException {
 
 		for (XRI3Segment alias : this.pdsInstance.getAliases()) {
 

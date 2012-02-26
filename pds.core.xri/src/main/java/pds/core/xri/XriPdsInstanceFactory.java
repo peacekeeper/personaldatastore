@@ -14,14 +14,14 @@ import javax.servlet.FilterConfig;
 
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 
 import pds.core.base.PdsException;
 import pds.core.base.PdsInstance;
 import pds.core.base.PdsInstanceFactory;
 import pds.store.user.User;
 import pds.store.xri.Xri;
+import xdi2.core.xri3.impl.XRI3;
+import xdi2.core.xri3.impl.XRI3Segment;
 
 public class XriPdsInstanceFactory implements PdsInstanceFactory {
 

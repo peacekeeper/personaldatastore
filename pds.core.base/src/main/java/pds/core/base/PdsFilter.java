@@ -13,16 +13,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.messaging.server.EndpointRegistry;
-import org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet;
-import org.eclipse.higgins.xdi4j.messaging.server.MessagingTarget;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.AbstractMessagingTarget;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.CompoundMessagingTarget;
-import org.eclipse.higgins.xdi4j.messaging.server.impl.graph.GraphMessagingTarget;
 
 import pds.core.base.messagingtargets.ContextResourceMessagingTarget;
 import pds.core.base.messagingtargets.PdsResourceMessagingTarget;
+import xdi2.core.Graph;
+import xdi2.messaging.target.MessagingTarget;
+import xdi2.messaging.target.impl.AbstractMessagingTarget;
+import xdi2.messaging.target.impl.CompoundMessagingTarget;
+import xdi2.messaging.target.impl.graph.GraphMessagingTarget;
+import xdi2.server.EndpointRegistry;
+import xdi2.server.EndpointServlet;
 
 /**
  * A servlet filter that instantiates PDS instances as needed and mounts them
@@ -179,7 +179,7 @@ public class PdsFilter implements Filter {
 
 		ContextResourceMessagingTarget contextResourceMessagingTarget = new ContextResourceMessagingTarget();
 		contextResourceMessagingTarget.setPdsInstance(pdsInstance);
-		contextResourceMessagingTarget.init(endpointRegistry);
+		contextResourceMessagingTarget.init();
 
 		compoundMessagingTarget.getMessagingTargets().add(contextResourceMessagingTarget);
 
@@ -187,7 +187,7 @@ public class PdsFilter implements Filter {
 
 		PdsResourceMessagingTarget pdsResourceMessagingTarget = new PdsResourceMessagingTarget();
 		pdsResourceMessagingTarget.setPdsInstance(pdsInstance);
-		pdsResourceMessagingTarget.init(endpointRegistry);
+		pdsResourceMessagingTarget.init();
 
 		compoundMessagingTarget.getMessagingTargets().add(pdsResourceMessagingTarget);
 
@@ -195,7 +195,7 @@ public class PdsFilter implements Filter {
 
 		for (AbstractMessagingTarget pdsInstanceMessagingTarget : pdsInstance.getMessagingTargets()) {
 
-			pdsInstanceMessagingTarget.init(endpointRegistry);
+			pdsInstanceMessagingTarget.init();
 
 			compoundMessagingTarget.getMessagingTargets().add(pdsInstanceMessagingTarget);
 		}
@@ -208,13 +208,13 @@ public class PdsFilter implements Filter {
 
 		GraphMessagingTarget graphMessagingTarget = new GraphMessagingTarget();
 		graphMessagingTarget.setGraph(graph);
-		graphMessagingTarget.init(endpointRegistry);
+		graphMessagingTarget.init();
 
 		compoundMessagingTarget.getMessagingTargets().add(graphMessagingTarget);
 
 		// init and done
 
-		compoundMessagingTarget.init(endpointRegistry);
+		compoundMessagingTarget.init();
 
 		return compoundMessagingTarget;
 	}
