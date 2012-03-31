@@ -7,12 +7,10 @@ import nextapp.echo.app.Panel;
 import nextapp.echo.app.ResourceImageReference;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
-
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
-
 import pds.web.ui.DeveloperModeComponent;
 import pds.web.ui.MainWindow;
 import pds.xdi.XdiContext;
+import xdi2.core.xri3.impl.XRI3;
 
 public class XdiPanel extends Panel implements DeveloperModeComponent {
 

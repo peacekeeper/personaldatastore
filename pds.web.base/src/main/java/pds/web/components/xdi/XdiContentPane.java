@@ -2,6 +2,8 @@ package pds.web.components.xdi;
 
 import java.util.ResourceBundle;
 
+import javax.xml.ws.soap.Addressing;
+
 import nextapp.echo.app.Border;
 import nextapp.echo.app.Color;
 import nextapp.echo.app.Column;
@@ -15,18 +17,15 @@ import nextapp.echo.app.SplitPane;
 import nextapp.echo.app.layout.GridLayoutData;
 import nextapp.echo.app.layout.RowLayoutData;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
-
-import org.eclipse.higgins.XDI2.Graph;
-import org.eclipse.higgins.XDI2.addressing.Addressing;
-import org.eclipse.higgins.XDI2.constants.MessagingConstants;
-import org.eclipse.higgins.XDI2.messaging.MessageResult;
-import org.eclipse.higgins.XDI2.messaging.Operation;
-import org.eclipse.higgins.XDI2.util.CopyUtil;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
-
 import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;
 import pds.xdi.XdiContext;
+import xdi2.core.Graph;
+import xdi2.core.util.CopyUtil;
+import xdi2.core.xri3.impl.XRI3;
+import xdi2.messaging.MessageResult;
+import xdi2.messaging.Operation;
+import xdi2.messaging.util.XDIMessagingConstants;
 
 public class XdiContentPane extends ContentPane {
 
@@ -66,7 +65,7 @@ public class XdiContentPane extends ContentPane {
 
 		try {
 
-			Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET);
+			Operation operation = this.context.prepareOperation(XDIMessagingConstants.XRI_S_GET);
 
 			if (this.getAddresses != null) {
 

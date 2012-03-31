@@ -140,49 +140,26 @@ public class XdiContext {
 
 		MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
 		Message message = messageEnvelope.getMessageContainer(this.canonical, true).createMessage();
-// TODO		if (this.password != null) messageEnvelope.getGraph().createStatement(this.canonical, new XRI3Segment("$password"), this.password);
+		if (this.password != null) messageEnvelope.getGraph().createStatement(this.canonical, new XRI3Segment("$password"), this.password);
 
 		return message;
 	}
 
-	public Operation prepareOperation(XRI3Segment operationXri) {
+	public void prepareOperations(XRI3Segment operationXri, XRI3Segment[] targetXris) {
 
-		MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
-		Message message = messageEnvelope.newMessage(this.canonical);
-		if (this.password != null) messageEnvelope.getGraph().createStatement(this.canonical, new XRI3Segment("$password"), this.password);
-		Operation operation = message.createOperation(operationXri);
+		Message message = this.prepareMessage();
+		
+		for (XRI3Segment targetXri : targetXris) {
 
-		return operation;
-	}
-
-	public Operation prepareOperation(XRI3Segment operationXri, Graph operationGraph) {
-
-		Operation operation = this.prepareOperation(operationXri);
-		operation.createOperationGraph(operationGraph);
-
-		return operation;
-	}
-
-	public Operation prepareOperation(XRI3Segment operationXri, XRI3[] operationAddresses) {
-
-		Operation operation = this.prepareOperation(operationXri);
-		Graph operationGraph = operation.createOperationGraph(null);
-
-		for (XRI3 operationAddress : operationAddresses) {
-
-			CopyUtil.copyStatement(Addressing.convertAddressToStatement(operationAddress), operationGraph, null);
+			message.createOperation(operationXri, targetXri);
 		}
-
-		return operation;
 	}
 
-	public Operation prepareOperation(XRI3Segment operationXri, XRI3 operationAddress) {
+	public void prepareOperation(XRI3Segment operationXri, XRI3Segment targetXri) {
 
-		Operation operation = this.prepareOperation(operationXri);
-		Graph operationGraph = operation.createOperationGraph(null);
-		CopyUtil.copyStatement(Addressing.convertAddressToStatement(operationAddress), operationGraph, null);
+		Message message = this.prepareMessage();
 
-		return operation;
+		message.createOperation(operationXri, targetXri);
 	}
 
 	/*
@@ -324,22 +301,22 @@ public class XdiContext {
 
 	private XdiGraphEvent xdiGraphEventForOperationXri(XRI3Segment operationXri) {
 
-		if (MessagingConstants.XRI_GET.equals(operationXri)) return new XdiGraphGetEvent(this);
-		if (MessagingConstants.XRI_ADD.equals(operationXri)) return new XdiGraphAddEvent(this);
-		if (MessagingConstants.XRI_MOD.equals(operationXri)) return new XdiGraphModEvent(this);
-		if (MessagingConstants.XRI_SET.equals(operationXri)) return new XdiGraphSetEvent(this);
-		if (MessagingConstants.XRI_DEL.equals(operationXri)) return new XdiGraphDelEvent(this);
+		if (XDIMessagingConstants.XRI_GET.equals(operationXri)) return new XdiGraphGetEvent(this);
+		if (XDIMessagingConstants.XRI_ADD.equals(operationXri)) return new XdiGraphAddEvent(this);
+		if (XDIMessagingConstants.XRI_MOD.equals(operationXri)) return new XdiGraphModEvent(this);
+		if (XDIMessagingConstants.XRI_SET.equals(operationXri)) return new XdiGraphSetEvent(this);
+		if (XDIMessagingConstants.XRI_DEL.equals(operationXri)) return new XdiGraphDelEvent(this);
 
 		return null;
 	}
 
 	private Map<XRI3, List<XdiGraphListener> > xdiGraphListenersForOperationXri(XRI3Segment operationXri) {
 
-		if (MessagingConstants.XRI_GET.equals(operationXri)) return this.xdiGetGraphListeners;
-		if (MessagingConstants.XRI_ADD.equals(operationXri)) return this.xdiAddGraphListeners;
-		if (MessagingConstants.XRI_MOD.equals(operationXri)) return this.xdiModGraphListeners;
-		if (MessagingConstants.XRI_SET.equals(operationXri)) return this.xdiSetGraphListeners;
-		if (MessagingConstants.XRI_DEL.equals(operationXri)) return this.xdiDelGraphListeners;
+		if (XDIMessagingConstants.XRI_GET.equals(operationXri)) return this.xdiGetGraphListeners;
+		if (XDIMessagingConstants.XRI_ADD.equals(operationXri)) return this.xdiAddGraphListeners;
+		if (XDIMessagingConstants.XRI_MOD.equals(operationXri)) return this.xdiModGraphListeners;
+		if (XDIMessagingConstants.XRI_SET.equals(operationXri)) return this.xdiSetGraphListeners;
+		if (XDIMessagingConstants.XRI_DEL.equals(operationXri)) return this.xdiDelGraphListeners;
 
 		return new HashMap<XRI3, List<XdiGraphListener> > ();
 	}

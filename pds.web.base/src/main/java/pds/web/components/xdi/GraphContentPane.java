@@ -12,20 +12,18 @@ import nextapp.echo.app.Insets;
 import nextapp.echo.app.Row;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
-
-import org.eclipse.higgins.XDI2.Graph;
-import org.eclipse.higgins.XDI2.Literal;
-import org.eclipse.higgins.XDI2.Statement;
-import org.eclipse.higgins.XDI2.impl.memory.MemoryGraphFactory;
-import org.eclipse.higgins.XDI2.io.XDIWriterRegistry;
-import org.eclipse.higgins.XDI2.util.CopyUtil;
-import org.eclipse.higgins.XDI2.util.CopyUtil.CopyStatementStrategy;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
-
 import pds.web.PDSApplication;
 import pds.web.components.HtmlLabel;
 import pds.web.ui.MessageDialog;
 import pds.web.util.HtmlUtil;
+import xdi2.core.Graph;
+import xdi2.core.Literal;
+import xdi2.core.impl.BasicLiteral;
+import xdi2.core.impl.memory.MemoryGraphFactory;
+import xdi2.core.io.XDIWriterRegistry;
+import xdi2.core.util.CopyUtil;
+import xdi2.core.util.CopyUtil.CopyStrategy;
+import xdi2.core.xri3.impl.XRI3SubSegment;
 
 public class GraphContentPane extends ContentPane {
 
@@ -83,7 +81,7 @@ public class GraphContentPane extends ContentPane {
 	public void setGraph(Graph graph) {
 
 		this.graph = MemoryGraphFactory.getInstance().openGraph();
-		CopyUtil.copyStatements(graph, this.graph, PASSWORDCENSORINGCOPYSTATEMENTSTRATEGY);
+		CopyUtil.copyGraph(graph, this.graph, PASSWORDCENSORINGCOPYSTATEMENTSTRATEGY);
 
 		this.refresh();
 	}
@@ -117,25 +115,19 @@ public class GraphContentPane extends ContentPane {
 		this.refresh();
 	}
 
-	private static final XRI3Segment XRI_PASSWORD = new XRI3Segment("$password");
+	private static final XRI3SubSegment XRI_PASSWORD = new XRI3SubSegment("$password");
 
-	private static CopyStatementStrategy PASSWORDCENSORINGCOPYSTATEMENTSTRATEGY = new CopyStatementStrategy() {
-
-		@Override
-		public boolean doCopy(Statement statement, Graph target) {
-
-			return true;
-		}
+	private static CopyStrategy PASSWORDCENSORINGCOPYSTATEMENTSTRATEGY = new CopyStrategy() {
 
 		@Override
-		public String replaceLiteralData(Literal literal) {
+		public Literal replaceLiteral(Literal literal) {
 
-			if (literal.getPredicate().getPredicateXri().equals(XRI_PASSWORD)) {
+			if (literal.getContextNode().getArcXri().equals(XRI_PASSWORD)) {
 
-				return "********";
+				return new BasicLiteral("********");
 			} else {
 
-				return literal.getData();
+				return literal;
 			}
 		};
 	};
