@@ -1,0 +1,278 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.openxrd</groupId>
+    <artifactId>openxrd</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>OpenXRD-J</name>
+    <description>
+		The OpenXRD-J library provides tools to support developers working with Extensible Resource Descriptors (XRD).
+	</description>
+
+    <repositories>
+        <repository>
+            <id>shibboleth-release</id>
+            <name>Internet2 Releases</name>
+            <layout>default</layout>
+            <url>http://shibboleth.internet2.edu/downloads/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <site>
+            <id>openxrd.website</id>
+            <name>OpenXRD Website</name>
+            <url>scp://tamalpais.joyent.us/users/home/wnorris/domains/openxrd.org/web/public/</url>
+        </site>
+    </distributionManagement>
+
+    <dependencies>
+        <!-- Compile dependencies -->
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>xmltooling</artifactId>
+            <version>1.2.1</version>
+            <optional>false</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.bcel</groupId>
+            <artifactId>bcel</artifactId>
+            <version>5.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.htmlparser</groupId>
+            <artifactId>htmlparser</artifactId>
+            <version>1.6</version>
+            <scope>compile</scope>
+        </dependency>
+
+
+        <!-- Runtime dependencies -->
+        <dependency>
+            <groupId>org.apache.xerces</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>2.9.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.9.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xerces</groupId>
+            <artifactId>resolver</artifactId>
+            <version>2.9.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xerces</groupId>
+            <artifactId>serializer</artifactId>
+            <version>2.9.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.1</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xmlunit</groupId>
+            <artifactId>xmlunit</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>0.9.15</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/bin.xml</descriptor>
+                        <descriptor>src/main/assembly/src.xml</descriptor>
+                    </descriptors>
+                    <tarLongFileMode>gnu</tarLongFileMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-Xmx256m</argLine>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <index>true</index>
+                        <manifestEntries>
+                            <Main-Class>org.openxrd.Version</Main-Class>
+                        </manifestEntries>
+                        <manifestSections>
+                            <manifestSection>
+                                <name>org/openxrd/</name>
+                                <manifestEntries>
+                                    <Implementation-Title>${pom.artifactId}</Implementation-Title>
+                                    <Implementation-Version>${pom.version}</Implementation-Version>
+                                    <Implementation-Vendor>www.openxrd.org</Implementation-Vendor>
+                                </manifestEntries>
+                            </manifestSection>
+                            <manifestSection>
+                                <name>org/openxrd/xrd/</name>
+                                <manifestEntries>
+                                    <Specification-Title>Extensible Resource Descriptor (XRD) v1.0</Specification-Title>
+                                    <Specification-Version>1.0</Specification-Version>
+                                    <Specification-Vendor>OASIS</Specification-Vendor>
+                                </manifestEntries>
+                            </manifestSection>
+                        </manifestSections>
+                    </archive>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <links>
+                        <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+                    </links>
+                    <quiet>true</quiet>
+                    <author>false</author>
+                    <version>true</version>
+                    <doctitle>${project.name} ${project.version} Java API.</doctitle>
+                    <windowtitle>${project.name} ${project.version} Java API.</windowtitle>
+                    <overview>src/main/java/overview.html</overview>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>${project.reporting.outputDirectory}/xref</outputDirectory>
+                    <doctitle>${project.name} ${project.version} Code Cross-Reference</doctitle>
+                    <windowtitle>${project.name} ${project.version} Java API.</windowtitle>
+                    <javadocDir>${project.reporting.outputDirectory}/apidocs</javadocDir>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <outputDirectory>${project.reporting.outputDirectory}/style</outputDirectory>
+                    <enableRSS>false</enableRSS>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>${project.reporting.outputDirectory}/unitTest</outputDirectory>
+                    <xrefLocation>${project.reporting.outputDirectory}/xref</xrefLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <!-- Project Metadata -->
+    <url>https://openxrd.org/</url>
+
+    <inceptionYear>2009</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>Internet2</name>
+        <url>http://www.internet2.edu/</url>
+    </organization>
+
+    <scm>
+        <connection>scm:git:git://github.com/willnorris/java-openxrd.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/willnorris/java-openxrd.git</developerConnection>
+        <url>http://github.com/willnorris/java-openxrd</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>willnorris</id>
+            <name>Will Norris</name>
+            <email>will@willnorris.com</email>
+            <url>http://willnorris.com/</url>
+            <organization>Internet2</organization>
+            <organizationUrl>http://www.internet2.edu/</organizationUrl>
+            <roles>
+                <role>developer</role>
+                <role>documentation</role>
+            </roles>
+            <timezone>-8</timezone>
+        </developer>
+    </developers>
+
+</project>

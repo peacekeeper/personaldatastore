@@ -24,15 +24,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.eclipse.higgins.xdi4j.Subject;
-import org.eclipse.higgins.xdi4j.constants.DictionaryConstants;
-import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
-import org.eclipse.higgins.xdi4j.dictionary.Dictionary;
-import org.eclipse.higgins.xdi4j.messaging.MessageResult;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.util.iterators.IteratorListMaker;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import org.eclipse.higgins.XDI2.Subject;
+import org.eclipse.higgins.XDI2.constants.DictionaryConstants;
+import org.eclipse.higgins.XDI2.constants.MessagingConstants;
+import org.eclipse.higgins.XDI2.dictionary.Dictionary;
+import org.eclipse.higgins.XDI2.messaging.MessageResult;
+import org.eclipse.higgins.XDI2.messaging.Operation;
+import org.eclipse.higgins.XDI2.util.iterators.IteratorListMaker;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
 import org.openxri.resolve.Resolver;
 import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.context.ServletContextAware;
@@ -45,7 +45,7 @@ import pds.xdi.XdiException;
 
 public class AuthorizationServlet implements HttpRequestHandler, ServletContextAware {
 
-	private static final Log log = LogFactory.getLog(AuthorizationServlet.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(AuthorizationServlet.class.getName());
 
 	private static final Xdi xdi;
 

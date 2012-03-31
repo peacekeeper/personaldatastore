@@ -16,7 +16,7 @@ import nextapp.echo.app.Row;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 
-import org.eclipse.higgins.xdi4j.messaging.Operation;
+import org.eclipse.higgins.XDI2.messaging.Operation;
 
 import pds.web.ui.MainWindow;
 import pds.xdi.events.XdiTransactionEvent;

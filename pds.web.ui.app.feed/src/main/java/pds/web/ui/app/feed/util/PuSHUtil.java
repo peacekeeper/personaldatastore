@@ -39,7 +39,7 @@ import org.apache.http.protocol.HttpContext;
 
 public class PuSHUtil {
 
-	private static final Log log = LogFactory.getLog(PuSHUtil.class);
+	private static final Logger log = LoggerFactory.getLogger(PuSHUtil.class);
 
 	private static final DefaultHttpClient httpClient;
 

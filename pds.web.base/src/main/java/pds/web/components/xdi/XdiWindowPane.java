@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.WindowPane;
 
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
 
 import pds.xdi.XdiContext;
 

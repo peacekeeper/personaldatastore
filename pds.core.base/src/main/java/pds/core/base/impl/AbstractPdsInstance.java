@@ -4,20 +4,20 @@ import pds.core.base.PdsInstance;
 
 public abstract class AbstractPdsInstance implements PdsInstance {
 
-	private String target;
+	private String pdsPath;
 
-	public AbstractPdsInstance(String target) {
+	public AbstractPdsInstance(String pdsPath) {
 
-		this.target = target;
+		this.pdsPath = pdsPath;
 	}
 
-	public String getTarget() {
+	public String getPdsPath() {
 
-		return this.target;
+		return this.pdsPath;
 	}
 
-	public void setTarget(String target) {
+	public void setPdsPath(String pdsPath) {
 
-		this.target = target;
+		this.pdsPath = pdsPath;
 	}
 }

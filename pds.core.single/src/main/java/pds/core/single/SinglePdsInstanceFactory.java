@@ -12,6 +12,9 @@ public class SinglePdsInstanceFactory implements PdsInstanceFactory {
 	private XRI3Segment canonical;
 	private XRI3Segment[] aliases;
 	private String[] endpoints;
+	private String privateKey;
+	private String publicKey;
+	private String certificate;
 
 	@Override
 	public void init(FilterConfig filterConfig) throws PdsException {
@@ -31,18 +34,18 @@ public class SinglePdsInstanceFactory implements PdsInstanceFactory {
 		}
 	}
 
-	public String getTarget(String path) {
+	public String getPdsPath(String path) {
 
 		return "";
 	}
 
-	public PdsInstance getPdsInstance(String target) throws PdsException {
+	public PdsInstance getPdsInstance(String pdsPath) throws PdsException {
 
-		return new SinglePdsInstance(target, this.canonical, this.aliases, this.endpoints);
+		return new SinglePdsInstance(pdsPath, this.canonical, this.aliases, this.endpoints, this.privateKey, this.publicKey, this.certificate);
 	}
 
 	@Override
-	public String[] getAllMountTargets(PdsInstance pdsInstance) throws PdsException {
+	public String[] getAllPdsPaths(PdsInstance pdsInstance) throws PdsException {
 
 		return new String[] { "" };
 	}
@@ -86,5 +89,35 @@ public class SinglePdsInstanceFactory implements PdsInstanceFactory {
 	public void setEndpoints(String[] endpoints) {
 
 		this.endpoints = endpoints;
+	}
+
+	public String getPrivateKey() {
+
+		return this.privateKey;
+	}
+
+	public void setPrivateKey(String privateKey) {
+
+		this.privateKey = privateKey;
+	}
+
+	public String getPublicKey() {
+
+		return this.publicKey;
+	}
+
+	public void setPublicKey(String publicKey) {
+
+		this.publicKey = publicKey;
+	}
+
+	public String getCertificate() {
+
+		return this.certificate;
+	}
+
+	public void setCertificate(String certificate) {
+
+		this.certificate = certificate;
 	}
 }

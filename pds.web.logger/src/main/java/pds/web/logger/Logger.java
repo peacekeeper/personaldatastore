@@ -6,14 +6,13 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import pds.web.logger.events.LogEvent;
 import pds.web.logger.events.LogListener;
 
 /**
- * Logger system for CardGears.
+ * Logger system for the web interface.
  * 
  * Every log entry has the following:
  * - A level (INFO, WARNING or PROBLEM)
@@ -32,7 +31,7 @@ public class Logger implements Serializable {
 
 	private static final long serialVersionUID = 7234006165333916570L;
 
-	private static final Log log = LogFactory.getLog(Logger.class.getName());
+	private static final org.slf4j.Logger log = LoggerFactory.getLogger(Logger.class.getName());
 
 	private List<LogListener> logListeners;
 

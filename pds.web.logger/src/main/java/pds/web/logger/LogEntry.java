@@ -1,8 +1,9 @@
 package pds.web.logger;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class LogEntry {
+public class LogEntry implements Serializable {
 
 	private static final long serialVersionUID = -5331544256502104099L;
 

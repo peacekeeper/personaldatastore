@@ -3,13 +3,13 @@ package pds.xdi.sync;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.exceptions.MessagingException;
-import org.eclipse.higgins.xdi4j.impl.memory.MemoryGraphFactory;
-import org.eclipse.higgins.xdi4j.messaging.MessageEnvelope;
-import org.eclipse.higgins.xdi4j.messaging.MessageResult;
-import org.eclipse.higgins.xdi4j.messaging.client.XDIClient;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
+import xdi2.client.XDIClient;
+import xdi2.core.Graph;
+import xdi2.core.exceptions.Xdi2MessagingException;
+import xdi2.core.impl.memory.MemoryGraphFactory;
+import xdi2.core.xri3.impl.XRI3;
+import xdi2.messaging.MessageEnvelope;
+import xdi2.messaging.MessageResult;
 
 public class XDICachingClient implements XDIClient {
 

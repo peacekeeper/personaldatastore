@@ -21,17 +21,17 @@ import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.Predicate;
-import org.eclipse.higgins.xdi4j.Reference;
-import org.eclipse.higgins.xdi4j.Subject;
-import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
-import org.eclipse.higgins.xdi4j.messaging.MessageResult;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.util.iterators.IteratorListMaker;
-import org.eclipse.higgins.xdi4j.util.iterators.MappingReferenceXrisIterator;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import org.eclipse.higgins.XDI2.Graph;
+import org.eclipse.higgins.XDI2.Predicate;
+import org.eclipse.higgins.XDI2.Reference;
+import org.eclipse.higgins.XDI2.Subject;
+import org.eclipse.higgins.XDI2.constants.MessagingConstants;
+import org.eclipse.higgins.XDI2.messaging.MessageResult;
+import org.eclipse.higgins.XDI2.messaging.Operation;
+import org.eclipse.higgins.XDI2.util.iterators.IteratorListMaker;
+import org.eclipse.higgins.XDI2.util.iterators.MappingReferenceXrisIterator;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
 
 import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;

@@ -15,14 +15,14 @@ import org.apache.abdera.model.Element;
 import org.apache.abdera.model.Text.Type;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.Predicate;
-import org.eclipse.higgins.xdi4j.Subject;
-import org.eclipse.higgins.xdi4j.addressing.Addressing;
-import org.eclipse.higgins.xdi4j.multivalue.MultiSubjects;
-import org.eclipse.higgins.xdi4j.types.Timestamps;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import org.eclipse.higgins.XDI2.Graph;
+import org.eclipse.higgins.XDI2.Predicate;
+import org.eclipse.higgins.XDI2.Subject;
+import org.eclipse.higgins.XDI2.addressing.Addressing;
+import org.eclipse.higgins.XDI2.multivalue.MultiSubjects;
+import org.eclipse.higgins.XDI2.types.Timestamps;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
 import org.jdom.Namespace;
 
 import pds.dictionary.PdsDictionary;
@@ -72,7 +72,7 @@ public class FeedDictionary {
 	private static final Namespace NAMESPACE_ACTIVITYSTREAMS = Namespace.getNamespace("activity", "http://activitystrea.ms/spec/1.0/");
 	private static final Namespace NAMESPACE_POCO = Namespace.getNamespace("poco", "http://portablecontacts.net/spec/1.0");
 
-	private static final Log log = LogFactory.getLog(FeedDictionary.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(FeedDictionary.class.getName());
 
 	private FeedDictionary() { }
 

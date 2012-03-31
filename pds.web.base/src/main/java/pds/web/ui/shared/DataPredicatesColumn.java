@@ -5,8 +5,8 @@ import java.util.ResourceBundle;
 import nextapp.echo.app.Column;
 import nextapp.echo.app.Component;
 
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
 
 import pds.dictionary.PdsDictionary;
 import pds.web.ui.MainWindow;

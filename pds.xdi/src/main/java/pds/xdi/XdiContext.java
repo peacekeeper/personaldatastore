@@ -10,23 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.addressing.Addressing;
-import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
-import org.eclipse.higgins.xdi4j.messaging.Message;
-import org.eclipse.higgins.xdi4j.messaging.MessageEnvelope;
-import org.eclipse.higgins.xdi4j.messaging.MessageResult;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.messaging.client.XDIClient;
-import org.eclipse.higgins.xdi4j.messaging.client.http.XDIHttpClient;
-import org.eclipse.higgins.xdi4j.messaging.error.ErrorMessageResult;
-import org.eclipse.higgins.xdi4j.util.CopyUtil;
-import org.eclipse.higgins.xdi4j.util.XriUtil;
-import org.eclipse.higgins.xdi4j.util.iterators.IteratorArrayMaker;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import javax.xml.ws.soap.Addressing;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
@@ -38,10 +25,23 @@ import pds.xdi.events.XdiGraphSetEvent;
 import pds.xdi.events.XdiTransactionEvent;
 import pds.xdi.events.XdiTransactionFailureEvent;
 import pds.xdi.events.XdiTransactionSuccessEvent;
+import xdi2.client.XDIClient;
+import xdi2.client.http.XDIHttpClient;
+import xdi2.core.Graph;
+import xdi2.core.util.CopyUtil;
+import xdi2.core.util.iterators.IteratorArrayMaker;
+import xdi2.core.xri3.impl.XRI3;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
+import xdi2.messaging.MessageEnvelope;
+import xdi2.messaging.MessageResult;
+import xdi2.messaging.Operation;
+import xdi2.messaging.error.ErrorMessageResult;
+import xdi2.messaging.util.XDIMessagingConstants;
 
 public class XdiContext {
 
-	private static final Log log = LogFactory.getLog(XdiContext.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(XdiContext.class.getName());
 
 	private final Xdi xdi;
 	private final XDIClient xdiClient;
@@ -99,14 +99,14 @@ public class XdiContext {
 
 		// $get
 
-		XRI3 operationAddress = new XRI3("" + this.canonical + "/$password");
-		Operation operation = this.prepareOperation(MessagingConstants.XRI_GETEXISTS, operationAddress);
+/* TODO		XRI3 operationAddress = new XRI3("" + this.canonical + "/$password");
+		Operation operation = this.prepareOperation(XDIMessagingConstants.XRI_GET, operationAddress);
 		MessageResult messageResult = this.send(operation);
 
 		if (! Boolean.TRUE.equals(messageResult.getBoolean())) {
 
 			throw new XdiException("Incorrect password.");
-		}
+		}*/
 	}
 
 	public XdiTransactionEvent directXdi(MessageEnvelope messageEnvelope) throws XdiException {
@@ -139,8 +139,8 @@ public class XdiContext {
 	public Message prepareMessage() {
 
 		MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
-		Message message = messageEnvelope.newMessage(this.canonical);
-		if (this.password != null) messageEnvelope.getGraph().createStatement(this.canonical, new XRI3Segment("$password"), this.password);
+		Message message = messageEnvelope.getMessageContainer(this.canonical, true).createMessage();
+// TODO		if (this.password != null) messageEnvelope.getGraph().createStatement(this.canonical, new XRI3Segment("$password"), this.password);
 
 		return message;
 	}
@@ -196,7 +196,7 @@ public class XdiContext {
 
 	public MessageResult send(Message message) throws XdiException {
 
-		return this.send(message.getMessageEnvelope());
+		return this.send(message.getMessageContainer().getMessageEnvelope());
 	}
 
 	public MessageResult send(MessageEnvelope messageEnvelope) throws XdiException {

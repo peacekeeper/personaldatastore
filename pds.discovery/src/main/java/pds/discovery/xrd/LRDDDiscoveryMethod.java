@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.HttpClient;
 import org.opensaml.xml.parse.ParserPool;
 import org.openxrd.discovery.DiscoveryException;
@@ -15,11 +13,13 @@ import org.openxrd.xrd.core.Alias;
 import org.openxrd.xrd.core.Link;
 import org.openxrd.xrd.core.Property;
 import org.openxrd.xrd.core.XRD;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class LRDDDiscoveryMethod implements HttpDiscoveryMethod {
 
-	private static final Log log = LogFactory.getLog(LRDDDiscoveryMethod.class);
+	private static final Logger log = LoggerFactory.getLogger(LRDDDiscoveryMethod.class);
 
 	private HttpDiscoveryMethod parentDiscovery;
 

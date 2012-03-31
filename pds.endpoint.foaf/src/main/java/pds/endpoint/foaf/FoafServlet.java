@@ -4,30 +4,29 @@ package pds.endpoint.foaf;
 import java.io.IOException;
 import java.io.Writer;
 
+import javax.security.auth.Subject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.Subject;
-import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
-import org.eclipse.higgins.xdi4j.messaging.MessageResult;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.resolve.Resolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.HttpRequestHandler;
 
 import pds.dictionary.PdsDictionary;
 import pds.xdi.Xdi;
 import pds.xdi.XdiContext;
+import xdi2.core.Graph;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.MessageResult;
+import xdi2.messaging.Operation;
 
 public class FoafServlet implements HttpRequestHandler {
 
 	private static final long serialVersionUID = 1534867676264547673L;
 
-	private static final Log log = LogFactory.getLog(FoafServlet.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(FoafServlet.class.getName());
 
 	private static final Xdi xdi;
 

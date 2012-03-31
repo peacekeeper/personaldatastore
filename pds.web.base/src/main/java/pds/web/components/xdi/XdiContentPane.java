@@ -16,13 +16,13 @@ import nextapp.echo.app.layout.GridLayoutData;
 import nextapp.echo.app.layout.RowLayoutData;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.addressing.Addressing;
-import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
-import org.eclipse.higgins.xdi4j.messaging.MessageResult;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.util.CopyUtil;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
+import org.eclipse.higgins.XDI2.Graph;
+import org.eclipse.higgins.XDI2.addressing.Addressing;
+import org.eclipse.higgins.XDI2.constants.MessagingConstants;
+import org.eclipse.higgins.XDI2.messaging.MessageResult;
+import org.eclipse.higgins.XDI2.messaging.Operation;
+import org.eclipse.higgins.XDI2.util.CopyUtil;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
 
 import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;

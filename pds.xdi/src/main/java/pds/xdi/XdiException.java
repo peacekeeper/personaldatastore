@@ -1,7 +1,7 @@
 package pds.xdi;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -11,7 +11,7 @@ public class XdiException extends Exception {
 
 	private static final long serialVersionUID = 3274656239599696879L;
 
-	private static Log log = LogFactory.getLog(XdiException.class);
+	private static Logger log = LoggerFactory.getLogger(XdiException.class);
 
 	public XdiException() {
 
@@ -38,6 +38,6 @@ public class XdiException extends Exception {
 
 		super(t);
 
-		log.error(t);
+		log.error(t.getMessage(), t);
 	}
 }

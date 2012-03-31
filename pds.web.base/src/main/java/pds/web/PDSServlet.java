@@ -22,7 +22,7 @@ public class PDSServlet extends WebContainerServlet {
 
 	private static final long serialVersionUID = -7856586634363745175L;
 
-	private static final Log log = LogFactory.getLog(PDSServlet.class);
+	private static final Logger log = LoggerFactory.getLogger(PDSServlet.class);
 
 	private List<PdsWebApp> pdsWebApps;
 	private List<SignInMethod> signInMethods;

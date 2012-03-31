@@ -20,14 +20,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.Subject;
-import org.eclipse.higgins.xdi4j.addressing.Addressing;
-import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
-import org.eclipse.higgins.xdi4j.messaging.MessageResult;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import org.eclipse.higgins.XDI2.Graph;
+import org.eclipse.higgins.XDI2.Subject;
+import org.eclipse.higgins.XDI2.addressing.Addressing;
+import org.eclipse.higgins.XDI2.constants.MessagingConstants;
+import org.eclipse.higgins.XDI2.messaging.MessageResult;
+import org.eclipse.higgins.XDI2.messaging.Operation;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
 import org.microformats.hCard.HCard;
 import org.microformats.hCard.HCardBuilder;
 import org.openxri.resolve.Resolver;
@@ -42,7 +42,7 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
 	private static final long serialVersionUID = 9135016266076360503L;
 
-	private static final Log log = LogFactory.getLog(HcardServlet.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(HcardServlet.class.getName());
 
 	private static final Xdi xdi;
 

@@ -27,13 +27,13 @@ import nextapp.echo.app.layout.SplitPaneLayoutData;
 
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Text.Type;
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.Subject;
-import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.types.Timestamps;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import org.eclipse.higgins.XDI2.Graph;
+import org.eclipse.higgins.XDI2.Subject;
+import org.eclipse.higgins.XDI2.constants.MessagingConstants;
+import org.eclipse.higgins.XDI2.messaging.Operation;
+import org.eclipse.higgins.XDI2.types.Timestamps;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
 import org.htmlparser.Tag;
 import org.openxrd.xrd.core.XRD;
 

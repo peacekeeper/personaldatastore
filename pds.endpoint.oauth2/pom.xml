@@ -1,5 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
 	<parent>
 		<groupId>pdsproject</groupId>
 		<artifactId>pdsproject</artifactId>
@@ -9,105 +10,63 @@
 	<artifactId>pds.endpoint.oauth2</artifactId>
 	<packaging>war</packaging>
 	<name>pds.endpoint.oauth2</name>
+
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.2</version>
+			</plugin>
+			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.26</version>
 				<configuration>
 					<jettyEnvXml>
-						${basedir}/../pdsproject/src/test/resources/jetty-env.xml
+						${basedir}/src/test/resources/jetty-env.xml
 					</jettyEnvXml>
 					<contextPath>/</contextPath>
-					<systemproperties>
-						<systemproperty>
-							<name>org.apache.commons.logging.Log</name>
-							<value>org.apache.commons.logging.impl.Log4JLogger</value>
-						</systemproperty>
-						<systemproperty>
+					<useTestClasspath>true</useTestClasspath>
+					<systemProperties>
+						<systemProperty>
+							<name>jetty.port</name>
+							<value>8080</value>
+						</systemProperty>
+						<systemProperty>
 							<name>slf4j</name>
-							<value>false</value>
-						</systemproperty>
-						<systemproperty>
+							<value>true</value>
+						</systemProperty>
+						<systemProperty>
 							<name>log4j.configuration</name>
 							<value>file:${basedir}/src/main/resources/log4j.properties</value>
-						</systemproperty>
-					</systemproperties>
+						</systemProperty>
+					</systemProperties>
 				</configuration>
 				<dependencies>
 					<dependency>
-						<groupId>log4j</groupId>
-						<artifactId>log4j</artifactId>
-						<version>1.2.15</version>
-						<exclusions>
-							<exclusion>
-								<groupId>javax.jms</groupId>
-								<artifactId>jms</artifactId>
-							</exclusion>
-							<exclusion>
-								<groupId>com.sun.jdmk</groupId>
-								<artifactId>jmxtools</artifactId>
-							</exclusion>
-							<exclusion>
-								<groupId>com.sun.jmx</groupId>
-								<artifactId>jmxri</artifactId>
-							</exclusion>
-						</exclusions>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-api</artifactId>
+						<version>1.6.4</version>
+						<scope>compile</scope>
+					</dependency>
+					<dependency>
+						<groupId>org.slf4j</groupId>
+						<artifactId>jcl-over-slf4j</artifactId>
+						<version>1.6.4</version>
+						<scope>compile</scope>
+					</dependency>
+					<dependency>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-log4j12</artifactId>
+						<version>1.6.4</version>
+						<scope>compile</scope>
 					</dependency>
 				</dependencies>
 			</plugin>
-<!--			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>execution1</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>net.smartam.leeloo</groupId>
-							<artifactId>oauth2-authzserver</artifactId>
-							<version>0.2-SNAPSHOT</version>
-							<packaging>jar</packaging>
-							<file>${basedir}/../pdsproject/lib/oauth2-authzserver-0.2-SNAPSHOT.jar</file>
-							<pomFile>${basedir}/../pdsproject/lib/oauth2-authzserver-0.2-SNAPSHOT.pom</pomFile>
-						</configuration>
-					</execution>
-					<execution>
-						<id>execution2</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>net.smartam.leeloo</groupId>
-							<artifactId>oauth2-common</artifactId>
-							<version>0.2-SNAPSHOT</version>
-							<packaging>jar</packaging>
-							<file>${basedir}/../pdsproject/lib/oauth2-common-0.2-SNAPSHOT.jar</file>
-							<pomFile>${basedir}/../pdsproject/lib/oauth2-common-0.2-SNAPSHOT.pom</pomFile>
-						</configuration>
-					</execution>
-					<execution>
-						<id>execution3</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>net.smartam.leeloo</groupId>
-							<artifactId>oauth2-parent</artifactId>
-							<version>0.2-SNAPSHOT</version>
-							<packaging>pom</packaging>
-							<file>${basedir}/../pdsproject/lib/oauth2-parent-0.2-SNAPSHOT.pom</file>
-						</configuration>
-					</execution>
-				</executions>
-	-		</plugin> -->
 		</plugins>
 	</build>
+
 	<repositories>
 <!--		<repository>
 			<id>sonatype-snapshots</id>
@@ -120,19 +79,8 @@
 			<url>http://repository.apache.org/snapshots/</url>
 		</repository>
 	</repositories>
+
 	<dependencies>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.1.1</version>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -198,4 +146,5 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
+
 </project>

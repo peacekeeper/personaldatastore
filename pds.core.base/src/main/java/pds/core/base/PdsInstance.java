@@ -4,16 +4,16 @@ import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.target.impl.AbstractMessagingTarget;
 
 /**
- * A PdsInstance represents a single PDS account backed by an XDI4j Graph object.
+ * A PdsInstance represents a single PDS account backed by an XDI2 Graph object.
  * 
  * @author Markus
  */
 public interface PdsInstance {
 
 	/**
-	 * The target for which this PdsInstance has been originally instantiated.
+	 * The PDS path for which this PdsInstance has been originally instantiated.
 	 */
-	public String getTarget();
+	public String getPdsPath();
 
 	/**
 	 * The canonical identifier for this PdsInstance (e.g. an I-Number).
@@ -29,9 +29,15 @@ public interface PdsInstance {
 	 * XDI endpoint URIs for this PdsInstance.
 	 */
 	public String[] getEndpoints();
+	
+	public String getPrivateKey();
 
+	public String getPublicKey();
+	
+	public String getCertificate();
+	
 	/**
-	 * Optional additional XDI4j MessagingTargets for this PdsInstance.
+	 * Optional additional XDI2 MessagingTargets for this PdsInstance.
 	 */
-	public AbstractMessagingTarget[] getMessagingTargets();
+	public AbstractMessagingTarget[] getAdditionalMessagingTargets();
 }

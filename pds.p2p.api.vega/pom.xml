@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<groupId>pdsproject</groupId>
+		<artifactId>pdsproject</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>pds.p2p.api.vega</artifactId>
+	<packaging>jar</packaging>
+	<name>pds.p2p.api.vega</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>pdsproject</groupId>
+			<artifactId>pds.p2p.api</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>pdsproject</groupId>
+			<artifactId>pds.p2p.api.orion</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>2.5.1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>freepastry</groupId>
+			<artifactId>freepastry</artifactId>
+			<version>2.1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>xmlpull</groupId>
+			<artifactId>xmlpull</artifactId>
+			<version>1.1.3.4a</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>xpp3</groupId>
+			<artifactId>xpp3</artifactId>
+			<version>1.1.3.4d_b2</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+</project>

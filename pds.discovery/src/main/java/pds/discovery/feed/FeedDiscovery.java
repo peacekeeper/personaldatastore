@@ -10,8 +10,8 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -26,7 +26,7 @@ import pds.discovery.util.DiscoveryUtil;
  */
 public class FeedDiscovery {
 
-	private static final Log log = LogFactory.getLog(FeedDiscovery.class);
+	private static final Logger log = LoggerFactory.getLogger(FeedDiscovery.class);
 	
 	private FeedDiscovery() { }
 

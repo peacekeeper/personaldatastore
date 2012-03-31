@@ -14,7 +14,7 @@ import nextapp.echo.app.TaskQueueHandle;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
 import org.w3c.dom.Element;
 
 import pds.web.PDSApplication;
@@ -30,7 +30,7 @@ public class RpxnowSignInPanel extends Panel implements ExternalCallReceiver {
 
 	private static final long serialVersionUID = 46284183174314347L;
 
-	private static final Log log = LogFactory.getLog(RpxnowSignInPanel.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(RpxnowSignInPanel.class.getName());
 
 	protected ResourceBundle resourceBundle;
 

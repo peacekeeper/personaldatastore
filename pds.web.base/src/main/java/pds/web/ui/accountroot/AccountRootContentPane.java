@@ -13,9 +13,9 @@ import nextapp.echo.app.SplitPane;
 import nextapp.echo.app.layout.RowLayoutData;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 
-import org.eclipse.higgins.xdi4j.constants.DictionaryConstants;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import org.eclipse.higgins.XDI2.constants.DictionaryConstants;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
 
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;

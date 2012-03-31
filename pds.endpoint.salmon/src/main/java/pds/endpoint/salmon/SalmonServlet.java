@@ -20,11 +20,11 @@ import org.apache.abdera.model.Feed;
 import org.apache.abdera.parser.Parser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.Subject;
-import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import org.eclipse.higgins.XDI2.Graph;
+import org.eclipse.higgins.XDI2.Subject;
+import org.eclipse.higgins.XDI2.constants.MessagingConstants;
+import org.eclipse.higgins.XDI2.messaging.Operation;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
 import org.openxri.resolve.Resolver;
 import org.springframework.web.HttpRequestHandler;
 
@@ -44,7 +44,7 @@ public class SalmonServlet implements HttpRequestHandler {
 
 	private static final long serialVersionUID = -1912598515775509417L;
 
-	private static final Log log = LogFactory.getLog(SalmonServlet.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(SalmonServlet.class.getName());
 
 	private static final Xdi xdi;
 	private static final Salmon salmon;

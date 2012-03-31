@@ -9,12 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.Subject;
-import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
-import org.eclipse.higgins.xdi4j.messaging.MessageResult;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import org.eclipse.higgins.XDI2.Graph;
+import org.eclipse.higgins.XDI2.Subject;
+import org.eclipse.higgins.XDI2.constants.MessagingConstants;
+import org.eclipse.higgins.XDI2.messaging.MessageResult;
+import org.eclipse.higgins.XDI2.messaging.Operation;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
 import org.openxri.resolve.Resolver;
 import org.springframework.web.HttpRequestHandler;
 
@@ -30,7 +30,7 @@ public class FeedServlet implements HttpRequestHandler {
 
 	private static final long serialVersionUID = 9135016266076360503L;
 
-	private static final Log log = LogFactory.getLog(FeedServlet.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(FeedServlet.class.getName());
 
 	private static final Xdi xdi;
 

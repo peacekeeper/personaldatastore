@@ -8,7 +8,7 @@ import nextapp.echo.app.ResourceImageReference;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
 
 import pds.web.ui.DeveloperModeComponent;
 import pds.web.ui.MainWindow;

@@ -2,7 +2,7 @@ package pds.xdi.events;
 
 import java.util.Date;
 
-import org.eclipse.higgins.xdi4j.messaging.MessageEnvelope;
+import xdi2.messaging.MessageEnvelope;
 
 public class XdiTransactionEvent extends XdiEvent {
 

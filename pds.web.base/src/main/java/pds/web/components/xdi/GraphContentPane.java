@@ -13,14 +13,14 @@ import nextapp.echo.app.Row;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.Literal;
-import org.eclipse.higgins.xdi4j.Statement;
-import org.eclipse.higgins.xdi4j.impl.memory.MemoryGraphFactory;
-import org.eclipse.higgins.xdi4j.io.XDIWriterRegistry;
-import org.eclipse.higgins.xdi4j.util.CopyUtil;
-import org.eclipse.higgins.xdi4j.util.CopyUtil.CopyStatementStrategy;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import org.eclipse.higgins.XDI2.Graph;
+import org.eclipse.higgins.XDI2.Literal;
+import org.eclipse.higgins.XDI2.Statement;
+import org.eclipse.higgins.XDI2.impl.memory.MemoryGraphFactory;
+import org.eclipse.higgins.XDI2.io.XDIWriterRegistry;
+import org.eclipse.higgins.XDI2.util.CopyUtil;
+import org.eclipse.higgins.XDI2.util.CopyUtil.CopyStatementStrategy;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
 
 import pds.web.PDSApplication;
 import pds.web.components.HtmlLabel;

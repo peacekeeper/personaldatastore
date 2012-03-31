@@ -1,6 +1,6 @@
 package pds.xdi.events;
 
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
+import xdi2.core.xri3.impl.XRI3;
 
 public interface XdiGraphListener {
 

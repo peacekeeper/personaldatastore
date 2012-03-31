@@ -1,6 +1,5 @@
 package pds.xdi;
 
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,39 +7,33 @@ import java.util.List;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.eclipse.higgins.xdi4j.Graph;
-import org.eclipse.higgins.xdi4j.addressing.Addressing;
-import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
-import org.eclipse.higgins.xdi4j.discovery.Discovery;
-import org.eclipse.higgins.xdi4j.messaging.Message;
-import org.eclipse.higgins.xdi4j.messaging.MessageEnvelope;
-import org.eclipse.higgins.xdi4j.messaging.MessageResult;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
-import org.eclipse.higgins.xdi4j.messaging.client.XDIClient;
-import org.eclipse.higgins.xdi4j.messaging.client.http.XDIHttpClient;
-import org.eclipse.higgins.xdi4j.messaging.error.ErrorMessageResult;
-import org.eclipse.higgins.xdi4j.util.CopyUtil;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3;
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
 import org.openxri.resolve.Resolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pds.xdi.events.XdiListener;
 import pds.xdi.events.XdiResolutionEndpointEvent;
 import pds.xdi.events.XdiResolutionEvent;
-import pds.xdi.events.XdiResolutionInameEvent;
-import pds.xdi.events.XdiResolutionInumberEvent;
 import pds.xdi.events.XdiTransactionEvent;
 import pds.xdi.events.XdiTransactionFailureEvent;
 import pds.xdi.events.XdiTransactionSuccessEvent;
+import xdi2.client.XDIClient;
+import xdi2.client.http.XDIHttpClient;
+import xdi2.core.ContextNode;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
+import xdi2.messaging.MessageEnvelope;
+import xdi2.messaging.MessageResult;
+import xdi2.messaging.Operation;
+import xdi2.messaging.error.ErrorMessageResult;
+import xdi2.messaging.util.XDIMessagingConstants;
 
 /**
- * PDS-based implementation of the Store interface.
+ * Support for resolving and opening XDI contexts.
  */
 public class Xdi {
 
-	private static final Log log = LogFactory.getLog(Xdi.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(Xdi.class.getName());
 
 	private Resolver resolver;
 	private Cache inumberEndpointCache;
@@ -65,7 +58,7 @@ public class Xdi {
 	 * Context methods
 	 */
 
-	public XdiContext resolveContextByIname(String iname, String password) throws XdiException {
+/* TODO	public XdiContext resolveContextByIname(String iname, String password) throws XdiException {
 
 		log.trace("resolveContextByIname()");
 
@@ -115,9 +108,9 @@ public class Xdi {
 		// done
 
 		return context;
-	}
+	} */
 
-	public XdiContext resolveContextByInumber(String inumber, String password) throws XdiException {
+/* TODO	public XdiContext resolveContextByInumber(String inumber, String password) throws XdiException {
 
 		log.trace("resolveContextByInumber()");
 
@@ -152,7 +145,7 @@ public class Xdi {
 		// done
 
 		return context;
-	}
+	}*/
 
 	public XdiContext resolveContextByEndpoint(String endpoint, String password) throws XdiException {
 
@@ -165,15 +158,13 @@ public class Xdi {
 
 		try {
 
-			XRI3 operationAddress = new XRI3("$/$is($xdi$v$1)");
 			MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
-			Message message = messageEnvelope.newMessage(MessagingConstants.XRI_SELF);
-			Operation operation = message.createGetOperation();
-			Graph operationGraph = operation.createOperationGraph(null);
-			CopyUtil.copyStatement(Addressing.convertAddressToStatement(operationAddress), operationGraph, null);
+			ContextNode contextNode = messageEnvelope.getGraph().addStatement("()/$is($xdi$v$1)/($)").getSubject();
+			Message message = messageEnvelope.getMessageContainer(XDIMessagingConstants.XRI_S_SELF, true).createMessage();
+			message.createGetOperation(contextNode);
 			MessageResult messageResult = this.send(xdiClient, messageEnvelope);
 
-			inumber = Addressing.findReferenceXri(messageResult.getGraph(), operationAddress).toString();
+			inumber = messageResult.getGraph().findRelation(new XRI3Segment("()"), new XRI3Segment("$is($xdi$v$1)")).toString();
 		} catch (Exception ex) {
 
 			throw new RuntimeException("Problem while resolving the endpoint: " + ex.getMessage());
@@ -263,7 +254,7 @@ public class Xdi {
 
 	public MessageResult send(XDIClient xdiClient, Message message) throws XdiException {
 
-		return this.send(xdiClient, message.getMessageEnvelope());
+		return this.send(xdiClient, message.getMessageContainer().getMessageEnvelope());
 	}
 
 	public MessageResult send(XDIClient xdiClient, MessageEnvelope messageEnvelope) throws XdiException {

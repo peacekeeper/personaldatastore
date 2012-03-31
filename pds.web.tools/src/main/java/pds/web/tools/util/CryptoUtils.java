@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
  */
 public class CryptoUtils {
 
-	private static final Log log = LogFactory.getLog(CryptoUtils.class);
+	private static final Logger log = LoggerFactory.getLogger(CryptoUtils.class);
 
 	/**
 	 * Initializes the @{link org.apache.xml.security.Init Apache XML Security} infrastructure.

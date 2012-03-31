@@ -2,8 +2,6 @@ package pds.discovery.xrd;
 
 import java.net.URI;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.opensaml.xml.ConfigurationException;
@@ -16,6 +14,8 @@ import org.openxrd.discovery.impl.HtmlLinkDiscoveryMethod;
 import org.openxrd.discovery.impl.HttpHeaderDiscoveryMethod;
 import org.openxrd.xrd.core.Link;
 import org.openxrd.xrd.core.XRD;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class can:
@@ -25,7 +25,7 @@ import org.openxrd.xrd.core.XRD;
  */
 public class XRDDiscovery {
 
-	private static final Log log = LogFactory.getLog(XRDDiscovery.class);
+	private static final Logger log = LoggerFactory.getLogger(XRDDiscovery.class);
 
 	private static DiscoveryManager lrddDiscoveryManager;
 	private static LRDDDiscoveryMethod webfingerDiscoveryMethod;

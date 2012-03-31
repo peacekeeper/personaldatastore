@@ -22,11 +22,11 @@ import nextapp.echo.app.layout.SplitPaneLayoutData;
 import nextapp.echo.filetransfer.app.DownloadCommand;
 import nextapp.echo.filetransfer.app.DownloadProvider;
 
-import org.eclipse.higgins.xdi4j.constants.MessagingConstants;
-import org.eclipse.higgins.xdi4j.io.XDIWriter;
-import org.eclipse.higgins.xdi4j.io.XDIWriterRegistry;
-import org.eclipse.higgins.xdi4j.messaging.MessageResult;
-import org.eclipse.higgins.xdi4j.messaging.Operation;
+import org.eclipse.higgins.XDI2.constants.MessagingConstants;
+import org.eclipse.higgins.XDI2.io.XDIWriter;
+import org.eclipse.higgins.XDI2.io.XDIWriterRegistry;
+import org.eclipse.higgins.XDI2.messaging.MessageResult;
+import org.eclipse.higgins.XDI2.messaging.Operation;
 
 import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;

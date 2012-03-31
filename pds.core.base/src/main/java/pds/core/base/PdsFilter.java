@@ -11,11 +11,10 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import pds.core.base.messagingtargets.ContextResourceMessagingTarget;
-import pds.core.base.messagingtargets.PdsResourceMessagingTarget;
+import pds.core.base.messagingtargets.PdsMessagingTarget;
 import xdi2.core.Graph;
 import xdi2.messaging.target.MessagingTarget;
 import xdi2.messaging.target.impl.AbstractMessagingTarget;
@@ -26,18 +25,18 @@ import xdi2.server.EndpointServlet;
 
 /**
  * A servlet filter that instantiates PDS instances as needed and mounts them
- * as XDI4j messaging targets.
+ * as XDI2 messaging targets.
  * 
  * It uses one or more PdsInstanceFactory's for instantiating PDS instances, e.g. just a single instance,
  * or one instance per user, etc.
  * 
- * It also uses a PdsGraphFactory for instantiating one of the XDI4j backend Graph implementations
+ * It also uses a PdsGraphFactory for instantiating one of the XDI2 backend Graph implementations
  * 
  * @author Markus
  */
 public class PdsFilter implements Filter {
 
-	private static Log log = LogFactory.getLog(PdsFilter.class.getName());
+	private static Logger log = LoggerFactory.getLogger(PdsFilter.class.getName());
 
 	private PdsInstanceFactory[] pdsInstanceFactories;
 	private PdsGraphFactory pdsGraphFactory;
@@ -89,54 +88,54 @@ public class PdsFilter implements Filter {
 
 		for (PdsInstanceFactory pdsInstanceFactory : this.pdsInstanceFactories) {
 
-			// find out what target this request applies to (if any)
+			// find out what PDS path this request applies to (if any)
 
-			log.debug("With " + pdsInstanceFactory.getClass().getSimpleName() + ": Looking up target at path \"" + path + "\"");
+			log.debug("With " + pdsInstanceFactory.getClass().getSimpleName() + ": Looking up PDS path at \"" + path + "\"");
 
-			String target = pdsInstanceFactory.getTarget(path);
-			if (target == null) {
+			String pdsPath = pdsInstanceFactory.getPdsPath(path);
+			if (pdsPath == null) {
 
-				log.debug("With " + pdsInstanceFactory.getClass().getSimpleName() + ": No target at path \"" + path + "\"");
+				log.debug("With " + pdsInstanceFactory.getClass().getSimpleName() + ": No PDS path at \"" + path + "\"");
 				continue;
 			}
 
-			log.debug("With " + pdsInstanceFactory.getClass().getSimpleName() + ": Target \"" + target + "\" at path \"" + path + "\"");
+			log.debug("With " + pdsInstanceFactory.getClass().getSimpleName() + ": PDS path \"" + pdsPath + "\" at \"" + path + "\"");
 
-			// check if we already have that target
+			// check if we already have a messaging target
 
 			EndpointRegistry endpointRegistry = this.endpointServlet.getEndpointRegistry();
 
-			MessagingTarget messagingTarget = endpointRegistry.getMessagingTarget(target);
+			MessagingTarget messagingTarget = endpointRegistry.getMessagingTarget(pdsPath);
 			if (messagingTarget != null) {
 
-				log.debug("Already have messaging target for \"" + target + "\"");
+				log.debug("Already have messaging target for \"" + pdsPath + "\"");
 				chain.doFilter(request, response);
 				return;
 			}
 
-			// look up the appropriate PDS instance for our target	
+			// look up the appropriate PDS instance for our PDS path	
 
-			log.debug("With " + pdsInstanceFactory.getClass().getSimpleName() + ": Looking up PDS instance at \"" + target + "\"");
+			log.debug("With " + pdsInstanceFactory.getClass().getSimpleName() + ": Looking up PDS instance at \"" + pdsPath + "\"");
 
 			PdsInstance pdsInstance = null;
 
 			try {
 
-				pdsInstance = pdsInstanceFactory.getPdsInstance(target);
+				pdsInstance = pdsInstanceFactory.getPdsInstance(pdsPath);
 			} catch (Exception ex) {
 
-				log.error("With " + pdsInstanceFactory.getClass().getSimpleName() + ": Cannot look up PDS instance at \"" + target + "\": " + ex.getMessage(), ex);
+				log.error("With " + pdsInstanceFactory.getClass().getSimpleName() + ": Cannot look up PDS instance at \"" + pdsPath + "\": " + ex.getMessage(), ex);
 				((HttpServletResponse) response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
 				return;
 			}
 
 			if (pdsInstance == null) {
 
-				log.debug("With " + pdsInstanceFactory.getClass().getSimpleName() + ": No PDS instance at \"" + target + "\"");
+				log.debug("With " + pdsInstanceFactory.getClass().getSimpleName() + ": No PDS instance at \"" + pdsPath + "\"");
 				continue;
 			}
 
-			log.debug("With " + pdsInstanceFactory.getClass().getSimpleName() + ": PDS instance " + pdsInstance.getClass().getSimpleName() + " at \"" + target + "\"");
+			log.debug("With " + pdsInstanceFactory.getClass().getSimpleName() + ": PDS instance " + pdsInstance.getClass().getSimpleName() + " at \"" + pdsPath + "\"");
 
 			// create and register messaging target for the PDS instance
 
@@ -146,16 +145,16 @@ public class PdsFilter implements Filter {
 
 				messagingTarget = this.createMessagingTarget(endpointRegistry, pdsInstance);
 
-				String[] allMountTargets = pdsInstanceFactory.getAllMountTargets(pdsInstance);
+				String[] allMountTargets = pdsInstanceFactory.getAllPdsPaths(pdsInstance);
 				for (String mountTarget : allMountTargets) {
 
 					endpointRegistry.registerMessagingTarget(mountTarget, messagingTarget);
 				}
 
-				log.info("Successfully registered messaging target at \"" + target + "\"");
+				log.info("Successfully registered messaging target at \"" + pdsPath + "\"");
 			} catch (Exception ex) {
 
-				log.error("Cannot create and register messaging target at \"" + target + "\": " + ex.getMessage(), ex);
+				log.error("Cannot create and register messaging target at \"" + pdsPath + "\": " + ex.getMessage(), ex);
 				((HttpServletResponse) response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
 				return;
 			}
@@ -175,29 +174,21 @@ public class PdsFilter implements Filter {
 		CompoundMessagingTarget compoundMessagingTarget = new CompoundMessagingTarget();
 		compoundMessagingTarget.setMode(CompoundMessagingTarget.MODE_WRITE_FIRST_HANDLED);
 
-		// create and add ContextResourceMessagingTarget
+		// create and add PdsMessagingTarget
 
-		ContextResourceMessagingTarget contextResourceMessagingTarget = new ContextResourceMessagingTarget();
-		contextResourceMessagingTarget.setPdsInstance(pdsInstance);
-		contextResourceMessagingTarget.init();
+		PdsMessagingTarget pdsMessagingTarget = new PdsMessagingTarget();
+		pdsMessagingTarget.setPdsInstance(pdsInstance);
+		pdsMessagingTarget.init();
 
-		compoundMessagingTarget.getMessagingTargets().add(contextResourceMessagingTarget);
+		compoundMessagingTarget.getMessagingTargets().add(pdsMessagingTarget);
 
-		// create and add PdsResourceMessagingTarget
+		// add additional MessagingTargets from the PdsInstance
 
-		PdsResourceMessagingTarget pdsResourceMessagingTarget = new PdsResourceMessagingTarget();
-		pdsResourceMessagingTarget.setPdsInstance(pdsInstance);
-		pdsResourceMessagingTarget.init();
+		for (AbstractMessagingTarget additionalMessagingTarget : pdsInstance.getAdditionalMessagingTargets()) {
 
-		compoundMessagingTarget.getMessagingTargets().add(pdsResourceMessagingTarget);
+			additionalMessagingTarget.init();
 
-		// add PdsInstanceMessagingTargets
-
-		for (AbstractMessagingTarget pdsInstanceMessagingTarget : pdsInstance.getMessagingTargets()) {
-
-			pdsInstanceMessagingTarget.init();
-
-			compoundMessagingTarget.getMessagingTargets().add(pdsInstanceMessagingTarget);
+			compoundMessagingTarget.getMessagingTargets().add(additionalMessagingTarget);
 		}
 
 		// get graph

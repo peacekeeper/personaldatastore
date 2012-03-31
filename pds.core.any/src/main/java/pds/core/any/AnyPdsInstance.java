@@ -9,13 +9,19 @@ public class AnyPdsInstance extends AbstractPdsInstance implements PdsInstance {
 
 	private XRI3Segment canonical;
 	private String[] endpoints;
+	private String privateKey;
+	private String publicKey;
+	private String certificate;
 
-	AnyPdsInstance(String target, XRI3Segment canonical, String[] endpoints) {
+	AnyPdsInstance(String pdsPath, XRI3Segment canonical, String[] endpoints, String privateKey, String publicKey, String certificate) {
 
-		super(target);
+		super(pdsPath);
 
 		this.canonical = canonical;
 		this.endpoints = endpoints;
+		this.privateKey = privateKey;
+		this.publicKey = publicKey;
+		this.certificate = certificate;
 	}
 
 	@Override
@@ -43,7 +49,22 @@ public class AnyPdsInstance extends AbstractPdsInstance implements PdsInstance {
 		return endpoints;
 	}
 
-	public AbstractMessagingTarget[] getMessagingTargets() {
+	public String getPrivateKey() {
+
+		return this.privateKey;
+	}
+
+	public String getPublicKey() {
+
+		return this.publicKey;
+	}
+
+	public String getCertificate() {
+
+		return this.certificate;
+	}
+
+	public AbstractMessagingTarget[] getAdditionalMessagingTargets() {
 
 		return new AbstractMessagingTarget[0];
 	}

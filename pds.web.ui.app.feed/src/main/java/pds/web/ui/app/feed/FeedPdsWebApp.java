@@ -2,7 +2,7 @@ package pds.web.ui.app.feed;
 
 import nextapp.echo.app.ResourceImageReference;
 
-import org.eclipse.higgins.xdi4j.xri3.impl.XRI3Segment;
+import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
 
 import pds.web.ui.MainContentPane;
 import pds.web.ui.app.PdsWebApp;

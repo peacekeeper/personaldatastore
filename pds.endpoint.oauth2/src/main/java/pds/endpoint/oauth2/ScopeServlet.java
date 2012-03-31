@@ -30,7 +30,7 @@ import pds.xdi.XdiContext;
 
 public class ScopeServlet implements HttpRequestHandler, ServletContextAware {
 
-	private static final Log log = LogFactory.getLog(ScopeServlet.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(ScopeServlet.class.getName());
 
 	//	private static final Xdi xdi;
 

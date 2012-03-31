@@ -22,7 +22,7 @@ import pds.endpoint.oauth2.store.OAuthStore;
 
 public class TokenServlet implements HttpRequestHandler {
 
-	private static final Log log = LogFactory.getLog(TokenServlet.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(TokenServlet.class.getName());
 
 	private ClientAuthenticator clientAuthenticator;
 	private OAuthStore oauthStore;

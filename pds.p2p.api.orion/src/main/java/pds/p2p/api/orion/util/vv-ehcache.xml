@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+	<defaultCache maxElementsInMemory="10000" eternal="false"
+		timeToIdleSeconds="0" timeToLiveSeconds="120" overflowToDisk="false"
+		diskPersistent="false" diskExpiryThreadIntervalSeconds="120"
+		memoryStoreEvictionPolicy="LRU" />
+	<cache name="canonicalIdCache" maxElementsInMemory="1000"
+		eternal="false" overflowToDisk="false" timeToIdleSeconds="120"
+		timeToLiveSeconds="0" diskPersistent="false"
+		diskExpiryThreadIntervalSeconds="120" />
+	<cache name="certificateCache" maxElementsInMemory="1000"
+		eternal="false" overflowToDisk="false" timeToIdleSeconds="120"
+		timeToLiveSeconds="0" diskPersistent="false"
+		diskExpiryThreadIntervalSeconds="120" />
+	<cache name="xdiUrlCache" maxElementsInMemory="1000" eternal="false"
+		overflowToDisk="false" timeToIdleSeconds="120" timeToLiveSeconds="0"
+		diskPersistent="false" diskExpiryThreadIntervalSeconds="120" />
+	<cache name="nonceCache" maxElementsInMemory="1000"
+		eternal="false" overflowToDisk="false" timeToIdleSeconds="120"
+		timeToLiveSeconds="0" diskPersistent="false"
+		diskExpiryThreadIntervalSeconds="120" />
+</ehcache>

@@ -17,15 +17,15 @@ public class AnyPdsInstanceFactory implements PdsInstanceFactory {
 
 	}
 
-	public String getTarget(String path) {
+	public String getPdsPath(String path) {
 
 		try {
 
-			String target = path;
-			while (target.endsWith("/")) target = target.substring(0, target.length() - 1);
-			target = new XRI3(target).getAuthority().toString() + "/";
+			String pdsPath = path;
+			while (pdsPath.endsWith("/")) pdsPath = pdsPath.substring(0, pdsPath.length() - 1);
+			pdsPath = new XRI3(pdsPath).getAuthority().toString() + "/";
 
-			return target;
+			return pdsPath;
 		} catch (Exception ex) {
 
 			return null;
@@ -40,11 +40,11 @@ public class AnyPdsInstanceFactory implements PdsInstanceFactory {
 
 		XRI3Segment canonical = new XRI3Segment(xriString);
 
-		return new AnyPdsInstance(target, canonical, this.endpoints);
+		return new AnyPdsInstance(target, canonical, this.endpoints, null, null, null);
 	}
 
 	@Override
-	public String[] getAllMountTargets(PdsInstance pdsInstance) throws PdsException {
+	public String[] getAllPdsPaths(PdsInstance pdsInstance) throws PdsException {
 
 		return new String[] { ((AnyPdsInstance) pdsInstance).getCanonical().toString() + "/" };
 	}

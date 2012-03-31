@@ -1,0 +1,404 @@
+# this file holds the default values for pastry and it's applications
+# you do not need to modify the default.params file to override these values
+# instead you can use your own params file to set values to override the 
+# defaults.  You can specify this file by constructing your
+# rice.environment.Environment() with the filename you wish to use
+# typically, you will want to be able to pass this file name from the command 
+# line
+
+# max number of handles stored per routing table entry
+pastry_rtMax = 1
+pastry_rtBaseBitLength = 4
+
+# leafset size
+pastry_lSetSize = 24
+
+# maintenance frequencies
+pastry_leafSetMaintFreq = 60
+pastry_routeSetMaintFreq = 900
+
+# drop the message if pastry is not ready
+pastry_messageDispatch_bufferIfNotReady = false
+
+# number of messages to buffer while an app hasn't yet been registered
+pastry_messageDispatch_bufferSize = 32
+
+# FP 2.1 uses the new transport layer
+transport_wire_datagram_receive_buffer_size = 131072
+transport_wire_datagram_send_buffer_size = 65536
+transport_epoch_max_num_addresses = 2
+transport_sr_max_num_hops = 5
+
+# proximity neighbor selection
+transport_use_pns = true
+
+# number of rows in the routing table to consider during PNS
+# valid values are ALL, or a number
+pns_num_rows_to_use = 10
+
+# commonapi testing parameters
+
+# direct or socket
+commonapi_testing_exit_on_failure = true
+commonapi_testing_protocol = direct
+commonapi_testing_startPort = 5009
+commonapi_testing_num_nodes = 10
+# set this to specify the bootstrap node
+#commonapi_testing_bootstrap = localhost:5009
+
+# random number generator's seed, "CLOCK" uses the current clock time
+random_seed = CLOCK
+
+# sphere, euclidean or gt-itm
+direct_simulator_topology = sphere
+# -1 starts the simulation with the current time
+direct_simulator_start_time = -1
+#pastry_direct_use_own_random = true
+#pastry_periodic_leafset_protocol_use_own_random = true
+pastry_direct_gtitm_matrix_file=GNPINPUT
+# the number of stubs in your network
+pastry_direct_gtitm_max_overlay_size=1000
+# the number of virtual nodes at each stub: this allows you to simulate multiple "LANs" and allows cheeper scaling
+pastry_direct_gtitm_nodes_per_stub=1
+# the factor to multiply your file by to reach millis.  Set this to 0.001 if your file is in microseconds.  Set this to 1000 if your file is in seconds.
+pastry_direct_gtitm_delay_factor=1.0
+#millis of the maximum network delay for the generated network topologies
+pastry_direct_max_diameter=200
+pastry_direct_min_delay=2
+#setting this to false will use the old protocols which are about 200 times as fast, but may cause routing inconsistency in a real network.  Probably won't in a simulator because it will never be incorrect about liveness
+pastry_direct_guarantee_consistency=true
+
+# rice.pastry.socket parameters
+# tells the factory you intend to use multiple nodes
+# this causes the logger to prepend all entries with the nodeid
+pastry_factory_multipleNodes = true
+pastry_factory_selectorPerNode = false
+pastry_factory_processorPerNode = false
+# number of bootstap nodehandles to fetch in parallel
+pastry_factory_bootsInParallel = 1
+
+# the maximum size of a message
+pastry_socket_reader_selector_deserialization_max_size = 1000000
+# the maximum number of outgoing messages to queue when a socket is slower than the number of messages you are queuing
+pastry_socket_writer_max_queue_length = 30
+pastry_socket_writer_max_msg_size = 20480
+pastry_socket_repeater_buffer_size = 65536
+pastry_socket_pingmanager_smallPings=true
+pastry_socket_pingmanager_datagram_receive_buffer_size = 131072
+pastry_socket_pingmanager_datagram_send_buffer_size = 65536
+# the time before it will retry a route that was already found dead
+pastry_socket_srm_check_dead_throttle = 300000
+pastry_socket_srm_proximity_timeout = 3600000
+pastry_socket_srm_ping_throttle = 30000
+pastry_socket_srm_default_rto = 3000
+pastry_socket_srm_rto_ubound = 10000
+pastry_socket_srm_rto_lbound = 50
+pastry_socket_srm_gain_h = 0.25
+pastry_socket_srm_gain_g = 0.125
+pastry_socket_scm_max_open_sockets = 300
+pastry_socket_scm_max_open_source_routes = 30
+# the maximum number of source routes to attempt, setting this to 0 will 
+# effectively eliminate source route attempts
+# setting higher than the leafset does no good, it will be bounded by the leafset
+# a larger number tries more source routes, which could give you a more accurate 
+# determination, however, is more likely to lead to congestion collapse
+pastry_socket_srm_num_source_route_attempts = 8
+pastry_socket_scm_socket_buffer_size = 32768
+# this parameter is multiplied by the exponential backoff when doing a liveness check so the first will be 800, then 1600, then 3200 etc...
+pastry_socket_scm_ping_delay = 800
+# adds some fuzziness to the pings to help prevent congestion collapse, so this will make the ping be advanced or delayed by this factor
+pastry_socket_scm_ping_jitter = 0.1
+# how many pings until we call the node faulty
+pastry_socket_scm_num_ping_tries = 5
+pastry_socket_scm_write_wait_time = 30000
+pastry_socket_scm_backoff_initial = 250
+pastry_socket_scm_backoff_limit = 5
+pastry_socket_pingmanager_testSourceRouting = false
+pastry_socket_increment_port_after_construction = false
+# if you want to allow connection to 127.0.0.1, set this to true
+pastry_socket_allow_loopback = false
+# these params will be used if the computer attempts to bind to the loopback address, they will open a socket to this address/port to identify which network adapter to bind to
+pastry_socket_known_network_address = yahoo.com
+pastry_socket_known_network_address_port = 80
+pastry_socket_use_own_random = true
+pastry_socket_random_seed = clock
+# force the node to be a seed node
+rice_socket_seed = false
+
+# the parameter simulates some nodes being firewalled, base on rendezvous_test_num_firewalled
+rendezvous_test_firewall = false
+# probabilistic fraction of firewalled nodes
+rendezvous_test_num_firewalled = 0.3
+# don't firewall the first node, useful for testing
+rendezvous_test_makes_bootstrap = false
+
+# FP 2.1 uses the new transport layer
+transport_wire_datagram_receive_buffer_size = 131072
+transport_wire_datagram_send_buffer_size = 65536
+
+# NAT/UPnP settings
+nat_network_prefixes = 127.0.0.1;10.;192.168.
+# Enable and set this if you have already set up port forwarding and know the external address
+#external_address = 123.45.67.89:1234
+#enable this if you set up port forwarding (on the same port), but you don't 
+#know the external address and you don't have UPnP enabled
+#this is useful for a firwall w/o UPnP support, and your IP address isn't static
+probe_for_external_address = false
+# values how to probe
+pastry_proxy_connectivity_timeout = 15000 
+pastry_proxy_connectivity_tries = 3
+# possible values: always, never, prefix (prefix is if the localAddress matches any of the nat_network_prefixes
+# whether to search for a nat using UPnP (default: prefix)
+nat_search_policy = prefix
+# whether to verify connectivity (default: boot)
+firewall_test_policy = boot
+# policy for setting port forwarding the state of the firewall if there is already a conflicting rule: overwrite, fail (throw exception), change (use different port) 
+# you may want to set this to overwrite or fail on the bootstrap nodes, but most freepastry applications can run on any available port, so the default is change
+nat_state_policy = change
+# the name of the application in the firewall, set this if you want your application to have a more specific name
+nat_app_name = freepastry
+# how long to wait for responses from the firewall, in millis
+nat_discovery_timeout = 5000
+# how many searches to try to find a free firewall port
+nat_find_port_max_tries = 10
+# uncomment this to use UPnP NAT port forwarding, you need to include in the classpath: commons-jxpath-1.1.jar:commons-logging.jar:sbbi-upnplib-xxx.jar
+nat_handler_class = rice.pastry.socket.nat.sbbi.SBBINatHandler
+# hairpinning: 
+# default "prefix" requires more bandwidth if you are behind a NAT.  It enables multiple IP 
+# addresses in the NodeHandle if you are behind a NAT.  These are usually the internet routable address, 
+# and the LAN address (usually 192.168.x.x)
+# you can set this to never if any of the following conditions hold:
+#  a) you are the only FreePastry node behind this address
+#  b) you firewall supports hairpinning see
+# http://scm.sipfoundry.org/rep/ietf-drafts/behave/draft-ietf-behave-nat-udp-03.html#rfc.section.6
+nat_nodehandle_multiaddress = prefix
+
+# if we are not scheduled for time on cpu in this time, we setReady(false)
+# otherwise there could be message inconsistency, because
+# neighbors may believe us to be dead.  Note that it is critical
+# to consider the amount of time it takes the transport layer to find a 
+# node faulty before setting this parameter, this parameter should be
+# less than the minimum time required to find a node faulty
+pastry_protocol_consistentJoin_max_time_to_be_scheduled = 15000
+
+# in case messages are dropped or something, how often it will retry to 
+# send the consistent join message, to get verification from the entire
+# leafset
+pastry_protocol_consistentJoin_retry_interval = 30000
+# parameter to control how long dead nodes are retained in the "failed set" in
+# CJP (see ConsistentJoinProtocol ctor) (15 minutes)
+pastry_protocol_consistentJoin_failedRetentionTime = 900000
+# how often to cleanup the failed set (5 mins) (see ConsistentJoinProtocol ctor)
+pastry_protocol_consistentJoin_cleanup_interval = 300000
+# the maximum number of entries to send in the failed set, only sends the most 
+recent detected failures (see ConsistentJoinProtocol ctor)
+pastry_protocol_consistentJoin_maxFailedToSend = 20
+
+# how often we send/expect to be sent updates
+pastry_protocol_periodicLeafSet_ping_neighbor_period = 20000
+pastry_protocol_periodicLeafSet_lease_period = 30000
+
+# what the grace period is to receive a periodic update, before checking 
+# liveness
+pastry_protocol_periodicLeafSet_request_lease_throttle = 10000
+
+# how many entries are kept in the partition handler's table
+partition_handler_max_history_size=20
+# how long entries in the partition handler's table are kept
+# 90 minutes
+partition_handler_max_history_age=5400000
+# what fraction of the time a bootstrap host is checked
+partition_handler_bootstrap_check_rate=0.05
+# how often to run the partition handler
+# 5 minutes
+partition_handler_check_interval=300000
+
+# the version number of the RouteMessage to transmit (it can receive anything that it knows how to)
+# this is useful if you need to migrate an older ring
+# you can change this value in realtime, so, you can start at 0 and issue a command to update it to 1
+pastry_protocol_router_routeMsgVersion = 1
+
+# should usually be equal to the pastry_rtBaseBitLength
+p2p_splitStream_stripeBaseBitLength = 4
+p2p_splitStream_policy_default_maximum_children = 24
+p2p_splitStream_stripe_max_failed_subscription = 5
+p2p_splitStream_stripe_max_failed_subscription_retry_delay = 1000
+
+#multiring
+p2p_multiring_base = 2
+
+#past
+p2p_past_messageTimeout = 30000
+p2p_past_successfulInsertThreshold = 0.5
+
+#replication
+
+# fetch delay is the delay between fetching successive keys
+p2p_replication_manager_fetch_delay = 500
+# the timeout delay is how long we take before we time out fetching a key
+p2p_replication_manager_timeout_delay = 20000
+# this is the number of keys to delete when we detect a change in the replica set
+p2p_replication_manager_num_delete_at_once = 100
+# this is how often replication will wake up and do maintainence; 10 mins
+p2p_replication_maintenance_interval = 600000 
+# the maximum number of keys replication will try to exchange in a maintainence message
+p2p_replication_max_keys_in_message = 1000
+
+#scribe
+p2p_scribe_maintenance_interval = 180000
+#time for a subscribe fail to be thrown (in millis)
+p2p_scribe_message_timeout = 15000
+
+#util
+p2p_util_encryptedOutputStream_buffer = 32678
+
+#aggregation
+p2p_aggregation_logStatistics = true
+p2p_aggregation_flushDelayAfterJoin = 30000
+#5 MINS
+p2p_aggregation_flushStressInterval = 300000 
+#5 MINS
+p2p_aggregation_flushInterval = 300000 
+#1024*1024
+p2p_aggregation_maxAggregateSize = 1048576 
+p2p_aggregation_maxObjectsInAggregate = 25
+p2p_aggregation_maxAggregatesPerRun = 2
+p2p_aggregation_addMissingAfterRefresh = true
+p2p_aggregation_maxReaggregationPerRefresh = 100
+p2p_aggregation_nominalReferenceCount = 2
+p2p_aggregation_maxPointersPerAggregate = 100
+#14 DAYS
+p2p_aggregation_pointerArrayLifetime = 1209600000
+#1 DAY 
+p2p_aggregation_aggregateGracePeriod = 86400000
+#15 MINS 
+p2p_aggregation_aggrRefreshInterval = 900000 
+p2p_aggregation_aggrRefreshDelayAfterJoin = 70000
+#3 DAYS
+p2p_aggregation_expirationRenewThreshold = 259200000 
+p2p_aggregation_monitorEnabled = false
+#15 MINS
+p2p_aggregation_monitorRefreshInterval = 900000 
+#5 MINS
+p2p_aggregation_consolidationDelayAfterJoin = 300000 
+#15 MINS
+p2p_aggregation_consolidationInterval = 900000 
+#14 DAYS
+p2p_aggregation_consolidationThreshold = 1209600000 
+p2p_aggregation_consolidationMinObjectsInAggregate = 20
+p2p_aggregation_consolidationMinComponentsAlive = 0.8
+p2p_aggregation_reconstructionMaxConcurrentLookups = 10
+p2p_aggregation_aggregateLogEnabled = true
+#1 HOUR
+p2p_aggregation_statsGranularity = 3600000
+#3 WEEKS 
+p2p_aggregation_statsRange = 1814400000 
+p2p_aggregation_statsInterval = 60000
+p2p_aggregation_jitterRange = 0.1
+
+# glacier
+p2p_glacier_logStatistics = true
+p2p_glacier_faultInjectionEnabled = false
+p2p_glacier_insertTimeout = 30000
+p2p_glacier_minFragmentsAfterInsert = 3.0
+p2p_glacier_refreshTimeout = 30000
+p2p_glacier_expireNeighborsDelayAfterJoin = 30000
+#5 MINS
+p2p_glacier_expireNeighborsInterval = 300000 
+#5 DAYS
+p2p_glacier_neighborTimeout = 432000000 
+p2p_glacier_syncDelayAfterJoin = 30000
+#5 MINS
+p2p_glacier_syncMinRemainingLifetime = 300000 
+#insertTimeout
+p2p_glacier_syncMinQuietTime = 30000 
+p2p_glacier_syncBloomFilterNumHashes = 3
+p2p_glacier_syncBloomFilterBitsPerKey = 4
+p2p_glacier_syncPartnersPerTrial = 1
+#1 HOUR
+p2p_glacier_syncInterval = 3600000 
+#3 MINUTES
+p2p_glacier_syncRetryInterval = 180000 
+p2p_glacier_syncMaxFragments = 100
+p2p_glacier_fragmentRequestMaxAttempts = 0
+p2p_glacier_fragmentRequestTimeoutDefault = 10000
+p2p_glacier_fragmentRequestTimeoutMin = 10000
+p2p_glacier_fragmentRequestTimeoutMax = 60000
+p2p_glacier_fragmentRequestTimeoutDecrement = 1000
+p2p_glacier_manifestRequestTimeout = 10000
+p2p_glacier_manifestRequestInitialBurst = 3
+p2p_glacier_manifestRequestRetryBurst = 5
+p2p_glacier_manifestAggregationFactor = 5
+#3 MINUTES
+p2p_glacier_overallRestoreTimeout = 180000 
+p2p_glacier_handoffDelayAfterJoin = 45000
+#4 MINUTES
+p2p_glacier_handoffInterval = 240000 
+p2p_glacier_handoffMaxFragments = 10
+#10 MINUTES
+p2p_glacier_garbageCollectionInterval = 600000 
+p2p_glacier_garbageCollectionMaxFragmentsPerRun = 100
+#10 MINUTES
+p2p_glacier_localScanInterval = 600000 
+p2p_glacier_localScanMaxFragmentsPerRun = 20
+p2p_glacier_restoreMaxRequestFactor = 4.0
+p2p_glacier_restoreMaxBoosts = 2
+p2p_glacier_rateLimitedCheckInterval = 30000
+p2p_glacier_rateLimitedRequestsPerSecond = 3
+p2p_glacier_enableBulkRefresh = true
+p2p_glacier_bulkRefreshProbeInterval = 3000
+p2p_glacier_bulkRefreshMaxProbeFactor = 3.0
+p2p_glacier_bulkRefreshManifestInterval = 30000
+p2p_glacier_bulkRefreshManifestAggregationFactor = 20
+p2p_glacier_bulkRefreshPatchAggregationFactor = 50
+#3 MINUTES
+p2p_glacier_bulkRefreshPatchInterval = 180000 
+p2p_glacier_bulkRefreshPatchRetries = 2
+p2p_glacier_bucketTokensPerSecond = 100000
+p2p_glacier_bucketMaxBurstSize = 200000
+p2p_glacier_jitterRange = 0.1
+#1 MINUTE
+p2p_glacier_statisticsReportInterval = 60000 
+p2p_glacier_maxActiveRestores = 3
+
+#transport layer testing params
+org.mpisws.p2p.testing.transportlayer.replay.Recorder_printlog = true
+
+# logging
+#default log level
+loglevel = INFO
+
+#example of enabling logging on the endpoint:
+#rice.p2p.scribe@ScribeRegrTest-endpoint_loglevel = INFO
+
+logging_packageOnly = true
+
+logging_date_format = yyyyMMdd.HHmmss.SSS
+logging_enable=true
+
+# 24 hours
+log_rotate_interval = 86400000
+# the name of the active log file, and the filename prefix of rotated log
+log_rotate_filename = freepastry.log
+# the format of the date for the rotating log
+log_rotating_date_format = yyyyMMdd.HHmmss.SSS
+
+# true will tell the environment to ues the FileLogManager
+environment_logToFile = true
+# the prefix for the log files (otherwise will be named after the nodeId)
+fileLogManager_filePrefix = ./logs/vega-
+# the suffix for the log files
+fileLogManager_fileSuffix = .log
+# wether to keep the line prefix (declaring the node id) for each line of the log
+fileLogManager_keepLinePrefix = false
+fileLogManager_multipleFiles = true
+fileLogManager_defaultFileName = main
+
+# false = append true = overwrite
+fileLogManager_overwrite_existing_log_file = false
+
+# the amount of time the LookupService tutorial app will wait before timing out
+# in milliseconds, default is 30 seconds
+lookup_service.timeout = 30000
+# how long to wait before the first retry
+lookup_service.firstTimeout = 500

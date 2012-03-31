@@ -1,5 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
 	<parent>
 		<groupId>pdsproject</groupId>
 		<artifactId>pdsproject</artifactId>
@@ -9,60 +10,8 @@
 	<artifactId>pds.discovery</artifactId>
 	<packaging>jar</packaging>
 	<name>pds.discovery</name>
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<id>dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<includeScope>runtime</includeScope>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>execution1</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>org.openxrd</groupId>
-							<artifactId>openxrd</artifactId>
-							<version>1.0-SNAPSHOT</version>
-							<packaging>jar</packaging>
-							<file>${basedir}/../pdsproject/lib/openxrd-1.0-SNAPSHOT.jar</file>
-							<pomFile>${basedir}/../pdsproject/lib/openxrd-1.0-SNAPSHOT.pom</pomFile>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+
 	<dependencies>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.1.1</version>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 		<dependency>
 			<groupId>org.openxrd</groupId>
 			<artifactId>openxrd</artifactId>
@@ -122,4 +71,5 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
+
 </project>

@@ -17,7 +17,7 @@ public class ExternalCallServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -8736563564727679509L;
 
-	private static Log log = LogFactory.getLog(ExternalCallServlet.class.getName());
+	private static Logger log = LoggerFactory.getLogger(ExternalCallServlet.class.getName());
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

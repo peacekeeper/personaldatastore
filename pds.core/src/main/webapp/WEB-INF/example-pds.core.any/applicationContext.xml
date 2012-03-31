@@ -19,7 +19,7 @@
 	</bean>
 
 	<!-- PDS Graph Factory -->
-	<!-- This determines the XDI4j back-end store to be used by the PDS. -->
+	<!-- This determines the XDI2 back-end store to be used by the PDS. -->
 
 	<bean id="pdsGraphFactory" class="pds.core.base.graphfactories.PdsBDBGraphFactory">
 		<property name="databasePath" value="./pds-bdb/" />
@@ -41,6 +41,6 @@
 	<!-- XDI Servlet -->
 	<!-- Do not modify this, unless you know what you are doing. -->
 
-	<bean id="EndpointServlet" class="org.eclipse.higgins.xdi4j.messaging.server.EndpointServlet" />
+	<bean id="EndpointServlet" class="xdi2.server.EndpointServlet" />
 
 </beans>
