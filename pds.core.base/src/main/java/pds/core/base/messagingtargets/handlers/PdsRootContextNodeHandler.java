@@ -23,7 +23,7 @@ public class PdsRootContextNodeHandler extends AbstractContextNodeHandler {
 	public boolean executeGetOnContextNode(ContextNode operationContextNode, Operation operation, MessageResult messageResult, ExecutionContext executionContext) throws Xdi2MessagingException {
 
 		ContextNode messageResultRootContextNode = messageResult.getGraph().getRootContextNode();
-		
+
 		messageResultRootContextNode.createRelation(new XRI3Segment("$is$a"), new XRI3Segment("($xdi$v$1)"));
 		messageResultRootContextNode.createRelation(new XRI3Segment("$is$a"), new XRI3Segment("($pds$v$1)"));
 		messageResultRootContextNode.createRelation(new XRI3Segment("$is($xdi$v$1)"), this.pdsInstance.getCanonical());

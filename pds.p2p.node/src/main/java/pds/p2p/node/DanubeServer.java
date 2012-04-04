@@ -1,13 +1,7 @@
 package pds.p2p.node;
 
-import java.io.IOException;
 import java.util.Date;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Properties;
 
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
@@ -19,14 +13,17 @@ import pds.p2p.api.Orion;
 import pds.p2p.api.Polaris;
 import pds.p2p.api.Sirius;
 import pds.p2p.api.Vega;
+import pds.p2p.api.annotations.ApiInterface;
 
-import com.googlecode.jsonrpc4j.JsonRpcServer;
 
 public class DanubeServer {
 
-	private static Logger log = LoggerFactory.getLogger(DanubeServer.class);
+	private static final Logger log = LoggerFactory.getLogger(DanubeServer.class);
+
+	private static Properties properties;
 
 	private static Server server;
+	private static Context context;
 
 	private static Admin adminObject;
 	private static Orion orionObject;
@@ -34,11 +31,32 @@ public class DanubeServer {
 	private static Sirius siriusObject;
 	private static Polaris polarisObject;
 
-	private static void init() throws Throwable {
+	public static void main(String[] args) throws Throwable {
+
+		init(args);
+		server(args);
+		shutdown();
+	}
+
+	private static void init(String[] args) throws Throwable {
 
 		log.info("init()");
 
-		adminObject = new AdminImpl(new Date(), server);
+		// Properties
+
+		properties = new Properties();
+		properties.load(DanubeServer.class.getResourceAsStream("/application.properties"));
+
+		// Server and Context
+
+		int port = Integer.parseInt(properties.getProperty("server.port", "9090"));
+		server = new Server(port);
+
+		context = new Context(server, "/");
+
+		// JSON-RPC
+
+		adminObject = new AdminImpl(new Date(), server, context);
 
 		orionObject = pds.p2p.api.orion.OrionFactory.getOrion();
 		orionObject.init();
@@ -57,51 +75,40 @@ public class DanubeServer {
 		if (pds.p2p.api.polaris.PolarisFactory.getException() != null) throw pds.p2p.api.polaris.PolarisFactory.getException();
 	}
 
-	public static void main(String[] args) throws Throwable {
+	private static void shutdown() {
 
-		server = new Server(8080);
+		log.info("shutdown()");
 
-		init();
+		adminObject = null;
 
-		Context context = new Context(server, "/");
-		context.addServlet(new ServletHolder(new JsonRpcServlet(adminObject)), "/admin");
-		context.addServlet(new ServletHolder(new JsonRpcServlet(orionObject)), "/orion");
-		context.addServlet(new ServletHolder(new JsonRpcServlet(vegaObject)), "/vega");
-		context.addServlet(new ServletHolder(new JsonRpcServlet(siriusObject)), "/sirius");
-		context.addServlet(new ServletHolder(new JsonRpcServlet(polarisObject)), "/polaris");
+		polarisObject.shutdown();
+		polarisObject = null;
 
-		server.setGracefulShutdown(1000);
+		siriusObject.shutdown();
+		siriusObject = null;
+
+		vegaObject.shutdown();
+		vegaObject = null;
+
+		orionObject.shutdown();
+		orionObject = null;
+	}
+
+	private static void server(String[] args) throws Throwable {
+
+		log.info("server()");
+
+		context.addServlet(new ServletHolder(new JsonRpcServlet(adminObject)), "/" + Admin.class.getAnnotation(ApiInterface.class).name());
+		context.addServlet(new ServletHolder(new JsonRpcServlet(orionObject)), "/" + Orion.class.getAnnotation(ApiInterface.class).name());
+		context.addServlet(new ServletHolder(new JsonRpcServlet(vegaObject)), "/" + Vega.class.getAnnotation(ApiInterface.class).name());
+		context.addServlet(new ServletHolder(new JsonRpcServlet(siriusObject)), "/" + Sirius.class.getAnnotation(ApiInterface.class).name());
+		context.addServlet(new ServletHolder(new JsonRpcServlet(polarisObject)), "/" + Polaris.class.getAnnotation(ApiInterface.class).name());
+
+		log.info("Starting server...");
+
+		server.setGracefulShutdown(3000);
 		server.setStopAtShutdown(true);
 		server.start();
 		server.join();
-	}
-
-	private static class JsonRpcServlet extends HttpServlet {
-
-		private static final long serialVersionUID = 7453275488406497744L;
-
-		private Object jsonRpcObject;
-		private JsonRpcServer jsonRpcServer;
-
-		private JsonRpcServlet(Object jsonRpcObject) {
-
-			this.jsonRpcObject = jsonRpcObject;
-		}
-
-		@Override
-		public void init(ServletConfig config) throws ServletException {
-
-			super.init(config);
-
-			this.jsonRpcServer = new JsonRpcServer(jsonRpcObject, jsonRpcObject.getClass());
-		}
-
-		@Override
-		protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-			log.debug(this.jsonRpcObject.getClass() + ": service()");
-
-			this.jsonRpcServer.handle(request, response);
-		}
 	};
 }

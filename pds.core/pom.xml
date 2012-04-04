@@ -31,7 +31,7 @@
 					<systemProperties>
 						<systemProperty>
 							<name>jetty.port</name>
-							<value>9090</value>
+							<value>10100</value>
 						</systemProperty>
 						<systemProperty>
 							<name>slf4j</name>

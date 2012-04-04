@@ -1,5 +1,8 @@
 package pds.p2p.api;
 
+import pds.p2p.api.annotations.ApiInterface;
+
+@ApiInterface(name="orion", description="Node and User Identity API")
 public interface Orion {
 
 	public void init() throws Exception;

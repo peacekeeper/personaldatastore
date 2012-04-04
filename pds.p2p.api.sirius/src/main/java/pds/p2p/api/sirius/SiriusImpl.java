@@ -14,11 +14,10 @@ import xdi2.client.local.XDILocalClient;
 import xdi2.core.Graph;
 import xdi2.core.Literal;
 import xdi2.core.Relation;
+import xdi2.core.exceptions.Xdi2ParseException;
 import xdi2.core.impl.memory.MemoryGraphFactory;
-import xdi2.core.io.XDIReader;
 import xdi2.core.io.XDIReaderRegistry;
-import xdi2.core.util.CopyUtil;
-import xdi2.messaging.Message;
+import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
 import xdi2.messaging.util.XDIMessagingConstants;
@@ -54,25 +53,10 @@ public class SiriusImpl implements Sirius {
 
 		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
 
-		XDIReader reader = XDIReaderRegistry.getAuto();
-		Graph graph = null;
-
-		if (xdi != null) {
-
-			graph = MemoryGraphFactory.getInstance().openGraph();
-			reader.read(graph, xdi, null);
-		}
-
-		MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
-		Message message = messageEnvelope.getMessageContainer(XDIMessagingConstants.XRI_S_ANONYMOUS, true).createMessage();
-		if (graph != null) CopyUtil.copyContextNode(graph.getRootContextNode(), messageEnvelope.getGraph(), null);
-		message.createGetOperation(messageEnvelope.getGraph().getRootContextNode());
-
+		MessageEnvelope messageEnvelope = messageEnvelopeFromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
-		log.debug(messageResult.getGraph().toString());
-
-		if (format == null) format = "XDI/JSON";
+		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
 
 		return messageResult.getGraph().toString(format, null);
 	}
@@ -83,25 +67,10 @@ public class SiriusImpl implements Sirius {
 
 		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
 
-		XDIReader reader = XDIReaderRegistry.getAuto();
-		Graph graph = null;
-
-		if (xdi != null) {
-
-			graph = MemoryGraphFactory.getInstance().openGraph();
-			reader.read(graph, xdi, null);
-		}
-
-		MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
-		Message message = messageEnvelope.getMessageContainer(XDIMessagingConstants.XRI_S_ANONYMOUS, true).createMessage();
-		if (graph != null) CopyUtil.copyContextNode(graph.getRootContextNode(), messageEnvelope.getGraph(), null);
-		message.createAddOperation(messageEnvelope.getGraph().getRootContextNode());
-
+		MessageEnvelope messageEnvelope = messageEnvelopeFromOperationXriAndXdi(XDIMessagingConstants.XRI_S_ADD, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
-		log.debug(messageResult.getGraph().toString());
-
-		if (format == null) format = "XDI/JSON";
+		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
 
 		return messageResult.getGraph().toString(format, null);
 	}
@@ -112,54 +81,10 @@ public class SiriusImpl implements Sirius {
 
 		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
 
-		XDIReader reader = XDIReaderRegistry.getAuto();
-		Graph graph = null;
-
-		if (xdi != null) {
-
-			graph = MemoryGraphFactory.getInstance().openGraph();
-			reader.read(graph, xdi, null);
-		}
-
-		MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
-		Message message = messageEnvelope.getMessageContainer(XDIMessagingConstants.XRI_S_ANONYMOUS, true).createMessage();
-		if (graph != null) CopyUtil.copyContextNode(graph.getRootContextNode(), messageEnvelope.getGraph(), null);
-		message.createModOperation(messageEnvelope.getGraph().getRootContextNode());
-
+		MessageEnvelope messageEnvelope = messageEnvelopeFromOperationXriAndXdi(XDIMessagingConstants.XRI_S_MOD, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
-		log.debug(messageResult.getGraph().toString());
-
-		if (format == null) format = "XDI/JSON";
-
-		return messageResult.getGraph().toString(format, null);
-	}
-
-	public String set(String xdi, String format) throws Exception {
-
-		log.debug("set(" + xdi + "," + format + ")");
-
-		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
-
-		XDIReader reader = XDIReaderRegistry.getAuto();
-		Graph graph = null;
-
-		if (xdi != null) {
-
-			graph = MemoryGraphFactory.getInstance().openGraph();
-			reader.read(graph, xdi, null);
-		}
-
-		MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
-		Message message = messageEnvelope.getMessageContainer(XDIMessagingConstants.XRI_S_ANONYMOUS, true).createMessage();
-		if (graph != null) CopyUtil.copyContextNode(graph.getRootContextNode(), messageEnvelope.getGraph(), null);
-		message.createAddOperation(messageEnvelope.getGraph().getRootContextNode());	// TODO CHANGE TO SET
-
-		MessageResult messageResult = this.client.send(messageEnvelope, null);
-		if (messageResult == null) throw new RuntimeException("No result");
-		log.debug(messageResult.getGraph().toString());
-
-		if (format == null) format = "XDI/JSON";
+		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
 
 		return messageResult.getGraph().toString(format, null);
 	}
@@ -170,25 +95,10 @@ public class SiriusImpl implements Sirius {
 
 		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
 
-		XDIReader reader = XDIReaderRegistry.getAuto();
-		Graph graph = null;
-
-		if (xdi != null) {
-
-			graph = MemoryGraphFactory.getInstance().openGraph();
-			reader.read(graph, xdi, null);
-		}
-
-		MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
-		Message message = messageEnvelope.getMessageContainer(XDIMessagingConstants.XRI_S_ANONYMOUS, true).createMessage();
-		if (graph != null) CopyUtil.copyContextNode(graph.getRootContextNode(), messageEnvelope.getGraph(), null);
-		message.createDelOperation(messageEnvelope.getGraph().getRootContextNode());
-
+		MessageEnvelope messageEnvelope = messageEnvelopeFromOperationXriAndXdi(XDIMessagingConstants.XRI_S_DEL, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
-		log.debug(messageResult.getGraph().toString());
-
-		if (format == null) format = "XDI/JSON";
+		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
 
 		return messageResult.getGraph().toString(format, null);
 	}
@@ -199,23 +109,10 @@ public class SiriusImpl implements Sirius {
 
 		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
 
-		XDIReader reader = XDIReaderRegistry.getAuto();
-		Graph graph = null;
-
-		if (xdi != null) {
-
-			graph = MemoryGraphFactory.getInstance().openGraph();
-			reader.read(graph, xdi, null);
-		}
-
-		MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
-		Message message = messageEnvelope.getMessageContainer(XDIMessagingConstants.XRI_S_ANONYMOUS, true).createMessage();
-		if (graph != null) CopyUtil.copyContextNode(graph.getRootContextNode(), messageEnvelope.getGraph(), null);
-		message.createGetOperation(messageEnvelope.getGraph().getRootContextNode());
-
+		MessageEnvelope messageEnvelope = messageEnvelopeFromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
-		log.debug(messageResult.getGraph().toString());
+		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
 
 		List<String> literals = new Vector<String> ();
 		for (Iterator<Literal> i = messageResult.getGraph().getRootContextNode().getAllLiterals(); i.hasNext(); ) literals.add((i.next()).getLiteralData());
@@ -239,23 +136,10 @@ public class SiriusImpl implements Sirius {
 
 		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
 
-		XDIReader reader = XDIReaderRegistry.getAuto();
-		Graph graph = null;
-
-		if (xdi != null) {
-
-			graph = MemoryGraphFactory.getInstance().openGraph();
-			reader.read(graph, xdi, null);
-		}
-
-		MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
-		Message message = messageEnvelope.getMessageContainer(XDIMessagingConstants.XRI_S_ANONYMOUS, true).createMessage();
-		if (graph != null) CopyUtil.copyContextNode(graph.getRootContextNode(), messageEnvelope.getGraph(), null);
-		message.createGetOperation(messageEnvelope.getGraph().getRootContextNode());
-
+		MessageEnvelope messageEnvelope = messageEnvelopeFromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
-		log.debug(messageResult.getGraph().toString());
+		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
 
 		List<String> relations = new Vector<String> ();
 		for (Iterator<Relation> i = messageResult.getGraph().getRootContextNode().getAllRelations(); i.hasNext(); ) relations.add((i.next()).getRelationXri().toString());
@@ -285,10 +169,24 @@ public class SiriusImpl implements Sirius {
 
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
-		log.debug(messageResult.getGraph().toString());
+		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
 
 		if (format == null) format = "XDI/JSON";
 
 		return messageResult.getGraph().toString(format, null);
+	}
+
+	private static final MessageEnvelope messageEnvelopeFromOperationXriAndXdi(XRI3Segment operationXri, String xdi) throws Xdi2ParseException {
+
+		try {
+
+			if (xdi == null) xdi = "()";
+
+			XRI3Segment targetXri = new XRI3Segment(xdi);
+			return MessageEnvelope.fromOperationXriAndTargetXri(XDIMessagingConstants.XRI_S_GET, targetXri);
+		} catch (Exception ex) {
+
+			return MessageEnvelope.fromOperationXriAndStatement(XDIMessagingConstants.XRI_S_GET, xdi);
+		}
 	}
 }

@@ -1,6 +1,8 @@
 package pds.p2p.api;
 
+import pds.p2p.api.annotations.ApiInterface;
 
+@ApiInterface(name="vega", description="P2P Networking API")
 public interface Vega {
 
 	public void init() throws Exception;

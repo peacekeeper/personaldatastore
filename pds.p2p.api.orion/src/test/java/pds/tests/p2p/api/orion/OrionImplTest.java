@@ -16,7 +16,7 @@ public class OrionImplTest extends TestCase {
 
 		assertEquals(orion.iname(), "=markus");
 		assertEquals(orion.inumber(), "=!b9a9.c0b3.8269.0219");
-		assertEquals(orion.xdiUri(), "http://localhost:9090/");
+		assertEquals(orion.xdiUri(), "http://localhost:10100/");
 		assertEquals(orion.loggedin(), "1");
 
 		assertEquals(orion.resolve("=markus"), "=!b9a9.c0b3.8269.0219");

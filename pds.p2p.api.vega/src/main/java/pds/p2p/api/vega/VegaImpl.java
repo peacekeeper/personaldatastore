@@ -118,7 +118,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 	public String connect(String localPort, String remoteHost, String remotePort, String parameters) throws Exception {
 
-		log.info("connect(" + localPort + "," + remoteHost + "," + remotePort + ",<parameters>)");
+		log.debug("connect(" + localPort + "," + remoteHost + "," + remotePort + ",<parameters>)");
 
 		try {
 
@@ -167,7 +167,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 				for (Map.Entry<Object, Object> property : properties.entrySet()) {
 
-					log.info("Setting parameter " + (String) property.getKey() + " --> " + (String) property.getValue());
+					log.debug("Setting parameter " + (String) property.getKey() + " --> " + (String) property.getValue());
 					this.environment.getParameters().setString((String) property.getKey(), (String) property.getValue());
 				}
 			}
@@ -181,19 +181,19 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 				remoteAddr = InetAddress.getByName(remoteHost);
 				remoteSockAddr = new InetSocketAddress(remoteAddr, Integer.valueOf(remotePort).intValue());
-				log.info("Boot address is " + remoteSockAddr.toString());
+				log.debug("Boot address is " + remoteSockAddr.toString());
 			} else {
 
 				remoteAddr = null;
 				remoteSockAddr = null;
-				log.info("No boot address.");
+				log.debug("No boot address.");
 			}
 
 			// figure out local address
 
 			InetAddress localAddr = InetAddress.getLocalHost();
 			InetSocketAddress localSockAddr = new InetSocketAddress(localAddr, Integer.valueOf(localPort).intValue());
-			log.info("Local address is " + localSockAddr.toString());
+			log.debug("Local address is " + localSockAddr.toString());
 
 			// figure out public address and port
 
@@ -216,11 +216,11 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 				sendBuffer = sendString.getBytes();
 
 				DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, InetAddress.getByName(remoteHost), Integer.valueOf(remotePort).intValue() - 1);
-				log.info("Sending probe packet...");
+				log.debug("Sending probe packet...");
 				clientSocket.send(sendPacket);
 
 				DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
-				log.info("Receiving probe packet...");
+				log.debug("Receiving probe packet...");
 				clientSocket.receive(receivePacket);
 				receiveString = new String(receiveBuffer).substring(0, receivePacket.getLength());
 
@@ -228,21 +228,21 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 				String publicPort = receiveString.split(" ")[1];
 				publicAddr = InetAddress.getByName(publicHost);
 				publicSockAddr = new InetSocketAddress(publicAddr, Integer.valueOf(publicPort).intValue());
-				log.info("Public address is " + publicSockAddr.toString());
+				log.debug("Public address is " + publicSockAddr.toString());
 
 				clientSocket.close();
 			} else {
 
 				publicAddr = null;
 				publicSockAddr = null;
-				log.info("No public address.");
+				log.debug("No public address.");
 			}
 
 			if (publicAddr != null && localAddr.equals(publicAddr)) {
 
 				publicAddr = null;
 				publicSockAddr = null;
-				log.info("Local address is public address.");
+				log.debug("Local address is public address.");
 			}
 
 			// construct pastry ID factory
@@ -261,7 +261,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 			// create node
 
-			log.info("Instantiating node...");
+			log.debug("Instantiating node...");
 
 			this.createNode(publicSockAddr);
 
@@ -287,7 +287,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 				public void update(Observable object, Object arg) {
 
-					log.info("Observed " + arg + " to " + object);
+					log.debug("Observed " + arg + " to " + object);
 
 					if (arg instanceof RuntimeException) {
 
@@ -301,10 +301,10 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 			if (remoteSockAddr == null) {
 
-				log.info("Booting node into new network...");
+				log.debug("Booting node into new network...");
 			} else {
 
-				log.info("Booting node into " + remoteSockAddr.toString());
+				log.debug("Booting node into " + remoteSockAddr.toString());
 			}
 
 			this.pastryNode.boot(Collections.singleton(remoteSockAddr));
@@ -324,13 +324,13 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 				synchronized(this.pastryNode) {
 
-					log.info("Waiting for node to boot...");
+					log.debug("Waiting for node to boot...");
 					this.pastryNode.wait(500);
 					counter++;
 				}
 			}
 
-			log.info("Booting complete! Our node ID: " + this.pastryNode.getNodeId().toStringFull() + ". Our node handle: " + this.pastryNode.getLocalNodeHandle().toString() + ". Our node: " + this.pastryNode.toString());
+			log.debug("Booting complete! Our node ID: " + this.pastryNode.getNodeId().toStringFull() + ". Our node handle: " + this.pastryNode.getLocalNodeHandle().toString() + ". Our node: " + this.pastryNode.toString());
 		} catch (Exception ex) {
 
 			this.disconnect();
@@ -349,18 +349,18 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		/*if (this.isInternetRoutablePrefix(localAddr) || (remoteAddr != null && this.isInternetRoutablePrefix(remoteAddr))) {
 		if (false) {
 
-			log.info("Constructing InternetPastryNodeFactory...");
+			log.debug("Constructing InternetPastryNodeFactory...");
 			nodeFactory = new rice.pastry.socket.internet.InternetPastryNodeFactory(nodeIdFactory, localAddr, Integer.valueOf(localPort).intValue(), this.environment, null, Collections.singletonList(remoteSockAddr), null);
 		} else*/ {
 
-			log.info("Constructing SocketPastryNodeFactory...");
+			log.debug("Constructing SocketPastryNodeFactory...");
 			nodeFactory = new rice.pastry.socket.SocketPastryNodeFactory(nodeIdFactory, Integer.valueOf(localPort).intValue(), this.environment);
 		}
 
 		this.pastryNode = nodeFactory.newNode(nodeIdFactory.generateNodeId(), publicSockAddr);
 
-		log.info("Local node: " + this.pastryNode.getClass().getName());
-		log.info("Local port is " + localPort);
+		log.debug("Local node: " + this.pastryNode.getClass().getName());
+		log.debug("Local port is " + localPort);
 	}
 
 	protected void createEndpoint() {

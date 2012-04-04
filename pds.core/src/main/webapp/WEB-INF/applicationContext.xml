@@ -27,7 +27,7 @@
 
 		<property name="endpoints">
 			<list>
-				<value>http://yourserver.com/pds-core/</value>
+				<value>http://localhost:10100/</value>
 			</list>
 		</property>
 

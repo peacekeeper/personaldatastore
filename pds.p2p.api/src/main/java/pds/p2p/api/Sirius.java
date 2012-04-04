@@ -1,5 +1,8 @@
 package pds.p2p.api;
 
+import pds.p2p.api.annotations.ApiInterface;
+
+@ApiInterface(name="sirius", description="Shared XDI API")
 public interface Sirius {
 
 	public void init() throws Exception;
@@ -8,7 +11,6 @@ public interface Sirius {
 	public String add(String xdi, String format) throws Exception;
 	public String get(String xdi, String format) throws Exception;
 	public String mod(String xdi, String format) throws Exception;
-	public String set(String xdi, String format) throws Exception;
 	public String del(String xdi, String format) throws Exception;
 	public String[] getLiterals(String xdi) throws Exception;
 	public String getLiteral(String xdi) throws Exception;

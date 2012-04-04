@@ -151,7 +151,7 @@ public class XriUtil {
 
 		// resolve it!
 
-		String xdiUrl = "http://localhost:9090/";
+		String xdiUrl = "http://localhost:10100/";
 
 		// put it into cache
 
