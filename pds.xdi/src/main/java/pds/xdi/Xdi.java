@@ -161,7 +161,7 @@ public class Xdi {
 			MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
 			ContextNode contextNode = messageEnvelope.getGraph().addStatement("()/$is($xdi$v$1)/($)").getSubject();
 			Message message = messageEnvelope.getMessageContainer(XDIMessagingConstants.XRI_S_SELF, true).createMessage();
-			message.createGetOperation(contextNode);
+			message.createGetOperation(contextNode.getXri());
 			MessageResult messageResult = this.send(xdiClient, messageEnvelope);
 
 			inumber = messageResult.getGraph().findRelation(new XRI3Segment("()"), new XRI3Segment("$is($xdi$v$1)")).toString();

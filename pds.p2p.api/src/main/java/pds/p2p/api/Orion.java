@@ -1,8 +1,9 @@
 package pds.p2p.api;
 
-import pds.p2p.api.annotations.ApiInterface;
+import pds.p2p.api.annotation.DanubeApi;
 
-@ApiInterface(name="orion", description="Node and User Identity API")
+
+@DanubeApi(name="orion", description="Node and User Identity API")
 public interface Orion {
 
 	public void init() throws Exception;

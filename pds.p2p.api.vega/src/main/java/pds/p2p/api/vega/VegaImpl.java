@@ -338,7 +338,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 			throw ex;
 		}
 
-		return("1");
+		return "1";
 	}
 
 	protected void createNode(InetSocketAddress publicSockAddr) throws IOException {
@@ -422,10 +422,10 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		if (this.environment != null && this.pastryNode != null && this.endpoint != null) {
 
-			return("1");
+			return "1";
 		} else {
 
-			return(null);
+			return null;
 		}
 	}
 
@@ -437,58 +437,58 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		log.debug("nodeId()");
 
-		if (this.endpoint == null) return(null);
+		if (this.endpoint == null) return null;
 
-		return(this.endpoint.getId().toStringFull());
+		return this.endpoint.getId().toStringFull();
 	}
 
 	public String localHost() throws Exception {
 
 		log.debug("localHost()");
 
-		return(this.localHost);
+		return this.localHost;
 	}
 
 	public String localPort() throws Exception {
 
 		log.debug("localPort()");
 
-		return(this.localPort);
+		return this.localPort;
 	}
 
 	public String publicHost() throws Exception {
 
 		log.debug("publicHost()");
 
-		return(this.publicHost);
+		return this.publicHost;
 	}
 
 	public String publicPort() throws Exception {
 
 		log.debug("publicPort()");
 
-		return(this.publicPort);
+		return this.publicPort;
 	}
 
 	public String remoteHost() throws Exception {
 
 		log.debug("remoteHost()");
 
-		return(this.remoteHost);
+		return this.remoteHost;
 	}
 
 	public String remotePort() throws Exception {
 
 		log.debug("remotePort()");
 
-		return(this.remotePort);
+		return this.remotePort;
 	}
 
 	public String parameters() throws Exception {
 
 		log.debug("parameters()");
 
-		return(this.parameters);
+		return this.parameters;
 	}
 
 	public String lookupRandom() throws Exception {
@@ -498,7 +498,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		if (! "1".equals(this.connected())) throw new RuntimeException("Not connected.");
 
 		Id nodeId = this.pastryIdFactory.buildRandomId(this.environment.getRandomSource());
-		return(nodeId.toStringFull());
+		return nodeId.toStringFull();
 	}
 
 	public String[] lookupNeighbors(String num) throws Exception {
@@ -510,7 +510,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		NodeHandleSet nodeHandleSet = this.endpoint.neighborSet(Integer.valueOf(num).intValue());
 		String[] nodeIds = new String[nodeHandleSet.size()];
 		for (int i=0; i<nodeHandleSet.size(); i++) nodeIds[i] = nodeHandleSet.getHandle(i).getId().toStringFull();
-		return(nodeIds);
+		return nodeIds;
 	}
 
 	public void send(String nodeId, String ray, String content, String flags, String extension) throws Exception {
@@ -698,9 +698,9 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		if (! "1".equals(this.connected())) throw new RuntimeException("Not connected.");
 
 		String content = this.internalGet(key);
-		if (content == null) return(null);
+		if (content == null) return null;
 
-		return(content);
+		return content;
 	}
 
 	public void put(String key, String value) throws Exception {
@@ -729,7 +729,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		if (! "1".equals(this.connected())) throw new RuntimeException("Not connected.");
 
-		return(this.internalMultiGet(key));
+		return this.internalMultiGet(key);
 	}
 
 	public String multiGetIndex(String key, String index) throws Exception {
@@ -738,7 +738,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		if (! "1".equals(this.connected())) throw new RuntimeException("Not connected.");
 
-		return(this.internalMultiGetIndex(key, index));
+		return this.internalMultiGetIndex(key, index);
 	}
 
 	public String multiGetCount(String key) throws Exception {
@@ -747,7 +747,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		if (! "1".equals(this.connected())) throw new RuntimeException("Not connected.");
 
-		return(this.internalMultiGetCount(key));
+		return this.internalMultiGetCount(key);
 	}
 
 	public String multiGetRandom(String key) throws Exception {
@@ -756,7 +756,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		if (! "1".equals(this.connected())) throw new RuntimeException("Not connected.");
 
-		return(this.internalMultiGetRandom(key));
+		return this.internalMultiGetRandom(key);
 	}
 
 	public void multiDelete(String key, String value) throws Exception {
@@ -865,9 +865,9 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		}
 
 		if (continuation.hasException()) throw continuation.getException();
-		if (! continuation.hasResult()) return(null);
+		if (! continuation.hasResult()) return null;
 
-		return(continuation.getResult());
+		return continuation.getResult();
 	}
 
 	private String internalGet(final String key) throws Exception {
@@ -888,12 +888,12 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		}
 
 		if (continuation.hasException()) throw continuation.getException();
-		if (! continuation.hasResult()) return(null);
+		if (! continuation.hasResult()) return null;
 
 		VegaPastContent result = (VegaPastContent) continuation.getResult();
 		if (! result.getKey().equals(key)) throw new RuntimeException("Incorrect key.");
 
-		return(result.getValue());
+		return result.getValue();
 	}
 
 	private void internalMultiPut(final String key, final String value) throws Exception {
@@ -934,7 +934,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 			contents.add(content);
 		}
 
-		return(contents.toArray(new String[contents.size()]));
+		return contents.toArray(new String[contents.size()]);
 	}
 
 	private String internalMultiGetIndex(final String key, final String index) throws Exception {
@@ -954,7 +954,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		String[] indices = indexlist == null ? new String[0] : indexlist.trim().split(" ");
 
-		return(this.internalGet(key + "___" + indices[Integer.valueOf(index).intValue()]));
+		return this.internalGet(key + "___" + indices[Integer.valueOf(index).intValue()]);
 	}
 
 	private String internalMultiGetCount(final String key) throws Exception {
@@ -974,7 +974,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		String[] indices = indexlist == null ? new String[0] : indexlist.trim().split(" ");
 
-		return(Integer.toString(indices.length));
+		return Integer.toString(indices.length);
 	}
 
 	private String internalMultiGetRandom(final String key) throws Exception {
@@ -997,9 +997,9 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		int index = Math.abs(random.nextInt() % indices.length);
 
 		String content = this.internalGet(key + "___" + indices[index]);
-		if (content == null) return(null);
+		if (content == null) return null;
 
-		return(content);
+		return content;
 	}
 
 	private void internalMultiDelete(final String key, final String value) throws Exception {
@@ -1030,7 +1030,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		log.debug("--> forward(" + message + ")");
 
-		return(true);
+		return true;
 	}
 
 	public void childAdded(Topic topic, NodeHandle child) {
@@ -1072,12 +1072,12 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 			// check general message properties
 
 			boolean dataOk = 
-				vegaMessage.getRay() != null && 
-				vegaMessage.getIname() != null && 
-				vegaMessage.getInumber() != null && 
-				vegaMessage.getNonce() != null &&
-				vegaMessage.getSignature() != null && 
-				vegaMessage.getHashcash() != null;
+					vegaMessage.getRay() != null && 
+					vegaMessage.getIname() != null && 
+					vegaMessage.getInumber() != null && 
+					vegaMessage.getNonce() != null &&
+					vegaMessage.getSignature() != null && 
+					vegaMessage.getHashcash() != null;
 
 			boolean nonceOk = NonceUtil.checkNonce(vegaMessage.getNonce());
 
@@ -1095,18 +1095,18 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 					vegaMessage.getRay(),
 					null,
 					"{\n" + 
-					" \"type\":\"unicast\",\n" +
-					" \"id\":" + escapeJSON(id.toStringFull()) + ",\n" +
-					" \"ray\":" + escapeJSON(vegaMessage.getRay()) + ",\n" +
-					" \"iname\":" + escapeJSON(vegaMessage.getIname()) + ",\n" +
-					" \"inumber\":" + escapeJSON(vegaMessage.getInumber()) + ",\n" +
-					" \"nonce\":" + escapeJSON(vegaMessage.getNonce()) + ",\n" +
-					" \"content\":" + escapeJSON(vegaMessage.getContent()) + ",\n" + 
-					" \"signature\":" + escapeJSON(vegaMessage.getSignature()) + ",\n" + 
-					" \"hashcash\":" + escapeJSON(vegaMessage.getHashcash()) + ",\n" + 
-					" \"flags\":" + escapeJSON(vegaMessage.getFlags()) + ",\n" + 
-					" \"extension\":" + escapeJSON(vegaMessage.getExtension()) + "\n" + 
-			"}");
+							" \"type\":\"unicast\",\n" +
+							" \"id\":" + escapeJSON(id.toStringFull()) + ",\n" +
+							" \"ray\":" + escapeJSON(vegaMessage.getRay()) + ",\n" +
+							" \"iname\":" + escapeJSON(vegaMessage.getIname()) + ",\n" +
+							" \"inumber\":" + escapeJSON(vegaMessage.getInumber()) + ",\n" +
+							" \"nonce\":" + escapeJSON(vegaMessage.getNonce()) + ",\n" +
+							" \"content\":" + escapeJSON(vegaMessage.getContent()) + ",\n" + 
+							" \"signature\":" + escapeJSON(vegaMessage.getSignature()) + ",\n" + 
+							" \"hashcash\":" + escapeJSON(vegaMessage.getHashcash()) + ",\n" + 
+							" \"flags\":" + escapeJSON(vegaMessage.getFlags()) + ",\n" + 
+							" \"extension\":" + escapeJSON(vegaMessage.getExtension()) + "\n" + 
+					"}");
 		} catch (Exception ex) {
 
 			log.error("--> deliver: " + ex.getMessage(), ex);
@@ -1127,27 +1127,27 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 			// check general message properties
 
 			boolean dataOk = 
-				vegaScribeContent.getTopic() != null && 
-				vegaScribeContent.getRay() != null && 
-				vegaScribeContent.getIname() != null && 
-				vegaScribeContent.getInumber() != null && 
-				vegaScribeContent.getNonce() != null && 
-				vegaScribeContent.getSignature() != null && 
-				vegaScribeContent.getHashcash() != null;
+					vegaScribeContent.getTopic() != null && 
+					vegaScribeContent.getRay() != null && 
+					vegaScribeContent.getIname() != null && 
+					vegaScribeContent.getInumber() != null && 
+					vegaScribeContent.getNonce() != null && 
+					vegaScribeContent.getSignature() != null && 
+					vegaScribeContent.getHashcash() != null;
 
 			boolean nonceOk = NonceUtil.checkNonce(vegaScribeContent.getNonce());
 
 			boolean topicOk = 
-				topic.getId().equals(this.pastryIdFactory.buildId(vegaScribeContent.getTopic()))
-				&&
-				(
-						(! vegaScribeContent.getTopic().startsWith("=")) || 
-						(! vegaScribeContent.getTopic().startsWith("@")) || 
-						vegaScribeContent.getTopic().equals(this.orion.iname() + vegaScribeContent.getRay()) || 
-						vegaScribeContent.getTopic().equals(this.orion.inumber() + vegaScribeContent.getRay()) ||
-						vegaScribeContent.getTopic().equals(this.orion.iname()) || 
-						vegaScribeContent.getTopic().equals(this.orion.inumber())
-				);
+					topic.getId().equals(this.pastryIdFactory.buildId(vegaScribeContent.getTopic()))
+					&&
+					(
+							(! vegaScribeContent.getTopic().startsWith("=")) || 
+							(! vegaScribeContent.getTopic().startsWith("@")) || 
+							vegaScribeContent.getTopic().equals(this.orion.iname() + vegaScribeContent.getRay()) || 
+							vegaScribeContent.getTopic().equals(this.orion.inumber() + vegaScribeContent.getRay()) ||
+							vegaScribeContent.getTopic().equals(this.orion.iname()) || 
+							vegaScribeContent.getTopic().equals(this.orion.inumber())
+							);
 
 			boolean signatureOk = "1".equals(this.orion.verify(topic.getId().toStringFull() + " " + vegaScribeContent.getRay() + " " + vegaScribeContent.getNonce() + " " + vegaScribeContent.getContent(), vegaScribeContent.getSignature(), vegaScribeContent.getInumber()));
 
@@ -1163,18 +1163,18 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 					vegaScribeContent.getRay(),
 					vegaScribeContent.getTopic(),
 					"{\n" + 
-					" \"type\":\"multicast\",\n" +
-					" \"topic\":" + escapeJSON(vegaScribeContent.getTopic()) + ",\n" +
-					" \"ray\":" + escapeJSON(vegaScribeContent.getRay()) + ",\n" +
-					" \"iname\":" + escapeJSON(vegaScribeContent.getIname()) + ",\n" +
-					" \"inumber\":" + escapeJSON(vegaScribeContent.getInumber()) + ",\n" +
-					" \"nonce\":" + escapeJSON(vegaScribeContent.getNonce()) + ",\n" + 
-					" \"content\":" + escapeJSON(vegaScribeContent.getContent()) + ",\n" + 
-					" \"signature\":" + escapeJSON(vegaScribeContent.getSignature()) + ",\n" + 
-					" \"hashcash\":" + escapeJSON(vegaScribeContent.getHashcash()) + ",\n" + 
-					" \"flags\":" + escapeJSON(vegaScribeContent.getFlags()) + ",\n" + 
-					" \"extension\":" + escapeJSON(vegaScribeContent.getExtension()) + "\n" + 
-			"}");
+							" \"type\":\"multicast\",\n" +
+							" \"topic\":" + escapeJSON(vegaScribeContent.getTopic()) + ",\n" +
+							" \"ray\":" + escapeJSON(vegaScribeContent.getRay()) + ",\n" +
+							" \"iname\":" + escapeJSON(vegaScribeContent.getIname()) + ",\n" +
+							" \"inumber\":" + escapeJSON(vegaScribeContent.getInumber()) + ",\n" +
+							" \"nonce\":" + escapeJSON(vegaScribeContent.getNonce()) + ",\n" + 
+							" \"content\":" + escapeJSON(vegaScribeContent.getContent()) + ",\n" + 
+							" \"signature\":" + escapeJSON(vegaScribeContent.getSignature()) + ",\n" + 
+							" \"hashcash\":" + escapeJSON(vegaScribeContent.getHashcash()) + ",\n" + 
+							" \"flags\":" + escapeJSON(vegaScribeContent.getFlags()) + ",\n" + 
+							" \"extension\":" + escapeJSON(vegaScribeContent.getExtension()) + "\n" + 
+					"}");
 		} catch (Exception ex) {
 
 			throw new RuntimeException(ex);
@@ -1183,7 +1183,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 	public boolean anycast(Topic topic, ScribeContent scribeContent) {
 
-		if (! (scribeContent instanceof VegaScribeContent)) return(false);
+		if (! (scribeContent instanceof VegaScribeContent)) return false;
 		VegaScribeContent vegaScribeContent = (VegaScribeContent) scribeContent;
 
 		log.debug("--> anycast(" + topic.getId().toStringFull() + "," + scribeContent + ")");
@@ -1192,27 +1192,27 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		try {
 
 			boolean dataOk = 
-				vegaScribeContent.getTopic() != null && 
-				vegaScribeContent.getRay() != null && 
-				vegaScribeContent.getIname() != null && 
-				vegaScribeContent.getInumber() != null && 
-				vegaScribeContent.getNonce() != null && 
-				vegaScribeContent.getSignature() != null && 
-				vegaScribeContent.getHashcash() != null;
+					vegaScribeContent.getTopic() != null && 
+					vegaScribeContent.getRay() != null && 
+					vegaScribeContent.getIname() != null && 
+					vegaScribeContent.getInumber() != null && 
+					vegaScribeContent.getNonce() != null && 
+					vegaScribeContent.getSignature() != null && 
+					vegaScribeContent.getHashcash() != null;
 
 			boolean nonceOk = NonceUtil.checkNonce(vegaScribeContent.getNonce());
 
 			boolean topicOk = 
-				topic.getId().equals(this.pastryIdFactory.buildId(vegaScribeContent.getTopic()))
-				&&
-				(
-						(! vegaScribeContent.getTopic().startsWith("=")) || 
-						(! vegaScribeContent.getTopic().startsWith("@")) || 
-						vegaScribeContent.getTopic().equals(this.orion.iname() + vegaScribeContent.getRay()) || 
-						vegaScribeContent.getTopic().equals(this.orion.inumber() + vegaScribeContent.getRay()) ||
-						vegaScribeContent.getTopic().equals(this.orion.iname()) || 
-						vegaScribeContent.getTopic().equals(this.orion.inumber())
-				);
+					topic.getId().equals(this.pastryIdFactory.buildId(vegaScribeContent.getTopic()))
+					&&
+					(
+							(! vegaScribeContent.getTopic().startsWith("=")) || 
+							(! vegaScribeContent.getTopic().startsWith("@")) || 
+							vegaScribeContent.getTopic().equals(this.orion.iname() + vegaScribeContent.getRay()) || 
+							vegaScribeContent.getTopic().equals(this.orion.inumber() + vegaScribeContent.getRay()) ||
+							vegaScribeContent.getTopic().equals(this.orion.iname()) || 
+							vegaScribeContent.getTopic().equals(this.orion.inumber())
+							);
 
 			boolean signatureOk = "1".equals(this.orion.verify(topic.getId().toStringFull() + " " + vegaScribeContent.getRay() + " " + vegaScribeContent.getNonce() + " " + vegaScribeContent.getContent(), vegaScribeContent.getSignature(), vegaScribeContent.getInumber()));
 
@@ -1220,30 +1220,30 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 			boolean hashcashOk = hashcash.getTo().equals(topic.getId().toStringFull()) && hashcash.isValid();
 
 			log.debug("--> anycast: dataOk=" + dataOk + " nonceOk=" + nonceOk + " topicOk=" + topicOk + " signatureOk=" + signatureOk + " hashcashOk=" + hashcashOk);
-			if (! dataOk || ! nonceOk || ! topicOk || ! signatureOk || ! hashcashOk) return(false);
+			if (! dataOk || ! nonceOk || ! topicOk || ! signatureOk || ! hashcashOk) return false;
 
 			this.addPacket(
 					vegaScribeContent.getRay(),
 					vegaScribeContent.getTopic(),
 					"{\n" + 
-					" \"type\":\"anycast\",\n" +
-					" \"topic\":" + escapeJSON(vegaScribeContent.getTopic()) + ",\n" +
-					" \"ray\":" + escapeJSON(vegaScribeContent.getRay()) + ",\n" +
-					" \"iname\":" + escapeJSON(vegaScribeContent.getIname()) + ",\n" +
-					" \"inumber\":" + escapeJSON(vegaScribeContent.getInumber()) + ",\n" +
-					" \"nonce\":" + escapeJSON(vegaScribeContent.getNonce()) + ",\n" +
-					" \"content\":" + escapeJSON(vegaScribeContent.getContent()) + ",\n" + 
-					" \"signature\":" + escapeJSON(vegaScribeContent.getSignature()) + ",\n" + 
-					" \"hashcash\":" + escapeJSON(vegaScribeContent.getHashcash()) + ",\n" + 
-					" \"flags\":" + escapeJSON(vegaScribeContent.getFlags()) + ",\n" + 
-					" \"extension\":" + escapeJSON(vegaScribeContent.getExtension()) + "\n" + 
-			"}");
+							" \"type\":\"anycast\",\n" +
+							" \"topic\":" + escapeJSON(vegaScribeContent.getTopic()) + ",\n" +
+							" \"ray\":" + escapeJSON(vegaScribeContent.getRay()) + ",\n" +
+							" \"iname\":" + escapeJSON(vegaScribeContent.getIname()) + ",\n" +
+							" \"inumber\":" + escapeJSON(vegaScribeContent.getInumber()) + ",\n" +
+							" \"nonce\":" + escapeJSON(vegaScribeContent.getNonce()) + ",\n" +
+							" \"content\":" + escapeJSON(vegaScribeContent.getContent()) + ",\n" + 
+							" \"signature\":" + escapeJSON(vegaScribeContent.getSignature()) + ",\n" + 
+							" \"hashcash\":" + escapeJSON(vegaScribeContent.getHashcash()) + ",\n" + 
+							" \"flags\":" + escapeJSON(vegaScribeContent.getFlags()) + ",\n" + 
+							" \"extension\":" + escapeJSON(vegaScribeContent.getExtension()) + "\n" + 
+					"}");
 		} catch (Exception ex) {
 
 			throw new RuntimeException(ex);
 		}
 
-		return(true);
+		return true;
 	}
 
 	/*
@@ -1302,7 +1302,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 			throw new RuntimeException("hash(): " + ex.getMessage(), ex);
 		}
 
-		return(hash);
+		return hash;
 	}
 
 	/*	private boolean isInternetRoutablePrefix(InetAddress address) {    

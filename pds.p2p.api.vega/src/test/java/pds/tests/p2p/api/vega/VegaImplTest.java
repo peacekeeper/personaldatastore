@@ -1,5 +1,7 @@
 package pds.tests.p2p.api.vega;
 
+import java.io.File;
+
 import junit.framework.TestCase;
 import pds.p2p.api.Orion;
 import pds.p2p.api.Vega;
@@ -8,44 +10,70 @@ import pds.p2p.api.vega.VegaFactory;
 
 public class VegaImplTest extends TestCase {
 
+	private Orion orion;
+	private Vega vega;
+
+	@Override
+	public void setUp() throws Exception {
+
+		new File("./storage/").delete();
+		new File("./logs/").mkdir();
+
+		this.orion = OrionFactory.getOrion();
+		this.vega = VegaFactory.getVega(orion);
+
+		this.orion.init();
+		this.vega.init();
+	}
+
+	public void tearDown() throws Exception {
+
+		assertNull(this.vega.nodeId());
+		assertNull(this.vega.localHost());
+		assertNull(this.vega.localPort());
+		assertNull(this.vega.publicHost());
+		assertNull(this.vega.publicPort());
+		assertNull(this.vega.remoteHost());
+		assertNull(this.vega.remotePort());
+		assertNull(this.vega.parameters());
+
+		this.vega.shutdown();
+		this.orion.shutdown();
+
+		new File("./logs/").delete();
+	}
+
 	public void testVegaImpl() throws Exception {
 
-		Orion orion = OrionFactory.getOrion();
-		Vega vega = VegaFactory.getVega(orion);
+		this.orion.login("=markus", "xxx");
+		this.vega.connect(null, null, null, null);
 
-		orion.init();
-		vega.init();
+		assertNotNull(this.vega.nodeId());
+		assertNotNull(this.vega.localHost());
+		assertNotNull(this.vega.localPort());
+		assertNull(this.vega.publicHost());
+		assertNull(this.vega.publicPort());
+		assertNull(this.vega.remoteHost());
+		assertNull(this.vega.remotePort());
+		assertNull(this.vega.parameters());
+		assertEquals(this.vega.connected(), "1");
 
-		orion.login("=markus", "xxx");
-		vega.connect(null, null, null, null);
+		this.vega.put("a", "b");
+		this.vega.put("c", "d");
 
-		assertNotNull(vega.nodeId());
-		assertNotNull(vega.localHost());
-		assertNotNull(vega.localPort());
-		assertNull(vega.publicHost());
-		assertNull(vega.publicPort());
-		assertNull(vega.remoteHost());
-		assertNull(vega.remotePort());
-		assertNull(vega.parameters());
-		assertEquals(vega.connected(), "1");
+		assertEquals(this.vega.get("a"), "b");
+		assertEquals(this.vega.get("c"), "d");
 
-		vega.put("a", "b");
-		vega.put("c", "d");
+		this.vega.disconnect();
+		assertNull(this.vega.nodeId());
+		assertNull(this.vega.localHost());
+		assertNull(this.vega.localPort());
+		assertNull(this.vega.publicHost());
+		assertNull(this.vega.publicPort());
+		assertNull(this.vega.remoteHost());
+		assertNull(this.vega.remotePort());
+		assertNull(this.vega.parameters());
 
-		assertEquals(vega.get("a"), "b");
-		assertEquals(vega.get("c"), "d");
-/*
-		vega.disconnect();
-		assertNull(vega.nodeId());
-		assertNull(vega.localHost());
-		assertNull(vega.localPort());
-		assertNull(vega.publicHost());
-		assertNull(vega.publicPort());
-		assertNull(vega.remoteHost());
-		assertNull(vega.remotePort());
-		assertNull(vega.parameters());
-
-		vega.shutdown();
-		orion.shutdown();*/
+		this.orion.logout();
 	}
 }

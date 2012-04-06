@@ -1,8 +1,9 @@
 package pds.p2p.api;
 
-import pds.p2p.api.annotations.ApiInterface;
+import pds.p2p.api.annotation.DanubeApi;
 
-@ApiInterface(name="polaris", description="Personal XDI API")
+
+@DanubeApi(name="polaris", description="Personal XDI API")
 public interface Polaris {
 
 	public void init() throws Exception;

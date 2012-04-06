@@ -1,8 +1,9 @@
 package pds.p2p.api;
 
-import pds.p2p.api.annotations.ApiInterface;
+import pds.p2p.api.annotation.DanubeApi;
 
-@ApiInterface(name="sirius", description="Shared XDI API")
+
+@DanubeApi(name="sirius", description="Shared XDI API")
 public interface Sirius {
 
 	public void init() throws Exception;

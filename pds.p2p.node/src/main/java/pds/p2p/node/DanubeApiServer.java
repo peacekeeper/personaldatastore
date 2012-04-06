@@ -9,16 +9,17 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pds.p2p.api.Admin;
 import pds.p2p.api.Orion;
 import pds.p2p.api.Polaris;
 import pds.p2p.api.Sirius;
 import pds.p2p.api.Vega;
-import pds.p2p.api.annotations.ApiInterface;
+import pds.p2p.api.annotation.DanubeApi;
 
 
-public class DanubeServer {
+public class DanubeApiServer {
 
-	private static final Logger log = LoggerFactory.getLogger(DanubeServer.class);
+	private static final Logger log = LoggerFactory.getLogger(DanubeApiServer.class);
 
 	private static Properties properties;
 
@@ -45,7 +46,7 @@ public class DanubeServer {
 		// Properties
 
 		properties = new Properties();
-		properties.load(DanubeServer.class.getResourceAsStream("/application.properties"));
+		properties.load(DanubeApiServer.class.getResourceAsStream("/application.properties"));
 
 		// Server and Context
 
@@ -98,11 +99,11 @@ public class DanubeServer {
 
 		log.info("server()");
 
-		context.addServlet(new ServletHolder(new JsonRpcServlet(adminObject)), "/" + Admin.class.getAnnotation(ApiInterface.class).name());
-		context.addServlet(new ServletHolder(new JsonRpcServlet(orionObject)), "/" + Orion.class.getAnnotation(ApiInterface.class).name());
-		context.addServlet(new ServletHolder(new JsonRpcServlet(vegaObject)), "/" + Vega.class.getAnnotation(ApiInterface.class).name());
-		context.addServlet(new ServletHolder(new JsonRpcServlet(siriusObject)), "/" + Sirius.class.getAnnotation(ApiInterface.class).name());
-		context.addServlet(new ServletHolder(new JsonRpcServlet(polarisObject)), "/" + Polaris.class.getAnnotation(ApiInterface.class).name());
+		context.addServlet(new ServletHolder(new JsonRpcServlet(adminObject)), "/" + Admin.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new JsonRpcServlet(orionObject)), "/" + Orion.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new JsonRpcServlet(vegaObject)), "/" + Vega.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new JsonRpcServlet(siriusObject)), "/" + Sirius.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new JsonRpcServlet(polarisObject)), "/" + Polaris.class.getAnnotation(DanubeApi.class).name());
 
 		log.info("Starting server...");
 

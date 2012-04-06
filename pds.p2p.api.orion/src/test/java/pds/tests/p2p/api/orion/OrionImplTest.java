@@ -6,40 +6,53 @@ import pds.p2p.api.orion.OrionFactory;
 
 public class OrionImplTest extends TestCase {
 
+	private Orion orion;
+
+	@Override
+	public void setUp() throws Exception {
+
+		this.orion = OrionFactory.getOrion();
+
+		this.orion.init();
+	}
+
+	public void tearDown() throws Exception {
+
+		this.orion.shutdown();
+	}
+
 	public void testOrionImpl() throws Exception {
 
-		Orion orion = OrionFactory.getOrion();
-
-		orion.init();
+		this.orion.init();
 		
-		orion.login("=markus", "xxx");
+		this.orion.login("=markus", "xxx");
 
-		assertEquals(orion.iname(), "=markus");
-		assertEquals(orion.inumber(), "=!b9a9.c0b3.8269.0219");
-		assertEquals(orion.xdiUri(), "http://localhost:10100/");
-		assertEquals(orion.loggedin(), "1");
+		assertEquals(this.orion.iname(), "=markus");
+		assertEquals(this.orion.inumber(), "=!b9a9.c0b3.8269.0219");
+		assertEquals(this.orion.xdiUri(), "http://localhost:10100/");
+		assertEquals(this.orion.loggedin(), "1");
 
-		assertEquals(orion.resolve("=markus"), "=!b9a9.c0b3.8269.0219");
-		assertEquals(orion.resolve("=markus"), "=!b9a9.c0b3.8269.0219");
+		assertEquals(this.orion.resolve("=markus"), "=!b9a9.c0b3.8269.0219");
+		assertEquals(this.orion.resolve("=markus"), "=!b9a9.c0b3.8269.0219");
 
-		String encrypted = orion.encrypt("hello world", "=!b9a9.c0b3.8269.0219");
-		assertEquals(orion.decrypt(encrypted), "hello world");
+		String encrypted = this.orion.encrypt("hello world", "=!b9a9.c0b3.8269.0219");
+		assertEquals(this.orion.decrypt(encrypted), "hello world");
 
-		String signature = orion.sign("hello world");
-		assertEquals(orion.verify("hello world", signature, "=!b9a9.c0b3.8269.0219"), "1");
+		String signature = this.orion.sign("hello world");
+		assertEquals(this.orion.verify("hello world", signature, "=!b9a9.c0b3.8269.0219"), "1");
 
-		assertFalse(orion.guid().equals(orion.guid()));
+		assertFalse(this.orion.guid().equals(this.orion.guid()));
 
-		String symKey = orion.symGenerateKey();
-		String symEncrypted = orion.symEncrypt("hello world", symKey);
-		assertEquals(orion.symDecrypt(symEncrypted, symKey), "hello world");
+		String symKey = this.orion.symGenerateKey();
+		String symEncrypted = this.orion.symEncrypt("hello world", symKey);
+		assertEquals(this.orion.symDecrypt(symEncrypted, symKey), "hello world");
 		
-		orion.logout();
-		assertNull(orion.iname());
-		assertNull(orion.inumber());
-		assertNull(orion.xdiUri());
-		assertNull(orion.loggedin());
+		this.orion.logout();
+		assertNull(this.orion.iname());
+		assertNull(this.orion.inumber());
+		assertNull(this.orion.xdiUri());
+		assertNull(this.orion.loggedin());
 
-		orion.shutdown();
+		this.orion.shutdown();
 	}
 }

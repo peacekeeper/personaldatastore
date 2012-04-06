@@ -8,16 +8,39 @@
 
 	<display-name>pds.p2p.node.webshell</display-name>
 
-	<!-- SHELL SERVLET -->
+	<!-- SERVLET -->
 
 	<servlet>
-		<servlet-name>DanubeWebShell</servlet-name>
-		<servlet-class>pds.p2p.node.webshell.DanubeWebShell</servlet-class>
+		<servlet-name>ShellServlet</servlet-name>
+		<servlet-class>pds.p2p.node.webshell.servlets.ShellServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>PacketServlet</servlet-name>
+		<servlet-class>pds.p2p.node.webshell.servlets.PacketServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>DanubeWebShell</servlet-name>
-		<url-pattern>/DanubeWebShell</url-pattern>
+		<servlet-name>ShellServlet</servlet-name>
+		<url-pattern>/Shell</url-pattern>
 	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>PacketServlet</servlet-name>
+		<url-pattern>/Packet</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>InitServlet</servlet-name>
+		<servlet-class>pds.p2p.node.webshell.InitServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- SPRING SERVLET -->
+
+	<!-- <servlet> <servlet-name>SpringServlet</servlet-name> <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class> 
+		</servlet> <servlet-mapping> <servlet-name>SpringServlet</servlet-name> <url-pattern>/*</url-pattern> 
+		<url-pattern>/</url-pattern> </servlet-mapping> -->
+
 
 </web-app>

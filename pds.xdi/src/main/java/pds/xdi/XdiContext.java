@@ -301,22 +301,22 @@ public class XdiContext {
 
 	private XdiGraphEvent xdiGraphEventForOperationXri(XRI3Segment operationXri) {
 
-		if (XDIMessagingConstants.XRI_GET.equals(operationXri)) return new XdiGraphGetEvent(this);
-		if (XDIMessagingConstants.XRI_ADD.equals(operationXri)) return new XdiGraphAddEvent(this);
-		if (XDIMessagingConstants.XRI_MOD.equals(operationXri)) return new XdiGraphModEvent(this);
-		if (XDIMessagingConstants.XRI_SET.equals(operationXri)) return new XdiGraphSetEvent(this);
-		if (XDIMessagingConstants.XRI_DEL.equals(operationXri)) return new XdiGraphDelEvent(this);
+		if (XDIMessagingConstants.XRI_S_GET.equals(operationXri)) return new XdiGraphGetEvent(this);
+		if (XDIMessagingConstants.XRI_S_ADD.equals(operationXri)) return new XdiGraphAddEvent(this);
+		if (XDIMessagingConstants.XRI_S_MOD.equals(operationXri)) return new XdiGraphModEvent(this);
+		if (XDIMessagingConstants.XRI_S_SET.equals(operationXri)) return new XdiGraphSetEvent(this);
+		if (XDIMessagingConstants.XRI_S_DEL.equals(operationXri)) return new XdiGraphDelEvent(this);
 
 		return null;
 	}
 
 	private Map<XRI3, List<XdiGraphListener> > xdiGraphListenersForOperationXri(XRI3Segment operationXri) {
 
-		if (XDIMessagingConstants.XRI_GET.equals(operationXri)) return this.xdiGetGraphListeners;
-		if (XDIMessagingConstants.XRI_ADD.equals(operationXri)) return this.xdiAddGraphListeners;
-		if (XDIMessagingConstants.XRI_MOD.equals(operationXri)) return this.xdiModGraphListeners;
-		if (XDIMessagingConstants.XRI_SET.equals(operationXri)) return this.xdiSetGraphListeners;
-		if (XDIMessagingConstants.XRI_DEL.equals(operationXri)) return this.xdiDelGraphListeners;
+		if (XDIMessagingConstants.XRI_S_GET.equals(operationXri)) return this.xdiGetGraphListeners;
+		if (XDIMessagingConstants.XRI_S_ADD.equals(operationXri)) return this.xdiAddGraphListeners;
+		if (XDIMessagingConstants.XRI_S_MOD.equals(operationXri)) return this.xdiModGraphListeners;
+		if (XDIMessagingConstants.XRI_S_SET.equals(operationXri)) return this.xdiSetGraphListeners;
+		if (XDIMessagingConstants.XRI_S_DEL.equals(operationXri)) return this.xdiDelGraphListeners;
 
 		return new HashMap<XRI3, List<XdiGraphListener> > ();
 	}

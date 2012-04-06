@@ -1,9 +1,12 @@
-package pds.p2p.node.shell;
+package pds.p2p.api;
 
-import pds.p2p.api.annotations.ApiInterface;
+import pds.p2p.api.annotation.DanubeApi;
 
-@ApiInterface(name="admin", description="Admin API")
+@DanubeApi(name="admin", description="Admin API")
 public interface Admin {
+
+	public void init() throws Exception;
+	public void shutdown();
 
 	public String hello();
 	public String uptime();

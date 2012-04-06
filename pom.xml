@@ -20,6 +20,7 @@
 		<module>pds.p2p.api.sirius</module>
 		<module>pds.p2p.api.polaris</module>
 		<module>pds.p2p.node</module>
+		<module>pds.p2p.node.client</module>
 		<module>pds.p2p.node.shell</module>
 		<module>pds.p2p.node.webshell</module>
 <!-- 		<module>pds.dictionary</module>

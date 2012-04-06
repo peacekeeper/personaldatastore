@@ -183,10 +183,10 @@ public class SiriusImpl implements Sirius {
 			if (xdi == null) xdi = "()";
 
 			XRI3Segment targetXri = new XRI3Segment(xdi);
-			return MessageEnvelope.fromOperationXriAndTargetXri(XDIMessagingConstants.XRI_S_GET, targetXri);
+			return MessageEnvelope.fromOperationXriAndTargetXri(operationXri, targetXri);
 		} catch (Exception ex) {
 
-			return MessageEnvelope.fromOperationXriAndStatement(XDIMessagingConstants.XRI_S_GET, xdi);
+			return MessageEnvelope.fromOperationXriAndStatement(operationXri, xdi);
 		}
 	}
 }

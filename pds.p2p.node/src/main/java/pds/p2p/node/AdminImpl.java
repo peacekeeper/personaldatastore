@@ -10,7 +10,8 @@ import org.mortbay.jetty.servlet.ServletMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pds.p2p.api.annotations.ApiInterface;
+import pds.p2p.api.Admin;
+import pds.p2p.api.annotation.DanubeApi;
 
 public class AdminImpl implements Admin {
 
@@ -25,6 +26,14 @@ public class AdminImpl implements Admin {
 		this.startTime = startTime;
 		this.server = server;
 		this.context = context;
+	}
+
+	public void init() throws Exception {
+
+	}
+
+	public void shutdown() {
+
 	}
 
 	public String hello() {
@@ -64,7 +73,7 @@ public class AdminImpl implements Admin {
 
 				System.err.println(clazzInterfaze.getCanonicalName());
 
-				if (clazzInterfaze.getAnnotation(ApiInterface.class) != null) {
+				if (clazzInterfaze.getAnnotation(DanubeApi.class) != null) {
 
 					interfaze = clazzInterfaze;
 					break;
@@ -75,7 +84,7 @@ public class AdminImpl implements Admin {
 
 			// print help
 
-			ApiInterface apiInterface = interfaze.getAnnotation(ApiInterface.class);
+			DanubeApi apiInterface = interfaze.getAnnotation(DanubeApi.class);
 
 			buffer.append(apiInterface.name() + " - " + apiInterface.description() + "\n");
 		}
@@ -118,7 +127,7 @@ public class AdminImpl implements Admin {
 
 			System.err.println(clazzInterfaze.getCanonicalName());
 
-			if (clazzInterfaze.getAnnotation(ApiInterface.class) != null) {
+			if (clazzInterfaze.getAnnotation(DanubeApi.class) != null) {
 
 				interfaze = clazzInterfaze;
 				break;
