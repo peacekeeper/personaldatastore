@@ -1,7 +1,8 @@
-package pds.p2p.node.webshell.servlets;
+package pds.p2p.node.webshell;
 
 import java.io.IOException;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.WrapFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,16 +29,28 @@ public class ShellServlet extends HttpServlet {
 
 	private static Logger log = LoggerFactory.getLogger(ShellServlet.class);
 
+	private WrapFactory wrapFactory;
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+
+		super.init(config);
+
+		this.wrapFactory = new MyWrapFactory();
+	}
+
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// read parameters
-		
+
 		String command = request.getParameter("command");
 
 		// prepare Rhino context and scope
 
 		Context context = Context.enter();
+		context.setWrapFactory(this.wrapFactory);
+
 		ScriptableObject scope = this.getScope(request, context);
 
 		// execute command
@@ -78,7 +92,7 @@ public class ShellServlet extends HttpServlet {
 		scope.defineProperty(Polaris.class.getAnnotation(DanubeApi.class).name(), Context.javaToJS(DanubeApiClient.polarisObject, scope), ScriptableObject.DONTENUM);
 
 		request.getSession().setAttribute("scope", scope);
-		
+
 		return scope;
 	}
 }

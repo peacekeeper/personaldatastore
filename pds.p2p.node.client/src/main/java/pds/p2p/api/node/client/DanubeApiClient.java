@@ -56,6 +56,8 @@ public class DanubeApiClient {
 
 	public static void shutdown() {
 
+		log.info("shutdown()");
+
 		adminObject.shutdown();
 		orionObject.shutdown();
 		vegaObject.shutdown();

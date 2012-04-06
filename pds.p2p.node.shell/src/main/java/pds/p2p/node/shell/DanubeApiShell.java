@@ -2,7 +2,9 @@ package pds.p2p.node.shell;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.WrapFactory;
 import org.mozilla.javascript.tools.shell.Global;
+import org.mozilla.javascript.tools.shell.ShellContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +46,21 @@ public class DanubeApiShell {
 		log.info("shell()");
 
 		// Rhino / JavaScript Shell
+
+		final WrapFactory wrapFactory = new MyWrapFactory();
+
+		org.mozilla.javascript.tools.shell.Main.shellContextFactory = new ShellContextFactory() {
+
+			@Override
+			protected void onContextCreated(Context cx) {
+
+				super.onContextCreated(cx);
+
+				log.info("Initializing context...");
+
+				cx.setWrapFactory(wrapFactory);
+			}
+		};
 
 		org.mozilla.javascript.tools.shell.Main.global = new Global () {
 

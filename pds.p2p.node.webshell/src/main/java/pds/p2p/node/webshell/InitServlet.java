@@ -1,4 +1,4 @@
-package pds.p2p.node.webshell.servlets;
+package pds.p2p.node.webshell;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

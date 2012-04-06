@@ -12,12 +12,12 @@
 
 	<servlet>
 		<servlet-name>ShellServlet</servlet-name>
-		<servlet-class>pds.p2p.node.webshell.servlets.ShellServlet</servlet-class>
+		<servlet-class>pds.p2p.node.webshell.ShellServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>PacketServlet</servlet-name>
-		<servlet-class>pds.p2p.node.webshell.servlets.PacketServlet</servlet-class>
+		<servlet-class>pds.p2p.node.webshell.PacketServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>

@@ -18,7 +18,7 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.2.1</version>
 				<configuration>
-					<mainClass>pds.p2p.node.DanubeServer</mainClass>
+					<mainClass>pds.p2p.node.DanubeApiServer</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
