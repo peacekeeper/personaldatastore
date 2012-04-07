@@ -12,7 +12,6 @@ import pds.p2p.api.Polaris;
 import pds.p2p.api.Sirius;
 import pds.p2p.api.Vega;
 
-import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 import com.googlecode.jsonrpc4j.ProxyUtil;
 
 public class DanubeApiClient {
@@ -40,28 +39,22 @@ public class DanubeApiClient {
 
 		String serviceUrl = properties.getProperty("server.url", "http://localhost:9090/");
 		if (! serviceUrl.endsWith("/")) serviceUrl += "/";
-
-		adminObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Admin.class, new JsonRpcHttpClient(new URL(serviceUrl + "admin")));
-		orionObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Orion.class, new JsonRpcHttpClient(new URL(serviceUrl + "orion")));
-		vegaObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Vega.class, new JsonRpcHttpClient(new URL(serviceUrl + "vega")));
-		siriusObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Sirius.class, new JsonRpcHttpClient(new URL(serviceUrl + "sirius")));
-		polarisObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Polaris.class, new JsonRpcHttpClient(new URL(serviceUrl + "polaris")));
-
-		adminObject.init();
-		orionObject.init();
-		vegaObject.init();
-		siriusObject.init();
-		polarisObject.init();
+		
+		adminObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Admin.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "admin")));
+		orionObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Orion.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "orion")));
+		vegaObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Vega.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "vega")));
+		siriusObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Sirius.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "sirius")));
+		polarisObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Polaris.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "polaris")));
 	}
 
 	public static void shutdown() {
 
 		log.info("shutdown()");
 
-		adminObject.shutdown();
-		orionObject.shutdown();
-		vegaObject.shutdown();
-		siriusObject.shutdown();
-		polarisObject.shutdown();
+		adminObject = null;
+		orionObject = null;
+		vegaObject = null;
+		siriusObject = null;
+		polarisObject = null;
 	}
 }

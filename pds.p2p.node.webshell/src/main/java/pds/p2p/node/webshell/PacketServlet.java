@@ -43,6 +43,8 @@ public class PacketServlet extends HttpServlet {
 		// done
 		
 		response.setContentType("application/json");
-		response.getWriter().print(packet);
+		response.getWriter().println(packet);
+		response.getWriter().flush();
+		response.getWriter().close();
 	}
 }

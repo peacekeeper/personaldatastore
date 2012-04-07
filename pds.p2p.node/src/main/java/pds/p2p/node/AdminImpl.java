@@ -58,8 +58,8 @@ public class AdminImpl implements Admin {
 
 			ServletHolder servletHolder = this.context.getServletHandler().getServlet(servletName);
 
-			JsonRpcServlet servlet = null;
-			if (servletHolder != null) servlet = (JsonRpcServlet) servletHolder.getServlet();
+			MyJsonRpcServlet servlet = null;
+			if (servletHolder != null) servlet = (MyJsonRpcServlet) servletHolder.getServlet();
 
 			if (servlet == null) continue;
 
@@ -98,7 +98,7 @@ public class AdminImpl implements Admin {
 
 		String pathSpec = "/" + apiName;
 
-		JsonRpcServlet servlet = null;
+		MyJsonRpcServlet servlet = null;
 
 		for (ServletMapping servletMapping : this.context.getServletHandler().getServletMappings()) {
 
@@ -109,7 +109,7 @@ public class AdminImpl implements Admin {
 					String servletName = servletMapping.getServletName();
 
 					ServletHolder servletHolder = this.context.getServletHandler().getServlet(servletName);
-					if (servletHolder != null) servlet = (JsonRpcServlet) servletHolder.getServlet();
+					if (servletHolder != null) servlet = (MyJsonRpcServlet) servletHolder.getServlet();
 					if (servlet != null) break;
 				}
 			}

@@ -60,38 +60,38 @@ public class DanubeApiServer {
 		adminObject = new AdminImpl(new Date(), server, context);
 
 		orionObject = pds.p2p.api.orion.OrionFactory.getOrion();
-		orionObject.init();
 		if (pds.p2p.api.orion.OrionFactory.getException() != null) throw pds.p2p.api.orion.OrionFactory.getException();
 
 		vegaObject = pds.p2p.api.vega.VegaFactory.getVega(orionObject);
-		vegaObject.init();
 		if (pds.p2p.api.vega.VegaFactory.getException() != null) throw pds.p2p.api.vega.VegaFactory.getException();
 
 		siriusObject = pds.p2p.api.sirius.SiriusFactory.getSirius(vegaObject);
-		siriusObject.init();
 		if (pds.p2p.api.sirius.SiriusFactory.getException() != null) throw pds.p2p.api.sirius.SiriusFactory.getException();
 
 		polarisObject = pds.p2p.api.polaris.PolarisFactory.getPolaris(orionObject);
-		polarisObject.init();
 		if (pds.p2p.api.polaris.PolarisFactory.getException() != null) throw pds.p2p.api.polaris.PolarisFactory.getException();
+
+		adminObject.init();
+		orionObject.init();
+		vegaObject.init();
+		siriusObject.init();
+		polarisObject.init();
 	}
 
 	private static void shutdown() {
 
 		log.info("shutdown()");
 
-		adminObject = null;
-
+		adminObject.shutdown();
 		polarisObject.shutdown();
-		polarisObject = null;
-
 		siriusObject.shutdown();
-		siriusObject = null;
-
 		vegaObject.shutdown();
-		vegaObject = null;
-
 		orionObject.shutdown();
+
+		adminObject = null;
+		polarisObject = null;
+		siriusObject = null;
+		vegaObject = null;
 		orionObject = null;
 	}
 
@@ -99,11 +99,11 @@ public class DanubeApiServer {
 
 		log.info("server()");
 
-		context.addServlet(new ServletHolder(new JsonRpcServlet(adminObject)), "/" + Admin.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new JsonRpcServlet(orionObject)), "/" + Orion.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new JsonRpcServlet(vegaObject)), "/" + Vega.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new JsonRpcServlet(siriusObject)), "/" + Sirius.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new JsonRpcServlet(polarisObject)), "/" + Polaris.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(adminObject)), "/" + Admin.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(orionObject)), "/" + Orion.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(vegaObject)), "/" + Vega.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(siriusObject)), "/" + Sirius.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(polarisObject)), "/" + Polaris.class.getAnnotation(DanubeApi.class).name());
 
 		log.info("Starting server...");
 

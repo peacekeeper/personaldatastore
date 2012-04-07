@@ -13,16 +13,16 @@ import org.slf4j.LoggerFactory;
 
 import com.googlecode.jsonrpc4j.JsonRpcServer;
 
-public class JsonRpcServlet extends HttpServlet {
+public class MyJsonRpcServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 7453275488406497744L;
 
-	private static final Logger log = LoggerFactory.getLogger(JsonRpcServlet.class);
+	private static final Logger log = LoggerFactory.getLogger(MyJsonRpcServlet.class);
 
 	private Object jsonRpcObject;
 	private JsonRpcServer jsonRpcServer;
 
-	public JsonRpcServlet(Object jsonRpcObject) {
+	public MyJsonRpcServlet(Object jsonRpcObject) {
 
 		this.jsonRpcObject = jsonRpcObject;
 	}
@@ -41,6 +41,8 @@ public class JsonRpcServlet extends HttpServlet {
 		log.debug(this.jsonRpcObject.getClass() + ": service()");
 
 		this.jsonRpcServer.handle(request, response);
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
 	}
 
 	public Object getJsonRpcObject() {

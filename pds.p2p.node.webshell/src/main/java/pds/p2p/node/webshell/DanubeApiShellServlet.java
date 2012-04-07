@@ -23,11 +23,11 @@ import pds.p2p.api.Vega;
 import pds.p2p.api.annotation.DanubeApi;
 import pds.p2p.api.node.client.DanubeApiClient;
 
-public class ShellServlet extends HttpServlet {
+public class DanubeApiShellServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 7365330254187946790L;
 
-	private static Logger log = LoggerFactory.getLogger(ShellServlet.class);
+	private static Logger log = LoggerFactory.getLogger(DanubeApiShellServlet.class);
 
 	private WrapFactory wrapFactory;
 

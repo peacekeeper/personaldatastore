@@ -11,8 +11,8 @@
 	<!-- SERVLET -->
 
 	<servlet>
-		<servlet-name>ShellServlet</servlet-name>
-		<servlet-class>pds.p2p.node.webshell.ShellServlet</servlet-class>
+		<servlet-name>DanubeApiShellServlet</servlet-name>
+		<servlet-class>pds.p2p.node.webshell.DanubeApiShellServlet</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -21,8 +21,8 @@
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>ShellServlet</servlet-name>
-		<url-pattern>/Shell</url-pattern>
+		<servlet-name>DanubeApiShellServlet</servlet-name>
+		<url-pattern>/DanubeApiShell</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
