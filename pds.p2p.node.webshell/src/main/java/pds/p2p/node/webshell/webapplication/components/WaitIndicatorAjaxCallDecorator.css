@@ -1,0 +1,8 @@
+.wicket-spinner {
+	background-image: url(/images/spinner.gif);
+	background-repeat: no-repeat;
+	background-color: transparent;
+	height: 31px;
+	width: 31px;
+	display: none;
+}

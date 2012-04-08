@@ -1,0 +1,32 @@
+<html>
+<body>
+
+<wicket:extend>
+
+	<p>We are sorry, we experienced an internal problem with our software. The error has
+	been logged and will soon be acted upon.</p>
+
+	<p>
+	
+	<strong>Type of error:</strong> <span wicket:id="exClass">___ exClass here ___</span><br>
+	
+	<strong>Time of error:</strong> <span wicket:id="exTime">___ exTime here ___</span><br>
+	
+	<strong>Request path:</strong> <span wicket:id="exPath">___ exPath here ___</span><br>
+	
+	<span wicket:id="exMessageContainer">
+		<strong>Additional information:</strong> <span wicket:id="exMessage">___ exMessage here ___</span>
+	</span>
+
+	</p>
+
+	<p><a wicket:id="showTraceLink">Show detailled exception trace</a></p>
+
+	<span wicket:id="exTraceContainer">
+		<p wicket:id="exTrace" class="code">___ exTrace here ___</p>
+	</span>
+
+</wicket:extend>
+
+</body>
+</html>

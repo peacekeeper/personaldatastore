@@ -11,6 +11,7 @@ import pds.p2p.api.Orion;
 import pds.p2p.api.Polaris;
 import pds.p2p.api.Sirius;
 import pds.p2p.api.Vega;
+import pds.p2p.api.annotation.DanubeApi;
 
 import com.googlecode.jsonrpc4j.ProxyUtil;
 
@@ -39,12 +40,12 @@ public class DanubeApiClient {
 
 		String serviceUrl = properties.getProperty("server.url", "http://localhost:9090/");
 		if (! serviceUrl.endsWith("/")) serviceUrl += "/";
-		
-		adminObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Admin.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "admin")));
-		orionObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Orion.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "orion")));
-		vegaObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Vega.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "vega")));
-		siriusObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Sirius.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "sirius")));
-		polarisObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Polaris.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "polaris")));
+
+		adminObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Admin.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "jsonrpc-" + Admin.class.getAnnotation(DanubeApi.class).name())));
+		orionObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Orion.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "jsonrpc-" + Orion.class.getAnnotation(DanubeApi.class).name())));
+		vegaObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Vega.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "jsonrpc-" + Vega.class.getAnnotation(DanubeApi.class).name())));
+		siriusObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Sirius.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "jsonrpc-" + Sirius.class.getAnnotation(DanubeApi.class).name())));
+		polarisObject = ProxyUtil.createProxy(DanubeApiClient.class.getClassLoader(), Polaris.class, new MyJsonRpcHttpClient(new URL(serviceUrl + "jsonrpc-" + Polaris.class.getAnnotation(DanubeApi.class).name())));
 	}
 
 	public static void shutdown() {

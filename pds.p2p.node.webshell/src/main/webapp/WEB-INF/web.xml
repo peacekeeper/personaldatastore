@@ -8,16 +8,11 @@
 
 	<display-name>pds.p2p.node.webshell</display-name>
 
-	<!-- SERVLET -->
+	<!-- SERVLETS -->
 
 	<servlet>
 		<servlet-name>DanubeApiShellServlet</servlet-name>
 		<servlet-class>pds.p2p.node.webshell.DanubeApiShellServlet</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>PacketServlet</servlet-name>
-		<servlet-class>pds.p2p.node.webshell.PacketServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -25,22 +20,40 @@
 		<url-pattern>/DanubeApiShell</url-pattern>
 	</servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>PacketServlet</servlet-name>
-		<url-pattern>/Packet</url-pattern>
-	</servlet-mapping>
+	<!-- WICKET AND CACHING FILTER -->
 
-	<servlet>
-		<servlet-name>InitServlet</servlet-name>
-		<servlet-class>pds.p2p.node.webshell.InitServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+	<filter>
+		<filter-name>WicketFilter</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>pds.p2p.node.webshell.webapplication.WebShellApplication</param-value>
+		</init-param>
+	</filter>
 
-	<!-- SPRING SERVLET -->
+	<filter>
+		<filter-name>CachingFilter</filter-name>
+		<filter-class>pds.p2p.node.webshell.webapplication.filters.CachingFilter</filter-class>
+		<init-param>
+			<param-name>seconds</param-name>
+			<param-value>360</param-value>
+		</init-param>
+	</filter>
 
-	<!-- <servlet> <servlet-name>SpringServlet</servlet-name> <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class> 
-		</servlet> <servlet-mapping> <servlet-name>SpringServlet</servlet-name> <url-pattern>/*</url-pattern> 
-		<url-pattern>/</url-pattern> </servlet-mapping> -->
+	<filter-mapping>
+		<filter-name>WicketFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
+	<filter-mapping>
+		<filter-name>CachingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- SESSION -->
+
+	<session-config>
+		<session-timeout>20</session-timeout>
+	</session-config>
 
 </web-app>

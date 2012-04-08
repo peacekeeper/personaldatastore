@@ -15,22 +15,29 @@ import pds.p2p.api.Polaris;
 import pds.p2p.api.Sirius;
 import pds.p2p.api.Vega;
 import pds.p2p.api.annotation.DanubeApi;
+import pds.p2p.node.servlets.MyJsonRpcServlet;
+import pds.p2p.node.servlets.PacketServlet;
 
 
 public class DanubeApiServer {
 
 	private static final Logger log = LoggerFactory.getLogger(DanubeApiServer.class);
 
+	private static final String PROPERTIES_KEY_SERVERPORT = "server.port";
+	private static final String PROPERTIES_DEFAULT_SERVERPORT = "9090";
+
 	private static Properties properties;
 
 	private static Server server;
 	private static Context context;
 
-	private static Admin adminObject;
-	private static Orion orionObject;
-	private static Vega vegaObject;
-	private static Sirius siriusObject;
-	private static Polaris polarisObject;
+	private static ScriptThread scriptThread;
+
+	public static Admin adminObject;
+	public static Orion orionObject;
+	public static Vega vegaObject;
+	public static Sirius siriusObject;
+	public static Polaris polarisObject;
 
 	public static void main(String[] args) throws Throwable {
 
@@ -43,21 +50,25 @@ public class DanubeApiServer {
 
 		log.info("init()");
 
-		// Properties
+		// init properties
 
 		properties = new Properties();
 		properties.load(DanubeApiServer.class.getResourceAsStream("/application.properties"));
 
-		// Server and Context
+		// init ScriptThread
 
-		int port = Integer.parseInt(properties.getProperty("server.port", "9090"));
+		scriptThread = new ScriptThread();
+
+		// init Jetty
+
+		int port = Integer.parseInt(properties.getProperty(PROPERTIES_KEY_SERVERPORT, PROPERTIES_DEFAULT_SERVERPORT));
+
 		server = new Server(port);
-
 		context = new Context(server, "/");
 
-		// JSON-RPC
+		// init API
 
-		adminObject = new AdminImpl(new Date(), server, context);
+		adminObject = new AdminImpl(new Date(), server, context, scriptThread);
 
 		orionObject = pds.p2p.api.orion.OrionFactory.getOrion();
 		if (pds.p2p.api.orion.OrionFactory.getException() != null) throw pds.p2p.api.orion.OrionFactory.getException();
@@ -78,9 +89,16 @@ public class DanubeApiServer {
 		polarisObject.init();
 	}
 
-	private static void shutdown() {
+	private static void shutdown() throws Exception {
 
 		log.info("shutdown()");
+
+		// shutdown ScriptThread
+
+		scriptThread.stopRunning();
+		scriptThread.join();
+
+		// shutdown API
 
 		adminObject.shutdown();
 		polarisObject.shutdown();
@@ -99,13 +117,22 @@ public class DanubeApiServer {
 
 		log.info("server()");
 
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(adminObject)), "/" + Admin.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(orionObject)), "/" + Orion.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(vegaObject)), "/" + Vega.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(siriusObject)), "/" + Sirius.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(polarisObject)), "/" + Polaris.class.getAnnotation(DanubeApi.class).name());
+		// start ScriptThread
 
-		log.info("Starting server...");
+		log.info("Starting ScriptThread...");
+
+		scriptThread.start();
+
+		// start Jetty
+
+		log.info("Starting Jetty...");
+
+		context.addServlet(new ServletHolder(new PacketServlet()), "/packet");
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(adminObject)), "/jsonrpc-" + Admin.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(orionObject)), "/jsonrpc-" + Orion.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(vegaObject)), "/jsonrpc-" + Vega.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(siriusObject)), "/jsonrpc-" + Sirius.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(polarisObject)), "/jsonrpc-" + Polaris.class.getAnnotation(DanubeApi.class).name());
 
 		server.setGracefulShutdown(3000);
 		server.setStopAtShutdown(true);

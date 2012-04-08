@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
@@ -16,6 +18,8 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
  * A JSON-RPC client that uses the HTTP protocol.
  */
 public class MyJsonRpcHttpClient extends JsonRpcHttpClient {
+
+	private static Logger log = LoggerFactory.getLogger(MyJsonRpcHttpClient.class);
 
 	public MyJsonRpcHttpClient(ObjectMapper mapper, URL serviceUrl, Map<String, String> headers) {
 
@@ -42,16 +46,7 @@ public class MyJsonRpcHttpClient extends JsonRpcHttpClient {
 	 * @return the return value
 	 * @throws Throwable on error
 	 */
-	public Object invoke(
-			String methodName, Object[] arguments, Type returnType,
-			Map<String, String> extraHeaders)
-					throws Throwable {
-
-		// prepare request
-
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		super.invoke(methodName, arguments, buffer);
-		buffer.close();
+	public Object invoke(String methodName, Object[] arguments, Type returnType, Map<String, String> extraHeaders) throws Throwable {
 
 		// HTTP parameters
 
@@ -61,7 +56,15 @@ public class MyJsonRpcHttpClient extends JsonRpcHttpClient {
 		int readTimeoutMillis = this.getReadTimeoutMillis();
 		Map<String, String> headers = this.getHeaders();
 
+		// prepare request
+
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		super.invoke(methodName, arguments, buffer);
+		buffer.close();
+
 		// create URLConnection
+
+		log.debug("JSON-RPC: " + methodName + " to " + serviceUrl);
 
 		HttpURLConnection con = (HttpURLConnection)serviceUrl.openConnection(connectionProxy);
 		con.setConnectTimeout(connectionTimeoutMillis);

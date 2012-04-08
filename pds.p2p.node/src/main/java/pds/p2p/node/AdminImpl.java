@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import pds.p2p.api.Admin;
 import pds.p2p.api.annotation.DanubeApi;
+import pds.p2p.node.servlets.MyJsonRpcServlet;
 
 public class AdminImpl implements Admin {
 
@@ -20,12 +21,14 @@ public class AdminImpl implements Admin {
 	private Date startTime;
 	private Server server;
 	private Context context;
+	private ScriptThread scriptThread;
 
-	public AdminImpl(Date startTime, Server server, Context context) {
+	public AdminImpl(Date startTime, Server server, Context context, ScriptThread scriptThread) {
 
 		this.startTime = startTime;
 		this.server = server;
 		this.context = context;
+		this.scriptThread = scriptThread;
 	}
 
 	public void init() throws Exception {
@@ -57,10 +60,10 @@ public class AdminImpl implements Admin {
 			String servletName = servletMapping.getServletName();
 
 			ServletHolder servletHolder = this.context.getServletHandler().getServlet(servletName);
+			if (servletHolder == null) continue;
+			if (! (servletHolder.getServlet() instanceof MyJsonRpcServlet)) continue;
 
-			MyJsonRpcServlet servlet = null;
-			if (servletHolder != null) servlet = (MyJsonRpcServlet) servletHolder.getServlet();
-
+			MyJsonRpcServlet servlet = (MyJsonRpcServlet) servletHolder.getServlet();
 			if (servlet == null) continue;
 
 			// find interface
@@ -176,5 +179,23 @@ public class AdminImpl implements Admin {
 				}
 			}
 		}.start();
+	}
+
+	@Override
+	public synchronized void loadScript(String scriptId, String script) throws Exception {
+
+		this.scriptThread.loadScript(scriptId, script);
+	}
+
+	@Override
+	public synchronized void unloadScript(String scriptId) throws Exception {
+
+		this.scriptThread.unloadScript(scriptId);
+	}
+
+	@Override
+	public synchronized String[] getScriptIds() {
+
+		return this.scriptThread.getScriptIds();
 	}
 }

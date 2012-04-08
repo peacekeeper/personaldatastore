@@ -13,4 +13,7 @@ public interface Admin {
 	public String helpApis() throws Exception;
 	public String helpApi(String apiName) throws Exception;
 	public void stop() throws Exception;
+	public void loadScript(String scriptId, String script) throws Exception;
+	public void unloadScript(String scriptId) throws Exception;
+	public String[] getScriptIds();
 }

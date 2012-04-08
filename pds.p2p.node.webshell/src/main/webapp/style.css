@@ -1,8 +1,175 @@
-body,p,a,td,li {
+body {
+	background: black url('/images/mainback-gray.jpg');
 	font-family: courier, fixed, swiss, sans-serif;
-	font-size: 12px;
-	color: #cccccc;
+	font-size: 12pt;
+	color: black;
 }
+
+a {
+	color: black;
+	text-decoration: none;
+}
+
+a:hover {
+	color: black;
+	text-decoration: underline;
+}
+
+img {
+	border: 0;
+}
+
+input {
+	font-family: courier, fixed, swiss, sans-serif;
+	font-size: 12pt;
+	font-weight: bold;
+	height: 2em;
+}
+
+span.bold {
+	font-weight: bold;
+}
+
+/*
+/* Wicket
+*/
+
+#Page {
+	text-align: left;
+	margin-top: 10px;
+	margin-left: 3%;
+	margin-right: 3%;
+	padding: 0;
+}
+
+#Body {
+	line-height: 1.5em;
+	text-align: left;
+}
+
+#Body #BodyBorder {
+	padding: 11px 0 10px 0;
+	margin: -11px 0 0 0;
+	border: 0px solid black;
+}
+
+#Body #PageHeaderPad {
+	background: url("/images/bg.png") repeat-x;
+	height: 55px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#Body #PageHeaderPad #PageHeader {
+	float: right;
+	font-size: 24pt;
+	font-weight: bold;
+	color: white;
+	text-align: left;
+}
+
+#Body #PageHeaderPad #DanubeApiStatusPanel {
+	color: white;
+}
+
+#ControlPanel {
+	background-color: #444444;
+	border: 4px outset #444444;
+	margin: 20px 0 20px 0;
+	padding: 20px 0 20px 0;
+}
+
+#ControlPanel #UserPanel {
+}
+
+#ControlPanel #SidePanel {
+	text-transform: none;
+	text-align: left;
+	padding: 0 0 0 0;
+	margin: 0 0 0 0;
+}
+
+#ControlPanel #SidePanel .pad {
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+}
+
+#Content {
+	background: #6bb2f3 url("/images/shadowr.gif") top right repeat-y;
+	text-align: left;
+	line-height: 1.5em;
+	margin: 0px;
+	padding: 20px 50px 0 50px;
+}
+
+#Content .pad {
+	padding: 0 20px 20px 20px;
+}
+
+#Content h1 {
+	color: black;
+	font-size: 1.65em;
+	font-weight: bold;
+	margin: 0 0 .5em;
+}
+
+#Content h2 {
+	color: #666;
+	font-size: 1.3em;
+	font-weight: 400;
+	margin: .5em 0 .25em;
+}
+
+#Content h3 {
+	color: #666;
+	font-size: 1.1em;
+	font-weight: 400;
+	margin: .5em 0 .25em;
+}
+
+#Content p {
+	color: black;
+}
+
+#Content ul {
+	padding-left: 0;
+	list-style: none;
+	margin: 0 0 0 1em;
+}
+
+#Content ul li {
+	background: url("/images/123.gif") 0 .3em no-repeat;
+	list-style-type: none;
+	margin: 0;
+	padding: 0 0 0 .999em;
+}
+
+#Content .border {
+	border: 4px solid gray;
+	margin: 0 0 10px 0;
+	padding: 10px;
+}
+
+div.prfp {
+	border: 2px solid green;
+}
+
+.feedbackPanelERROR {
+	color: #ff0000;
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
+.feedbackPanelINFO {
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
+/*
+/* Terminal
+*/
 
 .lh15 {
 	line-height: 15px;
@@ -21,22 +188,7 @@ body,p,a,td,li {
 	background: #95a9d5;
 }
 
-a,a:link,a:visited {
-	text-decoration: none;
-	color: #77dd11;
-}
-
-a:hover {
-	text-decoration: underline;
-	color: #77dd11;
-}
-
-a:active {
-	text-decoration: underline;
-	color: #eeeeee;
-}
-
-a.termopen,a.termopen:link,a.termopen:visited {
+a.termopen, a.termopen:link, a.termopen:visited {
 	text-decoration: none;
 	color: #77dd11;
 	background: none;
@@ -73,31 +225,4 @@ li {
 .dimmed,.dimmed *,.dimmed * * {
 	background-color: #222222 !important;
 	color: #333333 !important;
-}
-
-@media print {
-	body {
-		background-color: #ffffff;
-	}
-	body,p,a,td,li,tt {
-		color: #000000;
-	}
-	pre,.prop {
-		color: #000000;
-	}
-	h1 {
-		color: #000000;
-	}
-	a,a:link,a:visited {
-		color: #000000;
-	}
-	a:hover {
-		color: #000000;
-	}
-	a:active {
-		color: #000000;
-	}
-	table.inventory {
-		display: none;
-	}
 }
