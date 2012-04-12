@@ -65,7 +65,9 @@ public class CreateIntent extends BasePage {
 
 			try {
 
-				Intent intent = new Intent(CreateIntent.this.product, CreateIntent.this.price);
+				Intent intent = new Intent();
+				intent.setProduct(CreateIntent.this.product);
+				intent.setPrice(CreateIntent.this.price);
 
 				DanubeApiClient.vegaObject.multicast("intent", "intent", intent.toJSON(), null, null);
 			} catch (Exception ex) {

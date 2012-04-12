@@ -1,21 +1,17 @@
 package pds.p2p.node.webshell.webpages.user;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pds.p2p.api.node.client.DanubeApiClient;
 import pds.p2p.node.webshell.webapplication.behaviors.DefaultFocusBehavior;
 import pds.p2p.node.webshell.webpages.BasePage;
-import pds.p2p.node.webshell.webpages.index.Index;
 
 public class Identity extends BasePage {
 
@@ -33,7 +29,7 @@ public class Identity extends BasePage {
 		// create and add components
 
 		this.add(new LoginForm("loginForm", new CompoundPropertyModel<Identity> (this)));
-		this.add(new LogoutLink("logoutLink"));
+		this.add(new LogoutForm("logoutForm", new CompoundPropertyModel<Identity> (this)));
 	}
 
 	private class LoginForm extends Form<Identity> {
@@ -55,7 +51,7 @@ public class Identity extends BasePage {
 			this.identifierTextField.add(new DefaultFocusBehavior());
 			this.passwordTextField = new PasswordTextField("password");
 			this.passwordTextField.setLabel(new Model<String> ("Password"));
-			this.passwordTextField.setRequired(true);
+			this.passwordTextField.setRequired(false);
 
 			// add components
 
@@ -66,15 +62,13 @@ public class Identity extends BasePage {
 		@Override
 		protected void onSubmit() {
 
-			RequestCycle requestCycle = this.getRequestCycle();
-
 			// login to orion
 
 			Identity.log.debug("Logging in: " + Identity.this.identifier);
 
 			try {
 
-				DanubeApiClient.orionObject.login(Identity.this.identifier, Identity.this.password);
+				DanubeApiClient.orionObject.login(Identity.this.identifier, "xxx");
 			} catch (Exception ex) {
 
 				log.warn(ex.getMessage(), ex);
@@ -82,24 +76,23 @@ public class Identity extends BasePage {
 				return;
 			}
 
-			// send user to homepage
+			// done
 
-			requestCycle.setResponsePage(Index.class);
-			return;
+			info(Identity.this.getString("loggedin"));
 		}
 	}
 
-	private class LogoutLink extends Link<Object> {
+	private class LogoutForm extends Form<Identity> {
 
-		private static final long serialVersionUID = 3416258156206380750L;
+		private static final long serialVersionUID = 5165186814705755609L;
 
-		public LogoutLink(String id) {
+		private LogoutForm(String id, IModel<Identity> model) {
 
-			super(id);
+			super(id, model);
 		}
 
 		@Override
-		public void onClick() {
+		protected void onSubmit() {
 
 			// logout from orion
 
@@ -115,9 +108,9 @@ public class Identity extends BasePage {
 				return;
 			}
 
-			// send user to home page
+			// done
 
-			this.setResponsePage(Application.get().getHomePage());
+			info(Identity.this.getString("loggedout"));
 		}
 	}
 

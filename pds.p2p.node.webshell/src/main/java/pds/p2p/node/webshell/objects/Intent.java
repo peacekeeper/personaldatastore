@@ -1,8 +1,6 @@
 package pds.p2p.node.webshell.objects;
 
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.Random;
 
 import org.json.JSONException;
@@ -10,32 +8,19 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pds.p2p.node.webshell.webpages.intent.CreateIntent;
-
-public class Intent implements Serializable {
+public class Intent extends Packet {
 
 	private static final long serialVersionUID = -3734622557993328577L;
 
-	private static Logger log = LoggerFactory.getLogger(CreateIntent.class.getName());
+	private static Logger log = LoggerFactory.getLogger(Intent.class.getName());
 
 	private String id;
 	private String product;
 	private String price;
 
-	public Intent(String id, String product, String price) {
+	public Intent() {
 
-		this.id = id;
-		this.product = product;
-		this.price = price;
-	}
-
-	public Intent(String product, String price) {
-
-		this(createId(), product, price);
-	}
-
-	private Intent() {
-
+		this.id = createId();
 	}
 
 	public String getId() {
@@ -68,27 +53,23 @@ public class Intent implements Serializable {
 		this.price = price;
 	}
 
-	public static Intent fromPacket(String packet) throws JSONException, UnsupportedEncodingException {
+	@Override
+	public void fromPacket (String rawpacket) throws UnsupportedEncodingException, JSONException {
 
-		log.debug("packet: " + packet);
-		
-		String decodedPacket = URLDecoder.decode(packet, "UTF-8");
-		log.debug("decodedPacket: " + decodedPacket);
+		super.fromPacket(rawpacket);
 
-		JSONObject packetObject = new JSONObject(decodedPacket);
+		this.fromContent(this.getContent());
+	}
 
-		String content = packetObject.getString("content");
+	public void fromContent(String content) throws JSONException, UnsupportedEncodingException {
+
 		log.debug("content: " + content);
 
 		JSONObject contentObject = new JSONObject(content);
 
-		Intent prfp = new Intent();
-
-		prfp.id = contentObject.getString("id");
-		prfp.product = contentObject.getString("product");
-		prfp.price = contentObject.getString("price");
-
-		return prfp;
+		this.id = contentObject.getString("id");
+		this.product = contentObject.getString("product");
+		this.price = contentObject.getString("price");
 	}
 
 	public String toJSON() {

@@ -26,9 +26,9 @@ function xdiSiriusTermOpen() {
 
 		xdiSiriusTerm = new Terminal({
 /*			x: 520,
-			y: 70,
-			cols: 80,
-			rows: 48,*/
+			y: 70,*/
+			cols: 50,
+			rows: 40,
 			termDiv: 'xdiSiriusTermDiv',
 			bgColor: '#312f61',
 			greeting: xdiSiriusHelp.join('\n'),

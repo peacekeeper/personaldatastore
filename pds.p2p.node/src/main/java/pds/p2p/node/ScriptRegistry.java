@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.ScriptableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ public class ScriptRegistry {
 
 	private File path;
 	private Map<String, ScriptableObject> scopes;
+	private Map<String, NativeObject> configuration;
 
 	public ScriptRegistry(File path) {
 
@@ -33,6 +35,7 @@ public class ScriptRegistry {
 
 		this.path = path;
 		this.scopes = new HashMap<String, ScriptableObject> ();
+		this.configuration = new HashMap<String, NativeObject> ();
 	}
 
 	public void init(Context context) {
@@ -75,7 +78,7 @@ public class ScriptRegistry {
 
 		// unload scripts
 
-		log.info("Unloading scripts..");
+		log.info("Unloading scripts from " + this.path.getAbsolutePath() + "..");
 
 		for (String scriptId : this.scopes.keySet()) {
 
@@ -97,13 +100,13 @@ public class ScriptRegistry {
 
 	public synchronized void loadScript(Context context, String scriptId, String script) throws Exception {
 
-		String result;
+		Object result;
 
 		// prepare script scope
 
 		ScriptableObject scope = context.initStandardObjects();
 
-		log.debug("Adding JavaScript objects...");
+		log.debug("Adding JavaScript objects for script '" + scriptId + "'...");
 
 		scope.defineProperty("log", Context.javaToJS(LoggerFactory.getLogger(scriptId), scope), ScriptableObject.DONTENUM);
 		scope.defineProperty(Admin.class.getAnnotation(DanubeApi.class).name(), Context.javaToJS(DanubeApiServer.adminObject, scope), ScriptableObject.DONTENUM);
@@ -115,23 +118,24 @@ public class ScriptRegistry {
 		// load script
 
 		log.debug("Loading script '" + scriptId + "'...");
-		result = Context.toString(context.evaluateString(scope, script, scriptId, 1, null));
-		log.debug("Loaded script '" + scriptId + "'. Result: " + result);
+		result = context.evaluateString(scope, script, scriptId, 1, null);
+		log.debug("Loaded script '" + scriptId + "'. Result: " + Context.toString(result));
 
 		// execute loadScript() function
 
 		log.debug("Executing loadScript() for '" + scriptId + "'...");
-		result = Context.toString(context.evaluateString(scope, "loadScript()", scriptId, 1, null));
-		log.debug("Executed loadScript() for '" + scriptId + "'. Result: " + result);
+		result = context.evaluateString(scope, "loadScript()", scriptId, 1, null);
+		log.debug("Executed loadScript() for '" + scriptId + "'. Result: " + result.getClass().getName() + "  " + Context.toString(result));
 
-		// add script
+		// add script and configuration
 
 		this.scopes.put(scriptId, scope);
+		this.configuration.put(scriptId, result instanceof NativeObject ? (NativeObject) result : null);
 	}
 
 	public synchronized void unloadScript(Context context, String scriptId) throws Exception {
 
-		String result;
+		Object result;
 
 		// get script
 
@@ -150,13 +154,13 @@ public class ScriptRegistry {
 		// execute unloadScript() function
 
 		log.debug("Executing unloadScript() for '" + scriptId + "'...");
-		result = Context.toString(context.evaluateString(scope, "unloadScript()", scriptId, 1, null));
-		log.debug("Executed unloadScript() for '" + scriptId + "'. Result: " + result);
+		result = context.evaluateString(scope, "unloadScript()", scriptId, 1, null);
+		log.debug("Executed unloadScript() for '" + scriptId + "'. Result: " + Context.toString(result));
 	}
 
 	public synchronized String runScript(Context context, String scriptId) throws Exception {
 
-		String result;
+		Object result;
 
 		// get script
 
@@ -167,12 +171,12 @@ public class ScriptRegistry {
 		// execute runScript() function
 
 		log.debug("Executing runScript() for '" + scriptId + "'...");
-		result = Context.toString(context.evaluateString(scope, "runScript()", scriptId, 1, null));
-		log.debug("Executed runScript() for '" + scriptId + "'. Result: " + result);
+		result = context.evaluateString(scope, "runScript()", scriptId, 1, null);
+		log.debug("Executed runScript() for '" + scriptId + "'. Result: " + Context.toString(result));
 		
 		// done
 		
-		return result;
+		return Context.toString(result);
 	}
 
 	/*

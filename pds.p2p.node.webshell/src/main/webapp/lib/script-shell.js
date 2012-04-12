@@ -25,8 +25,8 @@ function shellTermOpen() {
 		shellTerm = new Terminal({
 			x: 220,
 			y: 70,
-			cols:160,
-			rows:48,
+			cols:100,
+			rows:40,
 			termDiv: 'shellTermDiv',
 			bgColor: '#28425a',
 			greeting: shellHelp.join('\n'),

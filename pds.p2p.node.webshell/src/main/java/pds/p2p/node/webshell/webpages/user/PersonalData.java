@@ -3,7 +3,7 @@ package pds.p2p.node.webshell.webpages.user;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
 
 import pds.p2p.api.node.client.DanubeApiClient;
-import pds.p2p.node.webshell.webapplication.components.PolarisLiteralModel;
+import pds.p2p.node.webshell.webapplication.models.PolarisLiteralModel;
 import pds.p2p.node.webshell.webpages.BasePage;
 
 public class PersonalData extends BasePage {

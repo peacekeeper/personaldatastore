@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 public class LoopScriptThread extends Thread {
 
+	private static final long SLEEP_INTERVAL = 3 * 1000;
+
 	private static Logger log = LoggerFactory.getLogger(LoopScriptThread.class);
 
 	private boolean running;
@@ -22,10 +24,10 @@ public class LoopScriptThread extends Thread {
 	}
 
 	public void stopRunning() {
-		
+
 		this.running = false;
 	}
-	
+
 	@Override
 	public void run() {
 
@@ -35,11 +37,11 @@ public class LoopScriptThread extends Thread {
 		// init script registry
 
 		this.scriptRegistry.init(context);
-		
+
 		// run scripts
 
 		log.info("Running scripts..");
-		
+
 		while (this.running) {
 
 			for (String scriptId : this.scriptRegistry.getScriptIds()) {
@@ -55,19 +57,19 @@ public class LoopScriptThread extends Thread {
 					continue;
 				}
 			}
-			
+
 			// wait
-			
+
 			try {
 
-				Thread.sleep(2000);
+				Thread.sleep(SLEEP_INTERVAL);
 			} catch (InterruptedException ex) { }
 		}
 
 		// shut down script registry
 
 		this.scriptRegistry.shutdown(context);
-		
+
 		// done
 
 		Context.exit();
@@ -81,9 +83,9 @@ public class LoopScriptThread extends Thread {
 
 		Context context = Context.enter();
 		context.setWrapFactory(MyWrapFactory.getInstance());
-		
+
 		this.scriptRegistry.loadScript(context, scriptId, script);
-		
+
 		Context.exit();
 	}
 
@@ -93,7 +95,7 @@ public class LoopScriptThread extends Thread {
 		context.setWrapFactory(MyWrapFactory.getInstance());
 
 		this.scriptRegistry.unloadScript(context, scriptId);
-		
+
 		Context.exit();
 	}
 

@@ -22,12 +22,12 @@ public class ViewIntents extends BasePage {
 
 		this.setTitle(this.getString("title"));
 
-		String[] packets;
+		String[] rawpackets;
 
 		try {
 
 			String inumber = DanubeApiClient.orionObject.inumber();
-			packets = DanubeApiClient.polarisObject.getLiterals(inumber + "+intent");
+			rawpackets = DanubeApiClient.polarisObject.getLiterals(inumber + "+intent");
 		} catch (Exception ex) {
 
 			throw new RuntimeException(ex.getMessage(), ex);
@@ -35,11 +35,14 @@ public class ViewIntents extends BasePage {
 
 		ArrayList<Intent> intents = new ArrayList<Intent> ();
 
-		for (String packet : packets) {
+		for (String rawpacket : rawpackets) {
 
 			try {
 
-				intents.add(Intent.fromPacket(packet));
+				Intent intent = new Intent();
+				intent.fromPacket(rawpacket);
+
+				intents.add(intent);
 			} catch (Exception ex) {
 
 				throw new RuntimeException(ex.getMessage(), ex);
@@ -47,6 +50,8 @@ public class ViewIntents extends BasePage {
 		}
 
 		Model<ArrayList<Intent>> model = new Model<ArrayList<Intent>> (intents);
+
+		log.debug("Loaded " + intents.size() + " intents.");
 
 		// create and add components
 

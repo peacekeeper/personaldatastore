@@ -35,7 +35,7 @@ function processIntent(rawpacket, packet) {
 	var content = packet.content;
 	var intent = eval("(" + content + ")");
 
-	polaris.add(orion.inumber() + "+intent!" + intent.id + "/!/(data:;base64," + encodeURIComponent(rawpacket) + ")", null);
+	polaris.add(orion.inumber() + "+intent!" + intent.id + "/!/(data:," + encodeURIComponent(rawpacket) + ")", null);
 }
 
 //-- main functions
@@ -44,6 +44,8 @@ function loadScript() {
 
 	vega.resetTopics("intentscript");
 	vega.resetRays("intentscript");
+
+	return { interval: 5 };
 }
 
 function runScript() {

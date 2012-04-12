@@ -1,4 +1,4 @@
-package pds.p2p.node.webshell.webpages.intent;
+package pds.p2p.node.webshell.webpages.terminals;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;

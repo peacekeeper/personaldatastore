@@ -55,9 +55,9 @@ public class ManualScriptServlet extends HttpServlet {
 
 		Context context = Context.enter();
 		context.setWrapFactory(MyWrapFactory.getInstance());
-		
+
 		this.scriptRegistry.shutdown(context);
-		
+
 		Context.exit();
 	}
 
@@ -65,9 +65,9 @@ public class ManualScriptServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// read parameters
-		
+
 		String scriptId = request.getParameter("scriptId");
-		
+
 		if (scriptId == null) {
 
 			log.warn("Missing 'scriptId' parameter");
@@ -81,9 +81,9 @@ public class ManualScriptServlet extends HttpServlet {
 
 		Context context = Context.enter();
 		context.setWrapFactory(MyWrapFactory.getInstance());
-		
+
 		String result;
-		
+
 		try {
 
 			result = this.scriptRegistry.runScript(context, scriptId);
@@ -94,8 +94,10 @@ public class ManualScriptServlet extends HttpServlet {
 			return;
 		}
 
+		Context.exit();
+
 		// done
-		
+
 		response.getOutputStream().print(result);
 		response.getOutputStream().flush();
 		response.getOutputStream().close();

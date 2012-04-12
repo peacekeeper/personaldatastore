@@ -1,20 +1,16 @@
 package pds.p2p.node.webshell.webpages;
 
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pds.p2p.api.node.client.DanubeApiClient;
 import pds.p2p.node.webshell.DanubeApiShellServlet;
-import pds.p2p.node.webshell.webapplication.components.WaitIndicatorAjaxCallDecorator;
 
 public class DanubeApiStatusPanel extends Panel {
 
@@ -45,11 +41,11 @@ public class DanubeApiStatusPanel extends Panel {
 
 			private static final long serialVersionUID = 1427947950380198205L;
 
-			@Override
+/*			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator() {
 
 				return new WaitIndicatorAjaxCallDecorator();
-			}
+			}*/
 		});
 	}
 
@@ -60,11 +56,11 @@ public class DanubeApiStatusPanel extends Panel {
 
 		// add css
 
-		response.renderCSSReference(new CssResourceReference(WaitIndicatorAjaxCallDecorator.class, "WaitIndicatorAjaxCallDecorator.css"));
+//		response.renderCSSReference(new CssResourceReference(WaitIndicatorAjaxCallDecorator.class, "WaitIndicatorAjaxCallDecorator.css"));
 
 		// add javascript
 		
-		response.renderJavaScriptReference(new JavaScriptResourceReference(WaitIndicatorAjaxCallDecorator.class, "WaitIndicatorAjaxCallDecorator.js"));
+//		response.renderJavaScriptReference(new JavaScriptResourceReference(WaitIndicatorAjaxCallDecorator.class, "WaitIndicatorAjaxCallDecorator.js"));
 	}
 
 	private static final class NodeIdModel extends AbstractReadOnlyModel<String> {
@@ -75,7 +71,6 @@ public class DanubeApiStatusPanel extends Panel {
 		public String getObject() {
 			try {
 
-				Thread.sleep(2000);
 				return DanubeApiClient.vegaObject.nodeId();
 			} catch (Exception ex) {
 

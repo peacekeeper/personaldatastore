@@ -26,9 +26,9 @@ function xdiPolarisTermOpen() {
 
 		xdiPolarisTerm = new Terminal({
 /*			x: 220,
-			y: 70,
-			cols: 80,
-			rows: 48,*/
+			y: 70,*/
+			cols: 50,
+			rows: 40,
 			termDiv: 'xdiPolarisTermDiv',
 			bgColor: '#255e49',
 			greeting: xdiPolarisHelp.join('\n'),

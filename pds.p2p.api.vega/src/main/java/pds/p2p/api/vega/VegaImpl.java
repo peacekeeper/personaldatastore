@@ -522,9 +522,10 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		Id id = this.pastryIdFactory.buildIdFromToString(nodeId);
 		String nonce = new Nonce().toString();
-		String signature = this.orion.sign(id.toStringFull() + " " + ray + " " + nonce + " " + content);
+		String timesent = Long.toString(System.currentTimeMillis());
+		String signature = this.orion.sign(id.toStringFull() + " " + ray + " " + nonce + " " + content + " " + timesent);
 		String hashcash = new HashCash(new Date(), id.toStringFull()).toString();
-		Message msg = new VegaMessage(ray, this.orion.iname(), this.orion.inumber(), nonce, content, signature, hashcash, flags, extension);
+		Message msg = new VegaMessage(ray, this.orion.iname(), this.orion.inumber(), nonce, content, signature, hashcash, flags, extension, timesent, null);
 
 		this.endpoint.route(id, msg, null);
 	}
@@ -663,9 +664,10 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		Topic t = new Topic(this.pastryIdFactory, topic);
 		String nonce = new Nonce().toString();
-		String signature = this.orion.sign(t.getId().toStringFull() + " " + ray + " " + nonce + " " + content);
+		String timesent = Long.toString(System.currentTimeMillis());
+		String signature = this.orion.sign(t.getId().toStringFull() + " " + ray + " " + nonce + " " + content + " " + timesent);
 		String hashcash = new HashCash(new Date(), t.getId().toStringFull()).toString();
-		ScribeContent scribeContent = new VegaScribeContent(topic, ray, this.orion.iname(), this.orion.inumber(), nonce, content, signature, hashcash, flags, extension);
+		ScribeContent scribeContent = new VegaScribeContent(topic, ray, this.orion.iname(), this.orion.inumber(), nonce, content, signature, hashcash, flags, extension, timesent, null);
 
 		this.scribe.publish(t, scribeContent);
 	}
@@ -684,9 +686,10 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		Topic t = new Topic(this.pastryIdFactory, topic);
 		String nonce = new Nonce().toString();
-		String signature = this.orion.sign(t.getId().toStringFull() + " " + ray + " " + nonce + " " + content);
+		String timesent = Long.toString(System.currentTimeMillis());
+		String signature = this.orion.sign(t.getId().toStringFull() + " " + ray + " " + nonce + " " + content + " " + timesent);
 		String hashcash = new HashCash(new Date(), t.getId().toStringFull()).toString();
-		ScribeContent scribeContent = new VegaScribeContent(topic, ray, this.orion.iname(), this.orion.inumber(), nonce, content, signature, hashcash, flags, extension);
+		ScribeContent scribeContent = new VegaScribeContent(topic, ray, this.orion.iname(), this.orion.inumber(), nonce, content, signature, hashcash, flags, extension, timesent, null);
 
 		this.scribe.anycast(t, scribeContent);
 	}
@@ -1069,6 +1072,10 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		try {
 
+			// message received
+			
+			vegaMessage.setTimerecv(Long.toString(System.currentTimeMillis()));
+
 			// check general message properties
 
 			boolean dataOk = 
@@ -1077,11 +1084,12 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 					vegaMessage.getInumber() != null && 
 					vegaMessage.getNonce() != null &&
 					vegaMessage.getSignature() != null && 
-					vegaMessage.getHashcash() != null;
+					vegaMessage.getHashcash() != null &&
+					vegaMessage.getTimesent() != null;
 
 			boolean nonceOk = NonceUtil.checkNonce(vegaMessage.getNonce());
 
-			boolean signatureOk = "1".equals(this.orion.verify(id.toStringFull() + " " + vegaMessage.getRay() + " " + vegaMessage.getNonce() + " " + vegaMessage.getContent(), vegaMessage.getSignature(), vegaMessage.getInumber()));
+			boolean signatureOk = "1".equals(this.orion.verify(id.toStringFull() + " " + vegaMessage.getRay() + " " + vegaMessage.getNonce() + " " + vegaMessage.getContent() + " " + vegaMessage.getTimesent(), vegaMessage.getSignature(), vegaMessage.getInumber()));
 
 			HashCash hashcash = HashCash.fromString(vegaMessage.getHashcash());
 			boolean hashcashOk = hashcash.getTo().equals(id.toStringFull()) && hashcash.isValid();
@@ -1105,7 +1113,9 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 							" \"signature\":" + escapeJSON(vegaMessage.getSignature()) + ",\n" + 
 							" \"hashcash\":" + escapeJSON(vegaMessage.getHashcash()) + ",\n" + 
 							" \"flags\":" + escapeJSON(vegaMessage.getFlags()) + ",\n" + 
-							" \"extension\":" + escapeJSON(vegaMessage.getExtension()) + "\n" + 
+							" \"extension\":" + escapeJSON(vegaMessage.getExtension()) + ",\n" + 
+							" \"timesent\":" + escapeJSON(vegaMessage.getTimesent()) + ",\n" + 
+							" \"timerecv\":" + escapeJSON(vegaMessage.getTimerecv()) + "\n" + 
 					"}");
 		} catch (Exception ex) {
 
@@ -1124,6 +1134,10 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		try {
 
+			// message received
+			
+			vegaScribeContent.setTimerecv(Long.toString(System.currentTimeMillis()));
+
 			// check general message properties
 
 			boolean dataOk = 
@@ -1133,7 +1147,8 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 					vegaScribeContent.getInumber() != null && 
 					vegaScribeContent.getNonce() != null && 
 					vegaScribeContent.getSignature() != null && 
-					vegaScribeContent.getHashcash() != null;
+					vegaScribeContent.getHashcash() != null &&
+					vegaScribeContent.getTimesent() != null;
 
 			boolean nonceOk = NonceUtil.checkNonce(vegaScribeContent.getNonce());
 
@@ -1149,7 +1164,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 							vegaScribeContent.getTopic().equals(this.orion.inumber())
 							);
 
-			boolean signatureOk = "1".equals(this.orion.verify(topic.getId().toStringFull() + " " + vegaScribeContent.getRay() + " " + vegaScribeContent.getNonce() + " " + vegaScribeContent.getContent(), vegaScribeContent.getSignature(), vegaScribeContent.getInumber()));
+			boolean signatureOk = "1".equals(this.orion.verify(topic.getId().toStringFull() + " " + vegaScribeContent.getRay() + " " + vegaScribeContent.getNonce() + " " + vegaScribeContent.getContent() + " " + vegaScribeContent.getTimesent(), vegaScribeContent.getSignature(), vegaScribeContent.getInumber()));
 
 			HashCash hashcash = HashCash.fromString(vegaScribeContent.getHashcash());
 			boolean hashcashOk = hashcash.getTo().equals(topic.getId().toStringFull()) && hashcash.isValid();
@@ -1173,7 +1188,9 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 							" \"signature\":" + escapeJSON(vegaScribeContent.getSignature()) + ",\n" + 
 							" \"hashcash\":" + escapeJSON(vegaScribeContent.getHashcash()) + ",\n" + 
 							" \"flags\":" + escapeJSON(vegaScribeContent.getFlags()) + ",\n" + 
-							" \"extension\":" + escapeJSON(vegaScribeContent.getExtension()) + "\n" + 
+							" \"extension\":" + escapeJSON(vegaScribeContent.getExtension()) + ",\n" + 
+							" \"timesent\":" + escapeJSON(vegaScribeContent.getTimesent()) + ",\n" + 
+							" \"timerecv\":" + escapeJSON(vegaScribeContent.getTimerecv()) + "\n" + 
 					"}");
 		} catch (Exception ex) {
 
@@ -1191,6 +1208,12 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		try {
 
+			// message received
+			
+			vegaScribeContent.setTimerecv(Long.toString(System.currentTimeMillis()));
+
+			// check general message properties
+
 			boolean dataOk = 
 					vegaScribeContent.getTopic() != null && 
 					vegaScribeContent.getRay() != null && 
@@ -1198,7 +1221,8 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 					vegaScribeContent.getInumber() != null && 
 					vegaScribeContent.getNonce() != null && 
 					vegaScribeContent.getSignature() != null && 
-					vegaScribeContent.getHashcash() != null;
+					vegaScribeContent.getHashcash() != null &&
+					vegaScribeContent.getTimesent() != null;
 
 			boolean nonceOk = NonceUtil.checkNonce(vegaScribeContent.getNonce());
 
@@ -1214,13 +1238,15 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 							vegaScribeContent.getTopic().equals(this.orion.inumber())
 							);
 
-			boolean signatureOk = "1".equals(this.orion.verify(topic.getId().toStringFull() + " " + vegaScribeContent.getRay() + " " + vegaScribeContent.getNonce() + " " + vegaScribeContent.getContent(), vegaScribeContent.getSignature(), vegaScribeContent.getInumber()));
+			boolean signatureOk = "1".equals(this.orion.verify(topic.getId().toStringFull() + " " + vegaScribeContent.getRay() + " " + vegaScribeContent.getNonce() + " " + vegaScribeContent.getContent() + " " + vegaScribeContent.getTimesent(), vegaScribeContent.getSignature(), vegaScribeContent.getInumber()));
 
 			HashCash hashcash = HashCash.fromString(vegaScribeContent.getHashcash());
 			boolean hashcashOk = hashcash.getTo().equals(topic.getId().toStringFull()) && hashcash.isValid();
 
 			log.debug("--> anycast: dataOk=" + dataOk + " nonceOk=" + nonceOk + " topicOk=" + topicOk + " signatureOk=" + signatureOk + " hashcashOk=" + hashcashOk);
 			if (! dataOk || ! nonceOk || ! topicOk || ! signatureOk || ! hashcashOk) return false;
+
+			// queue JSON packet
 
 			this.addPacket(
 					vegaScribeContent.getRay(),
@@ -1236,7 +1262,9 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 							" \"signature\":" + escapeJSON(vegaScribeContent.getSignature()) + ",\n" + 
 							" \"hashcash\":" + escapeJSON(vegaScribeContent.getHashcash()) + ",\n" + 
 							" \"flags\":" + escapeJSON(vegaScribeContent.getFlags()) + ",\n" + 
-							" \"extension\":" + escapeJSON(vegaScribeContent.getExtension()) + "\n" + 
+							" \"extension\":" + escapeJSON(vegaScribeContent.getExtension()) + ",\n" + 
+							" \"timesent\":" + escapeJSON(vegaScribeContent.getTimesent()) + ",\n" + 
+							" \"timerecv\":" + escapeJSON(vegaScribeContent.getTimerecv()) + "\n" + 
 					"}");
 		} catch (Exception ex) {
 

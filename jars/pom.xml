@@ -314,6 +314,20 @@
 							<file>${basedir}/lib/xpp3-1.1.3.4d_b2.jar</file>
 						</configuration>
 					</execution>
+					<execution>
+						<id>execution22</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>freepastry</groupId>
+							<artifactId>freepastry</artifactId>
+							<version>snapshot</version>
+							<packaging>jar</packaging>
+							<file>${basedir}/lib/pastry.jar</file>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>

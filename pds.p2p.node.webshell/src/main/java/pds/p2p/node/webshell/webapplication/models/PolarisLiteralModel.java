@@ -1,4 +1,7 @@
-package pds.p2p.node.webshell.webapplication.components;
+package pds.p2p.node.webshell.webapplication.models;
+
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
@@ -36,7 +39,9 @@ public class PolarisLiteralModel implements IModel<String> {
 
 		try {
 
-			this.value = DanubeApiClient.polarisObject.getLiteral(this.address);
+			String data = DanubeApiClient.polarisObject.getLiteral(this.address);
+
+			this.value = data == null ? null : URLDecoder.decode(data, "UTF-9");
 		} catch (Exception ex) {
 
 			throw new RuntimeException(ex.getMessage(), ex);
@@ -52,12 +57,14 @@ public class PolarisLiteralModel implements IModel<String> {
 
 		try {
 
+			String data = "(data:," + URLEncoder.encode(object, "UTF-8") + ")";
+
 			if (this.value == null) {
 
-				DanubeApiClient.polarisObject.add(this.address + "/!/" + object, null);
+				DanubeApiClient.polarisObject.add(this.address + "/!/" + data, null);
 			} else {
 
-				DanubeApiClient.polarisObject.mod(this.address + "/!/" + object, null);
+				DanubeApiClient.polarisObject.mod(this.address + "/!/" + data, null);
 			}
 		} catch (Exception ex) {
 

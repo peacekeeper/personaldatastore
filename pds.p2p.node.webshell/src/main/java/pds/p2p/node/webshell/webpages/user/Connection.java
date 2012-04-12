@@ -3,13 +3,11 @@ package pds.p2p.node.webshell.webpages.user;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pds.p2p.api.node.client.DanubeApiClient;
 import pds.p2p.node.webshell.webpages.BasePage;
-import pds.p2p.node.webshell.webpages.index.Index;
 
 public class Connection extends BasePage {
 
@@ -39,10 +37,6 @@ public class Connection extends BasePage {
 		@Override
 		protected void onSubmit() {
 
-			Connection.log.debug("Beginning Login.");
-
-			RequestCycle requestCycle = this.getRequestCycle();
-
 			// connect to vega
 
 			Connection.log.debug("Connecting");
@@ -57,10 +51,9 @@ public class Connection extends BasePage {
 				return;
 			}
 
-			// send user to homepage
+			// done
 
-			requestCycle.setResponsePage(Index.class);
-			return;
+			info(Connection.this.getString("connected"));
 		}
 	}
 
@@ -76,8 +69,6 @@ public class Connection extends BasePage {
 		@Override
 		protected void onSubmit() {
 
-			RequestCycle requestCycle = this.getRequestCycle();
-
 			// disconnect from vega
 
 			Connection.log.debug("Disconnecting");
@@ -92,10 +83,9 @@ public class Connection extends BasePage {
 				return;
 			}
 
-			// send user to homepage
+			// done
 
-			requestCycle.setResponsePage(Index.class);
-			return;
+			info(Connection.this.getString("disconnected"));
 		}
 	}
 }

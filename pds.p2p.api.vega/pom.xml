@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>freepastry</groupId>
 			<artifactId>freepastry</artifactId>
-			<version>2.1</version>
+			<version>snapshot</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

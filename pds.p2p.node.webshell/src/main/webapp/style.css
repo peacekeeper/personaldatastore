@@ -1,5 +1,5 @@
 body {
-	background: black url('/images/mainback-gray.jpg');
+	background: black url('/images/mainback-gray.jpg') repeat fixed;
 	font-family: Calibri, Arial, Helvetica, sans-serif;
 	font-size: 12pt;
 	color: black;
@@ -22,7 +22,7 @@ img {
 }
 
 input {
-	font-family: courier, fixed, swiss, sans-serif;
+	font-family: courier, fixed, monospace;
 	font-size: 12pt;
 	font-weight: bold;
 	height: 2em;
@@ -30,6 +30,12 @@ input {
 
 span.bold {
 	font-weight: bold;
+}
+
+.code {
+	font-family: courier, fixed, monospace;
+	font-size: 8pt;
+	white-space: pre;
 }
 
 /*
@@ -47,7 +53,7 @@ span.bold {
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: 65px;
+	height: 60px;
 	margin: 0px;
 	padding: 10px;
 	background: url("/images/bg.png") repeat-x;
@@ -73,16 +79,16 @@ span.bold {
 	bottom: 0px;
 	left: 0;
 	width: 100%;
-	height: 31px;
+	height: 21px;
 	font-family: courier, fixed, swiss, sans-serif;
 	background-color: gray;
 	color: white;
 	margin: 0px;
-	padding: 10px 10px 10px 10px;
+	padding: 5px 10px 5px 10px;
 }
 
 #Body {
-	margin: 150px auto auto 100px;
+	margin: 100px auto 60px auto;
 	line-height: 1.5em;
 	text-align: left;
 }
@@ -175,17 +181,25 @@ span.bold {
 	width: 100%;
 }
 
-div.prfp {
+div.intent {
+	background-image: url('/images/think.png');
+	background-repeat: no-repeat;
+	background-position: 10px 10px;
+	width: 400px;
+	height: 105px;
 	border: 4px outset gray;
+	margin-top: 10px;
+	padding: 10px;
 }
 
 .feedbackPanelERROR {
-	color: #ff0000;
+	color: #efaf6a;
 	font-size: 1.1em;
 	font-weight: bold;
 }
 
 .feedbackPanelINFO {
+	color: #6aafef;
 	font-size: 1.1em;
 	font-weight: bold;
 }
