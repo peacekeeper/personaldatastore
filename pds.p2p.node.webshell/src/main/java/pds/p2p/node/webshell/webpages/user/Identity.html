@@ -5,16 +5,20 @@
 
 	<h2>Log in:</h2>
 	
-	<form wicket:id="form">
+	<form wicket:id="loginForm">
 
 		<table>
-			<tr><td>User Identifier:</td><td><input wicket:id="userIdentifier" size="40" style="padding: 5px" type="text"></td></tr>
+			<tr><td>Identifier:</td><td><input wicket:id="identifier" size="40" style="padding: 5px" type="text"></td></tr>
 			<tr><td>Password:</td><td><input wicket:id="password" size="40" style="padding: 5px" type="password"></td></tr>
 		</table>
 
 		<p><input type="submit" value="Login" style="width: 100px"></p>
 
 	</form>
+
+	<h2>Log out:</h2>
+
+	<p>Click <a wicket:id="logoutLink">here</a> to logout.</p>
 
 </wicket:extend>
 

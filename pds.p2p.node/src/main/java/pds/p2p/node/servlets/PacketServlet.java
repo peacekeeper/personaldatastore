@@ -23,15 +23,15 @@ public class PacketServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// read parameters
-		
+
 		String client = request.getParameter("client");
-		
+
 		if (client == null) {
-			
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing'client' parameter");
+
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing 'client' parameter");
 			return;
 		}
-		
+
 		// stream packets to client
 
 		String packet;

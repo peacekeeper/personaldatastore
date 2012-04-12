@@ -10,7 +10,6 @@ import java.util.Map;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.WrapFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,41 +20,28 @@ import pds.p2p.api.Sirius;
 import pds.p2p.api.Vega;
 import pds.p2p.api.annotation.DanubeApi;
 
-public class ScriptThread extends Thread {
+public class ScriptRegistry {
 
-	private static Logger log = LoggerFactory.getLogger(ScriptThread.class);
+	private static Logger log = LoggerFactory.getLogger(ScriptRegistry.class);
 
-	private boolean running;
+	private File path;
 	private Map<String, ScriptableObject> scopes;
-	private WrapFactory wrapFactory;
 
-	public ScriptThread() {
+	public ScriptRegistry(File path) {
 
 		super();
 
-		this.running = true;
+		this.path = path;
 		this.scopes = new HashMap<String, ScriptableObject> ();
-		this.wrapFactory = new MyWrapFactory();
 	}
 
-	public void stopRunning() {
-		
-		this.running = false;
-	}
-	
-	@Override
-	public void run() {
-
-		// prepare Rhino context
-
-		Context context = Context.enter();
-		context.setWrapFactory(this.wrapFactory);
+	public void init(Context context) {
 
 		// load scripts
 
-		log.info("Loading scripts..");
+		log.info("Loading scripts from " + this.path.getAbsolutePath() + "..");
 
-		File[] scriptFiles = new File(".", "scripts/").listFiles(new FilenameFilter() {
+		File[] scriptFiles = this.path.listFiles(new FilenameFilter() {
 
 			@Override
 			public boolean accept(File dir, String name) {
@@ -80,33 +66,12 @@ public class ScriptThread extends Thread {
 			}
 		}
 
-		// run scripts
+		// done
 
-		log.info("Running scripts..");
+		log.info("" + this.scopes.size() + " files loaded.");
+	}
 
-		while (this.running) {
-
-			for (String scriptId : this.scopes.keySet()) {
-
-				// run script
-
-				try {
-
-					this.runScript(context, scriptId);
-				} catch (Exception ex) {
-
-					log.warn("Problem while running script '" + scriptId + "': " + ex.getMessage(), ex);
-					continue;
-				}
-			}
-			
-			// wait
-			
-			try {
-
-				Thread.sleep(2000);
-			} catch (InterruptedException ex) { }
-		}
+	public void shutdown(Context context) {
 
 		// unload scripts
 
@@ -123,44 +88,12 @@ public class ScriptThread extends Thread {
 				continue;
 			}
 		}
-
-		// done
-
-		Context.exit();
 	}
 
-	/*
-	 * Public methods
-	 */
-
-	public synchronized void loadScript(String scriptId, String script) throws Exception {
-
-		Context context = Context.enter();
-		context.setWrapFactory(this.wrapFactory);
-		
-		this.loadScript(context, scriptId, script);
-		
-		Context.exit();
-	}
-
-	public synchronized void unloadScript(String scriptId) throws Exception {
-
-		Context context = Context.enter();
-		context.setWrapFactory(this.wrapFactory);
-
-		this.unloadScript(context, scriptId);
-		
-		Context.exit();
-	}
-
-	public synchronized String[] getScriptIds() {
+	public String[] getScriptIds() {
 
 		return this.scopes.keySet().toArray(new String[this.scopes.size()]);
 	}
-
-	/*
-	 * Private methods
-	 */
 
 	public synchronized void loadScript(Context context, String scriptId, String script) throws Exception {
 
@@ -172,6 +105,7 @@ public class ScriptThread extends Thread {
 
 		log.debug("Adding JavaScript objects...");
 
+		scope.defineProperty("log", Context.javaToJS(LoggerFactory.getLogger(scriptId), scope), ScriptableObject.DONTENUM);
 		scope.defineProperty(Admin.class.getAnnotation(DanubeApi.class).name(), Context.javaToJS(DanubeApiServer.adminObject, scope), ScriptableObject.DONTENUM);
 		scope.defineProperty(Orion.class.getAnnotation(DanubeApi.class).name(), Context.javaToJS(DanubeApiServer.orionObject, scope), ScriptableObject.DONTENUM);
 		scope.defineProperty(Vega.class.getAnnotation(DanubeApi.class).name(), Context.javaToJS(DanubeApiServer.vegaObject, scope), ScriptableObject.DONTENUM);
@@ -220,7 +154,7 @@ public class ScriptThread extends Thread {
 		log.debug("Executed unloadScript() for '" + scriptId + "'. Result: " + result);
 	}
 
-	private synchronized void runScript(Context context, String scriptId) throws Exception {
+	public synchronized String runScript(Context context, String scriptId) throws Exception {
 
 		String result;
 
@@ -228,17 +162,17 @@ public class ScriptThread extends Thread {
 
 		ScriptableObject scope = this.scopes.get(scriptId);
 
-		if (scope == null) {
-
-			log.warn("Cannot run script '" + scriptId + "' (not found)");
-			return;
-		}
+		if (scope == null) throw new IllegalArgumentException("Cannot run script '" + scriptId + "' (not found)");
 
 		// execute runScript() function
 
 		log.debug("Executing runScript() for '" + scriptId + "'...");
 		result = Context.toString(context.evaluateString(scope, "runScript()", scriptId, 1, null));
 		log.debug("Executed runScript() for '" + scriptId + "'. Result: " + result);
+		
+		// done
+		
+		return result;
 	}
 
 	/*

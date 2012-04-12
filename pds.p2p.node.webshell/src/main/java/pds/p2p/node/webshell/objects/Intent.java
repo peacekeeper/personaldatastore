@@ -1,32 +1,40 @@
 package pds.p2p.node.webshell.objects;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Random;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class Prfp implements Serializable {
+import pds.p2p.node.webshell.webpages.intent.CreateIntent;
+
+public class Intent implements Serializable {
 
 	private static final long serialVersionUID = -3734622557993328577L;
+
+	private static Logger log = LoggerFactory.getLogger(CreateIntent.class.getName());
 
 	private String id;
 	private String product;
 	private String price;
 
-	public Prfp(String id, String product, String price) {
+	public Intent(String id, String product, String price) {
 
 		this.id = id;
 		this.product = product;
 		this.price = price;
 	}
 
-	public Prfp(String product, String price) {
+	public Intent(String product, String price) {
 
 		this(createId(), product, price);
 	}
 
-	private Prfp() {
+	private Intent() {
 
 	}
 
@@ -60,14 +68,25 @@ public class Prfp implements Serializable {
 		this.price = price;
 	}
 
-	public static Prfp fromJSON(String json) throws JSONException {
+	public static Intent fromPacket(String packet) throws JSONException, UnsupportedEncodingException {
 
-		JSONObject jsonObject = new JSONObject(json);
-		Prfp prfp = new Prfp();
+		log.debug("packet: " + packet);
+		
+		String decodedPacket = URLDecoder.decode(packet, "UTF-8");
+		log.debug("decodedPacket: " + decodedPacket);
 
-		prfp.id = jsonObject.getString("id");
-		prfp.product = jsonObject.getString("produce");
-		prfp.price = jsonObject.getString("price");
+		JSONObject packetObject = new JSONObject(decodedPacket);
+
+		String content = packetObject.getString("content");
+		log.debug("content: " + content);
+
+		JSONObject contentObject = new JSONObject(content);
+
+		Intent prfp = new Intent();
+
+		prfp.id = contentObject.getString("id");
+		prfp.product = contentObject.getString("product");
+		prfp.price = contentObject.getString("price");
 
 		return prfp;
 	}
@@ -76,7 +95,7 @@ public class Prfp implements Serializable {
 
 		StringBuffer json = new StringBuffer();
 		json.append("{");
-		json.append("\"id\":\"\"" + this.id.replace("\"", "\\\"") + "\"");
+		json.append("\"id\":\"" + this.id.replace("\"", "\\\"") + "\"");
 		json.append(",");
 		json.append("\"product\":\"" + this.product.replace("\"", "\\\"") + "\"");
 		json.append(",");
@@ -96,9 +115,9 @@ public class Prfp implements Serializable {
 	public boolean equals(Object object) {
 
 		if (this == object) return true;
-		if (! (object instanceof Prfp)) return false;
+		if (! (object instanceof Intent)) return false;
 
-		Prfp other = (Prfp) object;
+		Intent other = (Intent) object;
 
 		if (! this.id.equals(other.id)) return false;
 		if (! this.product.equals(other.product)) return false;

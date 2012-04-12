@@ -15,31 +15,36 @@
 
 	<div id="Page">
 
-		<div id="Body">
-
-			<div id="PageHeaderPad">
-				<div id="PageHeader"><a wicket:id="homePageLink"><img src="images/logo.png"></a></div>
-				<div id="DanubeApiStatusPanel" wicket:id="danubeApiStatusPanel">___ danubeApiStatusPanel ___</div>
-				<div class="clear"></div>
-			</div>
-
-			<div id="ControlPanel">
-				<div id="SidePanel" wicket:id="sidePanel">___ sidePanel here ___</div>
-			</div>
-
-			<div id="Content">
-				<div class="pad">
-
-					<h1 wicket:id="titleLabel">___ titleLabel here ___</h1>
-
-					<div wicket:id="feedbackPanel">___ feedbackPanel here ___</div>
-
-					<wicket:child>___ child here ___</wicket:child>
-
-				</div>
-			</div>
-
+		<div id="PageHeader">
+			<a id="Logo" wicket:id="homePageLink"><img src="images/logo.png"></a>
+			<div id="Title">Box Web Access</div>
 		</div>
+
+		<div id="DanubeApiStatusPanel" wicket:id="danubeApiStatusPanel">___ danubeApiStatusPanel ___</div>
+
+			<table id="Body" cellpadding="0" cellspacing="20" border="0">
+			<tr>
+
+			<td valign="center">
+				<div id="SidePanel" wicket:id="sidePanel">___ sidePanel here ___</div>
+			</td>
+
+			<td valign="center">
+				<div id="Content">
+					<div class="pad">
+	
+						<h1 wicket:id="titleLabel">___ titleLabel here ___</h1>
+	
+						<div wicket:id="feedbackPanel">___ feedbackPanel here ___</div>
+	
+						<wicket:child>___ child here ___</wicket:child>
+	
+					</div>
+				</div>
+			</td>
+			
+			</tr>
+			</table>
 
 		<div class="clear"></div>
 

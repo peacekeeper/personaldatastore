@@ -15,6 +15,8 @@ import pds.p2p.api.Polaris;
 import pds.p2p.api.Sirius;
 import pds.p2p.api.Vega;
 import pds.p2p.api.annotation.DanubeApi;
+import pds.p2p.node.admin.AdminImpl;
+import pds.p2p.node.servlets.ManualScriptServlet;
 import pds.p2p.node.servlets.MyJsonRpcServlet;
 import pds.p2p.node.servlets.PacketServlet;
 
@@ -31,7 +33,7 @@ public class DanubeApiServer {
 	private static Server server;
 	private static Context context;
 
-	private static ScriptThread scriptThread;
+	private static LoopScriptThread loopScriptThread;
 
 	public static Admin adminObject;
 	public static Orion orionObject;
@@ -55,9 +57,9 @@ public class DanubeApiServer {
 		properties = new Properties();
 		properties.load(DanubeApiServer.class.getResourceAsStream("/application.properties"));
 
-		// init ScriptThread
+		// init LoopScriptThread
 
-		scriptThread = new ScriptThread();
+		loopScriptThread = new LoopScriptThread();
 
 		// init Jetty
 
@@ -68,7 +70,7 @@ public class DanubeApiServer {
 
 		// init API
 
-		adminObject = new AdminImpl(new Date(), server, context, scriptThread);
+		adminObject = new AdminImpl(new Date(), server, context, loopScriptThread);
 
 		orionObject = pds.p2p.api.orion.OrionFactory.getOrion();
 		if (pds.p2p.api.orion.OrionFactory.getException() != null) throw pds.p2p.api.orion.OrionFactory.getException();
@@ -93,10 +95,10 @@ public class DanubeApiServer {
 
 		log.info("shutdown()");
 
-		// shutdown ScriptThread
+		// shutdown LoopScriptThread
 
-		scriptThread.stopRunning();
-		scriptThread.join();
+		loopScriptThread.stopRunning();
+		loopScriptThread.join();
 
 		// shutdown API
 
@@ -117,22 +119,23 @@ public class DanubeApiServer {
 
 		log.info("server()");
 
-		// start ScriptThread
+		// start LoopScriptThread
 
-		log.info("Starting ScriptThread...");
+		log.info("Starting LoopScriptThread...");
 
-		scriptThread.start();
+		loopScriptThread.start();
 
 		// start Jetty
 
 		log.info("Starting Jetty...");
 
+		context.addServlet(new ServletHolder(new ManualScriptServlet()), "/script");
 		context.addServlet(new ServletHolder(new PacketServlet()), "/packet");
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(adminObject)), "/jsonrpc-" + Admin.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(orionObject)), "/jsonrpc-" + Orion.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(vegaObject)), "/jsonrpc-" + Vega.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(siriusObject)), "/jsonrpc-" + Sirius.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(polarisObject)), "/jsonrpc-" + Polaris.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(adminObject)), "/" + Admin.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(orionObject)), "/" + Orion.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(vegaObject)), "/" + Vega.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(siriusObject)), "/" + Sirius.class.getAnnotation(DanubeApi.class).name());
+		context.addServlet(new ServletHolder(new MyJsonRpcServlet(polarisObject)), "/" + Polaris.class.getAnnotation(DanubeApi.class).name());
 
 		server.setGracefulShutdown(3000);
 		server.setStopAtShutdown(true);

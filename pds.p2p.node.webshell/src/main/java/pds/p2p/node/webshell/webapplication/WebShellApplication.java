@@ -8,6 +8,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.util.time.Duration;
 
 import pds.p2p.api.node.client.DanubeApiClient;
@@ -18,8 +19,8 @@ import pds.p2p.node.webshell.webpages.index.Index;
 import pds.p2p.node.webshell.webpages.information.About;
 import pds.p2p.node.webshell.webpages.information.PrivacyPolicy;
 import pds.p2p.node.webshell.webpages.information.TermsAndConditions;
+import pds.p2p.node.webshell.webpages.intent.CreateIntent;
 import pds.p2p.node.webshell.webpages.terminals.ShellTerminal;
-import pds.p2p.node.webshell.webpages.vrm.CreatePrfp;
 
 public class WebShellApplication extends WebApplication {
 
@@ -45,7 +46,7 @@ public class WebShellApplication extends WebApplication {
 		this.mountPage("/TermsOfUse", TermsAndConditions.class);
 		this.mountPackage("/information", About.class);
 		this.mountPackage("/terminals", ShellTerminal.class);
-		this.mountPackage("/vrm", CreatePrfp.class);
+		this.mountPackage("/intent", CreateIntent.class);
 
 		// set up various wicket parameters
 
@@ -54,6 +55,7 @@ public class WebShellApplication extends WebApplication {
 		this.getApplicationSettings().setAccessDeniedPage(AccessDeniedPage.class);
 		this.getApplicationSettings().setInternalErrorPage(InternalErrorPage.class);
 		this.getApplicationSettings().setPageExpiredErrorPage(PageExpired.class);
+		this.getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
 		this.getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
 
 		switch (this.getConfigurationType()) {

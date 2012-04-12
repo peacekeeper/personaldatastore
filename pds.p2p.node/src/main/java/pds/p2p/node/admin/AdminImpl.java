@@ -1,4 +1,4 @@
-package pds.p2p.node;
+package pds.p2p.node.admin;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import pds.p2p.api.Admin;
 import pds.p2p.api.annotation.DanubeApi;
+import pds.p2p.node.LoopScriptThread;
 import pds.p2p.node.servlets.MyJsonRpcServlet;
 
 public class AdminImpl implements Admin {
@@ -21,9 +22,9 @@ public class AdminImpl implements Admin {
 	private Date startTime;
 	private Server server;
 	private Context context;
-	private ScriptThread scriptThread;
+	private LoopScriptThread scriptThread;
 
-	public AdminImpl(Date startTime, Server server, Context context, ScriptThread scriptThread) {
+	public AdminImpl(Date startTime, Server server, Context context, LoopScriptThread scriptThread) {
 
 		this.startTime = startTime;
 		this.server = server;
@@ -73,8 +74,6 @@ public class AdminImpl implements Admin {
 			Class<?> interfaze = null;
 
 			for (Class<?> clazzInterfaze : clazz.getInterfaces()) {
-
-				System.err.println(clazzInterfaze.getCanonicalName());
 
 				if (clazzInterfaze.getAnnotation(DanubeApi.class) != null) {
 
@@ -127,8 +126,6 @@ public class AdminImpl implements Admin {
 		Class<?> interfaze = null;
 
 		for (Class<?> clazzInterfaze : clazz.getInterfaces()) {
-
-			System.err.println(clazzInterfaze.getCanonicalName());
 
 			if (clazzInterfaze.getAnnotation(DanubeApi.class) != null) {
 

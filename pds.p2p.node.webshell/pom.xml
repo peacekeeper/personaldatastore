@@ -109,6 +109,12 @@
 			<version>1.5.5</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-extensions</artifactId>
+			<version>1.5.5</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 </project>

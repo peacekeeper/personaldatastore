@@ -1,8 +1,10 @@
 body {
 	background: black url('/images/mainback-gray.jpg');
-	font-family: courier, fixed, swiss, sans-serif;
+	font-family: Calibri, Arial, Helvetica, sans-serif;
 	font-size: 12pt;
 	color: black;
+	margin: 0px;
+	padding: 0px;
 }
 
 a {
@@ -36,72 +38,86 @@ span.bold {
 
 #Page {
 	text-align: left;
-	margin-top: 10px;
-	margin-left: 3%;
-	margin-right: 3%;
-	padding: 0;
+	margin: 0px;
+	padding: 0px;
+}
+
+#PageHeader {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 65px;
+	margin: 0px;
+	padding: 10px;
+	background: url("/images/bg.png") repeat-x;
+	color: white;
+	font-size: 24pt;
+	font-weight: bold;
+	text-align: left;
+}
+
+#PageHeader #Title {
+	float: left;
+	margin-right: 30px;
+}
+
+#PageHeader #Logo {
+	float: right;
+	margin-right: 30px;
+}
+
+#DanubeApiStatusPanel {
+	float: left;
+	position: fixed;
+	bottom: 0px;
+	left: 0;
+	width: 100%;
+	height: 31px;
+	font-family: courier, fixed, swiss, sans-serif;
+	background-color: gray;
+	color: white;
+	margin: 0px;
+	padding: 10px 10px 10px 10px;
 }
 
 #Body {
+	margin: 150px auto auto 100px;
 	line-height: 1.5em;
 	text-align: left;
 }
 
-#Body #BodyBorder {
-	padding: 11px 0 10px 0;
-	margin: -11px 0 0 0;
-	border: 0px solid black;
-}
-
-#Body #PageHeaderPad {
-	background: url("/images/bg.png") repeat-x;
-	height: 55px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
-#Body #PageHeaderPad #PageHeader {
-	float: right;
-	font-size: 24pt;
-	font-weight: bold;
-	color: white;
-	text-align: left;
-}
-
-#Body #PageHeaderPad #DanubeApiStatusPanel {
-	color: white;
-}
-
-#ControlPanel {
-	background-color: #444444;
-	border: 4px outset #444444;
-	margin: 20px 0 20px 0;
-	padding: 20px 0 20px 0;
-}
-
-#ControlPanel #UserPanel {
-}
-
-#ControlPanel #SidePanel {
+#SidePanel {
+	background-color: white;
+	margin: 0 0 0 0;
+	padding: 20px;
+	width: 200px;
+	border: 5px solid gray;
+	font-family: Calibri, Arial, Helvetica, sans-serif;
 	text-transform: none;
 	text-align: left;
-	padding: 0 0 0 0;
-	margin: 0 0 0 0;
 }
 
-#ControlPanel #SidePanel .pad {
+#SidePanel img {
+	vertical-align: middle;
+}
+
+#SidePanel a {
+	vertical-align: middle;
+}
+
+#SidePanel .pad {
 	margin: 0 0 0 0;
 	padding: 0 0 0 0;
 }
 
 #Content {
-	background: #6bb2f3 url("/images/shadowr.gif") top right repeat-y;
+	background-color: white;
+	margin: 0 0 0 0;
+	padding: 20px;
+	border: 5px solid gray;
 	text-align: left;
 	line-height: 1.5em;
-	margin: 0px;
-	padding: 20px 50px 0 50px;
 }
 
 #Content .pad {
@@ -146,14 +162,21 @@ span.bold {
 	padding: 0 0 0 .999em;
 }
 
-#Content .border {
-	border: 4px solid gray;
-	margin: 0 0 10px 0;
-	padding: 10px;
+#Footer {
+	clear: both;
+	display: none;
+	background-color: gray;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	color: white;
+	margin: 0px;
+	padding: 15px 10px 15px 10px;
+	width: 100%;
 }
 
 div.prfp {
-	border: 2px solid green;
+	border: 4px outset gray;
 }
 
 .feedbackPanelERROR {

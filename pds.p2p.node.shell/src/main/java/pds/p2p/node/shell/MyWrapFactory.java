@@ -4,12 +4,8 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaArray;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.WrapFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MyWrapFactory extends WrapFactory {
-
-	private static Logger log = LoggerFactory.getLogger(MyWrapFactory.class);
 
 	public MyWrapFactory() {
 
@@ -35,8 +31,6 @@ public class MyWrapFactory extends WrapFactory {
 
 			wrapped = cx.newArray(scope, nativeElements);
 		}
-
-		log.debug("Wrapped " + (obj == null ? "null" : obj.getClass()) + " to " + (wrapped == null ? "null" : wrapped.getClass()));
 
 		return wrapped;
 	}

@@ -1,4 +1,4 @@
-package pds.p2p.node.webshell.webpages.vrm;
+package pds.p2p.node.webshell.webpages.intent;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -9,36 +9,36 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pds.p2p.api.node.client.DanubeApiClient;
-import pds.p2p.node.webshell.objects.Prfp;
+import pds.p2p.node.webshell.objects.Intent;
 import pds.p2p.node.webshell.webapplication.behaviors.DefaultFocusBehavior;
 import pds.p2p.node.webshell.webpages.BasePage;
 
-public class CreatePrfp extends BasePage {
+public class CreateIntent extends BasePage {
 
 	private static final long serialVersionUID = -4428962776875356738L;
 
-	private static Logger log = LoggerFactory.getLogger(CreatePrfp.class.getName());
+	private static Logger log = LoggerFactory.getLogger(CreateIntent.class.getName());
 
 	private String product;
 	private String price;
 
-	public CreatePrfp() {
+	public CreateIntent() {
 
 		this.setTitle(this.getString("title"));
 
 		// create and add components
 
-		this.add(new MyForm("form", new CompoundPropertyModel<CreatePrfp> (this)));
+		this.add(new MyForm("form", new CompoundPropertyModel<CreateIntent> (this)));
 	}
 
-	private class MyForm extends Form<CreatePrfp> {
+	private class MyForm extends Form<CreateIntent> {
 
 		private static final long serialVersionUID = 6565821013414740274L;
 
 		private TextField<String> productTextField;
 		private TextField<String> priceTextField;
 
-		private MyForm(String id, IModel<CreatePrfp> model) {
+		private MyForm(String id, IModel<CreateIntent> model) {
 
 			super(id, model);
 
@@ -61,23 +61,23 @@ public class CreatePrfp extends BasePage {
 		@Override
 		protected void onSubmit() {
 
-			CreatePrfp.log.debug("Issuing pRFP.");
+			CreateIntent.log.debug("Issuing Intent.");
 
 			try {
 
-				Prfp prfp = new Prfp(CreatePrfp.this.product, CreatePrfp.this.price);
+				Intent intent = new Intent(CreateIntent.this.product, CreateIntent.this.price);
 
-				DanubeApiClient.vegaObject.multicast("prfp", "prfp", prfp.toJSON(), null, null);
+				DanubeApiClient.vegaObject.multicast("intent", "intent", intent.toJSON(), null, null);
 			} catch (Exception ex) {
 
 				log.warn(ex.getMessage(), ex);
-				error(CreatePrfp.this.getString("fail") + ex.getMessage());
+				error(CreateIntent.this.getString("fail") + ex.getMessage());
 				return;
 			}
 
 			// done
 
-			info(CreatePrfp.this.getString("success"));
+			info(CreateIntent.this.getString("success"));
 		}
 	}
 

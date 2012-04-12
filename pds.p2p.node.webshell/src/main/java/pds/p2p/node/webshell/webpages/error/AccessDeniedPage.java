@@ -4,7 +4,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 
 import pds.p2p.node.webshell.webpages.BasePage;
-import pds.p2p.node.webshell.webpages.user.Login;
+import pds.p2p.node.webshell.webpages.user.Identity;
 
 public class AccessDeniedPage extends BasePage {
 
@@ -16,7 +16,7 @@ public class AccessDeniedPage extends BasePage {
 
 		// create and add components
 
-		this.add(new BookmarkablePageLink<Page> ("LoginLink", Login.class));
+		this.add(new BookmarkablePageLink<Page> ("LoginLink", Identity.class));
 	}
 
 	@Override

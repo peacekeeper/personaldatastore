@@ -1,8 +1,10 @@
 package pds.p2p.node.webshell.webpages.user;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -15,39 +17,40 @@ import pds.p2p.node.webshell.webapplication.behaviors.DefaultFocusBehavior;
 import pds.p2p.node.webshell.webpages.BasePage;
 import pds.p2p.node.webshell.webpages.index.Index;
 
-public class Login extends BasePage {
+public class Identity extends BasePage {
 
 	private static final long serialVersionUID = -4706614828963732568L;
 
-	private static Logger log = LoggerFactory.getLogger(Login.class.getName());
+	private static Logger log = LoggerFactory.getLogger(Identity.class.getName());
 
-	private String userIdentifier;
+	private String identifier;
 	private String password;
 
-	public Login() {
+	public Identity() {
 
 		this.setTitle(this.getString("title"));
 
 		// create and add components
 
-		this.add(new MyForm("form", new CompoundPropertyModel<Login> (this)));
+		this.add(new LoginForm("loginForm", new CompoundPropertyModel<Identity> (this)));
+		this.add(new LogoutLink("logoutLink"));
 	}
 
-	private class MyForm extends Form<Login> {
+	private class LoginForm extends Form<Identity> {
 
 		private static final long serialVersionUID = 1045735353194990548L;
 
 		private TextField<String> identifierTextField;
 		private PasswordTextField passwordTextField;
 
-		private MyForm(String id, IModel<Login> model) {
+		private LoginForm(String id, IModel<Identity> model) {
 
 			super(id, model);
 
 			// create components
 
-			this.identifierTextField = new TextField<String> ("userIdentifier");
-			this.identifierTextField.setLabel(new Model<String> ("I-Name"));
+			this.identifierTextField = new TextField<String> ("identifier");
+			this.identifierTextField.setLabel(new Model<String> ("Identifier"));
 			this.identifierTextField.setRequired(true);
 			this.identifierTextField.add(new DefaultFocusBehavior());
 			this.passwordTextField = new PasswordTextField("password");
@@ -63,21 +66,19 @@ public class Login extends BasePage {
 		@Override
 		protected void onSubmit() {
 
-			Login.log.debug("Beginning Login.");
-
 			RequestCycle requestCycle = this.getRequestCycle();
 
 			// login to orion
 
-			Login.log.debug("Logging in: " + Login.this.userIdentifier);
+			Identity.log.debug("Logging in: " + Identity.this.identifier);
 
 			try {
 
-				DanubeApiClient.orionObject.login(Login.this.userIdentifier, Login.this.password);
+				DanubeApiClient.orionObject.login(Identity.this.identifier, Identity.this.password);
 			} catch (Exception ex) {
 
 				log.warn(ex.getMessage(), ex);
-				error(Login.this.getString("fail") + ex.getMessage());
+				error(Identity.this.getString("fail") + ex.getMessage());
 				return;
 			}
 
@@ -88,19 +89,51 @@ public class Login extends BasePage {
 		}
 	}
 
-	public String getPass() {
-		return (this.password);
-	}
+	private class LogoutLink extends Link<Object> {
 
-	public void setPass(String pass) {
-		this.password = pass;
+		private static final long serialVersionUID = 3416258156206380750L;
+
+		public LogoutLink(String id) {
+
+			super(id);
+		}
+
+		@Override
+		public void onClick() {
+
+			// logout from orion
+
+			Identity.log.debug("Logging out.");
+
+			try {
+
+				DanubeApiClient.orionObject.logout();
+			} catch (Exception ex) {
+
+				Identity.log.warn(ex.getMessage(), ex);
+				error(Identity.this.getString("fail") + ex.getMessage());
+				return;
+			}
+
+			// send user to home page
+
+			this.setResponsePage(Application.get().getHomePage());
+		}
 	}
 
 	public String getIdentifier() {
-		return (this.userIdentifier);
+		return (this.identifier);
 	}
 
 	public void setIdentifier(String identifier) {
-		this.userIdentifier = identifier;
+		this.identifier = identifier;
+	}
+
+	public String getPassword() {
+		return (this.password);
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }
