@@ -2,6 +2,7 @@ package pds.p2p.api.vega;
 
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -24,6 +25,7 @@ import java.util.Queue;
 import java.util.Random;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -125,9 +127,18 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 			if ("1".equals(this.connected())) this.disconnect();
 
+			// delete / create directories
+
+			File storageDir = new File(".", "storage/");
+			File logsDir = new File(".", "logs/");
+
+			FileUtils.deleteDirectory(storageDir);
+			storageDir.mkdir();
+			logsDir.mkdir();
+
 			// check if the remote host contains the remote port
 
-			if (remoteHost.contains(":")) {
+			if (remoteHost != null && remoteHost.contains(":")) {
 
 				remotePort = remoteHost.split(":")[1];
 				remoteHost = remoteHost.split(":")[0];
@@ -515,7 +526,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		log.debug("lookupNeighbors(" + num + ")");
 
-		if (! "1".equals(this.connected())) throw new RuntimeException("Not connected.");
+		if (! "1".equals(this.connected())) return new String[0];
 
 		NodeHandleSet nodeHandleSet = this.endpoint.neighborSet(Integer.valueOf(num).intValue());
 		String[] nodeIds = new String[nodeHandleSet.size()];

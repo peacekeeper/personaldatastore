@@ -16,11 +16,8 @@ public class VegaImplTest extends TestCase {
 	@Override
 	public void setUp() throws Exception {
 
-		new File("./storage/").delete();
-		new File("./logs/").mkdir();
-
 		this.orion = OrionFactory.getOrion();
-		this.vega = VegaFactory.getVega(orion);
+		this.vega = VegaFactory.getVega(this.orion);
 
 		this.orion.init();
 		this.vega.init();
@@ -49,6 +46,7 @@ public class VegaImplTest extends TestCase {
 		this.vega.connect(null, null, null, null);
 
 		assertNotNull(this.vega.nodeId());
+		assertEquals(this.vega.lookupNeighbors("10").length, 1);
 		assertNotNull(this.vega.localHost());
 		assertNotNull(this.vega.localPort());
 		assertNull(this.vega.publicHost());
@@ -66,6 +64,7 @@ public class VegaImplTest extends TestCase {
 
 		this.vega.disconnect();
 		assertNull(this.vega.nodeId());
+		assertEquals(this.vega.lookupNeighbors("10").length, 0);
 		assertNull(this.vega.localHost());
 		assertNull(this.vega.localPort());
 		assertNull(this.vega.publicHost());

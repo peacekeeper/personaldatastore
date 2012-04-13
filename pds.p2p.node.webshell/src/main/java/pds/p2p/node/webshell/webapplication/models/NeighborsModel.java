@@ -13,13 +13,7 @@ public class NeighborsModel extends AbstractReadOnlyModel<String> {
 
 		try {
 
-			if ("1".equals(DanubeApiClient.vegaObject.connected())) {
-
-				return Integer.toString(DanubeApiClient.vegaObject.lookupNeighbors("99").length);
-			} else {
-
-				return null;
-			}
+			return Integer.toString(DanubeApiClient.vegaObject.lookupNeighbors("99").length);
 		} catch (Exception ex) {
 
 			throw new RuntimeException(ex.getMessage(), ex);

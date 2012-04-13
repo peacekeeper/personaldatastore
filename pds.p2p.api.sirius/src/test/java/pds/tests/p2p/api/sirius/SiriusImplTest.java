@@ -1,8 +1,6 @@
 package pds.tests.p2p.api.sirius;
 
 
-import java.io.File;
-
 import junit.framework.TestCase;
 import pds.p2p.api.Orion;
 import pds.p2p.api.Sirius;
@@ -22,29 +20,8 @@ public class SiriusImplTest extends TestCase {
 	private Vega vega;
 	private Sirius sirius;
 
-	private static void clearDirectory(String directoryString) {
-
-		File directory = new File(directoryString);
-		if (! directory.exists()) return;
-
-		for (String filename : directory.list()) {
-
-			File file = new File(directory, filename);
-
-			if (file.isDirectory()) 
-				clearDirectory(file.getAbsolutePath());
-			else
-				new File(directory, filename).delete();
-		}
-
-		directory.delete();
-	}
-
 	@Override
 	public void setUp() throws Exception {
-
-		clearDirectory("./storage/"); new File("./storage/").mkdir();
-		clearDirectory("./logs/"); new File("./logs/").mkdir();
 
 		this.orion = OrionFactory.getOrion();
 		this.vega = VegaFactory.getVega(this.orion);
@@ -59,8 +36,6 @@ public class SiriusImplTest extends TestCase {
 
 		this.vega.shutdown();
 		this.orion.shutdown();
-
-		new File("./logs/").delete();
 	}
 
 	public void testSiriusImpl() throws Exception {
