@@ -1,10 +1,10 @@
 package pds.p2p.node.webshell.webpages.relation;
 
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
+import pds.p2p.node.webshell.webapplication.components.NullValueLabel;
 import pds.p2p.node.webshell.webapplication.models.PolarisLiteralModel;
 
 public class PersonalDataPanel extends Panel {
@@ -19,14 +19,20 @@ public class PersonalDataPanel extends Panel {
 
 		if (readonly) {
 
-			this.add(new Label("name", new PolarisLiteralModel(inumber + "+name", xdiUri)));
-			this.add(new Label("email", new PolarisLiteralModel(inumber + "+email", xdiUri)));
-			this.add(new Label("country", new PolarisLiteralModel(inumber + "+country", xdiUri)));
+			this.add(new NullValueLabel("name", new PolarisLiteralModel(inumber + "+name", xdiUri), "(none)"));
+			this.add(new NullValueLabel("address", new PolarisLiteralModel(inumber + "+address", xdiUri), "(none)"));
+			this.add(new NullValueLabel("country", new PolarisLiteralModel(inumber + "+country", xdiUri), "(none)"));
+			this.add(new NullValueLabel("email", new PolarisLiteralModel(inumber + "+email", xdiUri), "(none)"));
+			this.add(new NullValueLabel("gender", new PolarisLiteralModel(inumber + "+gender", xdiUri), "(none)"));
+			this.add(new NullValueLabel("dateOfBirth", new PolarisLiteralModel(inumber + "+dateOfBirth", xdiUri), "(none)"));
 		} else {
 
 			this.add(new MyAjaxEditableLabel<String> ("name", new PolarisLiteralModel(inumber + "+name", xdiUri)));
-			this.add(new MyAjaxEditableLabel<String> ("email", new PolarisLiteralModel(inumber + "+email", xdiUri)));
+			this.add(new MyAjaxEditableLabel<String> ("address", new PolarisLiteralModel(inumber + "+address", xdiUri)));
 			this.add(new MyAjaxEditableLabel<String> ("country", new PolarisLiteralModel(inumber + "+country", xdiUri)));
+			this.add(new MyAjaxEditableLabel<String> ("email", new PolarisLiteralModel(inumber + "+email", xdiUri)));
+			this.add(new MyAjaxEditableLabel<String> ("gender", new PolarisLiteralModel(inumber + "+gender", xdiUri)));
+			this.add(new MyAjaxEditableLabel<String> ("dateOfBirth", new PolarisLiteralModel(inumber + "+dateOfBirth", xdiUri)));
 		}
 	}
 

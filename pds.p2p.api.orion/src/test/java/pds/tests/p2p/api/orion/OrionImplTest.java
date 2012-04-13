@@ -1,5 +1,7 @@
 package pds.tests.p2p.api.orion;
 
+import java.net.InetAddress;
+
 import junit.framework.TestCase;
 import pds.p2p.api.Orion;
 import pds.p2p.api.orion.OrionFactory;
@@ -29,7 +31,7 @@ public class OrionImplTest extends TestCase {
 
 		assertEquals(this.orion.iname(), "=markus");
 		assertEquals(this.orion.inumber(), "=!b9a9.c0b3.8269.0219");
-		assertEquals(this.orion.xdiUri(), "http://localhost:10100/");
+		assertEquals(this.orion.xdiUri(), "http://" + InetAddress.getLocalHost().getHostName() + ":10100/");
 		assertEquals(this.orion.loggedin(), "1");
 
 		assertEquals(this.orion.resolve("=markus"), "=!b9a9.c0b3.8269.0219");

@@ -2,14 +2,14 @@ package pds.p2p.node.webshell.webapplication.models;
 
 import java.util.ArrayList;
 
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pds.p2p.api.node.client.DanubeApiClient;
 import pds.p2p.node.webshell.objects.Intent;
 
-public class IntentsListModel implements IModel<ArrayList<Intent>> {
+public class IntentsListModel extends AbstractReadOnlyModel<ArrayList<Intent>> {
 
 	private static final long serialVersionUID = 5241414033305685135L;
 
@@ -66,11 +66,4 @@ public class IntentsListModel implements IModel<ArrayList<Intent>> {
 
 		return this.intents;
 	}
-
-	@Override
-	public void setObject(ArrayList<Intent> object) {
-
-		throw new RuntimeException("setObject() not supported");
-	}
-
 }

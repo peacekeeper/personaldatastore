@@ -37,7 +37,6 @@ import pds.p2p.api.vega.util.BlockingContinuation;
 import pds.p2p.api.vega.util.HashCash;
 import pds.p2p.api.vega.util.Nonce;
 import pds.p2p.api.vega.util.NonceUtil;
-import pds.p2p.api.vega.util.XriUtil;
 import rice.environment.Environment;
 import rice.p2p.commonapi.Application;
 import rice.p2p.commonapi.Endpoint;
@@ -126,25 +125,12 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 			if ("1".equals(this.connected())) this.disconnect();
 
-			// if the remote host is an XRI, resolve it
+			// check if the remote host contains the remote port
 
-			if (remoteHost != null && (remoteHost.startsWith("@") || remoteHost.startsWith("="))) {
+			if (remoteHost.contains(":")) {
 
-				remoteHost = XriUtil.discoverConnectUri(remoteHost);
-				if (remoteHost == null) throw new IOException("Cannot discover network from " + remoteHost);	
-			}
-
-			// if the remote host is a vega:// URI, parse it
-
-			if (remoteHost != null && remoteHost.startsWith("vega://")) {
-
-				remoteHost = remoteHost.substring("vega://".length());
-
-				if (remoteHost.contains(":")) {
-
-					remotePort = remoteHost.split(":")[1];
-					remoteHost = remoteHost.split(":")[0];
-				}
+				remotePort = remoteHost.split(":")[1];
+				remoteHost = remoteHost.split(":")[0];
 			}
 
 			// if no local or remote port is given, use default
@@ -313,7 +299,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 			int counter = 0;
 
-			while(! this.pastryNode.isReady()) {
+			while (! this.pastryNode.isReady()) {
 
 				// abort if can't join
 
@@ -322,7 +308,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 				// delay so we don't busy-wait
 
-				synchronized(this.pastryNode) {
+				synchronized (this.pastryNode) {
 
 					log.debug("Waiting for node to boot...");
 					this.pastryNode.wait(500);
@@ -339,6 +325,30 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		}
 
 		return "1";
+	}
+
+	public String connectList(String localPort, String remoteHostList, String parameters) throws Exception {
+
+		log.debug("connectList(" + localPort + "," + remoteHostList + ",<parameters>)");
+
+		String[] remoteHosts = remoteHostList.split(",");
+
+		for (String remoteHost : remoteHosts) {
+
+			log.debug("Trying to connect to remote host " + remoteHost);
+
+			try {
+
+				this.connect(localPort, remoteHost, null, parameters);
+				if ("1".equals(this.connected())) return "1";
+			} catch (Exception ex) {
+
+				log.warn("Could not connect to remote host " + remoteHost + ": " + ex.getMessage(), ex);
+				continue;
+			}
+		}
+
+		throw new IOException("Could not connect to any host.");
 	}
 
 	protected void createNode(InetSocketAddress publicSockAddr) throws IOException {
@@ -1073,7 +1083,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		try {
 
 			// message received
-			
+
 			vegaMessage.setTimerecv(Long.toString(System.currentTimeMillis()));
 
 			// check general message properties
@@ -1135,7 +1145,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		try {
 
 			// message received
-			
+
 			vegaScribeContent.setTimerecv(Long.toString(System.currentTimeMillis()));
 
 			// check general message properties
@@ -1209,7 +1219,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		try {
 
 			// message received
-			
+
 			vegaScribeContent.setTimerecv(Long.toString(System.currentTimeMillis()));
 
 			// check general message properties

@@ -3,14 +3,14 @@ package pds.p2p.node.webshell.webapplication.models;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pds.p2p.api.node.client.DanubeApiClient;
 import pds.p2p.node.webshell.objects.Relation;
 
-public class RelationsListModel implements IModel<ArrayList<Relation>> {
+public class RelationsListModel extends AbstractReadOnlyModel<ArrayList<Relation>> {
 
 	private static final long serialVersionUID = 6088509994392035182L;
 
@@ -44,7 +44,7 @@ public class RelationsListModel implements IModel<ArrayList<Relation>> {
 		}
 
 		// prepare relations
-		
+
 		this.relations = new ArrayList<Relation> ();
 
 		for (String rawrelation : rawrelations) {
@@ -55,7 +55,7 @@ public class RelationsListModel implements IModel<ArrayList<Relation>> {
 				String inumber = DanubeApiClient.orionObject.resolve(iname);
 				String nodeId = inumber == null ? null : DanubeApiClient.siriusObject.getLiteral(inumber + "$nodeid");
 				String xdiUri = inumber == null ? null : DanubeApiClient.siriusObject.getLiteral(inumber + "$xdiuri");
-				
+
 				Relation relation = new Relation();
 				relation.setIname(rawrelation);
 				relation.setInumber(inumber == null ? null : inumber);
@@ -75,11 +75,4 @@ public class RelationsListModel implements IModel<ArrayList<Relation>> {
 
 		return this.relations;
 	}
-
-	@Override
-	public void setObject(ArrayList<Relation> object) {
-
-		throw new RuntimeException("setObject() not supported");
-	}
-
 }

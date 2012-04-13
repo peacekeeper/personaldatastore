@@ -3,12 +3,20 @@
 
 <wicket:extend>
 
+	<p>In order to use most of the functionality of your box, you need to establish a personal identity within the network.</p>
+	
+	<p>To do so, please log in with an I-Name (e.g. <b>=yourname</b>).</p>
+	
+	<p>No actual authentication or background checking is performed at this time, so you can choose any arbitrary name.</p>
+
+	<hr noshade>
+
 	<h2>Log in:</h2>
 	
 	<form wicket:id="loginForm">
 
 		<table>
-			<tr><td>Identifier:</td><td><input wicket:id="identifier" size="40" style="padding: 5px" type="text"></td></tr>
+			<tr><td>I-Name:</td><td><input wicket:id="identifier" size="40" style="padding: 5px" type="text"></td></tr>
 			<tr style="display: none"><td>Password:</td><td><input wicket:id="password" size="40" style="padding: 5px" type="password"></td></tr>
 		</table>
 

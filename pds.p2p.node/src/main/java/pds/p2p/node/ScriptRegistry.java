@@ -6,7 +6,9 @@ import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeObject;
@@ -38,7 +40,7 @@ public class ScriptRegistry {
 		this.configuration = new HashMap<String, NativeObject> ();
 	}
 
-	public void init(Context context) {
+	public synchronized void init(Context context) {
 
 		// load scripts
 
@@ -74,13 +76,15 @@ public class ScriptRegistry {
 		log.info("" + this.scopes.size() + " files loaded.");
 	}
 
-	public void shutdown(Context context) {
+	public synchronized void shutdown(Context context) {
 
 		// unload scripts
 
 		log.info("Unloading scripts from " + this.path.getAbsolutePath() + "..");
 
-		for (String scriptId : this.scopes.keySet()) {
+		Set<String> scriptIds = new HashSet<String> (this.scopes.keySet());
+
+		for (String scriptId : scriptIds) {
 
 			try {
 
@@ -173,9 +177,9 @@ public class ScriptRegistry {
 		log.debug("Executing runScript() for '" + scriptId + "'...");
 		result = context.evaluateString(scope, "runScript()", scriptId, 1, null);
 		log.debug("Executed runScript() for '" + scriptId + "'. Result: " + Context.toString(result));
-		
+
 		// done
-		
+
 		return Context.toString(result);
 	}
 

@@ -10,6 +10,7 @@ public interface Vega {
 	public void shutdown();
 
 	public String connect(String localPort, String remoteHost, String remotePort, String parameters) throws Exception;
+	public String connectList(String localPort, String remoteHostList, String parameters) throws Exception;
 	public void disconnect() throws Exception;
 	public String connected() throws Exception;
 

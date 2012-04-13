@@ -38,7 +38,7 @@ public class XriUtil {
 	private static CacheManager cacheManager;
 	private static Cache canonicalIdCache;
 	private static Cache certificateCache;
-	private static Cache xdiUrlCache;
+	private static Cache xdiUriCache;
 
 	private static KeyPairGenerator keyPairGenerator;
 	private static X509V1CertificateGenerator certificateGenerator;
@@ -50,7 +50,7 @@ public class XriUtil {
 		cacheManager = CacheManager.create(configurationFileURL);
 		canonicalIdCache = cacheManager.getCache("canonicalIdCache");
 		certificateCache = cacheManager.getCache("certificateCache");
-		xdiUrlCache = cacheManager.getCache("xdiUrlCache");
+		xdiUriCache = cacheManager.getCache("xdiUriCache");
 
 		try {
 
@@ -146,21 +146,21 @@ public class XriUtil {
 
 		// get it from cache?
 
-		Element element = xdiUrlCache.get(xri);
-		log.debug("discoverXdiUrl(" + xri + "): CACHE " + (element != null ? "HIT" : "MISS"));
+		Element element = xdiUriCache.get(xri);
+		log.debug("discoverXdiUri(" + xri + "): CACHE " + (element != null ? "HIT" : "MISS"));
 		if (element != null) return (String) element.getValue();
 
 		// resolve it!
 
 		InetAddress localAddr = InetAddress.getLocalHost();
-		String xdiUrl = "http://" + localAddr.toString() + ":10100/";
+		String xdiUri = "http://" + localAddr.getHostName() + ":10100/";
 
 		// put it into cache
 
-		if (xdiUrl != null) xdiUrlCache.put(new Element(xri, xdiUrl));
+		if (xdiUri != null) xdiUriCache.put(new Element(xri, xdiUri));
 
 		// done
 
-		return xdiUrl;
+		return xdiUri;
 	}
 }

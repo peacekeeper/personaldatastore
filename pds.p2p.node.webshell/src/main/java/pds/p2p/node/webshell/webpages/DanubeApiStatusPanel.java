@@ -6,13 +6,16 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pds.p2p.api.node.client.DanubeApiClient;
 import pds.p2p.node.webshell.DanubeApiShellServlet;
+import pds.p2p.node.webshell.webapplication.components.NullValueLabel;
+import pds.p2p.node.webshell.webapplication.models.InameModel;
+import pds.p2p.node.webshell.webapplication.models.InumberModel;
+import pds.p2p.node.webshell.webapplication.models.NeighborsModel;
+import pds.p2p.node.webshell.webapplication.models.NodeIdModel;
 import pds.p2p.node.webshell.webpages.terminals.ShellTerminal;
 import pds.p2p.node.webshell.webpages.terminals.XDITerminal;
 
@@ -20,9 +23,10 @@ public class DanubeApiStatusPanel extends Panel {
 
 	private static final long serialVersionUID = 8002365033991382512L;
 
-	private static Logger log = LoggerFactory.getLogger(DanubeApiShellServlet.class);
+	static Logger log = LoggerFactory.getLogger(DanubeApiShellServlet.class);
 
 	private Label nodeIdLabel;
+	private Label neighborsLabel;
 	private Label inameLabel;
 	private Label inumberLabel;
 
@@ -30,13 +34,15 @@ public class DanubeApiStatusPanel extends Panel {
 
 		super(id);
 
-		this.nodeIdLabel = new Label("nodeIdLabel", new NodeIdModel());
-		this.inameLabel = new Label("inameLabel", new InameModel());
-		this.inumberLabel = new Label("inumberLabel", new InumberModel());
+		this.nodeIdLabel = new NullValueLabel("nodeIdLabel", new NodeIdModel(), "(not connected)");
+		this.neighborsLabel = new NullValueLabel("neighborsLabel", new NeighborsModel(), "(not connected)");
+		this.inameLabel = new NullValueLabel("inameLabel", new InameModel(), "(not logged in)");
+		this.inumberLabel = new NullValueLabel("inumberLabel", new InumberModel(), "(not logged in)");
 
 		// create and add components
 
 		this.add(this.nodeIdLabel);
+		this.add(this.neighborsLabel);
 		this.add(this.inameLabel);
 		this.add(this.inumberLabel);
 		this.add(new BookmarkablePageLink<Page> ("ShellTerminalLink", ShellTerminal.class));
@@ -67,58 +73,5 @@ public class DanubeApiStatusPanel extends Panel {
 		// add javascript
 		
 //		response.renderJavaScriptReference(new JavaScriptResourceReference(WaitIndicatorAjaxCallDecorator.class, "WaitIndicatorAjaxCallDecorator.js"));
-	}
-
-	private static final class NodeIdModel extends AbstractReadOnlyModel<String> {
-
-		private static final long serialVersionUID = -1004143566184261706L;
-
-		@Override
-		public String getObject() {
-			try {
-
-				return DanubeApiClient.vegaObject.nodeId();
-			} catch (Exception ex) {
-
-				log.warn(ex.getMessage(), ex);
-				return "(none)";
-			}
-		}
-	}
-
-	private static final class InameModel extends AbstractReadOnlyModel<String> {
-
-		private static final long serialVersionUID = 6399606689894790735L;
-
-		@Override
-		public String getObject() {
-
-			try {
-
-				return DanubeApiClient.orionObject.iname();
-			} catch (Exception ex) {
-
-				log.warn(ex.getMessage(), ex);
-				return "(none)";
-			}
-		}
-	}
-
-	private static final class InumberModel extends AbstractReadOnlyModel<String> {
-
-		private static final long serialVersionUID = 602197041909086712L;
-
-		@Override
-		public String getObject() {
-
-			try {
-
-				return DanubeApiClient.orionObject.inumber();
-			} catch (Exception ex) {
-
-				log.warn(ex.getMessage(), ex);
-				return "(none)";
-			}
-		}
 	}
 }
