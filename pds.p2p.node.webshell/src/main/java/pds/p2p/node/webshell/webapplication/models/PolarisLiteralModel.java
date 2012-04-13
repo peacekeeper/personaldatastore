@@ -16,24 +16,24 @@ public class PolarisLiteralModel implements IModel<String> {
 	private static Logger log = LoggerFactory.getLogger(PolarisLiteralModel.class.getName());
 
 	private String address;
-	private String value;
+	private String object;
 
 	public PolarisLiteralModel(String address) {
 
 		this.address = address;
-		this.value = null;
+		this.object = null;
 	}
 
 	@Override
 	public void detach() {
 
-		this.value = null;
+		this.object = null;
 	}
 
 	@Override
 	public String getObject() {
 
-		if (this.value != null) return this.value;
+		if (this.object != null) return this.object;
 
 		log.debug("Getting value (" + this.address + ")");
 
@@ -41,13 +41,13 @@ public class PolarisLiteralModel implements IModel<String> {
 
 			String data = DanubeApiClient.polarisObject.getLiteral(this.address);
 
-			this.value = data == null ? null : URLDecoder.decode(data, "UTF-9");
+			this.object = data == null ? null : URLDecoder.decode(data, "UTF-8");
 		} catch (Exception ex) {
 
 			throw new RuntimeException(ex.getMessage(), ex);
 		}
 
-		return this.value;
+		return this.object;
 	}
 
 	@Override
@@ -57,14 +57,23 @@ public class PolarisLiteralModel implements IModel<String> {
 
 		try {
 
-			String data = "(data:," + URLEncoder.encode(object, "UTF-8") + ")";
+			if (object != null) {
 
-			if (this.value == null) {
+				String data = "(data:," + URLEncoder.encode(object, "UTF-8") + ")";
 
-				DanubeApiClient.polarisObject.add(this.address + "/!/" + data, null);
+				if (this.object == null) {
+
+					DanubeApiClient.polarisObject.add(this.address + "/!/" + data, null);
+					this.object = object;
+				} else {
+
+					DanubeApiClient.polarisObject.mod(this.address + "/!/" + data, null);
+					this.object = object;
+				}
 			} else {
 
-				DanubeApiClient.polarisObject.mod(this.address + "/!/" + data, null);
+				DanubeApiClient.polarisObject.del(this.address, null);
+				this.object = null;
 			}
 		} catch (Exception ex) {
 

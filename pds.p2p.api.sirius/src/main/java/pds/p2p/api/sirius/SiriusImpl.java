@@ -125,7 +125,7 @@ public class SiriusImpl implements Sirius {
 		log.debug("getLiteral(" + xri + ")");
 
 		String[] literals = this.getLiterals(xri);
-		if (literals == null || literals.length < 1) return(null);
+		if (literals == null || literals.length < 1) return null;
 
 		return literals[0];
 	}
@@ -152,7 +152,7 @@ public class SiriusImpl implements Sirius {
 		log.debug("getRelation(" + xri + ")");
 
 		String[] relations = this.getRelations(xri);
-		if (relations == null) return(null);
+		if (relations == null || relations.length < 1) return null;
 
 		return relations[0];
 	}

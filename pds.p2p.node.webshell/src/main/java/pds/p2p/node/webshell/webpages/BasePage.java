@@ -9,9 +9,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
-import pds.p2p.node.webshell.webpages.information.PrivacyPolicy;
-import pds.p2p.node.webshell.webpages.information.TermsAndConditions;
-
 public abstract class BasePage extends WebPage {
 
 	private static final long serialVersionUID = -3724565270246387450L;
@@ -29,8 +26,6 @@ public abstract class BasePage extends WebPage {
 		this.add(new DanubeApiStatusPanel("danubeApiStatusPanel"));
 		this.add(this.titleLabel);
 		this.add(new FeedbackPanel("feedbackPanel"));
-		this.add(new BookmarkablePageLink<Page> ("TermsAndConditionsLink", TermsAndConditions.class));
-		this.add(new BookmarkablePageLink<Page> ("PrivacyPolicyLink", PrivacyPolicy.class));
 	}
 
 	@Override

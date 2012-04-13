@@ -4,7 +4,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 
 import pds.p2p.node.webshell.webpages.BasePage;
-import pds.p2p.node.webshell.webpages.user.Identity;
+import pds.p2p.node.webshell.webpages.node.Identity;
 
 public class AccessDeniedPage extends BasePage {
 

@@ -6,12 +6,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 import pds.p2p.node.webshell.webpages.intent.CreateIntent;
 import pds.p2p.node.webshell.webpages.intent.ViewIntents;
-import pds.p2p.node.webshell.webpages.terminals.ShellTerminal;
-import pds.p2p.node.webshell.webpages.terminals.XDITerminal;
-import pds.p2p.node.webshell.webpages.user.Connection;
-import pds.p2p.node.webshell.webpages.user.Identity;
-import pds.p2p.node.webshell.webpages.user.PersonalData;
-import pds.p2p.node.webshell.webpages.user.Relations;
+import pds.p2p.node.webshell.webpages.node.Connection;
+import pds.p2p.node.webshell.webpages.node.Identity;
+import pds.p2p.node.webshell.webpages.relation.PersonalData;
+import pds.p2p.node.webshell.webpages.relation.Relations;
 
 public class SidePanel extends Panel {
 
@@ -29,7 +27,5 @@ public class SidePanel extends Panel {
 		this.add(new BookmarkablePageLink<Page> ("RelationsLink", Relations.class));
 		this.add(new BookmarkablePageLink<Page> ("CreateIntentLink", CreateIntent.class));
 		this.add(new BookmarkablePageLink<Page> ("ViewIntentsLink", ViewIntents.class));
-		this.add(new BookmarkablePageLink<Page> ("ShellTerminalLink", ShellTerminal.class));
-		this.add(new BookmarkablePageLink<Page> ("XDITerminalLink", XDITerminal.class));
 	}
 }

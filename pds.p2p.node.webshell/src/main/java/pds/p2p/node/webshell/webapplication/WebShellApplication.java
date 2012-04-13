@@ -17,9 +17,9 @@ import pds.p2p.node.webshell.webpages.error.InternalErrorPage;
 import pds.p2p.node.webshell.webpages.error.PageExpired;
 import pds.p2p.node.webshell.webpages.index.Index;
 import pds.p2p.node.webshell.webpages.information.About;
-import pds.p2p.node.webshell.webpages.information.PrivacyPolicy;
-import pds.p2p.node.webshell.webpages.information.TermsAndConditions;
 import pds.p2p.node.webshell.webpages.intent.CreateIntent;
+import pds.p2p.node.webshell.webpages.node.Connection;
+import pds.p2p.node.webshell.webpages.relation.PersonalData;
 import pds.p2p.node.webshell.webpages.terminals.ShellTerminal;
 
 public class WebShellApplication extends WebApplication {
@@ -42,11 +42,11 @@ public class WebShellApplication extends WebApplication {
 
 		// set up page mounting
 
-		this.mountPage("/PrivacyPolicy", PrivacyPolicy.class);
-		this.mountPage("/TermsOfUse", TermsAndConditions.class);
 		this.mountPackage("/information", About.class);
 		this.mountPackage("/terminals", ShellTerminal.class);
+		this.mountPackage("/node", Connection.class);
 		this.mountPackage("/intent", CreateIntent.class);
+		this.mountPackage("/relation", PersonalData.class);
 
 		// set up various wicket parameters
 

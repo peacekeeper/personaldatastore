@@ -65,7 +65,9 @@ span.bold {
 
 #PageHeader #Title {
 	float: left;
+	color: white;
 	margin-right: 30px;
+	text-decoration: none;
 }
 
 #PageHeader #Logo {
@@ -188,6 +190,17 @@ div.intent {
 	width: 400px;
 	height: 105px;
 	border: 4px outset gray;
+	margin-top: 10px;
+	padding: 10px;
+}
+
+div.relation {
+	background-image: url('/images/arrow_right.png');
+	background-repeat: no-repeat;
+	background-position: 10px 10px;
+	width: 400px;
+	height: 105px;
+	border: 4px inset gray;
 	margin-top: 10px;
 	padding: 10px;
 }

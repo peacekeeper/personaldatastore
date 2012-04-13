@@ -28,6 +28,26 @@ public class Packet implements Serializable {
 
 	}
 
+	public String getTopic() {
+
+		return this.topic;
+	}
+
+	public void setTopic(String topic) {
+
+		this.topic = topic;
+	}
+
+	public String getRay() {
+
+		return this.ray;
+	}
+
+	public void setRay(String ray) {
+
+		this.ray = ray;
+	}
+
 	public String getIname() {
 
 		return this.iname;
@@ -36,6 +56,16 @@ public class Packet implements Serializable {
 	public void setIname(String iname) {
 
 		this.iname = iname;
+	}
+
+	public String getInumber() {
+
+		return this.inumber;
+	}
+
+	public void setInumber(String inumber) {
+
+		this.inumber = inumber;
 	}
 
 	public String getContent() {

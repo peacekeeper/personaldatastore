@@ -1,8 +1,10 @@
 package pds.p2p.node.webshell.webpages;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.util.time.Duration;
@@ -11,6 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import pds.p2p.api.node.client.DanubeApiClient;
 import pds.p2p.node.webshell.DanubeApiShellServlet;
+import pds.p2p.node.webshell.webpages.terminals.ShellTerminal;
+import pds.p2p.node.webshell.webpages.terminals.XDITerminal;
 
 public class DanubeApiStatusPanel extends Panel {
 
@@ -35,6 +39,8 @@ public class DanubeApiStatusPanel extends Panel {
 		this.add(this.nodeIdLabel);
 		this.add(this.inameLabel);
 		this.add(this.inumberLabel);
+		this.add(new BookmarkablePageLink<Page> ("ShellTerminalLink", ShellTerminal.class));
+		this.add(new BookmarkablePageLink<Page> ("XDITerminalLink", XDITerminal.class));
 
 		this.setOutputMarkupId(true);
 		this.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(10)) {

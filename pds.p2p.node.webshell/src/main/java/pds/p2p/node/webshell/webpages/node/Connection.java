@@ -1,4 +1,4 @@
-package pds.p2p.node.webshell.webpages.user;
+package pds.p2p.node.webshell.webpages.node;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.CompoundPropertyModel;

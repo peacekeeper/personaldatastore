@@ -1,4 +1,4 @@
-package pds.p2p.node.webshell.webpages.user;
+package pds.p2p.node.webshell.webpages.relation;
 
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
 
