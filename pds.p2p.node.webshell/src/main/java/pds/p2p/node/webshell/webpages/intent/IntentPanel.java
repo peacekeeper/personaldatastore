@@ -33,7 +33,7 @@ public class IntentPanel extends Panel {
 				try {
 
 					String inumber = DanubeApiClient.orionObject.inumber();
-					DanubeApiClient.polarisObject.del(inumber + "+intent" + "!" + intent.getId(), null);
+					DanubeApiClient.polarisObject.del(inumber + "+intent" + "!" + intent.getId(), null, null);
 				} catch (Exception ex) {
 
 					throw new RuntimeException(ex.getMessage(), ex);

@@ -3,6 +3,7 @@ package pds.p2p.api.orion.util;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.InetAddress;
 import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -151,7 +152,8 @@ public class XriUtil {
 
 		// resolve it!
 
-		String xdiUrl = "http://localhost:10100/";
+		InetAddress localAddr = InetAddress.getLocalHost();
+		String xdiUrl = "http://" + localAddr.toString() + ":10100/";
 
 		// put it into cache
 

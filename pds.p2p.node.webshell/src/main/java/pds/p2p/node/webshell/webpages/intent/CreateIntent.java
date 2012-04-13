@@ -10,10 +10,12 @@ import org.slf4j.LoggerFactory;
 
 import pds.p2p.api.node.client.DanubeApiClient;
 import pds.p2p.node.webshell.objects.Intent;
+import pds.p2p.node.webshell.webapplication.WebShellAuthorizationStrategy.NeedConnectedPage;
+import pds.p2p.node.webshell.webapplication.WebShellAuthorizationStrategy.NeedLoggedInPage;
 import pds.p2p.node.webshell.webapplication.behaviors.DefaultFocusBehavior;
 import pds.p2p.node.webshell.webpages.BasePage;
 
-public class CreateIntent extends BasePage {
+public class CreateIntent extends BasePage implements NeedLoggedInPage, NeedConnectedPage {
 
 	private static final long serialVersionUID = -4428962776875356738L;
 

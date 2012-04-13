@@ -14,11 +14,13 @@ import org.slf4j.LoggerFactory;
 
 import pds.p2p.api.node.client.DanubeApiClient;
 import pds.p2p.node.webshell.objects.Relation;
+import pds.p2p.node.webshell.webapplication.WebShellAuthorizationStrategy.NeedConnectedPage;
+import pds.p2p.node.webshell.webapplication.WebShellAuthorizationStrategy.NeedLoggedInPage;
 import pds.p2p.node.webshell.webapplication.behaviors.DefaultFocusBehavior;
 import pds.p2p.node.webshell.webapplication.models.RelationsListModel;
 import pds.p2p.node.webshell.webpages.BasePage;
 
-public class Relations extends BasePage {
+public class Relations extends BasePage implements NeedLoggedInPage, NeedConnectedPage {
 
 	private static final long serialVersionUID = -6000684597170356861L;
 
@@ -79,7 +81,7 @@ public class Relations extends BasePage {
 			try {
 
 				String inumber = DanubeApiClient.orionObject.inumber();
-				DanubeApiClient.polarisObject.add(inumber + "/+friend/" + Relations.this.relation, null);
+				DanubeApiClient.polarisObject.add(inumber + "/+friend/" + Relations.this.relation, null, null);
 			} catch (Exception ex) {
 
 				Relations.log.warn(ex.getMessage(), ex);

@@ -55,6 +55,7 @@ public class WebShellApplication extends WebApplication {
 		this.getApplicationSettings().setAccessDeniedPage(AccessDeniedPage.class);
 		this.getApplicationSettings().setInternalErrorPage(InternalErrorPage.class);
 		this.getApplicationSettings().setPageExpiredErrorPage(PageExpired.class);
+		this.getSecuritySettings().setAuthorizationStrategy(new WebShellAuthorizationStrategy());
 		this.getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
 		this.getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
 

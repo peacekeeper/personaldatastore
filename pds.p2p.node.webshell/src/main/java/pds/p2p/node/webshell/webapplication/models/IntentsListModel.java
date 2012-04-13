@@ -36,7 +36,7 @@ public class IntentsListModel implements IModel<ArrayList<Intent>> {
 		try {
 
 			String inumber = DanubeApiClient.orionObject.inumber();
-			rawpackets = DanubeApiClient.polarisObject.getLiterals(inumber + "+intent");
+			rawpackets = DanubeApiClient.polarisObject.getLiterals(inumber + "+intent", null);
 		} catch (Exception ex) {
 
 			throw new RuntimeException(ex.getMessage(), ex);

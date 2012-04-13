@@ -16,11 +16,13 @@ public class PolarisLiteralModel implements IModel<String> {
 	private static Logger log = LoggerFactory.getLogger(PolarisLiteralModel.class.getName());
 
 	private String address;
+	private String xdiUri;
 	private String object;
 
-	public PolarisLiteralModel(String address) {
+	public PolarisLiteralModel(String address, String xdiUri) {
 
 		this.address = address;
+		this.xdiUri = xdiUri;
 		this.object = null;
 	}
 
@@ -39,7 +41,7 @@ public class PolarisLiteralModel implements IModel<String> {
 
 		try {
 
-			String data = DanubeApiClient.polarisObject.getLiteral(this.address);
+			String data = DanubeApiClient.polarisObject.getLiteral(this.address, this.xdiUri);
 
 			this.object = data == null ? null : URLDecoder.decode(data, "UTF-8");
 		} catch (Exception ex) {
@@ -63,16 +65,16 @@ public class PolarisLiteralModel implements IModel<String> {
 
 				if (this.object == null) {
 
-					DanubeApiClient.polarisObject.add(this.address + "/!/" + data, null);
+					DanubeApiClient.polarisObject.add(this.address + "/!/" + data, this.xdiUri, null);
 					this.object = object;
 				} else {
 
-					DanubeApiClient.polarisObject.mod(this.address + "/!/" + data, null);
+					DanubeApiClient.polarisObject.mod(this.address + "/!/" + data, this.xdiUri, null);
 					this.object = object;
 				}
 			} else {
 
-				DanubeApiClient.polarisObject.del(this.address, null);
+				DanubeApiClient.polarisObject.del(this.address, this.xdiUri, null);
 				this.object = null;
 			}
 		} catch (Exception ex) {

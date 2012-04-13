@@ -15,10 +15,8 @@ import xdi2.client.http.XDIHttpClient;
 import xdi2.core.Graph;
 import xdi2.core.Literal;
 import xdi2.core.Relation;
-import xdi2.core.exceptions.Xdi2ParseException;
 import xdi2.core.impl.memory.MemoryGraphFactory;
 import xdi2.core.io.XDIReaderRegistry;
-import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
 import xdi2.messaging.util.XDIMessagingConstants;
@@ -48,14 +46,14 @@ public class PolarisImpl implements Polaris {
 	 * Actions
 	 */
 
-	public String get(String xdi, String format) throws Exception {
+	public String get(String xdi, String xdiUrl, String format) throws Exception {
 
-		log.debug("get(" + xdi + "," + format + ")");
+		log.debug("get(" + xdi + "," + xdiUrl + "," + format + ")");
 
 		if (! "1".equals(this.orion.loggedin())) throw new RuntimeException("Not signed in.");
-		this.client.setUrl(new URL(this.orion.xdiUri()));
+		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.orion.xdiUri()));
 
-		MessageEnvelope messageEnvelope = messageEnvelopeFromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
+		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
 		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
@@ -63,14 +61,14 @@ public class PolarisImpl implements Polaris {
 		return messageResult.getGraph().toString(format, null);
 	}
 
-	public String add(String xdi, String format) throws Exception {
+	public String add(String xdi, String xdiUrl, String format) throws Exception {
 
-		log.debug("add(" + xdi + "," + format + ")");
+		log.debug("add(" + xdi + "," + xdiUrl + "," + format + ")");
 
 		if (! "1".equals(this.orion.loggedin())) throw new RuntimeException("Not signed in.");
-		this.client.setUrl(new URL(this.orion.xdiUri()));
+		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.orion.xdiUri()));
 
-		MessageEnvelope messageEnvelope = messageEnvelopeFromOperationXriAndXdi(XDIMessagingConstants.XRI_S_ADD, xdi);
+		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_ADD, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
 		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
@@ -78,14 +76,14 @@ public class PolarisImpl implements Polaris {
 		return messageResult.getGraph().toString(format, null);
 	}
 
-	public String mod(String xdi, String format) throws Exception {
+	public String mod(String xdi, String xdiUrl, String format) throws Exception {
 
-		log.debug("mod(" + xdi + "," + format + ")");
+		log.debug("mod(" + xdi + "," + xdiUrl + "," + format + ")");
 
 		if (! "1".equals(this.orion.loggedin())) throw new RuntimeException("Not signed in.");
-		this.client.setUrl(new URL(this.orion.xdiUri()));
+		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.orion.xdiUri()));
 
-		MessageEnvelope messageEnvelope = messageEnvelopeFromOperationXriAndXdi(XDIMessagingConstants.XRI_S_MOD, xdi);
+		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_MOD, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
 		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
@@ -93,14 +91,14 @@ public class PolarisImpl implements Polaris {
 		return messageResult.getGraph().toString(format, null);
 	}
 
-	public String del(String xdi, String format) throws Exception {
+	public String del(String xdi, String xdiUrl, String format) throws Exception {
 
-		log.debug("del(" + xdi + "," + format + ")");
+		log.debug("del(" + xdi + "," + xdiUrl + "," + format + ")");
 
 		if (! "1".equals(this.orion.loggedin())) throw new RuntimeException("Not signed in.");
-		this.client.setUrl(new URL(this.orion.xdiUri()));
+		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.orion.xdiUri()));
 
-		MessageEnvelope messageEnvelope = messageEnvelopeFromOperationXriAndXdi(XDIMessagingConstants.XRI_S_DEL, xdi);
+		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_DEL, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
 		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
@@ -108,14 +106,14 @@ public class PolarisImpl implements Polaris {
 		return messageResult.getGraph().toString(format, null);
 	}
 
-	public String[] getLiterals(String xdi) throws Exception {
+	public String[] getLiterals(String xdi, String xdiUrl) throws Exception {
 
-		log.debug("getLiterals(" + xdi + ")");
+		log.debug("getLiterals(" + xdi + "," + xdiUrl + ")");
 
 		if (! "1".equals(this.orion.loggedin())) throw new RuntimeException("Not signed in.");
-		this.client.setUrl(new URL(this.orion.xdiUri()));
+		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.orion.xdiUri()));
 
-		MessageEnvelope messageEnvelope = messageEnvelopeFromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
+		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
 		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
@@ -126,24 +124,24 @@ public class PolarisImpl implements Polaris {
 		return literals.toArray(new String[literals.size()]);
 	}
 
-	public String getLiteral(String xri) throws Exception {
+	public String getLiteral(String xdi, String xdiUrl) throws Exception {
 
-		log.debug("getLiteral(" + xri + ")");
+		log.debug("getLiteral(" + xdi + "," + xdiUrl + ")");
 
-		String[] literals = this.getLiterals(xri);
+		String[] literals = this.getLiterals(xdi, xdiUrl);
 		if (literals == null || literals.length < 1) return(null);
 
 		return literals[0];
 	}
 
-	public String[] getRelations(String xdi) throws Exception {
+	public String[] getRelations(String xdi, String xdiUrl) throws Exception {
 
-		log.debug("getRelations(" + xdi + ")");
+		log.debug("getRelations(" + xdi + "," + xdiUrl + ")");
 
 		if (! "1".equals(this.orion.loggedin())) throw new RuntimeException("Not signed in.");
-		this.client.setUrl(new URL(this.orion.xdiUri()));
+		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.orion.xdiUri()));
 
-		MessageEnvelope messageEnvelope = messageEnvelopeFromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
+		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
 		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
@@ -154,22 +152,22 @@ public class PolarisImpl implements Polaris {
 		return relations.toArray(new String[relations.size()]);
 	}
 
-	public String getRelation(String xri) throws Exception {
+	public String getRelation(String xdi, String xdiUrl) throws Exception {
 
-		log.debug("getRelation(" + xri + ")");
+		log.debug("getRelation(" + xdi + "," + xdiUrl + ")");
 
-		String[] relations = this.getRelations(xri);
+		String[] relations = this.getRelations(xdi, xdiUrl);
 		if (relations == null) return(null);
 
 		return relations[0];
 	}
 
-	public String execute(String message, String format) throws Exception {
+	public String execute(String message, String xdiUrl, String format) throws Exception {
 
-		log.debug("execute(" + message + "," + format + ")");
+		log.debug("execute(" + message + "," + xdiUrl + "," + format + ")");
 
 		if (! "1".equals(this.orion.loggedin())) throw new RuntimeException("Not signed in.");
-		this.client.setUrl(new URL(this.orion.xdiUri()));
+		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.orion.xdiUri()));
 
 		Graph graph = MemoryGraphFactory.getInstance().openGraph();
 		XDIReaderRegistry.getAuto().read(graph, new StringReader(message), null);
@@ -182,19 +180,5 @@ public class PolarisImpl implements Polaris {
 		if (format == null) format = "XDI/JSON";
 
 		return messageResult.getGraph().toString(format, null);
-	}
-
-	private static final MessageEnvelope messageEnvelopeFromOperationXriAndXdi(XRI3Segment operationXri, String xdi) throws Xdi2ParseException {
-
-		try {
-
-			if (xdi == null) xdi = "()";
-
-			XRI3Segment targetXri = new XRI3Segment(xdi);
-			return MessageEnvelope.fromOperationXriAndTargetXri(operationXri, targetXri);
-		} catch (Exception ex) {
-
-			return MessageEnvelope.fromOperationXriAndStatement(operationXri, xdi);
-		}
 	}
 }

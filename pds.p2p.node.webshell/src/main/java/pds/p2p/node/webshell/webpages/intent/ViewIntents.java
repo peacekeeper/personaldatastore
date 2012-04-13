@@ -7,10 +7,12 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 
 import pds.p2p.node.webshell.objects.Intent;
+import pds.p2p.node.webshell.webapplication.WebShellAuthorizationStrategy.NeedConnectedPage;
+import pds.p2p.node.webshell.webapplication.WebShellAuthorizationStrategy.NeedLoggedInPage;
 import pds.p2p.node.webshell.webapplication.models.IntentsListModel;
 import pds.p2p.node.webshell.webpages.BasePage;
 
-public class ViewIntents extends BasePage {
+public class ViewIntents extends BasePage implements NeedLoggedInPage, NeedConnectedPage {
 
 	private static final long serialVersionUID = -4428962776875356738L;
 

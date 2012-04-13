@@ -1,8 +1,10 @@
+* {
+	font-family: Calibri, Arial, Helvetica, sans-serif;
+	font-size: 14pt;
+}
+
 body {
 	background: black url('/images/mainback-gray.jpg') repeat fixed;
-	font-family: Calibri, Arial, Helvetica, sans-serif;
-	font-size: 12pt;
-	color: black;
 	margin: 0px;
 	padding: 0px;
 }
@@ -26,6 +28,7 @@ input {
 	font-size: 12pt;
 	font-weight: bold;
 	height: 2em;
+	padding: 3px;
 }
 
 span.bold {
@@ -57,16 +60,15 @@ span.bold {
 	margin: 0px;
 	padding: 10px;
 	background: url("/images/bg.png") repeat-x;
-	color: white;
-	font-size: 24pt;
-	font-weight: bold;
-	text-align: left;
 }
 
 #PageHeader #Title {
 	float: left;
-	color: white;
 	margin-right: 30px;
+	font-size: 24pt;
+	font-weight: bold;
+	color: white;
+	text-align: left;
 	text-decoration: none;
 }
 
@@ -96,12 +98,14 @@ span.bold {
 }
 
 #SidePanel {
+	font-family: Calibri, Arial, Helvetica, sans-serif;
+	font-size: 14pt;
+	color: black;
 	background-color: white;
 	margin: 0 0 0 0;
 	padding: 20px;
 	width: 200px;
 	border: 5px solid gray;
-	font-family: Calibri, Arial, Helvetica, sans-serif;
 	text-transform: none;
 	text-align: left;
 }
@@ -120,6 +124,9 @@ span.bold {
 }
 
 #Content {
+	font-family: Calibri, Arial, Helvetica, sans-serif;
+	font-size: 14pt;
+	color: black;
 	background-color: white;
 	margin: 0 0 0 0;
 	padding: 20px;
@@ -187,7 +194,7 @@ div.intent {
 	background-image: url('/images/think.png');
 	background-repeat: no-repeat;
 	background-position: 10px 10px;
-	width: 400px;
+	width: 500px;
 	height: 105px;
 	border: 4px outset gray;
 	margin-top: 10px;
@@ -195,11 +202,11 @@ div.intent {
 }
 
 div.relation {
-	background-image: url('/images/arrow_right.png');
+	background-image: url('/images/person.png');
 	background-repeat: no-repeat;
-	background-position: 10px 10px;
-	width: 400px;
-	height: 105px;
+	background-position: 50px 30px;
+	width: 600px;
+/*	height: 105px;*/
 	border: 4px inset gray;
 	margin-top: 10px;
 	padding: 10px;
@@ -227,7 +234,7 @@ div.relation {
 
 .term {
 	font-family: "Courier New", courier, fixed, monospace;
-	font-size: 12px;
+	font-size: 14pt;
 	color: #94aad6;
 	background: none;
 	letter-spacing: 1px;
@@ -263,7 +270,7 @@ table.inventory td {
 tt,pre {
 	font-family: courier, fixed, monospace;
 	color: #ccffaa;
-	font-size: 12px;
+	font-size: 13px;
 	line-height: 15px;
 }
 

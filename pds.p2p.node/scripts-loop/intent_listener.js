@@ -17,15 +17,15 @@ function checkInitialized() {
 
 	if ((! connected) && vega.connected()) {
 
-		vega.subscribeTopic("intentscript", "intent");
-		vega.subscribeRay("intentscript", "intent");
+		vega.subscribeTopic("intent_listener", "intent");
+		vega.subscribeRay("intent_listener", "intent");
 		connected = true;
 	}
 
 	if (connected && (! vega.connected())) {
 
-		vega.unsubscribeTopic("intentscript", "intent");
-		vega.unsubscribeRay("intentscript", "intent");
+		vega.unsubscribeTopic("intent_listener", "intent");
+		vega.unsubscribeRay("intent_listener", "intent");
 		connected = false;
 	}
 }
@@ -42,8 +42,8 @@ function processIntent(rawpacket, packet) {
 
 function loadScript() {
 
-	vega.resetTopics("intentscript");
-	vega.resetRays("intentscript");
+	vega.resetTopics("intent_listener");
+	vega.resetRays("intent_listener");
 
 	return { interval: 5 };
 }
@@ -53,9 +53,9 @@ function runScript() {
 	checkInitialized();
 	if ((! loggedin) || (! connected)) return;
 
-	while (vega.hasPackets("intentscript")) {
+	while (vega.hasPackets("intent_listener")) {
 
-		var rawpacket = vega.fetchPacket("intentscript");
+		var rawpacket = vega.fetchPacket("intent_listener");
 		var packet = eval("(" + rawpacket + ")");
 
 		if (packet.ray == "intent") {
@@ -70,7 +70,7 @@ function runScript() {
 
 function unloadScript() {
 
-	vega.resetTopics("intentscript");
-	vega.resetRays("intentscript");
+	vega.resetTopics("intent_listener");
+	vega.resetRays("intent_listener");
 }
  
