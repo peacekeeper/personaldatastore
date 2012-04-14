@@ -55,6 +55,11 @@ public class ScriptRegistry {
 			}
 		});
 
+		if (scriptFiles == null) {
+
+			throw new RuntimeException("Directory not found: " + this.path.getAbsolutePath());
+		}
+
 		for (File scriptFile : scriptFiles) {
 
 			String scriptId = scriptFile.getName();

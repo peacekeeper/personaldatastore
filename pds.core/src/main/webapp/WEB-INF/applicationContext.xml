@@ -56,6 +56,6 @@
 	<!-- XDI Servlet -->
 	<!-- Do not modify this, unless you know what you are doing. -->
 
-	<bean id="EndpointServlet" class="xdi2.server.EndpointServlet" />
+	<bean id="EndpointServlet" class="xdi2.server.EndpointServlet" init-method="init" destroy-method="destroy" />
 
 </beans>

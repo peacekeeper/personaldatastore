@@ -24,8 +24,12 @@ public class DanubeApiServer implements ServletContextListener {
 
 	private static final Logger log = LoggerFactory.getLogger(DanubeApiServer.class);
 
+	private static final int DEFAULT_ECHOPORT = 15019;
+
 	private static boolean initialized = false;
-	private static LoopScriptThread loopScriptThread;
+	private static ScriptThread loopScriptThread;
+	private static EchoTcpThread echoTcpThread;
+	private static EchoUdpThread echoUdpThread;
 
 	public static Admin adminObject;
 	public static Orion orionObject;
@@ -75,9 +79,11 @@ public class DanubeApiServer implements ServletContextListener {
 
 		log.info("init()");
 
-		// init LoopScriptThread
+		// init threads
 
-		loopScriptThread = new LoopScriptThread();
+		loopScriptThread = new ScriptThread();
+		echoTcpThread = new EchoTcpThread(DEFAULT_ECHOPORT);
+		echoUdpThread = new EchoUdpThread(DEFAULT_ECHOPORT);
 
 		// init API
 
@@ -111,27 +117,39 @@ public class DanubeApiServer implements ServletContextListener {
 		servletContext.addServlet(Sirius.class.getAnnotation(DanubeApi.class).name(), new MyJsonRpcServlet(siriusObject)).addMapping("/" + Sirius.class.getAnnotation(DanubeApi.class).name());
 		servletContext.addServlet(Polaris.class.getAnnotation(DanubeApi.class).name(), new MyJsonRpcServlet(polarisObject)).addMapping("/" + Polaris.class.getAnnotation(DanubeApi.class).name());
 
-		// start LoopScriptThread
+		// start threads
 
-		log.info("Starting LoopScriptThread...");
+		log.info("Starting threads...");
 
 		loopScriptThread.start();
+		echoTcpThread.start();
+		echoUdpThread.start();
 	}
 
 	private static void shutdown() {
 
 		log.info("shutdown()");
 
-		// shutdown LoopScriptThread
+		// shutdown threads
 
-		loopScriptThread.stopRunning();
+		log.info("Stopping threads...");
 
 		try {
 
-			loopScriptThread.join();
-		} catch (InterruptedException ex) {
+			loopScriptThread.stopRunning();
+			echoTcpThread.stopRunning();
+			echoUdpThread.stopRunning();
 
-			log.warn(ex.getMessage(), ex);
+			loopScriptThread.interrupt();
+			echoTcpThread.interrupt();
+			echoUdpThread.interrupt();
+			
+			loopScriptThread.join();
+			echoTcpThread.join();
+			echoUdpThread.join();
+		} catch (Exception ex) {
+
+			log.error(ex.getMessage(), ex);
 		}
 
 		// shutdown API

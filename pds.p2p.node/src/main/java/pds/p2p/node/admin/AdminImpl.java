@@ -9,16 +9,16 @@ import org.slf4j.LoggerFactory;
 import pds.p2p.api.Admin;
 import pds.p2p.api.annotation.DanubeApi;
 import pds.p2p.node.DanubeApiServer;
-import pds.p2p.node.LoopScriptThread;
+import pds.p2p.node.ScriptThread;
 
 public class AdminImpl implements Admin {
 
 	private static final Logger log = LoggerFactory.getLogger(AdminImpl.class);
 
 	private Date startTime;
-	private LoopScriptThread scriptThread;
+	private ScriptThread scriptThread;
 
-	public AdminImpl(Date startTime, LoopScriptThread scriptThread) {
+	public AdminImpl(Date startTime, ScriptThread scriptThread) {
 
 		this.startTime = startTime;
 		this.scriptThread = scriptThread;

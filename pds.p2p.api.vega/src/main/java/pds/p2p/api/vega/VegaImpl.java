@@ -130,11 +130,9 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 			// delete / create directories
 
 			File storageDir = new File(".", "storage/");
-			File logsDir = new File(".", "logs/");
 
 			FileUtils.deleteDirectory(storageDir);
 			storageDir.mkdir();
-			logsDir.mkdir();
 
 			// check if the remote host contains the remote port
 
@@ -335,6 +333,14 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 			throw ex;
 		}
 
+		// reset topics, rays and packets
+
+		this.topics.clear();
+		this.rays.clear();
+		this.packets.clear();
+
+		// done
+
 		return "1";
 	}
 
@@ -375,13 +381,13 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		} else*/ {
 
 			log.debug("Constructing SocketPastryNodeFactory...");
-			nodeFactory = new rice.pastry.socket.SocketPastryNodeFactory(nodeIdFactory, Integer.valueOf(localPort).intValue(), this.environment);
+			nodeFactory = new rice.pastry.socket.SocketPastryNodeFactory(nodeIdFactory, Integer.valueOf(this.localPort).intValue(), this.environment);
 		}
 
 		this.pastryNode = nodeFactory.newNode(nodeIdFactory.generateNodeId(), publicSockAddr);
 
 		log.debug("Local node: " + this.pastryNode.getClass().getName());
-		log.debug("Local port is " + localPort);
+		log.debug("Local port is " + this.localPort);
 	}
 
 	protected void createEndpoint() {
@@ -434,6 +440,10 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 			this.remoteHost = null;
 			this.remotePort = null;
 			this.parameters = null;
+
+			this.topics.clear();
+			this.rays.clear();
+			this.packets.clear();
 		}
 	}
 

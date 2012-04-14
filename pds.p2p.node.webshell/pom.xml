@@ -31,6 +31,20 @@
 				<configuration>
 					<attachClasses>true</attachClasses>
 				</configuration>
+				<executions>
+					<execution>
+						<id>dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>war</goal>
+						</goals>
+						<configuration>
+							<packagingExcludes>WEB-INF/classes/**,WEB-INF/lib/**</packagingExcludes>
+							<warName>${project.build.finalName}-skinny</warName>
+							<attachClasses>false</attachClasses>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>

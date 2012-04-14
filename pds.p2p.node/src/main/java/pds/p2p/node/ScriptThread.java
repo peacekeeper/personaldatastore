@@ -6,24 +6,26 @@ import org.mozilla.javascript.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LoopScriptThread extends Thread {
+public class ScriptThread extends Thread {
 
 	private static final long SLEEP_INTERVAL = 3 * 1000;
 
-	private static Logger log = LoggerFactory.getLogger(LoopScriptThread.class);
+	private static Logger log = LoggerFactory.getLogger(ScriptThread.class);
 
 	private boolean running;
 	private ScriptRegistry scriptRegistry;
 
-	public LoopScriptThread() {
+	public ScriptThread() {
 
 		super();
 
 		this.running = true;
 		this.scriptRegistry = new ScriptRegistry(new File(".", "scripts-loop"));
+
+		this.setDaemon(true);
 	}
 
-	public void stopRunning() {
+	public void stopRunning() throws Exception {
 
 		this.running = false;
 	}
@@ -31,6 +33,10 @@ public class LoopScriptThread extends Thread {
 	@Override
 	public void run() {
 
+		log.info("SCRIPT Thread " + Thread.currentThread().getId() + " starting.");
+		
+		// enter context
+		
 		Context context = Context.enter();
 		context.setWrapFactory(MyWrapFactory.getInstance());
 
@@ -70,9 +76,13 @@ public class LoopScriptThread extends Thread {
 
 		this.scriptRegistry.shutdown(context);
 
-		// done
+		// exit context
 
 		Context.exit();
+
+		// done
+		
+		log.info("SCRIPT Thread " + Thread.currentThread().getId() + " stopped.");
 	}
 
 	/*
