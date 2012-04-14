@@ -1,0 +1,81 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<groupId>pdsproject</groupId>
+		<artifactId>pdsproject</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>pds.package.plug</artifactId>
+	<packaging>jar</packaging>
+	<name>pds.package.plug</name>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<configuration>
+					<mainClass>pds.package.plug.Server</mainClass>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.dstovall</groupId>
+				<artifactId>onejar-maven-plugin</artifactId>
+				<version>1.4.4</version>
+				<executions>
+					<execution>
+						<configuration>
+							<onejarVersion>0.97</onejarVersion>
+							<attachToBuild>true</attachToBuild>
+							<classifier>onejar</classifier>
+						</configuration>
+						<goals>
+							<goal>one-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>onejar-maven-plugin.googlecode.com</id>
+			<url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>pdsproject</groupId>
+			<artifactId>pds.p2p.core</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+			<classifier>sources</classifier>
+		</dependency>
+		<dependency>
+			<groupId>pdsproject</groupId>
+			<artifactId>pds.p2p.node</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+			<classifier>sources</classifier>
+		</dependency>
+		<dependency>
+			<groupId>pdsproject</groupId>
+			<artifactId>pds.p2p.node.webshell</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+			<classifier>sources</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jetty</artifactId>
+			<version>6.1.26</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+</project>

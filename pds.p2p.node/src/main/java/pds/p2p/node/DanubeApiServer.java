@@ -1,11 +1,13 @@
 package pds.p2p.node;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
-import java.util.Properties;
 
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,23 +18,13 @@ import pds.p2p.api.Sirius;
 import pds.p2p.api.Vega;
 import pds.p2p.api.annotation.DanubeApi;
 import pds.p2p.node.admin.AdminImpl;
-import pds.p2p.node.servlets.ManualScriptServlet;
 import pds.p2p.node.servlets.MyJsonRpcServlet;
-import pds.p2p.node.servlets.PacketServlet;
 
-
-public class DanubeApiServer {
+public class DanubeApiServer implements ServletContextListener {
 
 	private static final Logger log = LoggerFactory.getLogger(DanubeApiServer.class);
 
-	private static final String PROPERTIES_KEY_SERVERPORT = "server.port";
-	private static final String PROPERTIES_DEFAULT_SERVERPORT = "9090";
-
-	private static Properties properties;
-
-	private static Server server;
-	private static Context context;
-
+	private static boolean initialized = false;
 	private static LoopScriptThread loopScriptThread;
 
 	public static Admin adminObject;
@@ -41,36 +33,55 @@ public class DanubeApiServer {
 	public static Sirius siriusObject;
 	public static Polaris polarisObject;
 
-	public static void main(String[] args) throws Throwable {
+	@Override
+	public void contextInitialized(ServletContextEvent e) {
 
-		init(args);
-		server(args);
+		if (initialized) throw new RuntimeException("Already initialized.");
+
+		try {
+
+			init(e.getServletContext());
+			initialized = true;
+		} catch (Throwable ex) {
+
+			throw new RuntimeException(ex);
+		}
+	}
+
+	@Override
+	public void contextDestroyed(ServletContextEvent e) {
+
+		if (! initialized) throw new RuntimeException("Not initialized.");
+
 		shutdown();
 	}
 
-	private static void init(String[] args) throws Throwable {
+	public static Collection<Class<?>> apiClasses() {
+
+		return Arrays.asList(new Class<?>[] { Admin.class, Orion.class, Vega.class, Sirius.class, Polaris.class });
+	}
+
+	public static Class<?> apiClass(String apiName) {
+
+		for (Class<?> clazz : apiClasses()) {
+
+			if (apiName.equals(clazz.getAnnotation(DanubeApi.class).name())) return clazz;
+		}
+
+		return null;
+	}
+
+	private static void init(ServletContext servletContext) throws Throwable {
 
 		log.info("init()");
-
-		// init properties
-
-		properties = new Properties();
-		properties.load(DanubeApiServer.class.getResourceAsStream("/application.properties"));
 
 		// init LoopScriptThread
 
 		loopScriptThread = new LoopScriptThread();
 
-		// init Jetty
-
-		int port = Integer.parseInt(properties.getProperty(PROPERTIES_KEY_SERVERPORT, PROPERTIES_DEFAULT_SERVERPORT));
-
-		server = new Server(port);
-		context = new Context(server, "/");
-
 		// init API
 
-		adminObject = new AdminImpl(new Date(), server, context, loopScriptThread);
+		adminObject = new AdminImpl(new Date(), loopScriptThread);
 
 		orionObject = pds.p2p.api.orion.OrionFactory.getOrion();
 		if (pds.p2p.api.orion.OrionFactory.getException() != null) throw pds.p2p.api.orion.OrionFactory.getException();
@@ -89,16 +100,39 @@ public class DanubeApiServer {
 		vegaObject.init();
 		siriusObject.init();
 		polarisObject.init();
+
+		// adding servlets
+
+		log.info("Adding servlets...");
+
+		servletContext.addServlet(Admin.class.getAnnotation(DanubeApi.class).name(), new MyJsonRpcServlet(adminObject)).addMapping("/" + Admin.class.getAnnotation(DanubeApi.class).name());
+		servletContext.addServlet(Orion.class.getAnnotation(DanubeApi.class).name(), new MyJsonRpcServlet(orionObject)).addMapping("/" + Orion.class.getAnnotation(DanubeApi.class).name());
+		servletContext.addServlet(Vega.class.getAnnotation(DanubeApi.class).name(), new MyJsonRpcServlet(vegaObject)).addMapping("/" + Vega.class.getAnnotation(DanubeApi.class).name());
+		servletContext.addServlet(Sirius.class.getAnnotation(DanubeApi.class).name(), new MyJsonRpcServlet(siriusObject)).addMapping("/" + Sirius.class.getAnnotation(DanubeApi.class).name());
+		servletContext.addServlet(Polaris.class.getAnnotation(DanubeApi.class).name(), new MyJsonRpcServlet(polarisObject)).addMapping("/" + Polaris.class.getAnnotation(DanubeApi.class).name());
+
+		// start LoopScriptThread
+
+		log.info("Starting LoopScriptThread...");
+
+		loopScriptThread.start();
 	}
 
-	private static void shutdown() throws Exception {
+	private static void shutdown() {
 
 		log.info("shutdown()");
 
 		// shutdown LoopScriptThread
 
 		loopScriptThread.stopRunning();
-		loopScriptThread.join();
+
+		try {
+
+			loopScriptThread.join();
+		} catch (InterruptedException ex) {
+
+			log.warn(ex.getMessage(), ex);
+		}
 
 		// shutdown API
 
@@ -114,32 +148,4 @@ public class DanubeApiServer {
 		vegaObject = null;
 		orionObject = null;
 	}
-
-	private static void server(String[] args) throws Throwable {
-
-		log.info("server()");
-
-		// start LoopScriptThread
-
-		log.info("Starting LoopScriptThread...");
-
-		loopScriptThread.start();
-
-		// start Jetty
-
-		log.info("Starting Jetty...");
-
-		context.addServlet(new ServletHolder(new ManualScriptServlet()), "/script");
-		context.addServlet(new ServletHolder(new PacketServlet()), "/packet");
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(adminObject)), "/" + Admin.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(orionObject)), "/" + Orion.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(vegaObject)), "/" + Vega.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(siriusObject)), "/" + Sirius.class.getAnnotation(DanubeApi.class).name());
-		context.addServlet(new ServletHolder(new MyJsonRpcServlet(polarisObject)), "/" + Polaris.class.getAnnotation(DanubeApi.class).name());
-
-		server.setGracefulShutdown(3000);
-		server.setStopAtShutdown(true);
-		server.start();
-		server.join();
-	};
 }

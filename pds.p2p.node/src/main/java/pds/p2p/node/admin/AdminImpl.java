@@ -3,32 +3,24 @@ package pds.p2p.node.admin;
 import java.lang.reflect.Method;
 import java.util.Date;
 
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
-import org.mortbay.jetty.servlet.ServletMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pds.p2p.api.Admin;
 import pds.p2p.api.annotation.DanubeApi;
+import pds.p2p.node.DanubeApiServer;
 import pds.p2p.node.LoopScriptThread;
-import pds.p2p.node.servlets.MyJsonRpcServlet;
 
 public class AdminImpl implements Admin {
 
 	private static final Logger log = LoggerFactory.getLogger(AdminImpl.class);
 
 	private Date startTime;
-	private Server server;
-	private Context context;
 	private LoopScriptThread scriptThread;
 
-	public AdminImpl(Date startTime, Server server, Context context, LoopScriptThread scriptThread) {
+	public AdminImpl(Date startTime, LoopScriptThread scriptThread) {
 
 		this.startTime = startTime;
-		this.server = server;
-		this.context = context;
 		this.scriptThread = scriptThread;
 	}
 
@@ -54,41 +46,32 @@ public class AdminImpl implements Admin {
 
 		StringBuffer buffer = new StringBuffer();
 
-		// list JSON RPC servlets
+		// list API classes
 
-		for (ServletMapping servletMapping : this.context.getServletHandler().getServletMappings()) {
-
-			String servletName = servletMapping.getServletName();
-
-			ServletHolder servletHolder = this.context.getServletHandler().getServlet(servletName);
-			if (servletHolder == null) continue;
-			if (! (servletHolder.getServlet() instanceof MyJsonRpcServlet)) continue;
-
-			MyJsonRpcServlet servlet = (MyJsonRpcServlet) servletHolder.getServlet();
-			if (servlet == null) continue;
+		for (Class<?> apiClass : DanubeApiServer.apiClasses()) {
 
 			// find interface
 
-			Object object = servlet.getJsonRpcObject();
-			Class<?> clazz = object.getClass();
-			Class<?> interfaze = null;
+			log.debug("Finding API interface for API '" + apiClass.getCanonicalName() + "'");
 
-			for (Class<?> clazzInterfaze : clazz.getInterfaces()) {
+			Class<?> apiInterface = null;
 
-				if (clazzInterfaze.getAnnotation(DanubeApi.class) != null) {
+			for (Class<?> apiClassInterface : apiClass.getInterfaces()) {
 
-					interfaze = clazzInterfaze;
+				if (apiClassInterface.getAnnotation(DanubeApi.class) != null) {
+
+					apiInterface = apiClassInterface;
 					break;
 				}
 			}
 
-			if (interfaze == null) return null;
+			if (apiInterface == null) return null;
 
 			// print help
 
-			DanubeApi apiInterface = interfaze.getAnnotation(DanubeApi.class);
+			DanubeApi apiInterfaceAnnotation = apiInterface.getAnnotation(DanubeApi.class);
 
-			buffer.append(apiInterface.name() + " - " + apiInterface.description() + "\n");
+			buffer.append(apiInterfaceAnnotation.name() + " - " + apiInterfaceAnnotation.description() + "\n");
 		}
 
 		return buffer.toString();
@@ -96,51 +79,32 @@ public class AdminImpl implements Admin {
 
 	public String helpApi(String apiName) throws Exception {
 
-		// find JSON RPC servlet at this path
+		// find API class
 
-		String pathSpec = "/" + apiName;
-
-		MyJsonRpcServlet servlet = null;
-
-		for (ServletMapping servletMapping : this.context.getServletHandler().getServletMappings()) {
-
-			for (String servletPathSpec : servletMapping.getPathSpecs()) {
-
-				if (servletPathSpec.equals(pathSpec)) {
-
-					String servletName = servletMapping.getServletName();
-
-					ServletHolder servletHolder = this.context.getServletHandler().getServlet(servletName);
-					if (servletHolder != null) servlet = (MyJsonRpcServlet) servletHolder.getServlet();
-					if (servlet != null) break;
-				}
-			}
-		}
-
-		if (servlet == null) return null;
+		Class<?> apiClass = DanubeApiServer.apiClass(apiName);
 
 		// find interface
 
-		Object object = servlet.getJsonRpcObject();
-		Class<?> clazz = object.getClass();
-		Class<?> interfaze = null;
+		log.debug("Finding API interface for API '" + apiClass.getCanonicalName() + "'");
 
-		for (Class<?> clazzInterfaze : clazz.getInterfaces()) {
+		Class<?> apiInterface = null;
 
-			if (clazzInterfaze.getAnnotation(DanubeApi.class) != null) {
+		for (Class<?> apiClassInterface : apiClass.getInterfaces()) {
 
-				interfaze = clazzInterfaze;
+			if (apiClassInterface.getAnnotation(DanubeApi.class) != null) {
+
+				apiInterface = apiClassInterface;
 				break;
 			}
 		}
 
-		if (interfaze == null) return null;
+		if (apiInterface == null) return null;
 
 		// print help
 
 		StringBuffer buffer = new StringBuffer();
 
-		for (Method method : interfaze.getMethods()) {
+		for (Method method : apiInterface.getMethods()) {
 
 			buffer.append(apiName + "." + method.getName() + "(");
 
@@ -155,27 +119,6 @@ public class AdminImpl implements Admin {
 		}
 
 		return buffer.toString();
-	}
-
-	public void stop() throws Exception {
-
-		new Thread() {
-
-			public void run() {
-
-				try {
-
-					log.info("Preparing to shut down the server...");
-					Thread.sleep(1000);
-					log.info("Shutting down the server...");
-					server.stop();
-					log.info("Server has stopped.");
-				} catch (Exception ex) {
-
-					log.error("Error when stopping server: " + ex.getMessage(), ex);
-				}
-			}
-		}.start();
 	}
 
 	@Override
