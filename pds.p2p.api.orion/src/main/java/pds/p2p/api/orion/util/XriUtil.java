@@ -43,6 +43,8 @@ public class XriUtil {
 	private static KeyPairGenerator keyPairGenerator;
 	private static X509V1CertificateGenerator certificateGenerator;
 
+	private static KeyPair fakeKeyPair;
+	
 	static {
 
 		URL configurationFileURL = XriUtil.class.getResource("vv-ehcache.xml");
@@ -63,6 +65,10 @@ public class XriUtil {
 
 			throw new RuntimeException(ex);
 		}
+
+		SecureRandom random = new SecureRandom(new byte[] { 0 });
+		keyPairGenerator.initialize(1024, random);
+		fakeKeyPair = keyPairGenerator.generateKeyPair();
 	}
 
 	private XriUtil() { }
@@ -118,20 +124,15 @@ public class XriUtil {
 
 		// resolve it!
 
-		SecureRandom random = new SecureRandom(inumber.getBytes("UTF-8"));
-
-		keyPairGenerator.initialize(1024, random);
-		KeyPair keyPair = keyPairGenerator.generateKeyPair();
-
 		certificateGenerator.setSerialNumber(BigInteger.ONE);
 		certificateGenerator.setNotBefore(new Date());
 		certificateGenerator.setNotAfter(new Date());
 		certificateGenerator.setIssuerDN(new X500Principal("CN=" + inumber));
 		certificateGenerator.setSubjectDN(new X500Principal("CN=" + inumber));
-		certificateGenerator.setPublicKey(keyPair.getPublic());
+		certificateGenerator.setPublicKey(fakeKeyPair.getPublic());
 		certificateGenerator.setSignatureAlgorithm(SIGNATURE_ALGORITHM);
 
-		X509Certificate certificate = certificateGenerator.generate(keyPair.getPrivate());
+		X509Certificate certificate = certificateGenerator.generate(fakeKeyPair.getPrivate());
 
 		// put it into cache
 
@@ -162,5 +163,10 @@ public class XriUtil {
 		// done
 
 		return xdiUri;
+	}
+
+	public static KeyPair retrieveKeyPair(String inumber, String password) {
+
+		return fakeKeyPair;
 	}
 }

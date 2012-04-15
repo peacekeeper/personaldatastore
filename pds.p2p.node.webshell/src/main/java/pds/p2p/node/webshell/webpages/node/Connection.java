@@ -43,7 +43,7 @@ public class Connection extends BasePage {
 
 			try {
 
-				DanubeApiClient.vegaObject.connect(null, null, null, null);
+				DanubeApiClient.vegaObject.connect(null, null, null, null, null);
 			} catch (Exception ex) {
 
 				log.warn(ex.getMessage(), ex);

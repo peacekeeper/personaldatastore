@@ -70,12 +70,8 @@ public class JettyServer {
 		
 		server = new Server();
 		
-		new Exception("aa").printStackTrace(System.err);
-
 		server.setConnectors(new Connector[] { connector8080, connector9090, connector10100 });
-		new Exception("bb").printStackTrace(System.err);
 		server.setHandler(handlerList);
-		new Exception("cc").printStackTrace(System.err);
 	}
 
 	private static void shutdown() throws Exception {

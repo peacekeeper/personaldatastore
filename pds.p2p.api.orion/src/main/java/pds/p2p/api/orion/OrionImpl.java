@@ -1,7 +1,6 @@
 package pds.p2p.api.orion;
 
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -31,7 +30,8 @@ public class OrionImpl implements Orion {
 
 	private static Log log = LogFactory.getLog(OrionImpl.class);
 
-	private static final SecureRandom random = new SecureRandom();
+//	private static final SecureRandom random = new SecureRandom();
+	private static final SecureRandom fakeRandom = new SecureRandom(new byte[] { 0 });
 
 	private String iname;
 	private String password;
@@ -57,10 +57,12 @@ public class OrionImpl implements Orion {
 
 	public void init() throws Exception {
 
+		log.info("init()");
 	}
 
 	public void shutdown() {
 
+		log.info("shutdown()");
 	}
 
 	/*
@@ -87,13 +89,7 @@ public class OrionImpl implements Orion {
 
 			// retrieve key pair
 
-			if (! this.password.equals(password)) throw new RuntimeException("Invalid password");
-
-			SecureRandom random = new SecureRandom(this.inumber.getBytes("UTF-8"));
-
-			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(ENCRYPTION_ALGORITHM, "BC");
-			keyPairGenerator.initialize(1024, random);
-			KeyPair keyPair = keyPairGenerator.generateKeyPair();
+			KeyPair keyPair = XriUtil.retrieveKeyPair(this.inumber, this.password);
 
 			this.privateKey = keyPair.getPrivate();
 			this.publicKey = keyPair.getPublic();
@@ -163,7 +159,7 @@ public class OrionImpl implements Orion {
 		log.debug("sign(" + str + ")");
 
 		java.security.Signature s = java.security.Signature.getInstance(SIGNATURE_ALGORITHM);
-		s.initSign(this.privateKey, random);
+		s.initSign(this.privateKey, fakeRandom);
 		s.update(str.getBytes("UTF-8"));
 		return(new String(Base64.encodeBase64(s.sign())));
 	}
@@ -172,6 +168,9 @@ public class OrionImpl implements Orion {
 
 		log.debug("verify(" + str + "," + signature + "," + inumber + ")");
 
+		// fake!!
+		if (str != null) return "1";
+		
 		Certificate certificate = XriUtil.discoverCertificate(inumber);
 		PublicKey publicKey = certificate.getPublicKey();
 		java.security.Signature s = java.security.Signature.getInstance(SIGNATURE_ALGORITHM);
@@ -194,7 +193,7 @@ public class OrionImpl implements Orion {
 		Certificate certificate = XriUtil.discoverCertificate(inumber);
 		PublicKey publicKey = certificate.getPublicKey();
 		Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
-		cipher.init(Cipher.ENCRYPT_MODE, publicKey, random);
+		cipher.init(Cipher.ENCRYPT_MODE, publicKey, fakeRandom);
 		cipher.update(str.getBytes("UTF-8"));
 		return(new String(Base64.encodeBase64(cipher.doFinal())));
 	}
@@ -204,7 +203,7 @@ public class OrionImpl implements Orion {
 		log.debug("decrypt(" + str + ")");
 
 		Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
-		cipher.init(Cipher.DECRYPT_MODE, this.privateKey, random);
+		cipher.init(Cipher.DECRYPT_MODE, this.privateKey, fakeRandom);
 		cipher.update(Base64.decodeBase64(str));
 		return(new String(cipher.doFinal(), "UTF-8"));
 	}
@@ -214,7 +213,7 @@ public class OrionImpl implements Orion {
 		log.debug("symGenerateKey()");
 
 		KeyGenerator keyGenerator = KeyGenerator.getInstance(SYMENCRYPTION_ALGORITHM);
-		keyGenerator.init(SYMENCRYPTION_KEYSIZE, random);
+		keyGenerator.init(SYMENCRYPTION_KEYSIZE, fakeRandom);
 		SecretKey secretKey = keyGenerator.generateKey();
 		return(new String(Base64.encodeBase64(secretKey.getEncoded())));
 	}
@@ -225,7 +224,7 @@ public class OrionImpl implements Orion {
 
 		SecretKeySpec secretKeySpec = new SecretKeySpec(Base64.decodeBase64(key), SYMENCRYPTION_ALGORITHM);
 		Cipher cipher = Cipher.getInstance(SYMENCRYPTION_ALGORITHM);
-		cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, random);
+		cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, fakeRandom);
 		cipher.update(str.getBytes("UTF-8"));
 		return(new String(Base64.encodeBase64(cipher.doFinal())));
 	}
@@ -236,7 +235,7 @@ public class OrionImpl implements Orion {
 
 		SecretKeySpec secretKeySpec = new SecretKeySpec(Base64.decodeBase64(key), SYMENCRYPTION_ALGORITHM);
 		Cipher cipher = Cipher.getInstance(SYMENCRYPTION_ALGORITHM);
-		cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, random);
+		cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, fakeRandom);
 		cipher.update(Base64.decodeBase64(str));
 		return(new String(cipher.doFinal(), "UTF-8"));
 	}

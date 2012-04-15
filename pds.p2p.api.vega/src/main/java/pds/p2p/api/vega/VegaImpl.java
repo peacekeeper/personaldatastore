@@ -85,10 +85,10 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 	private String localHost;
 	private String localPort;
-	private String publicHost;
-	private String publicPort;
 	private String remoteHost;
 	private String remotePort;
+	private String publicHost;
+	private String publicPort;
 	private String parameters;
 	private Environment environment;
 	private rice.pastry.PastryNode pastryNode;
@@ -110,16 +110,19 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 	public void init() throws Exception {
 
+		log.info("init()");
+
 		System.setProperty(XmlPullParserFactory.PROPERTY_NAME, "org.xmlpull.mxp1.MXParserFactory");
 	}
 
 	public void shutdown() {
 
+		log.info("shutdown()");
 	}
 
-	public String connect(String localPort, String remoteHost, String remotePort, String parameters) throws Exception {
+	public String connect(String localHost, String localPort, String remoteHost, String remotePort, String parameters) throws Exception {
 
-		log.debug("connect(" + localPort + "," + remoteHost + "," + remotePort + ",<parameters>)");
+		log.debug("connect(" + localHost + "," + localPort + "," + remoteHost + "," + remotePort + ",<parameters>)");
 
 		try {
 
@@ -133,6 +136,14 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 			FileUtils.deleteDirectory(storageDir);
 			storageDir.mkdir();
+
+			// check if the local host contains the local port
+
+			if (localHost != null && localHost.contains(":")) {
+
+				localPort = localHost.split(":")[1];
+				localHost = localHost.split(":")[0];
+			}
 
 			// check if the remote host contains the remote port
 
@@ -167,12 +178,29 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 				}
 			}
 
-			// build the boot address
+			// build the local address
+
+			InetAddress localAddr;
+			InetSocketAddress localSockAddr;
+
+			if (localHost != null && localPort != null && Integer.valueOf(localPort).intValue() > 0) {
+
+				localAddr = InetAddress.getByName(localHost);
+				localSockAddr = new InetSocketAddress(localAddr, Integer.valueOf(localPort).intValue());
+				log.debug("Local address is " + localSockAddr.toString());
+			} else {
+				
+				localAddr = InetAddress.getLocalHost();
+				localSockAddr = new InetSocketAddress(localAddr, Integer.valueOf(localPort).intValue());
+				log.debug("Local address detected as " + localSockAddr.toString());
+			}
+
+			// build the remote address
 
 			InetAddress remoteAddr;
 			InetSocketAddress remoteSockAddr;
 
-			if (remoteHost != null && remotePort != null && ! remoteHost.equals("localhost") && ! remoteHost.startsWith("127.") && Integer.valueOf(remotePort).intValue() > 0) {
+			if (remoteHost != null && remotePort != null && Integer.valueOf(remotePort).intValue() > 0 && ! remoteHost.equals("localhost") && ! remoteHost.startsWith("127.")) {
 
 				remoteAddr = InetAddress.getByName(remoteHost);
 				remoteSockAddr = new InetSocketAddress(remoteAddr, Integer.valueOf(remotePort).intValue());
@@ -184,18 +212,12 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 				log.debug("No boot address.");
 			}
 
-			// figure out local address
-
-			InetAddress localAddr = InetAddress.getLocalHost();
-			InetSocketAddress localSockAddr = new InetSocketAddress(localAddr, Integer.valueOf(localPort).intValue());
-			log.debug("Local address is " + localSockAddr.toString());
-
 			// figure out public address and port
 
 			InetAddress publicAddr;
 			InetSocketAddress publicSockAddr;
 
-			if (remoteHost != null && remotePort != null && ! remoteHost.equals("localhost") && ! remoteHost.startsWith("127.") && Integer.valueOf(remotePort).intValue() > 0) {
+			if (remoteHost != null && remotePort != null && Integer.valueOf(remotePort).intValue() > 0 && ! remoteHost.equals("localhost") && ! remoteHost.startsWith("127.")) {
 
 				DatagramSocket clientSocket = new DatagramSocket(null);
 				clientSocket.setReuseAddress(true);
@@ -248,10 +270,10 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 			this.localHost = localSockAddr.getAddress().getHostAddress();
 			this.localPort = Integer.toString(localSockAddr.getPort());
-			this.publicHost = publicSockAddr == null ? null : publicSockAddr.getAddress().getHostAddress();
-			this.publicPort = publicSockAddr == null ? null : Integer.toString(publicSockAddr.getPort());
 			this.remoteHost = remoteSockAddr == null ? null : remoteSockAddr.getAddress().getHostAddress();
 			this.remotePort = remoteSockAddr == null ? null : Integer.toString(remoteSockAddr.getPort());
+			this.publicHost = publicSockAddr == null ? null : publicSockAddr.getAddress().getHostAddress();
+			this.publicPort = publicSockAddr == null ? null : Integer.toString(publicSockAddr.getPort());
 			this.parameters = parameters;
 
 			// create node
@@ -344,9 +366,9 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		return "1";
 	}
 
-	public String connectList(String localPort, String remoteHostList, String parameters) throws Exception {
+	public String connectList(String localHost, String localPort, String remoteHostList, String parameters) throws Exception {
 
-		log.debug("connectList(" + localPort + "," + remoteHostList + ",<parameters>)");
+		log.debug("connectList(" + localHost + "," + localPort + "," + remoteHostList + ",<parameters>)");
 
 		String[] remoteHosts = remoteHostList.split(",");
 
@@ -356,7 +378,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 			try {
 
-				this.connect(localPort, remoteHost, null, parameters);
+				this.connect(localHost, localPort, remoteHost, null, parameters);
 				if ("1".equals(this.connected())) return "1";
 			} catch (Exception ex) {
 
@@ -487,20 +509,6 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		return this.localPort;
 	}
 
-	public String publicHost() throws Exception {
-
-		log.debug("publicHost()");
-
-		return this.publicHost;
-	}
-
-	public String publicPort() throws Exception {
-
-		log.debug("publicPort()");
-
-		return this.publicPort;
-	}
-
 	public String remoteHost() throws Exception {
 
 		log.debug("remoteHost()");
@@ -513,6 +521,20 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		log.debug("remotePort()");
 
 		return this.remotePort;
+	}
+
+	public String publicHost() throws Exception {
+
+		log.debug("publicHost()");
+
+		return this.publicHost;
+	}
+
+	public String publicPort() throws Exception {
+
+		log.debug("publicPort()");
+
+		return this.publicPort;
 	}
 
 	public String parameters() throws Exception {

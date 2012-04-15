@@ -37,10 +37,12 @@ public class SiriusImpl implements Sirius {
 
 	public void init() throws Exception {
 
+		log.info("init()");
 	}
 
 	public void shutdown() {
 
+		log.info("shutdown()");
 	}
 
 	/*

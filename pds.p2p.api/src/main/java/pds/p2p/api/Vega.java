@@ -9,19 +9,19 @@ public interface Vega {
 	public void init() throws Exception;
 	public void shutdown();
 
-	public String connect(String localPort, String remoteHost, String remotePort, String parameters) throws Exception;
-	public String connectList(String localPort, String remoteHostList, String parameters) throws Exception;
+	public String connect(String localHost, String localPort, String remoteHost, String remotePort, String parameters) throws Exception;
+	public String connectList(String localHost, String localPort, String remoteHostList, String parameters) throws Exception;
 	public void disconnect() throws Exception;
 	public String connected() throws Exception;
 
 	public String nodeId() throws Exception;
 	public String localHost() throws Exception;
 	public String localPort() throws Exception;
-	public String publicHost() throws Exception;
-	public String publicPort() throws Exception;
 	public String remoteHost() throws Exception;
 	public String remotePort() throws Exception;
 	public String parameters() throws Exception;
+	public String publicHost() throws Exception;
+	public String publicPort() throws Exception;
 	public String lookupRandom() throws Exception;
 	public String[] lookupNeighbors(String num) throws Exception;
 	public void send(String nodeId, String ray, String content, String flags, String extension) throws Exception;

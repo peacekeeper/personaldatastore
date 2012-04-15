@@ -43,7 +43,7 @@ public class VegaImplTest extends TestCase {
 	public void testVegaImpl() throws Exception {
 
 		this.orion.login("=markus", "xxx");
-		this.vega.connect(null, null, null, null);
+		this.vega.connect(null, null, null, null, null);
 
 		assertNotNull(this.vega.nodeId());
 		assertEquals(this.vega.lookupNeighbors("10").length, 1);

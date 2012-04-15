@@ -36,10 +36,12 @@ public class PolarisImpl implements Polaris {
 
 	public void init() throws Exception {
 
+		log.info("init()");
 	}
 
 	public void shutdown() {
 
+		log.info("shutdown()");
 	}
 
 	/*
