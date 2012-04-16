@@ -13,6 +13,9 @@ public class Connection extends BasePage {
 
 	private static final long serialVersionUID = -4101890723769407353L;
 
+	private static final String LOCAL_HOST = "172.17.1.1/";
+	private static final String REMOTE_HOST_LIST = "172.17.218.193,172.17.217.183,172.17.217.243,172.17.90.193";
+
 	protected static Logger log = LoggerFactory.getLogger(Connection.class.getName());
 
 	public Connection() {
@@ -21,15 +24,16 @@ public class Connection extends BasePage {
 
 		// create and add components
 
-		this.add(new ConnectForm("connectForm", new CompoundPropertyModel<Connection> (this)));
+		this.add(new ConnectNewForm("connectNewForm", new CompoundPropertyModel<Connection> (this)));
+		this.add(new ConnectExistingForm("connectExistingForm", new CompoundPropertyModel<Connection> (this)));
 		this.add(new DisconnectForm("disconnectForm", new CompoundPropertyModel<Connection> (this)));
 	}
 
-	private class ConnectForm extends Form<Connection> {
+	private class ConnectNewForm extends Form<Connection> {
 
-		private static final long serialVersionUID = -2720901123859278741L;
+		private static final long serialVersionUID = 7493476895327795699L;
 
-		private ConnectForm(String id, IModel<Connection> model) {
+		private ConnectNewForm(String id, IModel<Connection> model) {
 
 			super(id, model);
 		}
@@ -43,7 +47,39 @@ public class Connection extends BasePage {
 
 			try {
 
-				DanubeApiClient.vegaObject.connect(null, null, null, null, null);
+				DanubeApiClient.vegaObject.connect(LOCAL_HOST, null, null);
+			} catch (Exception ex) {
+
+				log.warn(ex.getMessage(), ex);
+				error(Connection.this.getString("fail") + ex.getMessage());
+				return;
+			}
+
+			// done
+
+			info(Connection.this.getString("connected"));
+		}
+	}
+
+	private class ConnectExistingForm extends Form<Connection> {
+
+		private static final long serialVersionUID = -2720901123859278741L;
+
+		private ConnectExistingForm(String id, IModel<Connection> model) {
+
+			super(id, model);
+		}
+
+		@Override
+		protected void onSubmit() {
+
+			// connect to vega
+
+			Connection.log.debug("Connecting");
+
+			try {
+
+				DanubeApiClient.vegaObject.connectList(null, REMOTE_HOST_LIST, null);
 			} catch (Exception ex) {
 
 				log.warn(ex.getMessage(), ex);

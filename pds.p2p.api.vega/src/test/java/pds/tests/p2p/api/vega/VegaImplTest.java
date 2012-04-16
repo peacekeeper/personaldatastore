@@ -25,15 +25,6 @@ public class VegaImplTest extends TestCase {
 
 	public void tearDown() throws Exception {
 
-		assertNull(this.vega.nodeId());
-		assertNull(this.vega.localHost());
-		assertNull(this.vega.localPort());
-		assertNull(this.vega.publicHost());
-		assertNull(this.vega.publicPort());
-		assertNull(this.vega.remoteHost());
-		assertNull(this.vega.remotePort());
-		assertNull(this.vega.parameters());
-
 		this.vega.shutdown();
 		this.orion.shutdown();
 
@@ -43,7 +34,7 @@ public class VegaImplTest extends TestCase {
 	public void testVegaImpl() throws Exception {
 
 		this.orion.login("=markus", "xxx");
-		this.vega.connect(null, null, null, null, null);
+		this.vega.connect(null, null, null);
 
 		assertNotNull(this.vega.nodeId());
 		assertEquals(this.vega.lookupNeighbors("10").length, 1);

@@ -36,7 +36,7 @@ public class OrionImpl implements Orion {
 	private String iname;
 	private String password;
 	private String inumber;
-	private String xdiUri;
+	/*private String xdiUri;*/
 	private PrivateKey privateKey;
 	private PublicKey publicKey;
 
@@ -50,7 +50,7 @@ public class OrionImpl implements Orion {
 		this.iname = null;
 		this.password = null;
 		this.inumber = null;
-		this.xdiUri = null;
+		/*this.xdiUri = null;*/
 		this.privateKey = null;
 		this.publicKey = null;
 	}
@@ -82,10 +82,10 @@ public class OrionImpl implements Orion {
 			if (this.inumber == null) throw new RuntimeException("No I-Number found for this I-Name.");
 			log.debug("login: inumber=" + this.inumber);
 
-			this.xdiUri = XriUtil.discoverXdiUri(this.iname);
+/*			this.xdiUri = XriUtil.discoverXdiUri(this.iname);
 			if (this.xdiUri == null) throw new RuntimeException("No XDI endpoint found for this I-Name.");
 			if (! this.xdiUri.endsWith("/")) this.xdiUri += "/";
-			log.debug("login: xdiUri=" + this.xdiUri);
+			log.debug("login: xdiUri=" + this.xdiUri);*/
 
 			// retrieve key pair
 
@@ -108,7 +108,7 @@ public class OrionImpl implements Orion {
 		this.iname = null;
 		this.password = null;
 		this.inumber = null;
-		this.xdiUri = null;
+		/*this.xdiUri = null;*/
 		this.privateKey = null;
 		this.publicKey = null;
 	}
@@ -140,12 +140,12 @@ public class OrionImpl implements Orion {
 		return(this.inumber);
 	}
 
-	public String xdiUri() throws Exception {
+/*	public String xdiUri() throws Exception {
 
 		log.debug("xdiUri() = " + this.xdiUri);
 
 		return(this.xdiUri);
-	}
+	}*/
 
 	public String resolve(String iname) throws Exception {
 

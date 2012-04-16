@@ -1,9 +1,7 @@
 package pds.p2p.api.orion.util;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.net.InetAddress;
 import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -38,7 +36,7 @@ public class XriUtil {
 	private static CacheManager cacheManager;
 	private static Cache canonicalIdCache;
 	private static Cache certificateCache;
-	private static Cache xdiUriCache;
+/*	private static Cache xdiUriCache;*/
 
 	private static KeyPairGenerator keyPairGenerator;
 	private static X509V1CertificateGenerator certificateGenerator;
@@ -52,7 +50,7 @@ public class XriUtil {
 		cacheManager = CacheManager.create(configurationFileURL);
 		canonicalIdCache = cacheManager.getCache("canonicalIdCache");
 		certificateCache = cacheManager.getCache("certificateCache");
-		xdiUriCache = cacheManager.getCache("xdiUriCache");
+		/*xdiUriCache = cacheManager.getCache("xdiUriCache");*/
 
 		try {
 
@@ -143,7 +141,7 @@ public class XriUtil {
 		return certificate;
 	}
 
-	public static String discoverXdiUri(String xri) throws IOException {
+/*	public static String discoverXdiUri(String xri) throws IOException {
 
 		// get it from cache?
 
@@ -154,7 +152,7 @@ public class XriUtil {
 		// resolve it!
 
 		InetAddress localAddr = InetAddress.getLocalHost();
-		String xdiUri = "http://" + localAddr.getHostName() + ":10100/";
+		String xdiUri = "http://" + localAddr.getHostAddress() + ":10100/";
 
 		// put it into cache
 
@@ -163,7 +161,7 @@ public class XriUtil {
 		// done
 
 		return xdiUri;
-	}
+	}*/
 
 	public static KeyPair retrieveKeyPair(String inumber, String password) {
 

@@ -14,7 +14,6 @@ public interface Orion {
 	public String loggedin() throws Exception;
 	public String iname() throws Exception;
 	public String inumber() throws Exception;
-	public String xdiUri() throws Exception;
 	public String resolve(String iname) throws Exception;
 	public String sign(String str) throws Exception;
 	public String verify(String str, String signature, String inumber) throws Exception;

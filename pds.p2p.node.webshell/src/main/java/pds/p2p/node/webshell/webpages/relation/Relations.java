@@ -96,7 +96,7 @@ public class Relations extends BasePage implements NeedLoggedInPage, NeedConnect
 	}
 
 	public String getRelation() {
-		return relation;
+		return this.relation;
 	}
 
 	public void setRelation(String relation) {

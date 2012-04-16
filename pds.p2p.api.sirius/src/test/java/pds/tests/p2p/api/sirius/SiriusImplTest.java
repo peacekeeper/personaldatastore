@@ -41,7 +41,7 @@ public class SiriusImplTest extends TestCase {
 	public void testSiriusImpl() throws Exception {
 
 		this.orion.login("=markus", "xxx");
-		this.vega.connect(null, null, null, null, null);
+		this.vega.connect(null, null, null);
 
 		String result;
 		XDIReader reader = new XDIJSONReader();

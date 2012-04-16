@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 
 import pds.p2p.api.Orion;
 import pds.p2p.api.Polaris;
+import pds.p2p.api.Vega;
 import xdi2.client.http.XDIHttpClient;
 import xdi2.core.Graph;
 import xdi2.core.Literal;
@@ -26,11 +27,13 @@ public class PolarisImpl implements Polaris {
 	private static Log log = LogFactory.getLog(PolarisImpl.class);
 
 	private Orion orion;
+	private Vega vega;
 	private XDIHttpClient client;
 
-	PolarisImpl(Orion orion, XDIHttpClient client) {
+	PolarisImpl(Orion orion, Vega vega, XDIHttpClient client) {
 
 		this.orion = orion;
+		this.vega = vega;
 		this.client = client;
 	}
 
@@ -52,8 +55,8 @@ public class PolarisImpl implements Polaris {
 
 		log.debug("get(" + xdi + "," + xdiUrl + "," + format + ")");
 
-		if (! "1".equals(this.orion.loggedin())) throw new RuntimeException("Not signed in.");
-		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.orion.xdiUri()));
+		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
+		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.vega.xdiUri()));
 
 		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
@@ -67,8 +70,8 @@ public class PolarisImpl implements Polaris {
 
 		log.debug("add(" + xdi + "," + xdiUrl + "," + format + ")");
 
-		if (! "1".equals(this.orion.loggedin())) throw new RuntimeException("Not signed in.");
-		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.orion.xdiUri()));
+		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
+		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.vega.xdiUri()));
 
 		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_ADD, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
@@ -82,8 +85,8 @@ public class PolarisImpl implements Polaris {
 
 		log.debug("mod(" + xdi + "," + xdiUrl + "," + format + ")");
 
-		if (! "1".equals(this.orion.loggedin())) throw new RuntimeException("Not signed in.");
-		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.orion.xdiUri()));
+		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
+		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.vega.xdiUri()));
 
 		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_MOD, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
@@ -97,8 +100,8 @@ public class PolarisImpl implements Polaris {
 
 		log.debug("del(" + xdi + "," + xdiUrl + "," + format + ")");
 
-		if (! "1".equals(this.orion.loggedin())) throw new RuntimeException("Not signed in.");
-		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.orion.xdiUri()));
+		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
+		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.vega.xdiUri()));
 
 		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_DEL, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
@@ -112,8 +115,8 @@ public class PolarisImpl implements Polaris {
 
 		log.debug("getLiterals(" + xdi + "," + xdiUrl + ")");
 
-		if (! "1".equals(this.orion.loggedin())) throw new RuntimeException("Not signed in.");
-		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.orion.xdiUri()));
+		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
+		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.vega.xdiUri()));
 
 		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
@@ -140,8 +143,8 @@ public class PolarisImpl implements Polaris {
 
 		log.debug("getRelations(" + xdi + "," + xdiUrl + ")");
 
-		if (! "1".equals(this.orion.loggedin())) throw new RuntimeException("Not signed in.");
-		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.orion.xdiUri()));
+		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
+		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.vega.xdiUri()));
 
 		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
@@ -168,8 +171,8 @@ public class PolarisImpl implements Polaris {
 
 		log.debug("execute(" + message + "," + xdiUrl + "," + format + ")");
 
-		if (! "1".equals(this.orion.loggedin())) throw new RuntimeException("Not signed in.");
-		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.orion.xdiUri()));
+		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
+		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.vega.xdiUri()));
 
 		Graph graph = MemoryGraphFactory.getInstance().openGraph();
 		XDIReaderRegistry.getAuto().read(graph, new StringReader(message), null);

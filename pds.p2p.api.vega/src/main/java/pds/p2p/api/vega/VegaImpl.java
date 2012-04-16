@@ -4,9 +4,6 @@ package pds.p2p.api.vega;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -37,6 +34,7 @@ import pds.p2p.api.vega.comm.VegaPastContent;
 import pds.p2p.api.vega.comm.VegaScribeContent;
 import pds.p2p.api.vega.util.BlockingContinuation;
 import pds.p2p.api.vega.util.HashCash;
+import pds.p2p.api.vega.util.NetworkUtil;
 import pds.p2p.api.vega.util.Nonce;
 import pds.p2p.api.vega.util.NonceUtil;
 import rice.environment.Environment;
@@ -67,7 +65,7 @@ import rice.persistence.StorageManagerImpl;
 
 public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
-	private static final String NAT_APP_NAME = "versionvega";
+	private static final String NAT_APP_NAME = "projectdanube";
 	private static final String STORAGE_DIRECTORY = "./storage";
 	private static final long STORAGE_SIZE = 4 * 1024 * 1024;
 	private static final int CACHE_SIZE = 2 * 1024 * 1024;
@@ -120,43 +118,93 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		log.info("shutdown()");
 	}
 
-	public String connect(String localHost, String localPort, String remoteHost, String remotePort, String parameters) throws Exception {
+	public String connect(String localHost, String remoteHost, String parameters) throws Exception {
 
-		log.debug("connect(" + localHost + "," + localPort + "," + remoteHost + "," + remotePort + ",<parameters>)");
+		log.debug("connect(" + localHost + "," + remoteHost + ",<parameters>)");
 
 		try {
 
-			// disconnect first if necessary
+			// make sure we are disconnected
 
-			if ("1".equals(this.connected())) this.disconnect();
+			this.disconnect();
 
 			// delete / create directories
 
-			File storageDir = new File(".", "storage/");
+			File storageDir = new File(STORAGE_DIRECTORY);
 
 			FileUtils.deleteDirectory(storageDir);
 			storageDir.mkdir();
 
 			// check if the local host contains the local port
 
+			String localPort = null;
+
 			if (localHost != null && localHost.contains(":")) {
 
 				localPort = localHost.split(":")[1];
 				localHost = localHost.split(":")[0];
+
+				if (Integer.parseInt(localPort) <= 0) throw new RuntimeException("Invalid local port: " + localPort);
 			}
 
 			// check if the remote host contains the remote port
+
+			String remotePort = null;
 
 			if (remoteHost != null && remoteHost.contains(":")) {
 
 				remotePort = remoteHost.split(":")[1];
 				remoteHost = remoteHost.split(":")[0];
+
+				if (Integer.parseInt(remotePort) <= 0) throw new RuntimeException("Invalid remote port: " + remotePort);
 			}
 
 			// if no local or remote port is given, use default
 
 			if (localPort == null) localPort = Integer.toString(DEFAULT_VEGA_PORT);
 			if (remotePort == null) remotePort = Integer.toString(DEFAULT_VEGA_PORT);
+
+			// figure out remote address
+
+			InetSocketAddress remoteSockAddr;
+
+			if (remoteHost != null && remotePort != null) {
+
+				remoteSockAddr = NetworkUtil.detectRemoteAddress(remoteHost, remotePort);
+			} else {
+
+				remoteSockAddr = null;
+			}
+
+			log.debug("Remote address is " + remoteSockAddr);
+
+			// figure out local address
+
+			InetSocketAddress localSockAddr;
+
+			if (localHost != null && localPort != null) {
+
+				localSockAddr = NetworkUtil.detectLocalAddress(localHost, localPort);
+			} else {
+
+				localSockAddr = NetworkUtil.detectBestLocalAddress(remoteSockAddr, localPort);
+			}
+
+			log.debug("Local address is " + localSockAddr);
+
+			// figure out public address
+
+			InetSocketAddress publicSockAddr;
+
+			if (remoteHost != null && remotePort != null) {
+
+				publicSockAddr = NetworkUtil.detectPublicAddress(localSockAddr, remoteSockAddr);
+			} else {
+
+				publicSockAddr = null;
+			}
+
+			log.debug("Public address is " + publicSockAddr);
 
 			// loads pastry settings
 
@@ -178,90 +226,6 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 				}
 			}
 
-			// build the local address
-
-			InetAddress localAddr;
-			InetSocketAddress localSockAddr;
-
-			if (localHost != null && localPort != null && Integer.valueOf(localPort).intValue() > 0) {
-
-				localAddr = InetAddress.getByName(localHost);
-				localSockAddr = new InetSocketAddress(localAddr, Integer.valueOf(localPort).intValue());
-				log.debug("Local address is " + localSockAddr.toString());
-			} else {
-				
-				localAddr = InetAddress.getLocalHost();
-				localSockAddr = new InetSocketAddress(localAddr, Integer.valueOf(localPort).intValue());
-				log.debug("Local address detected as " + localSockAddr.toString());
-			}
-
-			// build the remote address
-
-			InetAddress remoteAddr;
-			InetSocketAddress remoteSockAddr;
-
-			if (remoteHost != null && remotePort != null && Integer.valueOf(remotePort).intValue() > 0 && ! remoteHost.equals("localhost") && ! remoteHost.startsWith("127.")) {
-
-				remoteAddr = InetAddress.getByName(remoteHost);
-				remoteSockAddr = new InetSocketAddress(remoteAddr, Integer.valueOf(remotePort).intValue());
-				log.debug("Boot address is " + remoteSockAddr.toString());
-			} else {
-
-				remoteAddr = null;
-				remoteSockAddr = null;
-				log.debug("No boot address.");
-			}
-
-			// figure out public address and port
-
-			InetAddress publicAddr;
-			InetSocketAddress publicSockAddr;
-
-			if (remoteHost != null && remotePort != null && Integer.valueOf(remotePort).intValue() > 0 && ! remoteHost.equals("localhost") && ! remoteHost.startsWith("127.")) {
-
-				DatagramSocket clientSocket = new DatagramSocket(null);
-				clientSocket.setReuseAddress(true);
-				clientSocket.setSoTimeout(10000);
-				clientSocket.bind(new InetSocketAddress(localAddr, Integer.valueOf(localPort).intValue()));
-
-				byte[] sendBuffer;
-				byte[] receiveBuffer = new byte[256];
-				String sendString;
-				String receiveString;
-
-				sendString = ":)";
-				sendBuffer = sendString.getBytes();
-
-				DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, InetAddress.getByName(remoteHost), Integer.valueOf(remotePort).intValue() - 1);
-				log.debug("Sending probe packet...");
-				clientSocket.send(sendPacket);
-
-				DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
-				log.debug("Receiving probe packet...");
-				clientSocket.receive(receivePacket);
-				receiveString = new String(receiveBuffer).substring(0, receivePacket.getLength());
-
-				String publicHost = receiveString.split(" ")[0];
-				String publicPort = receiveString.split(" ")[1];
-				publicAddr = InetAddress.getByName(publicHost);
-				publicSockAddr = new InetSocketAddress(publicAddr, Integer.valueOf(publicPort).intValue());
-				log.debug("Public address is " + publicSockAddr.toString());
-
-				clientSocket.close();
-			} else {
-
-				publicAddr = null;
-				publicSockAddr = null;
-				log.debug("No public address.");
-			}
-
-			if (publicAddr != null && localAddr.equals(publicAddr)) {
-
-				publicAddr = null;
-				publicSockAddr = null;
-				log.debug("Local address is public address.");
-			}
-
 			// construct pastry ID factory
 
 			this.pastryIdFactory = new rice.pastry.commonapi.PastryIdFactory(this.environment);
@@ -280,7 +244,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 			log.debug("Instantiating node...");
 
-			this.createNode(publicSockAddr);
+			this.createNode(localSockAddr, publicSockAddr);
 
 			// create endpoint
 
@@ -366,19 +330,21 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		return "1";
 	}
 
-	public String connectList(String localHost, String localPort, String remoteHostList, String parameters) throws Exception {
+	public String connectList(String localHost, String remoteHostList, String parameters) throws Exception {
 
-		log.debug("connectList(" + localHost + "," + localPort + "," + remoteHostList + ",<parameters>)");
+		log.debug("connectList(" + localHost + "," + remoteHostList + ",<parameters>)");
 
 		String[] remoteHosts = remoteHostList.split(",");
 
 		for (String remoteHost : remoteHosts) {
 
+			remoteHost = remoteHost.trim();
+
 			log.debug("Trying to connect to remote host " + remoteHost);
 
 			try {
 
-				this.connect(localHost, localPort, remoteHost, null, parameters);
+				this.connect(localHost, remoteHost, parameters);
 				if ("1".equals(this.connected())) return "1";
 			} catch (Exception ex) {
 
@@ -390,9 +356,10 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		throw new IOException("Could not connect to any host.");
 	}
 
-	protected void createNode(InetSocketAddress publicSockAddr) throws IOException {
+	protected void createNode(InetSocketAddress localSockAddr, InetSocketAddress publicSockAddr) throws IOException {
 
-		rice.pastry.NodeIdFactory nodeIdFactory = new rice.pastry.standard.RandomNodeIdFactory(this.environment);
+		//rice.pastry.NodeIdFactory nodeIdFactory = new rice.pastry.standard.RandomNodeIdFactory(this.environment);
+		rice.pastry.NodeIdFactory nodeIdFactory = new rice.pastry.standard.IPNodeIdFactory(localSockAddr.getAddress(), localSockAddr.getPort(), this.environment);
 		rice.pastry.socket.SocketPastryNodeFactory nodeFactory;
 
 		/*if (this.isInternetRoutablePrefix(localAddr) || (remoteAddr != null && this.isInternetRoutablePrefix(remoteAddr))) {
@@ -403,13 +370,13 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		} else*/ {
 
 			log.debug("Constructing SocketPastryNodeFactory...");
-			nodeFactory = new rice.pastry.socket.SocketPastryNodeFactory(nodeIdFactory, Integer.valueOf(this.localPort).intValue(), this.environment);
+			nodeFactory = new rice.pastry.socket.SocketPastryNodeFactory(nodeIdFactory, localSockAddr.getAddress(), localSockAddr.getPort(), this.environment);
 		}
 
 		this.pastryNode = nodeFactory.newNode(nodeIdFactory.generateNodeId(), publicSockAddr);
 
-		log.debug("Local node: " + this.pastryNode.getClass().getName());
-		log.debug("Local port is " + this.localPort);
+		log.debug("Node: " + this.pastryNode.getClass().getName());
+		log.debug("Node ID: " + this.pastryNode.getNodeId());
 	}
 
 	protected void createEndpoint() {
@@ -473,7 +440,7 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 
 		log.debug("connected()");
 
-		if (this.environment != null && this.pastryNode != null && this.endpoint != null) {
+		if (this.environment != null && this.pastryNode != null && this.endpoint != null && this.pastryNode.isReady()) {
 
 			return "1";
 		} else {
@@ -493,6 +460,22 @@ public class VegaImpl implements Vega, Application, ScribeMultiClient {
 		if (this.endpoint == null) return null;
 
 		return this.endpoint.getId().toStringFull();
+	}
+
+	public String xdiUri() throws Exception {
+
+		log.debug("xdiUri()");
+
+		if (this.publicHost != null) {
+
+			return "http://" + this.publicHost + ":10100/";
+		} else if (this.localHost != null) {
+
+			return "http://" + this.localHost + ":10100/";
+		} else {
+
+			return null;
+		}
 	}
 
 	public String localHost() throws Exception {

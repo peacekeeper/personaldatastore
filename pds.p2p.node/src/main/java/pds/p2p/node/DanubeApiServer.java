@@ -60,14 +60,14 @@ public class DanubeApiServer implements ServletContextListener {
 		shutdown();
 	}
 
-	public static Collection<Class<?>> apiClasses() {
+	public static Collection<Class<?>> apiInterfaces() {
 
 		return Arrays.asList(new Class<?>[] { Admin.class, Orion.class, Vega.class, Sirius.class, Polaris.class });
 	}
 
-	public static Class<?> apiClass(String apiName) {
+	public static Class<?> apiInterface(String apiName) {
 
-		for (Class<?> clazz : apiClasses()) {
+		for (Class<?> clazz : apiInterfaces()) {
 
 			if (apiName.equals(clazz.getAnnotation(DanubeApi.class).name())) return clazz;
 		}
@@ -98,7 +98,7 @@ public class DanubeApiServer implements ServletContextListener {
 		siriusObject = pds.p2p.api.sirius.SiriusFactory.getSirius(vegaObject);
 		if (pds.p2p.api.sirius.SiriusFactory.getException() != null) throw pds.p2p.api.sirius.SiriusFactory.getException();
 
-		polarisObject = pds.p2p.api.polaris.PolarisFactory.getPolaris(orionObject);
+		polarisObject = pds.p2p.api.polaris.PolarisFactory.getPolaris(orionObject, vegaObject);
 		if (pds.p2p.api.polaris.PolarisFactory.getException() != null) throw pds.p2p.api.polaris.PolarisFactory.getException();
 
 		adminObject.init();

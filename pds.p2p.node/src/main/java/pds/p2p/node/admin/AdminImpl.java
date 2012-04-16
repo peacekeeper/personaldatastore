@@ -3,17 +3,12 @@ package pds.p2p.node.admin;
 import java.lang.reflect.Method;
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import pds.p2p.api.Admin;
 import pds.p2p.api.annotation.DanubeApi;
 import pds.p2p.node.DanubeApiServer;
 import pds.p2p.node.ScriptThread;
 
 public class AdminImpl implements Admin {
-
-	private static final Logger log = LoggerFactory.getLogger(AdminImpl.class);
 
 	private Date startTime;
 	private ScriptThread scriptThread;
@@ -46,26 +41,9 @@ public class AdminImpl implements Admin {
 
 		StringBuffer buffer = new StringBuffer();
 
-		// list API classes
+		// list API interfaces
 
-		for (Class<?> apiClass : DanubeApiServer.apiClasses()) {
-
-			// find interface
-
-			log.debug("Finding API interface for API '" + apiClass.getCanonicalName() + "'");
-
-			Class<?> apiInterface = null;
-
-			for (Class<?> apiClassInterface : apiClass.getInterfaces()) {
-
-				if (apiClassInterface.getAnnotation(DanubeApi.class) != null) {
-
-					apiInterface = apiClassInterface;
-					break;
-				}
-			}
-
-			if (apiInterface == null) return null;
+		for (Class<?> apiInterface : DanubeApiServer.apiInterfaces()) {
 
 			// print help
 
@@ -79,26 +57,9 @@ public class AdminImpl implements Admin {
 
 	public String helpApi(String apiName) throws Exception {
 
-		// find API class
+		// find API interface
 
-		Class<?> apiClass = DanubeApiServer.apiClass(apiName);
-
-		// find interface
-
-		log.debug("Finding API interface for API '" + apiClass.getCanonicalName() + "'");
-
-		Class<?> apiInterface = null;
-
-		for (Class<?> apiClassInterface : apiClass.getInterfaces()) {
-
-			if (apiClassInterface.getAnnotation(DanubeApi.class) != null) {
-
-				apiInterface = apiClassInterface;
-				break;
-			}
-		}
-
-		if (apiInterface == null) return null;
+		Class<?> apiInterface = DanubeApiServer.apiInterface(apiName);
 
 		// print help
 

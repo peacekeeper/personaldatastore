@@ -53,8 +53,10 @@ public class RelationsListModel extends AbstractReadOnlyModel<ArrayList<Relation
 
 				String iname = rawrelation;
 				String inumber = DanubeApiClient.orionObject.resolve(iname);
-				String nodeId = inumber == null ? null : DanubeApiClient.siriusObject.getLiteral(inumber + "$nodeid");
-				String xdiUri = inumber == null ? null : DanubeApiClient.siriusObject.getLiteral(inumber + "$xdiuri");
+/*				String nodeId = inumber == null ? null : DanubeApiClient.siriusObject.getLiteral(inumber + "$nodeid");
+				String xdiUri = inumber == null ? null : DanubeApiClient.siriusObject.getLiteral(inumber + "$xdiuri");*/
+				String nodeId = inumber == null ? null : DanubeApiClient.vegaObject.get("(" + inumber + ")$nodeid");
+				String xdiUri = inumber == null ? null : DanubeApiClient.vegaObject.get("(" + inumber + ")$xdiuri");
 
 				Relation relation = new Relation();
 				relation.setIname(rawrelation);

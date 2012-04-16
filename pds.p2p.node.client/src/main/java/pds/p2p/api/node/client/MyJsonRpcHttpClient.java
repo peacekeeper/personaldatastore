@@ -19,21 +19,33 @@ import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
  */
 public class MyJsonRpcHttpClient extends JsonRpcHttpClient {
 
+	private static final int DEFAULT_CONNECTION_TIMEOUT = 60*1000;
+	private static final int DEFAULT_READ_TIMEOUT = 60*1000;
+
 	private static Logger log = LoggerFactory.getLogger(MyJsonRpcHttpClient.class);
 
 	public MyJsonRpcHttpClient(ObjectMapper mapper, URL serviceUrl, Map<String, String> headers) {
 
 		super(mapper, serviceUrl, headers);
+
+		this.setConnectionTimeoutMillis(DEFAULT_CONNECTION_TIMEOUT);
+		this.setReadTimeoutMillis(DEFAULT_READ_TIMEOUT);
 	}
 
 	public MyJsonRpcHttpClient(URL serviceUrl, Map<String, String> headers) {
 
 		super(serviceUrl, headers);
+
+		this.setConnectionTimeoutMillis(DEFAULT_CONNECTION_TIMEOUT);
+		this.setReadTimeoutMillis(DEFAULT_READ_TIMEOUT);
 	}
 
 	public MyJsonRpcHttpClient(URL serviceUrl) {
 
 		super(serviceUrl);
+
+		this.setConnectionTimeoutMillis(DEFAULT_CONNECTION_TIMEOUT);
+		this.setReadTimeoutMillis(DEFAULT_READ_TIMEOUT);
 	}
 
 	/**
@@ -47,6 +59,18 @@ public class MyJsonRpcHttpClient extends JsonRpcHttpClient {
 	 * @throws Throwable on error
 	 */
 	public Object invoke(String methodName, Object[] arguments, Type returnType, Map<String, String> extraHeaders) throws Throwable {
+
+		try {
+
+			return this.internalInvoke(methodName, arguments, returnType, extraHeaders);
+		} catch (Throwable ex) {
+
+			log.warn("Problem while invoking '" + methodName + "' on " + this.getServiceUrl() + ": " + ex.getMessage(), ex);
+			throw ex;
+		}
+	}
+
+	private Object internalInvoke(String methodName, Object[] arguments, Type returnType, Map<String, String> extraHeaders) throws Throwable {
 
 		// HTTP parameters
 
