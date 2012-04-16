@@ -10,7 +10,7 @@
 	<artifactId>pds.core</artifactId>
 	<packaging>war</packaging>
 	<name>pds.core</name>
-
+	
 	<build>
 		<plugins>
 			<plugin>
