@@ -1,6 +1,8 @@
 package pds.p2p.node.webshell.webpages.intent;
 
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.Radio;
+import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -12,7 +14,6 @@ import pds.p2p.api.node.client.DanubeApiClient;
 import pds.p2p.node.webshell.objects.Intent;
 import pds.p2p.node.webshell.webapplication.WebShellAuthorizationStrategy.NeedConnectedPage;
 import pds.p2p.node.webshell.webapplication.WebShellAuthorizationStrategy.NeedLoggedInPage;
-import pds.p2p.node.webshell.webapplication.behaviors.DefaultFocusBehavior;
 import pds.p2p.node.webshell.webpages.BasePage;
 
 public class CreateIntent extends BasePage implements NeedLoggedInPage, NeedConnectedPage {
@@ -21,7 +22,7 @@ public class CreateIntent extends BasePage implements NeedLoggedInPage, NeedConn
 
 	private static Logger log = LoggerFactory.getLogger(CreateIntent.class.getName());
 
-	private String product;
+	private String item;
 	private String price;
 
 	public CreateIntent() {
@@ -37,7 +38,7 @@ public class CreateIntent extends BasePage implements NeedLoggedInPage, NeedConn
 
 		private static final long serialVersionUID = 6565821013414740274L;
 
-		private TextField<String> productTextField;
+		private RadioGroup<String> itemRadioGroup;
 		private TextField<String> priceTextField;
 
 		private MyForm(String id, IModel<CreateIntent> model) {
@@ -46,17 +47,23 @@ public class CreateIntent extends BasePage implements NeedLoggedInPage, NeedConn
 
 			// create components
 
-			this.productTextField = new TextField<String> ("product");
-			this.productTextField.setLabel(new Model<String> ("Product"));
-			this.productTextField.setRequired(true);
-			this.productTextField.add(new DefaultFocusBehavior());
+			this.itemRadioGroup = new RadioGroup<String> ("item");
+			this.itemRadioGroup.setLabel(new Model<String> ("Item"));
+			this.itemRadioGroup.setRequired(true);
+			this.itemRadioGroup.add(new Radio<String> ("item1", new Model<String> ("1")));
+			this.itemRadioGroup.add(new Radio<String> ("item2", new Model<String> ("2")));
+			this.itemRadioGroup.add(new Radio<String> ("item3", new Model<String> ("3")));
+			this.itemRadioGroup.add(new Radio<String> ("item4", new Model<String> ("4")));
+			this.itemRadioGroup.add(new Radio<String> ("item5", new Model<String> ("5")));
+			this.itemRadioGroup.add(new Radio<String> ("item6", new Model<String> ("6")));
+			this.itemRadioGroup.add(new Radio<String> ("item7", new Model<String> ("7")));
 			this.priceTextField = new TextField<String> ("price");
 			this.priceTextField.setLabel(new Model<String> ("Price"));
 			this.priceTextField.setRequired(true);
 
 			// add components
 
-			this.add(this.productTextField);
+			this.add(this.itemRadioGroup);
 			this.add(this.priceTextField);
 		}
 
@@ -68,7 +75,7 @@ public class CreateIntent extends BasePage implements NeedLoggedInPage, NeedConn
 			try {
 
 				Intent intent = new Intent();
-				intent.setProduct(CreateIntent.this.product);
+				intent.setItem(CreateIntent.this.item);
 				intent.setPrice(CreateIntent.this.price);
 
 				DanubeApiClient.vegaObject.multicast("intent", "intent", intent.toJSON(), null, null);
@@ -85,12 +92,12 @@ public class CreateIntent extends BasePage implements NeedLoggedInPage, NeedConn
 		}
 	}
 
-	public String getProduct() {
-		return product;
+	public String getItem() {
+		return item;
 	}
 
-	public void setProduct(String product) {
-		this.product = product;
+	public void setItem(String item) {
+		this.item = item;
 	}
 
 	public String getPrice() {

@@ -1,13 +1,22 @@
 package pds.p2p.node.webshell.webpages;
 
 
+import java.util.ArrayList;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.IModel;
+
+import pds.p2p.node.webshell.objects.Intent;
+import pds.p2p.node.webshell.webapplication.models.IntentsListModel;
+import pds.p2p.node.webshell.webpages.intent.IntentPanel;
 
 public abstract class BasePage extends WebPage {
 
@@ -24,6 +33,7 @@ public abstract class BasePage extends WebPage {
 		this.add(new BookmarkablePageLink<Page> ("homePageLink", Application.get().getHomePage()));
 		this.add(new SidePanel("sidePanel"));
 		this.add(new DanubeApiStatusPanel("danubeApiStatusPanel"));
+		this.add(new MessagesPanel("messagesPanel"));
 		this.add(this.titleLabel);
 		this.add(new FeedbackPanel("feedbackPanel"));
 	}

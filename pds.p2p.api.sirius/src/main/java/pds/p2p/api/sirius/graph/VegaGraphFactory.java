@@ -18,7 +18,7 @@ public class VegaGraphFactory extends AbstractKeyValueGraphFactory implements Gr
 	}
 
 	@Override
-	protected KeyValueStore getKeyValueStore() throws IOException {
+	protected KeyValueStore openKeyValueStore() throws IOException {
 
 		return new VegaKeyValueStore(this.vega);
 	}

@@ -17,8 +17,7 @@ function checkInitialized() {
 
 	if ((! connected) && vega.connected()) {
 
-		vega.subscribeTopic("intent_listener", "intent");
-		vega.subscribeRay("intent_listener", "intent");
+		vega.subscribeRay("message_listener", "message");
 		connected = true;
 	}
 
@@ -28,20 +27,19 @@ function checkInitialized() {
 	}
 }
 
-function processIntent(rawpacket, packet) {
+function processMessage(rawpacket, packet) {
 
 	var content = packet.content;
-	var intent = eval("(" + content + ")");
+	var message = eval("(" + content + ")");
 
-	polaris.add(orion.inumber() + "+intent!" + intent.intentid + "/!/(data:," + encodeURIComponent(rawpacket) + ")", null, null);
+	polaris.add(orion.inumber() + "+message!" + message.messageid + "/!/(data:," + encodeURIComponent(rawpacket) + ")", null, null);
 }
 
 //-- main functions
 
 function loadScript() {
 
-	vega.resetTopics("intent_listener");
-	vega.resetRays("intent_listener");
+	vega.resetRays("message_listener");
 
 	return { interval: 5 };
 }
@@ -51,14 +49,14 @@ function runScript() {
 	checkInitialized();
 	if ((! loggedin) || (! connected)) return;
 
-	while (vega.hasPackets("intent_listener")) {
+	while (vega.hasPackets("message_listener")) {
 
-		var rawpacket = vega.fetchPacket("intent_listener");
+		var rawpacket = vega.fetchPacket("message_listener");
 		var packet = eval("(" + rawpacket + ")");
 
-		if (packet.ray == "intent") {
+		if (packet.ray == "message") {
 
-			processIntent(rawpacket, packet);
+			processMessage(rawpacket, packet);
 		} else {
 
 			continue;
@@ -68,7 +66,6 @@ function runScript() {
 
 function unloadScript() {
 
-	vega.resetTopics("intent_listener");
-	vega.resetRays("intent_listener");
+	vega.resetRays("message_listener");
 }
  

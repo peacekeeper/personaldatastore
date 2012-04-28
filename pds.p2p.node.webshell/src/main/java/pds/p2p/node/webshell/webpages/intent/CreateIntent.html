@@ -6,7 +6,19 @@
 	<form wicket:id="form">
 
 		<table>
-			<tr><td>What do you want:</td><td><input wicket:id="product" size="40" style="padding: 5px" type="text"></td></tr>
+			<!-- <tr><td>What do you want:</td><td><input wicket:id="product" size="40" style="padding: 5px" type="text"></td></tr>-->
+			<tr><td colspan="2">What item are you looking for?</td></tr>
+			<tr><td colspan="2">
+			<span wicket:id="item">
+				<input wicket:id="item1" type="radio"/><img src="/images/items/item1.png" align="middle">
+				<input wicket:id="item2" type="radio"/><img src="/images/items/item2.png" align="middle">
+				<input wicket:id="item3" type="radio"/><img src="/images/items/item3.png" align="middle">
+				<input wicket:id="item4" type="radio"/><img src="/images/items/item4.png" align="middle"><br>
+				<input wicket:id="item5" type="radio"/><img src="/images/items/item5.png" align="middle">
+				<input wicket:id="item6" type="radio"/><img src="/images/items/item6.png" align="middle">
+				<input wicket:id="item7" type="radio"/><img src="/images/items/item7.png" align="middle">
+			</span>
+			</td></tr>
 			<tr><td>How much would you pay:</td><td><input wicket:id="price" size="40" style="padding: 5px" type="text"></td></tr>
 		</table>
 

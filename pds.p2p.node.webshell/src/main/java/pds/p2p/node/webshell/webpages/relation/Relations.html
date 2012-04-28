@@ -9,11 +9,26 @@
 
 	<h2>New Relation</h2>
 	
-	<form wicket:id="form">
+	<form wicket:id="relationForm">
 
 		<table>
 			<tr><td>Relation:</td><td><input wicket:id="relation" size="40" style="padding: 5px" type="text"></td></tr>
 		</table>
+
+		<input type="submit" style="display:none">
+
+	</form>
+
+	<h2>Send Message</h2>
+	
+	<form wicket:id="messageForm">
+
+		<table>
+			<tr><td>To:</td><td><input wicket:id="to" size="40" style="padding: 5px" type="text"></td></tr>
+			<tr><td>Message:</td><td><input wicket:id="message" size="40" style="padding: 5px" type="text"></td></tr>
+		</table>
+
+		<input type="submit" style="display:none">
 
 	</form>
 

@@ -1,9 +1,11 @@
 package pds.p2p.node.webshell.webpages.intent;
 
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.request.resource.ContextRelativeResource;
 
 import pds.p2p.api.node.client.DanubeApiClient;
 import pds.p2p.node.webshell.objects.Intent;
@@ -19,7 +21,7 @@ public class IntentPanel extends Panel {
 		// create and add components
 
 		this.add(new Label("iname"));
-		this.add(new Label("product"));
+		this.add(new Image("item", new ContextRelativeResource("/images/items/item" + intent.getItem() + ".png")));
 		this.add(new Label("price"));
 		this.add(new Label("timerecv"));
 		this.add(new Link<String> ("delete") {
@@ -33,7 +35,7 @@ public class IntentPanel extends Panel {
 				try {
 
 					String inumber = DanubeApiClient.orionObject.inumber();
-					DanubeApiClient.polarisObject.del(inumber + "+intent" + "!" + intent.getId(), null, null);
+					DanubeApiClient.polarisObject.del(inumber + "+intent" + "!" + intent.getIntentId(), null, null);
 				} catch (Exception ex) {
 
 					throw new RuntimeException(ex.getMessage(), ex);

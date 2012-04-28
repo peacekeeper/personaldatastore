@@ -72,7 +72,7 @@ function xdiPolarisTermHandler() {
 		if (! argv[1]) {
 			this.write("Need 1 argument");
 		} else {
-			command = "polaris." + cmd.substring(1) + "(\"" + argv[1] + "\",\"STATEMENTS\")";				
+			command = "polaris." + cmd.substring(1) + "(\"" + argv[1] + "\",null,\"STATEMENTS\")";				
 			// send line to server-backend
 			this.send({
 				url: xdiPolarisRemotePath,

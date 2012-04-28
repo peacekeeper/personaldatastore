@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pds.p2p.api.node.client.DanubeApiClient;
+import pds.p2p.node.webshell.objects.Message;
 import pds.p2p.node.webshell.objects.Relation;
 import pds.p2p.node.webshell.webapplication.WebShellAuthorizationStrategy.NeedConnectedPage;
 import pds.p2p.node.webshell.webapplication.WebShellAuthorizationStrategy.NeedLoggedInPage;
@@ -27,6 +28,8 @@ public class Relations extends BasePage implements NeedLoggedInPage, NeedConnect
 	private static Logger log = LoggerFactory.getLogger(Relations.class.getName());
 
 	private String relation;
+	private String to;
+	private String message;
 
 	public Relations() {
 
@@ -48,16 +51,17 @@ public class Relations extends BasePage implements NeedLoggedInPage, NeedConnect
 		};
 
 		this.add(relationsListView);
-		this.add(new MyForm("form", new CompoundPropertyModel<Relations> (this)));
+		this.add(new RelationForm("relationForm", new CompoundPropertyModel<Relations> (this)));
+		this.add(new MessageForm("messageForm", new CompoundPropertyModel<Relations> (this)));
 	}
 
-	private class MyForm extends Form<Relations> {
+	private class RelationForm extends Form<Relations> {
 
 		private static final long serialVersionUID = 4415680791046759951L;
 
 		private TextField<String> relationTextField;
 
-		private MyForm(String id, IModel<Relations> model) {
+		private RelationForm(String id, IModel<Relations> model) {
 
 			super(id, model);
 
@@ -91,7 +95,62 @@ public class Relations extends BasePage implements NeedLoggedInPage, NeedConnect
 
 			// done
 
-			info(Relations.this.getString("success"));
+			info(Relations.this.getString("successrelation"));
+		}
+	}
+
+	private class MessageForm extends Form<Relations> {
+
+		private static final long serialVersionUID = -3624585005960965743L;
+
+		private TextField<String> toTextField;
+		private TextField<String> messageTextField;
+
+		private MessageForm(String id, IModel<Relations> model) {
+
+			super(id, model);
+
+			// create components
+
+			this.toTextField = new TextField<String> ("to");
+			this.toTextField.setLabel(new Model<String> ("To"));
+			this.toTextField.setRequired(true);
+			this.messageTextField = new TextField<String> ("message");
+			this.messageTextField.setLabel(new Model<String> ("Message"));
+			this.messageTextField.setRequired(true);
+
+			// add components
+
+			this.add(this.toTextField);
+			this.add(this.messageTextField);
+		}
+
+		@Override
+		protected void onSubmit() {
+
+			Relations.log.debug("Sending Message.");
+
+			try {
+
+				String inumber = DanubeApiClient.orionObject.resolve(Relations.this.to);
+				String nodeId = inumber == null ? null : DanubeApiClient.vegaObject.get("(" + inumber + ")$nodeid");
+
+				if (nodeId == null) throw new RuntimeException("Destination not found.");
+				
+				Message message = new Message();
+				message.setMessage(Relations.this.message);
+
+				DanubeApiClient.vegaObject.send(nodeId, "message", message.toJSON(), null, null);
+			} catch (Exception ex) {
+
+				Relations.log.warn(ex.getMessage(), ex);
+				error(Relations.this.getString("fail") + ex.getMessage());
+				return;
+			}
+
+			// done
+
+			info(Relations.this.getString("successmessage"));
 		}
 	}
 
@@ -101,5 +160,21 @@ public class Relations extends BasePage implements NeedLoggedInPage, NeedConnect
 
 	public void setRelation(String relation) {
 		this.relation = relation;
+	}
+
+	public String getTo() {
+		return this.to;
+	}
+
+	public void setTo(String to) {
+		this.to = to;
+	}
+
+	public String getMessage() {
+		return this.message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }

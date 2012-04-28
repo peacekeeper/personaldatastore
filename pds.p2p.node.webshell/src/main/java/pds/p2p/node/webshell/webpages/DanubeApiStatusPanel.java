@@ -7,10 +7,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.time.Duration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import pds.p2p.node.webshell.DanubeApiShellServlet;
 import pds.p2p.node.webshell.webapplication.components.NullValueLabel;
 import pds.p2p.node.webshell.webapplication.models.InameModel;
 import pds.p2p.node.webshell.webapplication.models.InumberModel;
@@ -22,8 +19,6 @@ import pds.p2p.node.webshell.webpages.terminals.XDITerminal;
 public class DanubeApiStatusPanel extends Panel {
 
 	private static final long serialVersionUID = 8002365033991382512L;
-
-	static Logger log = LoggerFactory.getLogger(DanubeApiShellServlet.class);
 
 	private Label nodeIdLabel;
 	private Label neighborsLabel;
@@ -49,7 +44,7 @@ public class DanubeApiStatusPanel extends Panel {
 		this.add(new BookmarkablePageLink<Page> ("XDITerminalLink", XDITerminal.class));
 
 		this.setOutputMarkupId(true);
-		this.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(10)) {
+		this.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(5)) {
 
 			private static final long serialVersionUID = 1427947950380198205L;
 

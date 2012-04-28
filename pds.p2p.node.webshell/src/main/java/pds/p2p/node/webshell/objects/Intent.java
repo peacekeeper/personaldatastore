@@ -14,33 +14,33 @@ public class Intent extends Packet {
 
 	private static Logger log = LoggerFactory.getLogger(Intent.class.getName());
 
-	private String id;
-	private String product;
+	private String intentId;
+	private String item;
 	private String price;
 
 	public Intent() {
 
-		this.id = createId();
+		this.intentId = createId();
 	}
 
-	public String getId() {
+	public String getIntentId() {
 
-		return this.id;
+		return this.intentId;
 	}
 
-	public void setId(String id) {
+	public void setIntentId(String intentId) {
 
-		this.id = id;
+		this.intentId = intentId;
 	}
 
-	public String getProduct() {
+	public String getItem() {
 
-		return this.product;
+		return this.item;
 	}
 
-	public void setProduct(String product) {
+	public void setItem(String item) {
 
-		this.product = product;
+		this.item = item;
 	}
 
 	public String getPrice() {
@@ -67,18 +67,18 @@ public class Intent extends Packet {
 
 		JSONObject contentObject = new JSONObject(content);
 
-		this.id = contentObject.getString("id");
-		this.product = contentObject.getString("product");
-		this.price = contentObject.getString("price");
+		this.intentId = contentObject.has("intentid") ? contentObject.getString("intentid") : null;
+		this.item = contentObject.has("item") ? contentObject.getString("item") : null;
+		this.price = contentObject.has("price") ? contentObject.getString("price") : null;
 	}
 
 	public String toJSON() {
 
 		StringBuffer json = new StringBuffer();
 		json.append("{");
-		json.append("\"id\":\"" + this.id.replace("\"", "\\\"") + "\"");
+		json.append("\"intentid\":\"" + this.intentId.replace("\"", "\\\"") + "\"");
 		json.append(",");
-		json.append("\"product\":\"" + this.product.replace("\"", "\\\"") + "\"");
+		json.append("\"item\":\"" + this.item.replace("\"", "\\\"") + "\"");
 		json.append(",");
 		json.append("\"price\":\"" + this.price.replace("\"", "\\\"") + "\"");
 		json.append("}");
@@ -89,7 +89,7 @@ public class Intent extends Packet {
 	@Override
 	public String toString() {
 
-		return "#" + this.id + ": " + this.product + " (" + this.price + ")";
+		return "#" + this.intentId + ": " + this.item + " (" + this.price + ")";
 	}
 
 	@Override
@@ -100,8 +100,8 @@ public class Intent extends Packet {
 
 		Intent other = (Intent) object;
 
-		if (! this.id.equals(other.id)) return false;
-		if (! this.product.equals(other.product)) return false;
+		if (! this.intentId.equals(other.intentId)) return false;
+		if (! this.item.equals(other.item)) return false;
 		if (! this.price.equals(other.price)) return false;
 
 		return true;
@@ -112,8 +112,8 @@ public class Intent extends Packet {
 
 		int hashCode = 1;
 
-		hashCode += hashCode * 31 + this.id.hashCode();
-		hashCode += hashCode * 31 + this.product.hashCode();
+		hashCode += hashCode * 31 + this.intentId.hashCode();
+		hashCode += hashCode * 31 + this.item.hashCode();
 		hashCode += hashCode * 31 + this.price.hashCode();
 
 		return hashCode;

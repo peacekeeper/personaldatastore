@@ -17,6 +17,7 @@ public class Packet implements Serializable {
 
 	private static Logger log = LoggerFactory.getLogger(Packet.class.getName());
 
+	private String id;
 	private String topic;
 	private String ray;
 	private String iname;
@@ -26,6 +27,16 @@ public class Packet implements Serializable {
 
 	public Packet() {
 
+	}
+
+	public String getId() {
+
+		return this.id;
+	}
+
+	public void setId(String id) {
+
+		this.id = id;
 	}
 
 	public String getTopic() {
@@ -88,7 +99,7 @@ public class Packet implements Serializable {
 		this.timerecv = timerecv;
 	}
 
-	public void fromPacket (String rawpacket) throws UnsupportedEncodingException, JSONException {
+	public void fromPacket(String rawpacket) throws UnsupportedEncodingException, JSONException {
 
 		log.debug("raw packet: " + rawpacket);
 
@@ -97,7 +108,8 @@ public class Packet implements Serializable {
 
 		JSONObject packetObject = new JSONObject(decodedPacket);
 
-		this.topic = packetObject.getString("topic");
+		this.id = packetObject.has("id") ? packetObject.getString("id") : null;
+		this.topic = packetObject.has("topic") ? packetObject.getString("topic") : null;
 		this.ray = packetObject.getString("ray");
 		this.iname = packetObject.getString("iname");
 		this.inumber = packetObject.getString("inumber");

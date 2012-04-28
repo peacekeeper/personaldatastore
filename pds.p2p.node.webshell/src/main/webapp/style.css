@@ -98,6 +98,13 @@ span.bold {
 	text-align: left;
 }
 
+#MessagesPanel {
+	font-family: courier, fixed, swiss, sans-serif;
+	color: white;
+	padding: 5px;
+	margin: 0px;
+}
+
 #SidePanel {
 	font-family: Calibri, Arial, Helvetica, sans-serif;
 	font-size: 14pt;
@@ -197,7 +204,7 @@ div.intent {
 	background-repeat: no-repeat;
 	background-position: 10px 10px;
 	width: 500px;
-	height: 105px;
+	height: 260px;
 	border: 4px outset gray;
 	margin-top: 10px;
 	padding: 10px;
@@ -212,6 +219,9 @@ div.relation {
 	border: 4px inset gray;
 	margin-top: 10px;
 	padding: 10px;
+}
+
+div.message {
 }
 
 .feedbackPanelERROR {

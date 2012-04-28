@@ -35,6 +35,8 @@ public class IntentsListModel extends AbstractReadOnlyModel<ArrayList<Intent>> {
 
 		try {
 
+			if (! "1".equals(DanubeApiClient.vegaObject.connected())) return new ArrayList<Intent> ();
+
 			String inumber = DanubeApiClient.orionObject.inumber();
 			rawpackets = DanubeApiClient.polarisObject.getLiterals(inumber + "+intent", null);
 		} catch (Exception ex) {
