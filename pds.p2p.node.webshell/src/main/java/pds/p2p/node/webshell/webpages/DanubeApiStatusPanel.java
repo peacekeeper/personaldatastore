@@ -11,8 +11,10 @@ import org.apache.wicket.util.time.Duration;
 import pds.p2p.node.webshell.webapplication.components.NullValueLabel;
 import pds.p2p.node.webshell.webapplication.models.InameModel;
 import pds.p2p.node.webshell.webapplication.models.InumberModel;
+import pds.p2p.node.webshell.webapplication.models.LocalHostModel;
 import pds.p2p.node.webshell.webapplication.models.NeighborsModel;
 import pds.p2p.node.webshell.webapplication.models.NodeIdModel;
+import pds.p2p.node.webshell.webapplication.models.PublicHostModel;
 import pds.p2p.node.webshell.webpages.terminals.ShellTerminal;
 import pds.p2p.node.webshell.webpages.terminals.XDITerminal;
 
@@ -24,6 +26,8 @@ public class DanubeApiStatusPanel extends Panel {
 	private Label neighborsLabel;
 	private Label inameLabel;
 	private Label inumberLabel;
+	private Label localHostLabel;
+	private Label publicHostLabel;
 
 	public DanubeApiStatusPanel(String id) {
 
@@ -33,6 +37,8 @@ public class DanubeApiStatusPanel extends Panel {
 		this.neighborsLabel = new NullValueLabel("neighborsLabel", new NeighborsModel(), "(not connected)");
 		this.inameLabel = new NullValueLabel("inameLabel", new InameModel(), "(not logged in)");
 		this.inumberLabel = new NullValueLabel("inumberLabel", new InumberModel(), "(not logged in)");
+		this.localHostLabel = new NullValueLabel("localHostLabel", new LocalHostModel(), "(not connected)");
+		this.publicHostLabel = new NullValueLabel("publicHostLabel", new PublicHostModel(), "(not connected)");
 
 		// create and add components
 
@@ -40,6 +46,8 @@ public class DanubeApiStatusPanel extends Panel {
 		this.add(this.neighborsLabel);
 		this.add(this.inameLabel);
 		this.add(this.inumberLabel);
+		this.add(this.localHostLabel);
+		this.add(this.publicHostLabel);
 		this.add(new BookmarkablePageLink<Page> ("ShellTerminalLink", ShellTerminal.class));
 		this.add(new BookmarkablePageLink<Page> ("XDITerminalLink", XDITerminal.class));
 
@@ -48,7 +56,7 @@ public class DanubeApiStatusPanel extends Panel {
 
 			private static final long serialVersionUID = 1427947950380198205L;
 
-/*			@Override
+			/*			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator() {
 
 				return new WaitIndicatorAjaxCallDecorator();
@@ -63,10 +71,10 @@ public class DanubeApiStatusPanel extends Panel {
 
 		// add css
 
-//		response.renderCSSReference(new CssResourceReference(WaitIndicatorAjaxCallDecorator.class, "WaitIndicatorAjaxCallDecorator.css"));
+		//		response.renderCSSReference(new CssResourceReference(WaitIndicatorAjaxCallDecorator.class, "WaitIndicatorAjaxCallDecorator.css"));
 
 		// add javascript
-		
-//		response.renderJavaScriptReference(new JavaScriptResourceReference(WaitIndicatorAjaxCallDecorator.class, "WaitIndicatorAjaxCallDecorator.js"));
+
+		//		response.renderJavaScriptReference(new JavaScriptResourceReference(WaitIndicatorAjaxCallDecorator.class, "WaitIndicatorAjaxCallDecorator.js"));
 	}
 }

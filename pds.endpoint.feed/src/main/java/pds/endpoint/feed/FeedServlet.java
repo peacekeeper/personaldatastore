@@ -20,8 +20,8 @@ import org.springframework.web.HttpRequestHandler;
 
 import pds.dictionary.PdsDictionary;
 import pds.dictionary.feed.FeedDictionary;
-import pds.xdi.Xdi;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiClient;
+import pds.xdi.XdiEndpoint;
 
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedOutput;
@@ -32,7 +32,7 @@ public class FeedServlet implements HttpRequestHandler {
 
 	private static final Logger log = LoggerFactory.getLogger(FeedServlet.class.getName());
 
-	private static final Xdi xdi;
+	private static final XdiClient xdi;
 
 	private String format;
 	private String contentType;
@@ -45,7 +45,7 @@ public class FeedServlet implements HttpRequestHandler {
 
 		try {
 
-			xdi = new Xdi(new Resolver(null));
+			xdi = new XdiClient(new Resolver(null));
 		} catch (Exception ex) {
 
 			throw new RuntimeException("Cannot initialize XDI: " + ex.getMessage(), ex);
@@ -78,7 +78,7 @@ public class FeedServlet implements HttpRequestHandler {
 		// find the XDI data
 
 		String xri = this.parseXri(request);
-		XdiContext context = this.getContext(xri);
+		XdiEndpoint context = this.getContext(xri);
 		Subject pdsSubject = context == null ? null : this.fetch(context);
 
 		if (pdsSubject == null) {
@@ -113,12 +113,12 @@ public class FeedServlet implements HttpRequestHandler {
 		return xri;
 	}
 
-	private XdiContext getContext(String xri) throws Exception {
+	private XdiEndpoint getContext(String xri) throws Exception {
 
 		return xdi.resolveContextByIname(xri, null);
 	}
 
-	private Subject fetch(XdiContext context) throws Exception {
+	private Subject fetch(XdiEndpoint context) throws Exception {
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_GET);
 		Graph operationGraph = operation.createOperationGraph(null);

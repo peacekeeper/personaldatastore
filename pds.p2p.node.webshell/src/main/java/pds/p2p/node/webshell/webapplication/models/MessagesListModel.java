@@ -35,6 +35,7 @@ public class MessagesListModel extends AbstractReadOnlyModel<ArrayList<Message>>
 
 		try {
 
+			if (! "1".equals(DanubeApiClient.orionObject.loggedin())) return new ArrayList<Message> ();
 			if (! "1".equals(DanubeApiClient.vegaObject.connected())) return new ArrayList<Message> ();
 
 			String inumber = DanubeApiClient.orionObject.inumber();

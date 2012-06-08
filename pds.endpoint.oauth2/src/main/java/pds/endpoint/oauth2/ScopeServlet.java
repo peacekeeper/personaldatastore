@@ -26,7 +26,7 @@ import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.context.ServletContextAware;
 
 import pds.endpoint.oauth2.store.OAuthStore;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
 
 public class ScopeServlet implements HttpRequestHandler, ServletContextAware {
 
@@ -141,7 +141,7 @@ public class ScopeServlet implements HttpRequestHandler, ServletContextAware {
 			oauthAuthorizationResponseBuilder.setExpiresIn(Integer.toString(accessTokenTtl));
 		}
 
-		XdiContext context = (XdiContext) request.getSession().getAttribute("context");
+		XdiEndpoint context = (XdiEndpoint) request.getSession().getAttribute("context");
 
 		oauthAuthorizationResponseBuilder.setParam("pds_canonical", context.getCanonical().toString());
 		oauthAuthorizationResponseBuilder.setParam("pds_endpoint", context.getEndpoint());

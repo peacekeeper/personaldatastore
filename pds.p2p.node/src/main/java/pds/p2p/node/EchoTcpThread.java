@@ -35,21 +35,23 @@ public class EchoTcpThread extends Thread {
 	@Override
 	public void run() {
 
-		log.info("ECHO TCP Thread " + Thread.currentThread().getId() + " starting.");
+		log.info("ECHO TCP Thread " + Thread.currentThread().getId() + " starting on port " + this.ipPort + ".");
 
 		// open socket
-		
+
 		try {
 
 			this.serverSocket = new ServerSocket();
+			this.serverSocket.setReuseAddress(true);
 			this.serverSocket.bind(new InetSocketAddress(this.ipPort));
 		} catch (Exception ex) {
 
+			log.error(ex.getMessage(), ex);
 			throw new RuntimeException(ex.getMessage(), ex);
 		}
 
 		// listen on socket
-		
+
 		while (this.running) {
 
 			try {
@@ -65,23 +67,23 @@ public class EchoTcpThread extends Thread {
 			} catch (Exception ex) {
 
 				if (! this.running) break;
-				
+
 				log.error("ECHO TCP Thread " + Thread.currentThread().getId() + " had exception: " + ex.getMessage(), ex);
 			}
 		}
 
 		// close socket
-		
+
 		try {
 
 			this.serverSocket.close();
 		} catch (Exception ex) { 
-			
+
 			log.error(ex.getMessage(), ex);
 		}
 
 		// done
-		
+
 		log.info("ECHO TCP Thread " + Thread.currentThread().getId() + " stopped.");
 	}
 }

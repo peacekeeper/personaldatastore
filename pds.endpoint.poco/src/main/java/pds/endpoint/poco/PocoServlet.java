@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.HttpRequestHandler;
 
 import pds.dictionary.PdsDictionary;
-import pds.xdi.Xdi;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiClient;
+import pds.xdi.XdiEndpoint;
 import xdi2.core.Graph;
 import xdi2.core.xri3.impl.XRI3;
 import xdi2.core.xri3.impl.XRI3Segment;
@@ -30,13 +30,13 @@ public class PocoServlet implements HttpRequestHandler {
 
 	private static final Logger log = LoggerFactory.getLogger(PocoServlet.class.getName());
 
-	private static final Xdi xdi;
+	private static final XdiClient xdi;
 
 	static {
 
 		try {
 
-			xdi = new Xdi(new Resolver(null));
+			xdi = new XdiClient(new Resolver(null));
 		} catch (Exception ex) {
 
 			throw new RuntimeException("Cannot initialize XDI: " + ex.getMessage(), ex);
@@ -68,7 +68,7 @@ public class PocoServlet implements HttpRequestHandler {
 		// find the XDI data
 
 		String xri = this.parseXri(request);
-		XdiContext context = this.getContext(xri);
+		XdiEndpoint context = this.getContext(xri);
 		Subject pdsSubject = context == null ? null : this.fetch(context);
 
 		if (pdsSubject == null) {
@@ -117,12 +117,12 @@ public class PocoServlet implements HttpRequestHandler {
 		return xri;
 	}
 
-	private XdiContext getContext(String xri) throws Exception {
+	private XdiEndpoint getContext(String xri) throws Exception {
 
 		return xdi.resolveContextByIname(xri, null);
 	}
 
-	private Subject fetch(XdiContext context) throws Exception {
+	private Subject fetch(XdiEndpoint context) throws Exception {
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_GET);
 		Graph operationGraph = operation.createOperationGraph(null);
@@ -139,7 +139,7 @@ public class PocoServlet implements HttpRequestHandler {
 		return subject;
 	}
 
-	private Poco convertPoco(String xri, XdiContext context, Subject pdsSubject) throws Exception {
+	private Poco convertPoco(String xri, XdiEndpoint context, Subject pdsSubject) throws Exception {
 
 		String id = context.getCanonical().toString();
 		String profileUrl = "http://xri2xrd.net/" + context.getCanonical().toString();

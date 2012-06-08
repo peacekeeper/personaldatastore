@@ -58,7 +58,7 @@ public class PolarisImpl implements Polaris {
 		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
 		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.vega.xdiUri()));
 
-		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
+		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndTargetXriOrStatement(XDIMessagingConstants.XRI_S_GET, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
 		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
@@ -73,7 +73,7 @@ public class PolarisImpl implements Polaris {
 		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
 		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.vega.xdiUri()));
 
-		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_ADD, xdi);
+		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndTargetXriOrStatement(XDIMessagingConstants.XRI_S_ADD, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
 		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
@@ -88,7 +88,7 @@ public class PolarisImpl implements Polaris {
 		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
 		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.vega.xdiUri()));
 
-		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_MOD, xdi);
+		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndTargetXriOrStatement(XDIMessagingConstants.XRI_S_MOD, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
 		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
@@ -103,7 +103,7 @@ public class PolarisImpl implements Polaris {
 		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
 		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.vega.xdiUri()));
 
-		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_DEL, xdi);
+		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndTargetXriOrStatement(XDIMessagingConstants.XRI_S_DEL, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
 		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
@@ -118,7 +118,7 @@ public class PolarisImpl implements Polaris {
 		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
 		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.vega.xdiUri()));
 
-		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
+		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndTargetXriOrStatement(XDIMessagingConstants.XRI_S_GET, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
 		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
@@ -146,7 +146,7 @@ public class PolarisImpl implements Polaris {
 		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
 		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.vega.xdiUri()));
 
-		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndXdi(XDIMessagingConstants.XRI_S_GET, xdi);
+		MessageEnvelope messageEnvelope = MessageEnvelope.fromOperationXriAndTargetXriOrStatement(XDIMessagingConstants.XRI_S_GET, xdi);
 		MessageResult messageResult = this.client.send(messageEnvelope, null);
 		if (messageResult == null) throw new RuntimeException("No result");
 		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());

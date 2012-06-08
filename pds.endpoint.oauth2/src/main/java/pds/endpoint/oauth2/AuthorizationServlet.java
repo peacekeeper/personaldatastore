@@ -39,15 +39,15 @@ import org.springframework.web.context.ServletContextAware;
 
 import pds.endpoint.oauth2.client.ClientAuthenticator;
 import pds.endpoint.oauth2.util.StringUtil;
-import pds.xdi.Xdi;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiClient;
+import pds.xdi.XdiEndpoint;
 import pds.xdi.XdiException;
 
 public class AuthorizationServlet implements HttpRequestHandler, ServletContextAware {
 
 	private static final Logger log = LoggerFactory.getLogger(AuthorizationServlet.class.getName());
 
-	private static final Xdi xdi;
+	private static final XdiClient xdi;
 
 	private ClientAuthenticator clientAuthenticator;
 
@@ -55,7 +55,7 @@ public class AuthorizationServlet implements HttpRequestHandler, ServletContextA
 
 		try {
 
-			xdi = new Xdi(new Resolver(null));
+			xdi = new XdiClient(new Resolver(null));
 		} catch (Exception ex) {
 
 			throw new RuntimeException("Cannot initialize XDI: " + ex.getMessage(), ex);
@@ -156,7 +156,7 @@ public class AuthorizationServlet implements HttpRequestHandler, ServletContextA
 			return;
 		}
 
-		XdiContext context = null;
+		XdiEndpoint context = null;
 
 		try {
 
@@ -207,12 +207,12 @@ public class AuthorizationServlet implements HttpRequestHandler, ServletContextA
 		this.sendPage(request, response, properties);
 	}
 
-	private XdiContext getContext(String iname, String password) throws Exception {
+	private XdiEndpoint getContext(String iname, String password) throws Exception {
 
 		return xdi.resolveContextByIname(iname, password);
 	}
 
-	private List<XRI3Segment> fetch(XdiContext context) throws Exception {
+	private List<XRI3Segment> fetch(XdiEndpoint context) throws Exception {
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_GET, new XRI3(context.getCanonical() + "/" + DictionaryConstants.XRI_EXTENSION));
 		MessageResult messageResult = context.send(operation);

@@ -84,6 +84,15 @@
 		</plugins>
 	</build>
 
+	<repositories>
+		<repository>
+			<id>jsonrpc4j-webdav-maven-repo</id>
+			<name>jsonrpc4j maven repository</name>
+			<url>http://jsonrpc4j.googlecode.com/svn/maven/repo/</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -124,7 +133,7 @@
 		<dependency>
 			<groupId>com.googlecode</groupId>
 			<artifactId>jsonrpc4j</artifactId>
-			<version>0.24-SNAPSHOT</version>
+			<version>0.23</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

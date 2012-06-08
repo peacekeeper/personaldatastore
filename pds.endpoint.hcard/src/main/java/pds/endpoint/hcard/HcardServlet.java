@@ -35,8 +35,8 @@ import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.context.ServletContextAware;
 
 import pds.dictionary.PdsDictionary;
-import pds.xdi.Xdi;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiClient;
+import pds.xdi.XdiEndpoint;
 
 public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
@@ -44,7 +44,7 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
 	private static final Logger log = LoggerFactory.getLogger(HcardServlet.class.getName());
 
-	private static final Xdi xdi;
+	private static final XdiClient xdi;
 
 	private String html;
 
@@ -56,7 +56,7 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 
 		try {
 
-			xdi = new Xdi(new Resolver(null));
+			xdi = new XdiClient(new Resolver(null));
 		} catch (Exception ex) {
 
 			throw new RuntimeException("Cannot initialize XDI: " + ex.getMessage(), ex);
@@ -102,7 +102,7 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		// find the XDI data
 
 		String xri = this.parseXri(request);
-		XdiContext context = this.getContext(xri);
+		XdiEndpoint context = this.getContext(xri);
 		Subject pdsSubject = context == null ? null : this.fetch(context);
 
 		if (pdsSubject == null) {
@@ -160,12 +160,12 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		return xri;
 	}
 
-	private XdiContext getContext(String xri) throws Exception {
+	private XdiEndpoint getContext(String xri) throws Exception {
 
 		return xdi.resolveContextByIname(xri, null);
 	}
 
-	private Subject fetch(XdiContext context) throws Exception {
+	private Subject fetch(XdiEndpoint context) throws Exception {
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_GET);
 		Graph operationGraph = operation.createOperationGraph(null);
@@ -182,7 +182,7 @@ public class HcardServlet implements HttpRequestHandler, ServletContextAware {
 		return subject;
 	}
 
-	private HCard convertHCard(String xri, XdiContext context, Subject pdsSubject, Properties properties) throws Exception {
+	private HCard convertHCard(String xri, XdiEndpoint context, Subject pdsSubject, Properties properties) throws Exception {
 
 		String uid = context.getCanonical().toString();
 		String name = Addressing.findLiteralData(pdsSubject, new XRI3("$" + PdsDictionary.XRI_NAME.toString()));

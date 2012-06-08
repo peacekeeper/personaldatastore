@@ -30,8 +30,8 @@ import org.openxri.resolve.Resolver;
 import org.springframework.web.HttpRequestHandler;
 
 import pds.dictionary.feed.FeedDictionary;
-import pds.xdi.Xdi;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiClient;
+import pds.xdi.XdiEndpoint;
 import pds.xdi.XdiException;
 
 import com.cliqset.abdera.ext.activity.ActivityEntry;
@@ -48,14 +48,14 @@ public class PuSHServlet implements HttpRequestHandler {
 
 	private static final Logger log = LoggerFactory.getLogger(PuSHServlet.class.getName());
 
-	private static final Xdi xdi;
+	private static final XdiClient xdi;
 	private static final Abdera abdera;
 
 	static {
 
 		try {
 
-			xdi = new Xdi(new Resolver(null));
+			xdi = new XdiClient(new Resolver(null));
 		} catch (Exception ex) {
 
 			throw new RuntimeException("Cannot initialize XDI: " + ex.getMessage(), ex);
@@ -117,7 +117,7 @@ public class PuSHServlet implements HttpRequestHandler {
 		// find the XDI data
 
 		String xri = this.parseXri(request);
-		XdiContext context = this.getContext(xri);
+		XdiEndpoint context = this.getContext(xri);
 		Subject pdsSubject = context == null ? null : this.fetch(context, hubtopic);
 
 		if (pdsSubject == null) {
@@ -180,7 +180,7 @@ public class PuSHServlet implements HttpRequestHandler {
 		// find the XDI data
 
 		String xri = this.parseXri(request);
-		XdiContext context = this.getContext(xri);
+		XdiEndpoint context = this.getContext(xri);
 		Subject pdsSubject = context == null ? null : this.fetch(context, hubtopic);
 
 		if (pdsSubject == null) {
@@ -220,7 +220,7 @@ public class PuSHServlet implements HttpRequestHandler {
 		// find the XDI data
 
 		String xri = this.parseXri(request);
-		XdiContext context = this.getContext(xri);
+		XdiEndpoint context = this.getContext(xri);
 		Subject pdsSubject = context == null ? null : this.fetch(context, hubtopic);
 
 		if (pdsSubject == null) {
@@ -249,7 +249,7 @@ public class PuSHServlet implements HttpRequestHandler {
 		return hubverifytoken.equals(literal.getData());
 	}
 
-	private static void subscribeTopic(XdiContext context, Subject pdsSubject) throws Exception {
+	private static void subscribeTopic(XdiEndpoint context, Subject pdsSubject) throws Exception {
 
 		log.debug("Subscribing to topic " + pdsSubject.getSubjectXri());
 
@@ -268,7 +268,7 @@ public class PuSHServlet implements HttpRequestHandler {
 		context.send(message);
 	}
 
-	private static void unsubscribeTopic(XdiContext context, Subject pdsSubject) throws Exception {
+	private static void unsubscribeTopic(XdiEndpoint context, Subject pdsSubject) throws Exception {
 
 		log.debug("Unsubscribing from topic " + pdsSubject.getSubjectXri());
 
@@ -287,7 +287,7 @@ public class PuSHServlet implements HttpRequestHandler {
 		context.send(message);
 	}
 
-	private static void addEntries(XdiContext context, Subject pdsSubject, Feed feed) throws Exception {
+	private static void addEntries(XdiEndpoint context, Subject pdsSubject, Feed feed) throws Exception {
 
 		log.debug("Adding entries to topic " + pdsSubject.getSubjectXri());
 
@@ -313,7 +313,7 @@ public class PuSHServlet implements HttpRequestHandler {
 		context.send(operation);
 	}
 
-	private static void addEntries(XdiContext context, Subject pdsSubject, SyndFeed syndFeed) throws Exception {
+	private static void addEntries(XdiEndpoint context, Subject pdsSubject, SyndFeed syndFeed) throws Exception {
 
 		throw new RuntimeException("Sorry, RSS is not currently supported.");
 	}
@@ -327,12 +327,12 @@ public class PuSHServlet implements HttpRequestHandler {
 		return xri;
 	}
 
-	private XdiContext getContext(String xri) throws XdiException {
+	private XdiEndpoint getContext(String xri) throws XdiException {
 
 		return xdi.resolveContextByIname(xri, null);
 	}
 
-	private Subject fetch(XdiContext context, String hubtopic) throws Exception {
+	private Subject fetch(XdiEndpoint context, String hubtopic) throws Exception {
 
 		Operation operation = context.prepareOperation(MessagingConstants.XRI_GET);
 		Graph operationGraph = operation.createOperationGraph(null);

@@ -29,8 +29,8 @@ import org.openxri.resolve.Resolver;
 import org.springframework.web.HttpRequestHandler;
 
 import pds.dictionary.feed.FeedDictionary;
-import pds.xdi.Xdi;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiClient;
+import pds.xdi.XdiEndpoint;
 import pds.xdi.XdiException;
 
 import com.cliqset.abdera.ext.activity.ActivityEntry;
@@ -46,7 +46,7 @@ public class SalmonServlet implements HttpRequestHandler {
 
 	private static final Logger log = LoggerFactory.getLogger(SalmonServlet.class.getName());
 
-	private static final Xdi xdi;
+	private static final XdiClient xdi;
 	private static final Salmon salmon;
 	private static final Abdera abdera;
 
@@ -54,7 +54,7 @@ public class SalmonServlet implements HttpRequestHandler {
 
 		try {
 
-			xdi = new Xdi(new Resolver(null));
+			xdi = new XdiClient(new Resolver(null));
 		} catch (Exception ex) {
 
 			throw new RuntimeException("Cannot initialize XDI: " + ex.getMessage(), ex);
@@ -150,7 +150,7 @@ public class SalmonServlet implements HttpRequestHandler {
 		// find the XDI data
 
 		String xri = this.parseXri(request);
-		XdiContext context = this.getContext(xri);
+		XdiEndpoint context = this.getContext(xri);
 		/*		Subject pdsSubject = context == null ? null : this.fetch(context, hubtopic);
 
 		if (pdsSubject == null) {
@@ -170,7 +170,7 @@ public class SalmonServlet implements HttpRequestHandler {
 		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
-	private static void addMentions(XdiContext context, Feed feed) throws Exception {
+	private static void addMentions(XdiEndpoint context, Feed feed) throws Exception {
 
 		log.debug("Adding mentions");
 
@@ -227,7 +227,7 @@ public class SalmonServlet implements HttpRequestHandler {
 		return xri;
 	}
 
-	private XdiContext getContext(String xri) throws XdiException {
+	private XdiEndpoint getContext(String xri) throws XdiException {
 
 		return xdi.resolveContextByIname(xri, null);
 	}

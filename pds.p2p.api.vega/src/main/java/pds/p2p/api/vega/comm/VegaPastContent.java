@@ -35,6 +35,10 @@ public class VegaPastContent implements PastContent {
 
 	public static final String[] WORLD_PUBLIC = new String[] {
 
+		// HACK.. allow everything for now
+
+		"^.+$",
+
 		// examples:
 		// a
 		// test
@@ -241,7 +245,7 @@ public class VegaPastContent implements PastContent {
 
 		return new VegaPastContentHandle(past);
 	}
-/*
+	/*
 	public GCPastContentHandle getHandle(GCPast past, long expiration) {
 
 		return new VegaPastContentHandle(past);
@@ -257,7 +261,7 @@ public class VegaPastContent implements PastContent {
 		return this.id;
 	}
 
-/*	public long getVersion() {
+	/*	public long getVersion() {
 
 		return this.version.longValue();
 	}*/
@@ -417,33 +421,33 @@ public class VegaPastContent implements PastContent {
 	@Override
 	public boolean equals(Object object) {
 
-		if (object == null || ! (object instanceof VegaPastContent)) return(false);
-		if (object == this) return(true);
+		if (object == null || ! (object instanceof VegaPastContent)) return false;
+		if (object == this) return true;
 
 		VegaPastContent other = (VegaPastContent) object;
 
-		if (this.id == null && other.id != null) return(false);
-		if (this.id != null && ! this.id.equals(other.id)) return(false);
+		if (this.id == null && other.id != null) return false;
+		if (this.id != null && ! this.id.equals(other.id)) return false;
 
-		if (this.iname == null && other.iname != null) return(false);
-		if (this.iname != null && ! this.iname.equals(other.iname)) return(false);
+		if (this.iname == null && other.iname != null) return false;
+		if (this.iname != null && ! this.iname.equals(other.iname)) return false;
 
-		if (this.inumber == null && other.inumber != null) return(false);
-		if (this.inumber != null && ! this.inumber.equals(other.inumber)) return(false);
+		if (this.inumber == null && other.inumber != null) return false;
+		if (this.inumber != null && ! this.inumber.equals(other.inumber)) return false;
 
-		if (this.key == null && other.key != null) return(false);
-		if (this.key != null && ! this.key.equals(other.key)) return(false);
+		if (this.key == null && other.key != null) return false;
+		if (this.key != null && ! this.key.equals(other.key)) return false;
 
-		if (this.value == null && other.value != null) return(false);
-		if (this.value != null && ! this.value.equals(other.value)) return(false);
+		if (this.value == null && other.value != null) return false;
+		if (this.value != null && ! this.value.equals(other.value)) return false;
 
-		if (this.signature == null && other.signature != null) return(false);
-		if (this.signature != null && ! this.signature.equals(other.signature)) return(false);
+		if (this.signature == null && other.signature != null) return false;
+		if (this.signature != null && ! this.signature.equals(other.signature)) return false;
 
-		if (this.hashcash == null && other.hashcash != null) return(false);
-		if (this.hashcash != null && ! this.hashcash.equals(other.hashcash)) return(false);
+		if (this.hashcash == null && other.hashcash != null) return false;
+		if (this.hashcash != null && ! this.hashcash.equals(other.hashcash)) return false;
 
-		return(true);
+		return true;
 	}
 
 	@Override

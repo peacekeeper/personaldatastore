@@ -55,7 +55,7 @@ public class DanubeApiServer implements ServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent e) {
 
-		if (! initialized) throw new RuntimeException("Not initialized.");
+		if (! initialized) return;
 
 		shutdown();
 	}

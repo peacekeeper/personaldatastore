@@ -1,4 +1,4 @@
-package pds.p2p.node.webshell;
+package pds.p2p.api.node.client;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaArray;

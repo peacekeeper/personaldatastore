@@ -36,6 +36,21 @@
 			<module>pds.util.spring</module> <module>pds.xdi</module> -->
 	</modules>
 
+	<issueManagement>
+		<url>https://github.com/peacekeeper/personaldatastore/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+
+	<scm>
+		<url>https://github.com/peacekeeper/personaldatastore</url>
+		<connection>scm:git:git://github.com/peacekeeper/personaldatastore.git</connection>
+		<developerConnection>scm:git:git@github.com:peacekeeper/personaldatastore.git</developerConnection>
+	</scm>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>

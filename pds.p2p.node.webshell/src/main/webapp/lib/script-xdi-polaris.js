@@ -30,7 +30,7 @@ function xdiPolarisTermOpen() {
 			cols: 50,
 			rows: 40,
 			termDiv: 'xdiPolarisTermDiv',
-			bgColor: '#255e49',
+			bgColor: '#1c2e3f',
 			greeting: xdiPolarisHelp.join('\n'),
 			handler: xdiPolarisTermHandler,
 			exitHandler: null

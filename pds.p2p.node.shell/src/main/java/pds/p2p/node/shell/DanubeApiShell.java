@@ -15,6 +15,7 @@ import pds.p2p.api.Sirius;
 import pds.p2p.api.Vega;
 import pds.p2p.api.annotation.DanubeApi;
 import pds.p2p.api.node.client.DanubeApiClient;
+import pds.p2p.api.node.client.MyWrapFactory;
 
 public class DanubeApiShell {
 

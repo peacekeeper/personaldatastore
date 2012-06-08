@@ -39,11 +39,11 @@ import xdi2.messaging.Operation;
 import xdi2.messaging.error.ErrorMessageResult;
 import xdi2.messaging.util.XDIMessagingConstants;
 
-public class XdiContext {
+public class XdiEndpoint {
 
-	private static final Logger log = LoggerFactory.getLogger(XdiContext.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(XdiEndpoint.class.getName());
 
-	private final Xdi xdi;
+	private final XdiClient xdi;
 	private final XDIClient xdiClient;
 	private final String identifier;
 	private final XRI3Segment canonical;
@@ -55,7 +55,7 @@ public class XdiContext {
 	private final Map<XRI3, List<XdiGraphListener> > xdiSetGraphListeners;
 	private final Map<XRI3, List<XdiGraphListener> > xdiDelGraphListeners;
 
-	XdiContext(Xdi xdi, XDIClient xdiClient, String identifier, XRI3Segment canonical, String password) { 
+	XdiEndpoint(XdiClient xdi, XDIClient xdiClient, String identifier, XRI3Segment canonical, String password) { 
 
 		this.xdi = xdi;
 		this.xdiClient = xdiClient;
@@ -118,7 +118,7 @@ public class XdiContext {
 
 		try {
 
-			MessageResult ret = XdiContext.this.xdiClient.send(messageEnvelope, null);
+			MessageResult ret = XdiEndpoint.this.xdiClient.send(messageEnvelope, null);
 
 			transactionEvent = new XdiTransactionSuccessEvent(this, messageEnvelope, beginTimestamp, new Date(), ret);
 			this.xdi.fireXdiTransactionEvent(transactionEvent);

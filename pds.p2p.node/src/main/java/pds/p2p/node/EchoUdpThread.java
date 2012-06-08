@@ -2,6 +2,7 @@ package pds.p2p.node;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,21 +34,23 @@ public class EchoUdpThread extends Thread {
 	@Override
 	public void run() {
 
-		log.info("ECHO UDP Thread " + Thread.currentThread().getId() + " starting.");
+		log.info("ECHO UDP Thread " + Thread.currentThread().getId() + " starting on port " + this.ipPort + ".");
 
 		// open socket
-		
+
 		try {
 
-			this.serverSocket = new DatagramSocket(this.ipPort);
+			this.serverSocket = new DatagramSocket(null);
 			this.serverSocket.setReuseAddress(true);
+			this.serverSocket.bind(new InetSocketAddress(this.ipPort));
 		} catch (Exception ex) {
 
+			log.error(ex.getMessage(), ex);
 			throw new RuntimeException(ex.getMessage(), ex);
 		}
 
 		// listen on socket
-		
+
 		while (this.running) {
 
 			try {
@@ -76,23 +79,23 @@ public class EchoUdpThread extends Thread {
 			} catch (Exception ex) {
 
 				if (! this.running) break;
-				
+
 				log.error("ECHO UDP Thread " + Thread.currentThread().getId() + " had exception: " + ex.getMessage(), ex);
 			}
 		}
 
 		// close socket
-		
+
 		try {
 
 			this.serverSocket.close();
 		} catch (Exception ex) { 
-			
+
 			log.error(ex.getMessage(), ex);
 		}
 
 		// done
-		
+
 		log.info("ECHO UDP Thread " + Thread.currentThread().getId() + " stopped.");
 	}
 }

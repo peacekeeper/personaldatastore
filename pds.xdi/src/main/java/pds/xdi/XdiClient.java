@@ -31,9 +31,9 @@ import xdi2.messaging.util.XDIMessagingConstants;
 /**
  * Support for resolving and opening XDI contexts.
  */
-public class Xdi {
+public class XdiClient {
 
-	private static final Logger log = LoggerFactory.getLogger(Xdi.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(XdiClient.class.getName());
 
 	private Resolver resolver;
 	private Cache inumberEndpointCache;
@@ -41,11 +41,11 @@ public class Xdi {
 
 	private final List<XdiListener> xdiListeners;
 
-	public Xdi(Resolver resolver) {
+	public XdiClient(Resolver resolver) {
 
 		this.resolver = resolver;
 		
-		CacheManager cacheManager = new CacheManager(Xdi.class.getResourceAsStream("ehcache.xml"));
+		CacheManager cacheManager = new CacheManager(XdiClient.class.getResourceAsStream("ehcache.xml"));
 		this.inumberEndpointCache = cacheManager.getCache("inumberEndpointCache");
 		if (this.inumberEndpointCache == null) throw new NullPointerException("No inumberEndpointCache.");
 		this.xdiEndpointCache = cacheManager.getCache("xdiEndpointCache");
@@ -147,14 +147,14 @@ public class Xdi {
 		return context;
 	}*/
 
-	public XdiContext resolveContextByEndpoint(String endpoint, String password) throws XdiException {
+	public XdiEndpoint resolveEndpointByEndpointUrl(String endpointUrl, String password) throws XdiException {
 
-		log.trace("resolveContextByEndpoint()");
+		log.trace("resolveEndpointByEndpointUrl()");
 
-		// resolve endpoint
+		// resolve endpoint url
 
 		String inumber = null;
-		XDIHttpClient xdiClient = new XDIHttpClient(endpoint);
+		XDIHttpClient xdiClient = new XDIHttpClient(endpointUrl);
 
 		try {
 
@@ -171,11 +171,11 @@ public class Xdi {
 		}
 
 		if (inumber == null) throw new XdiException("The I-Number could not be found.");
-		this.fireXdiResolutionEvent(new XdiResolutionEndpointEvent(this, endpoint, inumber));
+		this.fireXdiResolutionEvent(new XdiResolutionEndpointEvent(this, endpointUrl, inumber));
 
 		// instantiate context
 
-		XdiContext context = new XdiContext(
+		XdiEndpoint context = new XdiEndpoint(
 				this, 
 				xdiClient, 
 				inumber, 
@@ -191,13 +191,13 @@ public class Xdi {
 		return context;
 	}
 
-	public XdiContext resolveContextManually(String endpoint, String identifier, XRI3Segment canonical, String password) throws XdiException {
+	public XdiEndpoint resolveContextManually(String endpoint, String identifier, XRI3Segment canonical, String password) throws XdiException {
 
 		log.trace("resolveContextManually()");
 
 		// instantiate context
 
-		XdiContext context = new XdiContext(
+		XdiEndpoint context = new XdiEndpoint(
 				this, 
 				new XDIHttpClient(endpoint), 
 				identifier, 

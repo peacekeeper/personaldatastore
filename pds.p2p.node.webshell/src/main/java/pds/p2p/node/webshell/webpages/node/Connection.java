@@ -1,5 +1,7 @@
 package pds.p2p.node.webshell.webpages.node;
 
+import java.util.Properties;
+
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -7,16 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pds.p2p.api.node.client.DanubeApiClient;
+import pds.p2p.node.webshell.webapplication.WebShellApplication;
 import pds.p2p.node.webshell.webpages.BasePage;
 
 public class Connection extends BasePage {
 
 	private static final long serialVersionUID = -4101890723769407353L;
 
-	private static final String LOCAL_HOST = "172.17.1.1/";
-	private static final String REMOTE_HOST_LIST = "172.17.218.193,172.17.217.183,172.17.217.243,172.17.90.193";
-
-	protected static Logger log = LoggerFactory.getLogger(Connection.class.getName());
+	private static Logger log = LoggerFactory.getLogger(Connection.class.getName());
 
 	public Connection() {
 
@@ -41,13 +41,17 @@ public class Connection extends BasePage {
 		@Override
 		protected void onSubmit() {
 
+			Properties properties = ((WebShellApplication) this.getApplication()).getProperties();
+
 			// connect to vega
 
 			Connection.log.debug("Connecting");
 
 			try {
 
-				DanubeApiClient.vegaObject.connect(LOCAL_HOST, null, null);
+				String localHost = properties.getProperty("local.host");
+
+				DanubeApiClient.vegaObject.connect(localHost, null, null);
 			} catch (Exception ex) {
 
 				log.warn(ex.getMessage(), ex);
@@ -73,13 +77,17 @@ public class Connection extends BasePage {
 		@Override
 		protected void onSubmit() {
 
+			Properties properties = ((WebShellApplication) this.getApplication()).getProperties();
+
 			// connect to vega
 
 			Connection.log.debug("Connecting");
 
 			try {
 
-				DanubeApiClient.vegaObject.connectList(null, REMOTE_HOST_LIST, null);
+				String remoteHostList = properties.getProperty("remote.host.list");
+
+				DanubeApiClient.vegaObject.connectList(null, remoteHostList, null);
 			} catch (Exception ex) {
 
 				log.warn(ex.getMessage(), ex);

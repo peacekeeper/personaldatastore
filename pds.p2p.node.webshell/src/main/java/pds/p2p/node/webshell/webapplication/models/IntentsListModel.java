@@ -30,11 +30,12 @@ public class IntentsListModel extends AbstractReadOnlyModel<ArrayList<Intent>> {
 		log.debug("Getting intents.");
 
 		// get XDI data
-
 		String[] rawpackets;
+		
 
 		try {
 
+			if (! "1".equals(DanubeApiClient.orionObject.loggedin())) return new ArrayList<Intent> ();
 			if (! "1".equals(DanubeApiClient.vegaObject.connected())) return new ArrayList<Intent> ();
 
 			String inumber = DanubeApiClient.orionObject.inumber();

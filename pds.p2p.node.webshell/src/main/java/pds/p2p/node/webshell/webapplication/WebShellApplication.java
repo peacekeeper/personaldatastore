@@ -1,5 +1,6 @@
 package pds.p2p.node.webshell.webapplication;
 
+import java.io.FileReader;
 import java.util.Properties;
 
 import org.apache.wicket.Page;
@@ -30,6 +31,17 @@ public class WebShellApplication extends WebApplication {
 	@Override
 	public void init() {
 
+		// read properties
+
+		try {
+
+			this.properties = new Properties();
+			this.properties.load(new FileReader("webshell.properties"));
+		} catch (Exception ex) {
+
+			throw new RuntimeException(ex.getMessage(), ex);
+		}
+
 		// set up Danube API
 
 		try {
@@ -37,7 +49,7 @@ public class WebShellApplication extends WebApplication {
 			DanubeApiClient.init();
 		} catch (Exception ex) {
 
-			throw new RuntimeException(ex);
+			throw new RuntimeException(ex.getMessage(), ex);
 		}
 
 		// set up page mounting
@@ -103,22 +115,11 @@ public class WebShellApplication extends WebApplication {
 	@Override
 	public Session newSession(Request request, Response response) {
 
-		return(new WebShellSession(request));
+		return new WebShellSession(request);
 	}
 
 	public Properties getProperties() {
-		return (this.properties);
-	}
 
-	public void setProperties(Properties properties) {
-		this.properties = properties;
-	}
-
-	public Properties getVelocityProperties() {
-		return (this.velocityProperties);
-	}
-
-	public void setVelocityProperties(Properties velocityProperties) {
-		this.velocityProperties = velocityProperties;
+		return this.properties;
 	}
 }

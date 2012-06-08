@@ -12,7 +12,7 @@
 
 	<servlet>
 		<servlet-name>DanubeApiShellServlet</servlet-name>
-		<servlet-class>pds.p2p.node.webshell.DanubeApiShellServlet</servlet-class>
+		<servlet-class>pds.p2p.node.webshell.servlets.DanubeApiShellServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>

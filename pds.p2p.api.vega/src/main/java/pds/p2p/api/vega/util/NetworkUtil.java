@@ -29,7 +29,7 @@ public class NetworkUtil {
 		if (localHost.endsWith("/")) {
 
 			localHost = localHost.substring(0, localHost.length() - 1);
-			
+
 			// find out if there is a preferred interface for the local address
 
 			for (Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces(); e.hasMoreElements(); ) {
@@ -107,8 +107,8 @@ public class NetworkUtil {
 
 		if (! remoteAddr.isReachable(1000)) {
 
-			throw new RuntimeException("Remote address " + remoteAddr.toString() + " is not reachable.");
-		}		
+			log.warn("Remote address " + remoteAddr.toString() + " is not reachable.");
+		}
 
 		// done
 
@@ -183,7 +183,7 @@ public class NetworkUtil {
 		if (remoteSockAddr != null) {
 
 			String remoteHost = remoteSockAddr.getAddress().toString().substring(remoteSockAddr.getAddress().toString().indexOf('/') + 1);
-			
+
 			// find out if there is a preferred interface for the remote address
 
 			for (Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces(); e.hasMoreElements(); ) {

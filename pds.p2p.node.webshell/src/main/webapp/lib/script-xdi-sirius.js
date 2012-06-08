@@ -30,7 +30,7 @@ function xdiSiriusTermOpen() {
 			cols: 50,
 			rows: 40,
 			termDiv: 'xdiSiriusTermDiv',
-			bgColor: '#312f61',
+			bgColor: '#1c2e3f',
 			greeting: xdiSiriusHelp.join('\n'),
 			handler: xdiSiriusTermHandler,
 			exitHandler: null
