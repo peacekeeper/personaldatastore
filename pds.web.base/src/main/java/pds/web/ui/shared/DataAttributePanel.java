@@ -17,47 +17,44 @@ import nextapp.echo.app.TextField;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.RowLayoutData;
-
-import org.eclipse.higgins.XDI2.Graph;
-import org.eclipse.higgins.XDI2.Subject;
-import org.eclipse.higgins.XDI2.constants.MessagingConstants;
-import org.eclipse.higgins.XDI2.dictionary.Dictionary;
-import org.eclipse.higgins.XDI2.messaging.Message;
-import org.eclipse.higgins.XDI2.messaging.MessageResult;
-import org.eclipse.higgins.XDI2.messaging.Operation;
-import org.eclipse.higgins.XDI2.util.iterators.IteratorListMaker;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
-
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
 import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
+import xdi2.core.ContextNode;
+import xdi2.core.Graph;
+import xdi2.core.features.dictionary.Dictionary;
+import xdi2.core.util.iterators.IteratorListMaker;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
+import xdi2.messaging.MessageResult;
+import xdi2.messaging.Operation;
+import xdi2.messaging.constants.XDIMessagingConstants;
 
-public class DataPredicatePanel extends Panel implements XdiGraphListener {
+public class DataAttributePanel extends Panel implements XdiGraphListener {
 
 	private static final long serialVersionUID = -5082464847478633075L;
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
-	private XRI3Segment subjectXri;
-	private XRI3Segment predicateXri;
-	private XRI3 address;
-	private XRI3 extensionAddress;
-	private XRI3 canonicalAddress;
-	private XRI3 addAddress;
+	private XdiEndpoint endpoint;
+	private XRI3Segment contextNodeXri;
+	private XRI3Segment attributeXri;
+	private XRI3Segment address;
+	private XRI3Segment extensionAddress;
+	private XRI3Segment canonicalAddress;
+	private XRI3Segment addAddress;
 
 	private boolean readOnly;
 
 	private XdiPanel xdiPanel;
-	private Label predicateXriLabel;
+	private Label attributeXriLabel;
 	private TextField addTextField;
 	private Column instanceValuesColumn;
 	private Button cancelButton;
@@ -66,7 +63,7 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 	/**
 	 * Creates a new <code>AccountPersonaPanel</code>.
 	 */
-	public DataPredicatePanel() {
+	public DataAttributePanel() {
 		super();
 
 		this.readOnly = false;
@@ -88,22 +85,22 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 
 		// remove us as listener
 
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
 
 		try {
 
-			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
-			this.predicateXriLabel.setText(this.predicateXri.toString());
+			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.endpoint, this.address, this.xdiGetAddresses());
+			this.attributeXriLabel.setText(this.attributeXri.toString());
 
 			this.instanceValuesColumn.removeAll();
-			List<XRI3Segment> dataPredicateInstanceXris = this.getDataPredicateInstanceXris();
+			List<XRI3Segment> dataAttributeInstanceXris = this.getDataAttributeInstanceXris();
 
-			for (XRI3Segment dataPredicateInstanceXri : dataPredicateInstanceXris) {
+			for (XRI3Segment dataAttributeInstanceXri : dataAttributeInstanceXris) {
 
-				this.addDataPredicateInstancePanel(dataPredicateInstanceXri);
+				this.addDataAttributeInstancePanel(dataAttributeInstanceXri);
 			}
 		} catch (Exception ex) {
 
@@ -112,44 +109,44 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	private void addDataPredicateInstancePanel(XRI3Segment dataPredicateInstanceXri) {
+	private void addDataAttributeInstancePanel(XRI3Segment attributeInstanceXri) {
 
-		DataPredicateInstancePanel dataPredicatePanel = new DataPredicateInstancePanel();
-		dataPredicatePanel.setContextAndSubjectXriAndPredicateXri(this.context, this.subjectXri, dataPredicateInstanceXri);
-		dataPredicatePanel.setReadOnly(this.readOnly);
+		DataAttributeInstancePanel dataAttributeInstancePanel = new DataAttributeInstancePanel();
+		dataAttributeInstancePanel.setEndpointAndContextNodeXriAndAttributeXri(this.endpoint, this.contextNodeXri, attributeInstanceXri);
+		dataAttributeInstancePanel.setReadOnly(this.readOnly);
 
-		this.instanceValuesColumn.add(dataPredicatePanel);
+		this.instanceValuesColumn.add(dataAttributeInstancePanel);
 	}
 
-	public XRI3[] xdiGetAddresses() {
+	public XRI3Segment[] xdiGetAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address,
 				this.extensionAddress,
 				this.canonicalAddress
 		};
 	}
 
-	public XRI3[] xdiAddAddresses() {
+	public XRI3Segment[] xdiAddAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.addAddress
 		};
 	}
 
-	public XRI3[] xdiModAddresses() {
+	public XRI3Segment[] xdiModAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiSetAddresses() {
+	public XRI3Segment[] xdiSetAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiDelAddresses() {
+	public XRI3Segment[] xdiDelAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
@@ -182,27 +179,27 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	public void setContextAndSubjectXriAndPredicateXri(XdiContext context, XRI3Segment subjectXri, XRI3Segment predicateXri) {
+	public void setEndpointAndContextNodeXriAndAttributeXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri, XRI3Segment attributeXri) {
 
 		// remove us as listener
 
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 
 		// refresh
 
-		this.context = context;
-		this.subjectXri = subjectXri;
-		this.predicateXri = predicateXri;
-		this.address = new XRI3("" + this.subjectXri + "/" + this.predicateXri);
-		this.extensionAddress = new XRI3("" + this.subjectXri + "/" + Dictionary.makeExtensionPredicate(this.predicateXri));
-		this.canonicalAddress = new XRI3("" + this.subjectXri + "/" + Dictionary.makeCanonicalPredicate(this.predicateXri));
-		this.addAddress = new XRI3("" + this.subjectXri + "/" + this.predicateXri + "$($)");
+		this.endpoint = endpoint;
+		this.contextNodeXri = contextNodeXri;
+		this.attributeXri = attributeXri;
+		this.address = new XRI3Segment("" + this.contextNodeXri + this.attributeXri);
+		this.extensionAddress = new XRI3Segment("" + this.contextNodeXri + Dictionary.makeExtensionPredicate(this.attributeXri));
+		this.canonicalAddress = new XRI3Segment("" + this.contextNodeXri + Dictionary.makeCanonicalPredicate(this.attributeXri));
+		this.addAddress = new XRI3Segment("" + this.contextNodeXri + this.attributeXri + "$($)");
 
 		this.refresh();
 
 		// add us as listener
 
-		this.context.addXdiGraphListener(this);
+		this.endpoint.addXdiGraphListener(this);
 	}
 
 	public void setReadOnly(boolean readOnly) {
@@ -221,9 +218,9 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 
 		this.readOnly = readOnly;
 
-		for (Component component : MainWindow.findChildComponentsByClass(this, DataPredicateInstancePanel.class)) {
+		for (Component component : MainWindow.findChildComponentsByClass(this, DataAttributeInstancePanel.class)) {
 
-			((DataPredicateInstancePanel) component).setReadOnly(readOnly);
+			((DataAttributeInstancePanel) component).setReadOnly(readOnly);
 		}
 	}
 
@@ -260,35 +257,35 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 		this.cancelButton.setVisible(false);
 	}
 
-	private List<XRI3Segment> getDataPredicateInstanceXris() throws XdiException {
+	private List<XRI3Segment> getDataAttributeInstanceXris() throws XdiException {
 
 		// $get
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.extensionAddress);
-		MessageResult messageResult = this.context.send(operation);
+		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_GET, this.extensionAddress);
+		MessageResult messageResult = this.endpoint.send(message);
 
-		Subject subject = messageResult.getGraph().getSubject(this.subjectXri);
-		if (subject == null) return new ArrayList<XRI3Segment> ();
+		ContextNode contextNode = messageResult.getGraph().findContextNode(this.contextNodeXri, false);
+		if (contextNode == null) return new ArrayList<XRI3Segment> ();
 
-		Iterator<XRI3Segment> dataPredicateInstanceXris = Dictionary.getPredicateExtensions(subject, this.predicateXri);
-		return new IteratorListMaker<XRI3Segment> (dataPredicateInstanceXris).list();
+		Iterator<XRI3Segment> dataAttributeInstanceXris = Dictionary.getPredicateExtensions(contextNode, this.attributeXri);
+		return new IteratorListMaker<XRI3Segment> (dataAttributeInstanceXris).list();
 	}
 
 	private void addDataPredicateInstance(final String value) throws XdiException {
 
-		XRI3Segment dataPredicateInstanceAddXri = new XRI3Segment("" + this.predicateXri + "$($)");
-		XRI3Segment dataPredicateInstanceSetXri = new XRI3Segment("$" + this.predicateXri);
+		XRI3Segment dataPredicateInstanceAddXri = new XRI3Segment("" + this.attributeXri + "$($)");
+		XRI3Segment dataPredicateInstanceSetXri = new XRI3Segment("$" + this.attributeXri);
 
 		// $add and $set
 
-		Message message = this.context.prepareMessage();
+		Message message = this.endpoint.prepareMessage();
 		Operation operation = message.createOperation(MessagingConstants.XRI_ADD);
 		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(this.subjectXri, dataPredicateInstanceAddXri, value);
+		operationGraph.createStatement(this.contextNodeXri, dataPredicateInstanceAddXri, value);
 		Operation operation2 = message.createOperation(MessagingConstants.XRI_SET);
 		Graph operationGraph2 = operation2.createOperationGraph(null);
-		operationGraph2.createStatement(this.subjectXri, dataPredicateInstanceSetXri, value);
-		this.context.send(operation);
+		operationGraph2.createStatement(this.contextNodeXri, dataPredicateInstanceSetXri, value);
+		this.endpoint.send(operation);
 	}
 
 	/**
@@ -305,13 +302,13 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 		column1.add(row2);
 		xdiPanel = new XdiPanel();
 		row2.add(xdiPanel);
-		predicateXriLabel = new Label();
-		predicateXriLabel.setStyleName("Bold");
-		predicateXriLabel.setText("...");
+		attributeXriLabel = new Label();
+		attributeXriLabel.setStyleName("Bold");
+		attributeXriLabel.setText("...");
 		RowLayoutData predicateXriLabelLayoutData = new RowLayoutData();
 		predicateXriLabelLayoutData.setWidth(new Extent(120, Extent.PX));
-		predicateXriLabel.setLayoutData(predicateXriLabelLayoutData);
-		row2.add(predicateXriLabel);
+		attributeXriLabel.setLayoutData(predicateXriLabelLayoutData);
+		row2.add(attributeXriLabel);
 		addTextField = new TextField();
 		addTextField.setStyleName("Default");
 		addTextField.setVisible(false);

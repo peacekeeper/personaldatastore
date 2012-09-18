@@ -1,7 +1,6 @@
 package pds.web.ui;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -31,6 +30,7 @@ import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
 import xdi2.core.ContextNode;
+import xdi2.core.features.dictionary.Dictionary;
 import xdi2.core.util.StatementUtil;
 import xdi2.core.util.XDIUtil;
 import xdi2.core.util.iterators.IteratorListMaker;

@@ -8,24 +8,24 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.activation.MimeType;
+import javax.security.auth.Subject;
+import javax.sql.rowset.Predicate;
 import javax.xml.namespace.QName;
+import javax.xml.ws.soap.Addressing;
 
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Element;
 import org.apache.abdera.model.Text.Type;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.eclipse.higgins.XDI2.Graph;
-import org.eclipse.higgins.XDI2.Predicate;
-import org.eclipse.higgins.XDI2.Subject;
-import org.eclipse.higgins.XDI2.addressing.Addressing;
-import org.eclipse.higgins.XDI2.multivalue.MultiSubjects;
-import org.eclipse.higgins.XDI2.types.Timestamps;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
 import org.jdom.Namespace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pds.dictionary.PdsDictionary;
+import xdi2.core.ContextNode;
+import xdi2.core.Graph;
+import xdi2.core.features.timestamps.Timestamps;
+import xdi2.core.xri3.impl.XRI3;
+import xdi2.core.xri3.impl.XRI3Segment;
 
 import com.cliqset.abdera.ext.activity.ActivityEntry;
 import com.sun.syndication.feed.synd.SyndContentImpl;
@@ -80,7 +80,7 @@ public class FeedDictionary {
 	 * Stores a feed entry as an XDI subject.
 	 */
 	public static void fromEntry(
-			Subject entrySubject,
+			ContextNode entryContextNode,
 			IRI activityId, 
 			IRI activityVerb, 
 			String title, 
@@ -100,24 +100,24 @@ public class FeedDictionary {
 			String activityActorPreferredUsername,
 			String activityActorDisplayName) {
 
-		if (activityId != null) entrySubject.createStatement(XRI_ACTIVITY_ID, activityId.toString());
-		if (activityVerb != null) entrySubject.createStatement(XRI_ACTIVITY_VERB, activityVerb.toString());
-		if (title != null) entrySubject.createStatement(XRI_TITLE, title);
-		if (summary != null) entrySubject.createStatement(XRI_SUMMARY, summary);
-		if (summaryType != null) entrySubject.createStatement(XRI_SUMMARY_TYPE, summaryType.toString());
-		if (content != null) entrySubject.createStatement(XRI_CONTENT, content);
-		if (contentMimeType != null) entrySubject.createStatement(XRI_CONTENT_MIME_TYPE, contentMimeType.toString());
-		if (publishedDate != null) entrySubject.createStatement(XRI_PUBLISHED_DATE, Timestamps.dateToXri(publishedDate));
-		if (updatedDate != null) entrySubject.createStatement(XRI_UPDATED_DATE, Timestamps.dateToXri(updatedDate));
-		if (editedDate != null) entrySubject.createStatement(XRI_EDITED_DATE, Timestamps.dateToXri(editedDate));
-		if (authorName != null) entrySubject.createStatement(XRI_AUTHOR_NAME, authorName);
-		if (authorEmail != null) entrySubject.createStatement(XRI_AUTHOR_EMAIL, authorEmail);
-		if (authorUri != null) entrySubject.createStatement(XRI_AUTHOR_URI, authorUri.toString());
-		if (activityObjectType != null) entrySubject.createStatement(XRI_ACTIVITY_OBJECT_TYPE, activityObjectType.toString());
-		if (activityActorGivenName != null) entrySubject.createStatement(XRI_ACTIVITY_ACTOR_GIVEN_NAME, activityActorGivenName);
-		if (activityActorFamilyName != null) entrySubject.createStatement(XRI_ACTIVITY_ACTOR_FAMILY_NAME, activityActorFamilyName);
-		if (activityActorPreferredUsername != null) entrySubject.createStatement(XRI_ACTIVITY_ACTOR_PREFERRED_USERNAME, activityActorPreferredUsername);
-		if (activityActorDisplayName != null) entrySubject.createStatement(XRI_ACTIVITY_ACTOR_DISPLAY_NAME, activityActorDisplayName);
+		if (activityId != null) entryContextNode.createStatement(XRI_ACTIVITY_ID, activityId.toString());
+		if (activityVerb != null) entryContextNode.createStatement(XRI_ACTIVITY_VERB, activityVerb.toString());
+		if (title != null) entryContextNode.createStatement(XRI_TITLE, title);
+		if (summary != null) entryContextNode.createStatement(XRI_SUMMARY, summary);
+		if (summaryType != null) entryContextNode.createStatement(XRI_SUMMARY_TYPE, summaryType.toString());
+		if (content != null) entryContextNode.createStatement(XRI_CONTENT, content);
+		if (contentMimeType != null) entryContextNode.createStatement(XRI_CONTENT_MIME_TYPE, contentMimeType.toString());
+		if (publishedDate != null) entryContextNode.createStatement(XRI_PUBLISHED_DATE, Timestamps.dateToXri(publishedDate));
+		if (updatedDate != null) entryContextNode.createStatement(XRI_UPDATED_DATE, Timestamps.dateToXri(updatedDate));
+		if (editedDate != null) entryContextNode.createStatement(XRI_EDITED_DATE, Timestamps.dateToXri(editedDate));
+		if (authorName != null) entryContextNode.createStatement(XRI_AUTHOR_NAME, authorName);
+		if (authorEmail != null) entryContextNode.createStatement(XRI_AUTHOR_EMAIL, authorEmail);
+		if (authorUri != null) entryContextNode.createStatement(XRI_AUTHOR_URI, authorUri.toString());
+		if (activityObjectType != null) entryContextNode.createStatement(XRI_ACTIVITY_OBJECT_TYPE, activityObjectType.toString());
+		if (activityActorGivenName != null) entryContextNode.createStatement(XRI_ACTIVITY_ACTOR_GIVEN_NAME, activityActorGivenName);
+		if (activityActorFamilyName != null) entryContextNode.createStatement(XRI_ACTIVITY_ACTOR_FAMILY_NAME, activityActorFamilyName);
+		if (activityActorPreferredUsername != null) entryContextNode.createStatement(XRI_ACTIVITY_ACTOR_PREFERRED_USERNAME, activityActorPreferredUsername);
+		if (activityActorDisplayName != null) entryContextNode.createStatement(XRI_ACTIVITY_ACTOR_DISPLAY_NAME, activityActorDisplayName);
 	}
 
 	/**

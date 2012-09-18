@@ -11,18 +11,15 @@ import nextapp.echo.app.Row;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.RowLayoutData;
-
-import org.eclipse.higgins.XDI2.constants.MessagingConstants;
-import org.eclipse.higgins.XDI2.messaging.Operation;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
-
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
+import xdi2.messaging.constants.XDIMessagingConstants;
 import echopoint.ImageIcon;
 
 public class FriendPanel extends Panel implements XdiGraphListener {
@@ -31,10 +28,10 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
+	private XdiEndpoint endpoint;
 	private XRI3Segment subjectXri;
-	private XRI3Segment referenceXri;
-	private XRI3 address;
+	private XRI3Segment relationXri;
+	private XRI3Segment address;
 
 	private XdiPanel xdiPanel;
 	private Button friendButton;
@@ -54,27 +51,27 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 
 	@Override
 	public void init() {
-		
+
 		super.init();
 	}
-	
+
 	@Override
 	public void dispose() {
 
 		super.dispose();
 
 		// remove us as listener
-		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
 
 		try {
 
-			String friend = this.referenceXri.toString();
+			String friend = this.relationXri.toString();
 
-			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
+			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.endpoint, this.address, this.xdiGetAddresses());
 			this.friendButton.setText(friend);
 		} catch (Exception ex) {
 
@@ -83,35 +80,35 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	public XRI3[] xdiGetAddresses() {
+	public XRI3Segment[] xdiGetAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
 
-	public XRI3[] xdiAddAddresses() {
+	public XRI3Segment[] xdiAddAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiModAddresses() {
+	public XRI3Segment[] xdiModAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
 
-	public XRI3[] xdiSetAddresses() {
+	public XRI3Segment[] xdiSetAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
 
-	public XRI3[] xdiDelAddresses() {
+	public XRI3Segment[] xdiDelAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
@@ -132,24 +129,24 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	public void setContextAndSubjectXriAndReferenceXri(XdiContext context, XRI3Segment subjectXri, XRI3Segment referenceXri) {
+	public void setEndpointAndContextNodeXriAndRelationXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri, XRI3Segment relationXri) {
 
 		// remove us as listener
-		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 
 		// refresh
-		
-		this.context = context;
-		this.subjectXri = subjectXri;
-		this.referenceXri = referenceXri;
-		this.address = new XRI3("" + this.subjectXri + "/+friend/" + this.referenceXri);
+
+		this.endpoint = endpoint;
+		this.subjectXri = contextNodeXri;
+		this.relationXri = relationXri;
+		this.address = new XRI3Segment("" + this.subjectXri + "/+friend/" + this.relationXri);
 
 		this.refresh();
 
 		// add us as listener
 
-		this.context.addXdiGraphListener(this);
+		this.endpoint.addXdiGraphListener(this);
 	}
 
 	public void setFriendPanelDelegate(FriendPanelDelegate friendPanelDelegate) {
@@ -176,9 +173,9 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 
 			// $del
 
-			Operation operation = this.context.prepareOperation(MessagingConstants.XRI_DEL, this.address);
+			Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_DEL, this.address);
 
-			this.context.send(operation);
+			this.endpoint.send(message);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
@@ -208,7 +205,7 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 		row1.add(xdiPanel);
 		ImageIcon imageIcon1 = new ImageIcon();
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-		"/pds/web/resource/image/friend.png");
+				"/pds/web/resource/image/friend.png");
 		imageIcon1.setIcon(imageReference1);
 		imageIcon1.setHeight(new Extent(48, Extent.PX));
 		imageIcon1.setWidth(new Extent(48, Extent.PX));
@@ -227,7 +224,7 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 		deleteButton = new Button();
 		deleteButton.setStyleName("Plain");
 		ResourceImageReference imageReference2 = new ResourceImageReference(
-		"/pds/web/resource/image/op-cancel.png");
+				"/pds/web/resource/image/op-cancel.png");
 		deleteButton.setIcon(imageReference2);
 		RowLayoutData deleteButtonLayoutData = new RowLayoutData();
 		deleteButtonLayoutData.setAlignment(new Alignment(Alignment.DEFAULT,

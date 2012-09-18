@@ -13,7 +13,6 @@ import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
-import xdi2.core.xri3.impl.XRI3;
 import xdi2.core.xri3.impl.XRI3Segment;
 
 public class DataPredicatesColumn extends Column implements XdiGraphListener {
@@ -69,7 +68,7 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 			this.removeAll();
 			for (XRI3Segment dataPredicateXri : pdsDictionaryPredicates) {
 
-				this.addDataPredicatePanel(dataPredicateXri);
+				this.addDataAttributePanel(dataPredicateXri);
 			}
 		} catch (Exception ex) {
 
@@ -78,13 +77,13 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 		}
 	}
 
-	private void addDataPredicatePanel(XRI3Segment dataPredicateXri) {
+	private void addDataAttributePanel(XRI3Segment dataAttributeXri) {
 
-		DataPredicatePanel dataPredicatePanel = new DataPredicatePanel();
-		dataPredicatePanel.setEndpointAndContextNodeXriAndPredicateXri(this.endpoint, this.contextNodeXri, dataPredicateXri);
-		dataPredicatePanel.setReadOnly(this.readOnly);
+		DataAttributePanel dataAttributePanel = new DataAttributePanel();
+		dataAttributePanel.setEndpointAndContextNodeXriAndAttributeXri(this.endpoint, this.contextNodeXri, dataAttributeXri);
+		dataAttributePanel.setReadOnly(this.readOnly);
 
-		this.add(dataPredicatePanel);
+		this.add(dataAttributePanel);
 	}
 
 	public XRI3Segment[] xdiGetAddresses() {
@@ -160,9 +159,9 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 
 		this.readOnly = readOnly;
 
-		for (Component component : MainWindow.findChildComponentsByClass(this, DataPredicatePanel.class)) {
+		for (Component component : MainWindow.findChildComponentsByClass(this, DataAttributePanel.class)) {
 
-			((DataPredicatePanel) component).setReadOnly(readOnly);
+			((DataAttributePanel) component).setReadOnly(readOnly);
 		}
 	}
 
