@@ -1,5 +1,6 @@
 package pds.p2p.api.sirius.graph;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -14,6 +15,11 @@ class VegaKeyValueStore extends AbstractKeyValueStore {
 	VegaKeyValueStore(Vega vega) {
 
 		this.vega = vega;
+	}
+
+	@Override
+	public void init() throws IOException {
+
 	}
 
 	public void put(String key, String value) {

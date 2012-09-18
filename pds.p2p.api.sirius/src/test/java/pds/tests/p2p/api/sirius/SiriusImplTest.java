@@ -53,7 +53,7 @@ public class SiriusImplTest extends TestCase {
 		result = this.sirius.get("=markus", null);
 		graph = MemoryGraphFactory.getInstance().openGraph();
 		reader.read(graph, new StringReader(result));
-		assertEquals(new XRI3Segment("=giovanni"), graph.findRelation(new XRI3Segment("=markus"), new XRI3Segment("+friend")).getRelationXri());
+		assertEquals(new XRI3Segment("=giovanni"), graph.findRelation(new XRI3Segment("=markus"), new XRI3Segment("+friend")).getTargetContextNodeXri());
 
 		this.vega.disconnect();
 		this.orion.logout();

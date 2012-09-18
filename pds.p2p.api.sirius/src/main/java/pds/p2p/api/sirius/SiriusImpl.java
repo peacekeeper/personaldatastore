@@ -144,7 +144,7 @@ public class SiriusImpl implements Sirius {
 		if (log.isDebugEnabled()) log.debug(messageResult.getGraph().toString());
 
 		List<String> relations = new Vector<String> ();
-		for (Iterator<Relation> i = messageResult.getGraph().getRootContextNode().getAllRelations(); i.hasNext(); ) relations.add((i.next()).getRelationXri().toString());
+		for (Iterator<Relation> i = messageResult.getGraph().getRootContextNode().getAllRelations(); i.hasNext(); ) relations.add((i.next()).getTargetContextNodeXri().toString());
 
 		return relations.toArray(new String[relations.size()]);
 	}
