@@ -21,16 +21,15 @@ import nextapp.echo.app.layout.RowLayoutData;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 import nextapp.echo.filetransfer.app.DownloadCommand;
 import nextapp.echo.filetransfer.app.DownloadProvider;
-
-import org.eclipse.higgins.XDI2.constants.MessagingConstants;
-import org.eclipse.higgins.XDI2.io.XDIWriter;
-import org.eclipse.higgins.XDI2.io.XDIWriterRegistry;
-import org.eclipse.higgins.XDI2.messaging.MessageResult;
-import org.eclipse.higgins.XDI2.messaging.Operation;
-
 import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
+import xdi2.core.constants.XDIConstants;
+import xdi2.core.io.XDIWriter;
+import xdi2.core.io.XDIWriterRegistry;
+import xdi2.messaging.Message;
+import xdi2.messaging.MessageResult;
+import xdi2.messaging.constants.XDIMessagingConstants;
 import echopoint.ImageIcon;
 
 public class DataExportContentPane extends ContentPane {
@@ -39,7 +38,7 @@ public class DataExportContentPane extends ContentPane {
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
+	private XdiEndpoint endpoint;
 
 	private Label canonicalLabel;
 
@@ -69,7 +68,7 @@ public class DataExportContentPane extends ContentPane {
 
 		try {
 
-			this.canonicalLabel.setText(this.context.getCanonical().toString());
+			this.canonicalLabel.setText(this.endpoint.getCanonical().toString());
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
@@ -77,79 +76,79 @@ public class DataExportContentPane extends ContentPane {
 		}
 	}
 
-	public void setContext(XdiContext context) {
+	public void setEndpoint(XdiEndpoint endpoint) {
 
 		// refresh
 
-		this.context = context;
+		this.endpoint = endpoint;
 
 		this.refresh();
 	}
 
 	private void onExportActionPerformed(ActionEvent e) {
-	
-			// do a $get on everything
-	
-			MessageResult messageResult;
-	
-			try {
-	
-				Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET);
-				messageResult = this.context.send(operation);
-			} catch (Exception ex) {
-	
-				MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
-				return;
-			}
-	
-			// save the XDI data in a byte array
-	
-			final ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-			final XDIWriter xdiWriter;
-	
-			try {
-	
-				xdiWriter = XDIWriterRegistry.forFormat("X3 Standard");
-				xdiWriter.write(messageResult.getGraph(), byteArray, null);
-			} catch (Exception ex) {
-	
-				MessageDialog.problem("Sorry, a problem occurred while exporting your Personal Data: " + ex.getMessage(), ex);
-				return;
-			}
-	
-			// download it
-	
-			DownloadProvider downloadProvider = new DownloadProvider() {
-	
-				@Override
-				public String getContentType() {
-	
-					return xdiWriter.getMimeTypes()[0];
-				}
-	
-				@Override
-				public String getFileName() {
-	
-					return DataExportContentPane.this.context.getCanonical().toString() + "." + xdiWriter.getDefaultFileExtension();
-				}
-	
-				@Override
-				public long getSize() {
-	
-					return byteArray.size();
-				}
-	
-				@Override
-				public void writeFile(OutputStream outputStream) throws IOException {
-	
-					outputStream.write(byteArray.toByteArray());
-				}
-			};
-	
-			// download
-	
-			PDSApplication.getApp().enqueueCommand(new DownloadCommand(downloadProvider));
+
+		// do a $get on everything
+
+		MessageResult messageResult;
+
+		try {
+
+			Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_GET, XDIConstants.XRI_S_ROOT);
+			messageResult = this.endpoint.send(message);
+		} catch (Exception ex) {
+
+			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
+			return;
 		}
+
+		// save the XDI data in a byte array
+
+		final ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
+		final XDIWriter xdiWriter;
+
+		try {
+
+			xdiWriter = XDIWriterRegistry.getDefault();
+			xdiWriter.write(messageResult.getGraph(), byteArray);
+		} catch (Exception ex) {
+
+			MessageDialog.problem("Sorry, a problem occurred while exporting your Personal Data: " + ex.getMessage(), ex);
+			return;
+		}
+
+		// download it
+
+		DownloadProvider downloadProvider = new DownloadProvider() {
+
+			@Override
+			public String getContentType() {
+
+				return xdiWriter.getMimeType().toString();
+			}
+
+			@Override
+			public String getFileName() {
+
+				return DataExportContentPane.this.endpoint.getCanonical().toString() + "." + xdiWriter.getFileExtension();
+			}
+
+			@Override
+			public long getSize() {
+
+				return byteArray.size();
+			}
+
+			@Override
+			public void writeFile(OutputStream outputStream) throws IOException {
+
+				outputStream.write(byteArray.toByteArray());
+			}
+		};
+
+		// download
+
+		PDSApplication.getApp().enqueueCommand(new DownloadCommand(downloadProvider));
+	}
 
 	/**
 	 * Configures initial state of component.
@@ -224,7 +223,7 @@ public class DataExportContentPane extends ContentPane {
 		button1.setText("Export my Personal Data");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onExportActionPerformed(e);
 			}

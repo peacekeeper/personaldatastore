@@ -65,7 +65,7 @@ public class GraphContentPane extends ContentPane {
 
 		try {
 
-			XDIWriterRegistry.forFormat(this.format).write(this.graph, writer, null);
+			XDIWriterRegistry.forFormat(this.format, null).write(this.graph, writer);
 
 			String html = this.originalHtml;
 			html = html.replace("<!-- $$$ -->", HtmlUtil.htmlEncode(writer.getBuffer().toString(), true, false));

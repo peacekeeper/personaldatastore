@@ -11,9 +11,9 @@ import nextapp.echo.webcontainer.WebContainerServlet;
 import nextapp.echo.webcontainer.service.JavaScriptService;
 import nextapp.echo.webcontainer.service.StaticTextService;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openxri.resolve.Resolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pds.web.ui.app.PdsWebApp;
 import pds.web.ui.context.SignInMethod;

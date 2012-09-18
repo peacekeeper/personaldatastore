@@ -1,22 +1,22 @@
 package pds.web.events;
 
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
 
 public class ApplicationContextClosedEvent extends ApplicationEvent {
 
 	private static final long serialVersionUID = -2741247681465378631L;
 
-	private XdiContext context;
+	private XdiEndpoint endpoint;
 
-	public ApplicationContextClosedEvent(Object source, XdiContext context) {
+	public ApplicationContextClosedEvent(Object source, XdiEndpoint endpoint) {
 
 		super(source);
 
-		this.context = context;
+		this.endpoint = endpoint;
 	}
 
-	public XdiContext getContext() {
+	public XdiEndpoint getContext() {
 
-		return this.context;
+		return this.endpoint;
 	}
 }

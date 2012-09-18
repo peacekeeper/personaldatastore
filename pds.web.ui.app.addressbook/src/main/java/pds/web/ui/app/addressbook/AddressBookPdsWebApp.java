@@ -26,7 +26,7 @@ public class AddressBookPdsWebApp implements PdsWebApp {
 	public void onActionPerformed(MainContentPane mainContentPane, XdiContext context, XRI3Segment subjectXri) {
 
 		AddressBookWindowPane addressBookWindowPane = new AddressBookWindowPane();
-		addressBookWindowPane.setContextAndSubjectXri(context, subjectXri);
+		addressBookWindowPane.setEndpointAndContextNodeXri(context, subjectXri);
 
 		mainContentPane.add(addressBookWindowPane);
 	}

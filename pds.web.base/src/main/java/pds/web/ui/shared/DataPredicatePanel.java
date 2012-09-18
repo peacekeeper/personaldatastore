@@ -95,7 +95,7 @@ public class DataPredicatePanel extends Panel implements XdiGraphListener {
 
 		try {
 
-			this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
+			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 			this.predicateXriLabel.setText(this.predicateXri.toString());
 
 			this.instanceValuesColumn.removeAll();

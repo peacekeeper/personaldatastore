@@ -1,6 +1,8 @@
 package pds.tests.p2p.api.sirius;
 
 
+import java.io.StringReader;
+
 import junit.framework.TestCase;
 import pds.p2p.api.Orion;
 import pds.p2p.api.Sirius;
@@ -10,8 +12,8 @@ import pds.p2p.api.sirius.SiriusFactory;
 import pds.p2p.api.vega.VegaFactory;
 import xdi2.core.Graph;
 import xdi2.core.impl.memory.MemoryGraphFactory;
-import xdi2.core.io.XDIJSONReader;
 import xdi2.core.io.XDIReader;
+import xdi2.core.io.readers.XDIJSONReader;
 import xdi2.core.xri3.impl.XRI3Segment;
 
 public class SiriusImplTest extends TestCase {
@@ -44,13 +46,13 @@ public class SiriusImplTest extends TestCase {
 		this.vega.connect(null, null, null);
 
 		String result;
-		XDIReader reader = new XDIJSONReader();
+		XDIReader reader = new XDIJSONReader(null);
 		Graph graph;
 
 		this.sirius.add("=markus/+friend/=giovanni", null);
 		result = this.sirius.get("=markus", null);
 		graph = MemoryGraphFactory.getInstance().openGraph();
-		reader.read(graph, result, null);
+		reader.read(graph, new StringReader(result));
 		assertEquals(new XRI3Segment("=giovanni"), graph.findRelation(new XRI3Segment("=markus"), new XRI3Segment("+friend")).getRelationXri());
 
 		this.vega.disconnect();

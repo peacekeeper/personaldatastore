@@ -60,7 +60,7 @@ public class LogContentPane extends ContentPane implements LogListener, XdiListe
 		// add us as listener
 
 		PDSApplication.getApp().getLogger().addLogListener(this);
-		PDSApplication.getApp().getXdi().addXdiListener(this);
+		PDSApplication.getApp().getXdiClient().addXdiListener(this);
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class LogContentPane extends ContentPane implements LogListener, XdiListe
 		// remove us as listener
 
 		PDSApplication.getApp().getLogger().removeLogListener(this);
-		PDSApplication.getApp().getXdi().removeXdiListener(this);
+		PDSApplication.getApp().getXdiClient().removeXdiListener(this);
 	}
 
 	@Override

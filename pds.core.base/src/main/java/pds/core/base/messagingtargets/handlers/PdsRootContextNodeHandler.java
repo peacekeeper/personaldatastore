@@ -3,12 +3,11 @@ package pds.core.base.messagingtargets.handlers;
 
 import pds.core.base.PdsInstance;
 import xdi2.core.ContextNode;
-import xdi2.core.exceptions.Xdi2MessagingException;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.MessageResult;
 import xdi2.messaging.Operation;
+import xdi2.messaging.exceptions.Xdi2MessagingException;
 import xdi2.messaging.target.ExecutionContext;
-import xdi2.messaging.target.impl.AbstractContextNodeHandler;
 
 public class PdsRootContextNodeHandler extends AbstractContextNodeHandler {
 

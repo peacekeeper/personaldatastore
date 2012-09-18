@@ -76,7 +76,7 @@ public class PredefinedSignInPanel extends Panel {
 
 		Button contextButton = (Button) e.getSource();
 		
-		Xdi xdi = PDSApplication.getApp().getXdi();
+		Xdi xdi = PDSApplication.getApp().getXdiClient();
 
 		String endpoint = (String) contextButton.get("endpoint");
 		if (endpoint == null || endpoint.trim().equals("")) return;
@@ -89,7 +89,7 @@ public class PredefinedSignInPanel extends Panel {
 
 			XdiContext context = xdi.resolveContextByEndpoint(endpoint, null);
 
-			PDSApplication.getApp().openContext(context);
+			PDSApplication.getApp().openEndpoint(context);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, we could not open your Personal Data Store: " + ex.getMessage(), ex);

@@ -2,8 +2,6 @@ package pds.web.ui.accountpersona;
 
 import java.util.ResourceBundle;
 
-import javax.xml.ws.soap.Addressing;
-
 import nextapp.echo.app.Alignment;
 import nextapp.echo.app.Button;
 import nextapp.echo.app.ContentPane;
@@ -20,18 +18,17 @@ import nextapp.echo.app.layout.SplitPaneLayoutData;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.web.ui.shared.DataPredicatesColumn;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
 import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
-import xdi2.core.Graph;
-import xdi2.core.xri3.impl.XRI3;
 import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
 import xdi2.messaging.MessageResult;
-import xdi2.messaging.Operation;
+import xdi2.messaging.constants.XDIMessagingConstants;
 import echopoint.ImageIcon;
 
 public class AccountPersonaContentPane extends ContentPane implements XdiGraphListener {
@@ -40,10 +37,10 @@ public class AccountPersonaContentPane extends ContentPane implements XdiGraphLi
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
-	private XRI3Segment subjectXri;
-	private XRI3 address;
-	private XRI3 nameAddress;
+	private XdiEndpoint endpoint;
+	private XRI3Segment contextNodeXri;
+	private XRI3Segment address;
+	private XRI3Segment nameAddress;
 
 	private Label nameLabel;
 	private XdiPanel xdiPanel;
@@ -72,7 +69,7 @@ public class AccountPersonaContentPane extends ContentPane implements XdiGraphLi
 
 		// remove us as listener
 		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 	
 	private void refresh() {
@@ -80,8 +77,8 @@ public class AccountPersonaContentPane extends ContentPane implements XdiGraphLi
 		try {
 
 			this.nameLabel.setText(this.getName());
-			this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
-			this.dataPredicatesColumn.setContextAndSubjectXri(this.context, this.subjectXri);
+			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.endpoint, this.address, this.xdiGetAddresses());
+			this.dataPredicatesColumn.setEndpointAndContextNodeXri(this.endpoint, this.contextNodeXri);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
@@ -89,35 +86,28 @@ public class AccountPersonaContentPane extends ContentPane implements XdiGraphLi
 		}
 	}
 
-	public XRI3[] xdiGetAddresses() {
+	public XRI3Segment[] xdiGetAddresses() {
 
-		return new XRI3[] {
-				new XRI3("" + this.nameAddress + "/$$")
+		return new XRI3Segment[] {
+				new XRI3Segment("" + this.nameAddress + "/$$")
 		};
 	}
 
-	public XRI3[] xdiAddAddresses() {
+	public XRI3Segment[] xdiAddAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiModAddresses() {
+	public XRI3Segment[] xdiModAddresses() {
 
-		return new XRI3[] {
-				new XRI3("" + this.nameAddress + "/$$")
+		return new XRI3Segment[] {
+				new XRI3Segment("" + this.nameAddress + "/$$")
 		};
 	}
 
-	public XRI3[] xdiSetAddresses() {
+	public XRI3Segment[] xdiDelAddresses() {
 
-		return new XRI3[] {
-				new XRI3("" + this.nameAddress + "/$$")
-		};
-	}
-
-	public XRI3[] xdiDelAddresses() {
-
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
@@ -150,24 +140,24 @@ public class AccountPersonaContentPane extends ContentPane implements XdiGraphLi
 		}
 	}
 
-	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
+	public void setEndpointAndContextNodeXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri) {
 
 		// remove us as listener
 		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 
 		// refresh
 		
-		this.context = context;
-		this.subjectXri = subjectXri;
-		this.address = new XRI3("" + this.subjectXri);
-		this.nameAddress = new XRI3("" + this.subjectXri + "/$a$xsd$string");
+		this.endpoint = endpoint;
+		this.contextNodeXri = contextNodeXri;
+		this.address = new XRI3Segment("" + this.contextNodeXri);
+		this.nameAddress = new XRI3Segment("" + this.contextNodeXri + "/$a$xsd$string");
 
 		this.refresh();
 
 		// add us as listener
 
-		this.context.addXdiGraphListener(this);
+		this.endpoint.addXdiGraphListener(this);
 	}
 
 	private void onDeletePersona(ActionEvent e) {
@@ -184,19 +174,17 @@ public class AccountPersonaContentPane extends ContentPane implements XdiGraphLi
 
 	private String getName() throws XdiException {
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.nameAddress);
-		MessageResult messageResult = this.context.send(operation);
+		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_GET, this.nameAddress);
+		MessageResult messageResult = this.endpoint.send(message);
 
-		return Addressing.findLiteralData(messageResult.getGraph(), this.nameAddress);
+		return messageResult.getGraph().findLiteral(this.nameAddress).getLiteralData();
 	}
 
 	private void delete() throws XdiException {
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_DEL);
-		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(this.subjectXri);
+		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_DEL, this.contextNodeXri);
 
-		this.context.send(operation);
+		this.endpoint.send(message);
 	}
 
 	/**

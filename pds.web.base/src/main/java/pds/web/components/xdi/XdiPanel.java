@@ -9,8 +9,8 @@ import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import pds.web.ui.DeveloperModeComponent;
 import pds.web.ui.MainWindow;
-import pds.xdi.XdiContext;
-import xdi2.core.xri3.impl.XRI3;
+import pds.xdi.XdiEndpoint;
+import xdi2.core.xri3.impl.XRI3Segment;
 
 public class XdiPanel extends Panel implements DeveloperModeComponent {
 
@@ -18,9 +18,9 @@ public class XdiPanel extends Panel implements DeveloperModeComponent {
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
-	private XRI3 mainAddress;
-	private XRI3[] getAddresses;
+	private XdiEndpoint endpoint;
+	private XRI3Segment mainAddress;
+	private XRI3Segment[] getAddresses;
 
 	/**
 	 * Creates a new <code>ClaimPanel</code>.
@@ -46,24 +46,24 @@ public class XdiPanel extends Panel implements DeveloperModeComponent {
 		super.dispose();
 	}
 
-	public void setContextAndMainAddressAndGetAddresses(XdiContext context, XRI3 mainAddress, XRI3[] getAddresses) {
+	public void setEndpointAndMainAddressAndGetAddresses(XdiEndpoint endpoint, XRI3Segment mainAddress, XRI3Segment[] getAddresses) {
 
-		this.context = context;
+		this.endpoint = endpoint;
 		this.mainAddress = mainAddress;
 		this.getAddresses = getAddresses;
 	}
 
-	public XdiContext getContext() {
+	public XdiEndpoint getEndpoint() {
 
-		return this.context;
+		return this.endpoint;
 	}
 
-	public XRI3 getMainAddress() {
+	public XRI3Segment getMainAddress() {
 		
 		return this.mainAddress;
 	}
 
-	public XRI3[] getGetAddresses() {
+	public XRI3Segment[] getGetAddresses() {
 		
 		return this.getAddresses;
 	}
@@ -71,7 +71,7 @@ public class XdiPanel extends Panel implements DeveloperModeComponent {
 	private void onButtonActionPerformed(ActionEvent e) {
 
 		XdiWindowPane xdiWindowPane = new XdiWindowPane();
-		xdiWindowPane.setContextAndMainAddressAndGetAddresses(this.context, this.mainAddress, this.getAddresses);
+		xdiWindowPane.setEndpointAndMainAddressAndGetAddresses(this.endpoint, this.mainAddress, this.getAddresses);
 
 		MainWindow.findMainContentPane(this).add(xdiWindowPane);
 	}

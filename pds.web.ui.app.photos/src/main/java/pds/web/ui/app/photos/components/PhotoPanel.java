@@ -90,7 +90,7 @@ public class PhotoPanel extends Panel implements XdiGraphListener {
 			byte[] bytes = this.getBytes();
 			String title = this.getTitle();
 
-			this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
+			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 
 			this.titleLabel.setText(title);
 

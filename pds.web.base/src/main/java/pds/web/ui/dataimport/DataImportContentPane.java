@@ -23,25 +23,22 @@ import nextapp.echo.filetransfer.app.UploadSelect;
 import nextapp.echo.filetransfer.app.event.UploadEvent;
 import nextapp.echo.filetransfer.app.event.UploadListener;
 import nextapp.echo.filetransfer.model.Upload;
-
-import org.eclipse.higgins.XDI2.Graph;
-import org.eclipse.higgins.XDI2.Statement;
-import org.eclipse.higgins.XDI2.Subject;
-import org.eclipse.higgins.XDI2.addressing.Addressing;
-import org.eclipse.higgins.XDI2.constants.MessagingConstants;
-import org.eclipse.higgins.XDI2.impl.memory.MemoryGraphFactory;
-import org.eclipse.higgins.XDI2.io.XDIReaderRegistry;
-import org.eclipse.higgins.XDI2.messaging.Operation;
-import org.eclipse.higgins.XDI2.util.CopyUtil;
-import org.eclipse.higgins.XDI2.util.CopyUtil.CopyStatementStrategy;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
-
 import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.logger.Logger;
 import pds.web.ui.MessageDialog;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
+import xdi2.core.ContextNode;
+import xdi2.core.Graph;
+import xdi2.core.constants.XDIConstants;
+import xdi2.core.features.remoteroots.RemoteRoots;
+import xdi2.core.impl.memory.MemoryGraphFactory;
+import xdi2.core.io.XDIReaderRegistry;
+import xdi2.core.util.CopyUtil;
+import xdi2.core.util.CopyUtil.CopyStrategy;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
+import xdi2.messaging.constants.XDIMessagingConstants;
 import echopoint.ImageIcon;
 
 public class DataImportContentPane extends ContentPane {
@@ -50,7 +47,7 @@ public class DataImportContentPane extends ContentPane {
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
+	private XdiEndpoint endpoint;
 
 	private Label canonicalLabel;
 	private Panel uploadSelectPanel;
@@ -90,8 +87,8 @@ public class DataImportContentPane extends ContentPane {
 
 		try {
 
-			this.canonicalLabel.setText(this.context.getCanonical().toString());
-			this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, null, null);
+			this.canonicalLabel.setText(this.endpoint.getCanonical().toString());
+			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.endpoint, null, null);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
@@ -99,11 +96,11 @@ public class DataImportContentPane extends ContentPane {
 		}
 	}
 
-	public void setContext(XdiContext context) {
+	public void setEndpoint(XdiEndpoint endpoint) {
 
 		// refresh
 
-		this.context = context;
+		this.endpoint = endpoint;
 
 		this.refresh();
 	}
@@ -145,7 +142,7 @@ public class DataImportContentPane extends ContentPane {
 		try {
 
 			this.graph = MemoryGraphFactory.getInstance().openGraph();
-			XDIReaderRegistry.getAuto().read(this.graph, new ByteArrayInputStream(bytes), null);
+			XDIReaderRegistry.getAuto().read(this.graph, new ByteArrayInputStream(bytes));
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, there appears to be a problem with the XDI data: " + ex.getMessage(), ex);
@@ -155,7 +152,7 @@ public class DataImportContentPane extends ContentPane {
 		// show the stats row
 
 		this.bytesLabel.setText(Integer.toString(bytes.length));
-		this.statementsLabel.setText(Integer.toString(this.graph.getStatementCount()));
+		this.statementsLabel.setText(Integer.toString(this.graph.getRootContextNode().getAllStatementCount()));
 		this.statsRow.setVisible(true);
 
 		// enable the import button
@@ -201,8 +198,8 @@ public class DataImportContentPane extends ContentPane {
 
 		try {
 
-			Operation operation = this.context.prepareOperation(MessagingConstants.XRI_DEL);
-			this.context.send(operation);
+			Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_DEL, XDIConstants.XRI_S_ROOT);
+			this.endpoint.send(message);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while deleting your Personal Data: " + ex.getMessage(), ex);
@@ -215,27 +212,19 @@ public class DataImportContentPane extends ContentPane {
 
 		Graph importGraph = MemoryGraphFactory.getInstance().openGraph();
 
-		final XRI3Segment oldInumber = Addressing.findReferenceXri(this.graph, new XRI3("$/$is($xdi$v$1)"));
-		final XRI3Segment newInumber = this.context.getCanonical();
+		final XRI3Segment oldInumber = RemoteRoots.xriOfRemoteRootXri(RemoteRoots.getSelfRemoteRootContextNode(this.graph).getXri());
+		final XRI3Segment newInumber = this.endpoint.getCanonical();
 
 		logger.info("Importing from " + oldInumber + " to " + newInumber, null);
 
-		CopyUtil.copyStatements(this.graph, importGraph, new CopyStatementStrategy() {
+		CopyUtil.copyGraph(this.graph, importGraph, new CopyStrategy() {
 
 			@Override
-			public boolean doCopy(Statement statement, Graph graph) {
+			public ContextNode replaceContextNode(ContextNode contextNode) {
 
-				if (statement.getSubject().getSubjectXri().equals(new XRI3Segment("$"))) return false;
+				//if (subject.getSubjectXri().equals(oldInumber)) return newInumber;	// TODO
 
-				return true;
-			}
-
-			@Override
-			public XRI3Segment replaceSubjectXri(Subject subject) {
-
-				if (subject.getSubjectXri().equals(oldInumber)) return newInumber;
-
-				return super.replaceSubjectXri(subject);
+				return super.replaceContextNode(contextNode);
 			}
 		});
 
@@ -243,8 +232,8 @@ public class DataImportContentPane extends ContentPane {
 
 		try {
 
-			Operation operation = this.context.prepareOperation(MessagingConstants.XRI_ADD, importGraph);
-			this.context.send(operation);
+			Message message = this.endpoint.prepareOperations(XDIMessagingConstants.XRI_S_ADD, importGraph.getRootContextNode().getAllStatements());
+			this.endpoint.send(message);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);

@@ -160,7 +160,7 @@ public class TopicPanel extends Panel implements XdiGraphListener {
 		this.nameAddress = new XRI3("" + this.address + "/+name");
 		this.hubAddress = new XRI3("" + this.address + "/+push+hub");
 
-		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
+		this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 
 		this.refresh();
 

@@ -12,17 +12,14 @@ import nextapp.echo.app.Row;
 import nextapp.echo.app.SplitPane;
 import nextapp.echo.app.layout.RowLayoutData;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
-
-import org.eclipse.higgins.XDI2.constants.DictionaryConstants;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
-
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.web.ui.shared.DataPredicatesColumn;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
+import xdi2.core.xri3.impl.XRI3;
+import xdi2.core.xri3.impl.XRI3Segment;
 import echopoint.ImageIcon;
 
 public class AccountRootContentPane extends ContentPane implements XdiGraphListener {
@@ -31,12 +28,12 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
-	private XRI3Segment subjectXri;
-	private XRI3 address;
-	private XRI3 extensionAddress;
-	private XRI3 equivalenceAddress;
-	private XRI3 inheritanceAddress;
+	private XdiEndpoint endpoint;
+	private XRI3Segment contextNodeXri;
+	private XRI3Segment address;
+	private XRI3Segment extensionAddress;
+	private XRI3Segment equivalenceAddress;
+	private XRI3Segment inheritanceAddress;
 
 	private Label inumberLabel;
 	private XdiPanel xdiPanel;
@@ -60,21 +57,21 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 
 	@Override
 	public void dispose() {
-		
+
 		super.dispose();
 
 		// remove us as listener
-		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
 
 		try {
 
-			this.inumberLabel.setText(this.subjectXri.toString());
-			this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
-			this.dataPredicatesColumn.setContextAndSubjectXri(this.context, this.subjectXri);
+			this.inumberLabel.setText(this.contextNodeXri.toString());
+			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.endpoint, this.address, this.xdiGetAddresses());
+			this.dataPredicatesColumn.setEndpointAndContextNodeXri(this.endpoint, this.contextNodeXri);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
@@ -82,37 +79,32 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 		}
 	}
 
-	public XRI3[] xdiGetAddresses() {
+	public XRI3Segment[] xdiGetAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.extensionAddress,
 				this.equivalenceAddress,
 				this.inheritanceAddress
 		};
 	}
 
-	public XRI3[] xdiAddAddresses() {
+	public XRI3Segment[] xdiAddAddresses() {
 
-		return new XRI3[] {
-				new XRI3("" + this.extensionAddress + "/$$"),
-				new XRI3("" + this.equivalenceAddress + "/$$"),
-				new XRI3("" + this.inheritanceAddress + "/$$")
+		return new XRI3Segment[] {
+				new XRI3Segment("" + this.extensionAddress + "/$$"),
+				new XRI3Segment("" + this.equivalenceAddress + "/$$"),
+				new XRI3Segment("" + this.inheritanceAddress + "/$$")
 		};
 	}
 
-	public XRI3[] xdiModAddresses() {
+	public XRI3Segment[] xdiModAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiSetAddresses() {
+	public XRI3Segment[] xdiDelAddresses() {
 
-		return new XRI3[0];
-	}
-
-	public XRI3[] xdiDelAddresses() {
-
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
@@ -122,26 +114,26 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 		this.refresh();
 	}
 
-	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
+	public void setEndpointAndContextNodeXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri) {
 
 		// remove us as listener
-		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 
 		// refresh
-		
-		this.context = context;
-		this.subjectXri = subjectXri;
-		this.address = new XRI3("" + this.subjectXri);
-		this.extensionAddress = new XRI3("" + this.subjectXri + "/" + DictionaryConstants.XRI_EXTENSION);
-		this.equivalenceAddress = new XRI3("" + this.subjectXri + "/" + DictionaryConstants.XRI_IS);
-		this.inheritanceAddress = new XRI3("" + this.subjectXri + "/" + DictionaryConstants.XRI_IS_A);
+
+		this.endpoint = endpoint;
+		this.contextNodeXri = contextNodeXri;
+		this.address = new XRI3Segment("" + this.contextNodeXri);
+		this.extensionAddress = new XRI3Segment("" + this.contextNodeXri + "$extension");	// TODO
+		this.equivalenceAddress = new XRI3Segment("" + this.contextNodeXri + "$equivalence");	// TODO
+		this.inheritanceAddress = new XRI3Segment("" + this.contextNodeXri + "$inheritance");	// TODO
 
 		this.refresh();
 
 		// add us as listener
 
-		this.context.addXdiGraphListener(this);
+		this.endpoint.addXdiGraphListener(this);
 	}
 
 	/**

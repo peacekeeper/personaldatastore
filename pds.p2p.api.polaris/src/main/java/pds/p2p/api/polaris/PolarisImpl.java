@@ -20,7 +20,7 @@ import xdi2.core.impl.memory.MemoryGraphFactory;
 import xdi2.core.io.XDIReaderRegistry;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
-import xdi2.messaging.util.XDIMessagingConstants;
+import xdi2.messaging.constants.XDIMessagingConstants;
 
 public class PolarisImpl implements Polaris {
 
@@ -175,7 +175,7 @@ public class PolarisImpl implements Polaris {
 		this.client.setUrl(xdiUrl != null ? new URL(xdiUrl) : new URL(this.vega.xdiUri()));
 
 		Graph graph = MemoryGraphFactory.getInstance().openGraph();
-		XDIReaderRegistry.getAuto().read(graph, new StringReader(message), null);
+		XDIReaderRegistry.getAuto().read(graph, new StringReader(message));
 		MessageEnvelope messageEnvelope = MessageEnvelope.fromGraph(graph);
 
 		MessageResult messageResult = this.client.send(messageEnvelope, null);

@@ -1,15 +1,13 @@
 package pds.web.ui.app;
 
 import nextapp.echo.app.ResourceImageReference;
-
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
-
 import pds.web.ui.MainContentPane;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
+import xdi2.core.xri3.impl.XRI3Segment;
 
 public interface PdsWebApp {
 
 	public String getName();
 	public ResourceImageReference getResourceImageReference();
-	public void onActionPerformed(MainContentPane mainContentPane, XdiContext context, XRI3Segment subjectXri);
+	public void onActionPerformed(MainContentPane mainContentPane, XdiEndpoint endpoint, XRI3Segment contextNdoeXri);
 }

@@ -68,7 +68,7 @@ public class ContextWindowPane extends WindowPane implements ApplicationListener
 
 			this.removeAll();
 			OpenContentPane openContentPane = new OpenContentPane();
-			openContentPane.setContext(((ApplicationContextOpenedEvent) applicationEvent).getContext());
+			openContentPane.setEndpoint(((ApplicationContextOpenedEvent) applicationEvent).getEndpoint());
 			this.add(openContentPane);
 
 			// put us into the bottom right corner

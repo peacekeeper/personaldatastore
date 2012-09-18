@@ -91,7 +91,7 @@ public class DirectXdiContentPane extends ContentPane {
 
 	private void onSendXdiActionPerformed(ActionEvent e) {
 
-		XdiContext context = PDSApplication.getApp().getOpenContext();
+		XdiContext context = PDSApplication.getApp().getOpenEndpoint();
 
 		MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
 		XdiTransactionEvent transactionEvent = null;
@@ -137,7 +137,7 @@ public class DirectXdiContentPane extends ContentPane {
 
 			if (literal.getPredicate().getPredicateXri().equals(XRI_PASSWORD)) {
 
-				XdiContext context = PDSApplication.getApp().getOpenContext();
+				XdiContext context = PDSApplication.getApp().getOpenEndpoint();
 				String password = context.getPassword();
 
 				return password != null ? password : literal.getData();

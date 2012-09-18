@@ -3,7 +3,7 @@ package pds.core.any;
 import pds.core.base.PdsInstance;
 import pds.core.base.impl.AbstractPdsInstance;
 import xdi2.core.xri3.impl.XRI3Segment;
-import xdi2.messaging.target.impl.AbstractMessagingTarget;
+import xdi2.messaging.target.AbstractMessagingTarget;
 
 public class AnyPdsInstance extends AbstractPdsInstance implements PdsInstance {
 

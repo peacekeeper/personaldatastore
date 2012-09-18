@@ -104,7 +104,7 @@ public class RpxnowSignInPanel extends Panel implements ExternalCallReceiver {
 
 		// try to open the context
 
-		Xdi xdi = pdsApplication.getXdi();
+		Xdi xdi = pdsApplication.getXdiClient();
 
 		try {
 
@@ -116,7 +116,7 @@ public class RpxnowSignInPanel extends Panel implements ExternalCallReceiver {
 
 					try {
 
-						PDSApplication.getApp().openContext(context);
+						PDSApplication.getApp().openEndpoint(context);
 					} catch (Exception ex) {
 
 						MessageDialog.problem("Sorry, we could not open your Personal Data Store: " + ex.getMessage(), ex);

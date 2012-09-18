@@ -27,11 +27,6 @@ import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.RowLayoutData;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 import nextapp.echo.extras.app.ToolTipContainer;
-
-import org.eclipse.higgins.XDI2.constants.MessagingConstants;
-import org.eclipse.higgins.XDI2.messaging.Operation;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
-
 import pds.web.PDSApplication;
 import pds.web.events.ApplicationContextClosedEvent;
 import pds.web.events.ApplicationContextOpenedEvent;
@@ -43,9 +38,12 @@ import pds.web.ui.context.ContextWindowPane;
 import pds.web.ui.dataexport.DataExportWindowPane;
 import pds.web.ui.dataimport.DataImportWindowPane;
 import pds.web.ui.log.LogWindowPane;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
+import xdi2.core.constants.XDIConstants;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
+import xdi2.messaging.constants.XDIMessagingConstants;
 import echopoint.ImageIcon;
-import pds.web.ui.AccountRootGrid;
 
 public class MainContentPane extends ContentPane implements ApplicationListener {
 
@@ -53,7 +51,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
+	private XdiEndpoint endpoint;
 
 	private Column pdsColumn;
 	private AccountRootGrid accountRootGrid;
@@ -93,8 +91,8 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 				public void actionPerformed(ActionEvent e) {
 
-					XRI3Segment subjectXri = MainContentPane.this.getContext().getCanonical();
-					pdsWebApp.onActionPerformed(MainContentPane.this, MainContentPane.this.getContext(), subjectXri);
+					XRI3Segment contextNodeXri = MainContentPane.this.getEndpoint().getCanonical();
+					pdsWebApp.onActionPerformed(MainContentPane.this, MainContentPane.this.getEndpoint(), contextNodeXri);
 				}
 			});
 			MainContentPane.this.pdsWebAppGrid.add(pdsWebAppButton);
@@ -133,9 +131,9 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 	}
 
-	public XdiContext getContext() {
+	public XdiEndpoint getEndpoint() {
 
-		return this.context;
+		return this.endpoint;
 	}
 
 	public boolean isDeveloperModeSelected() {
@@ -149,7 +147,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 			this.pdsColumn.setVisible(true);
 
-			this.context = ((ApplicationContextOpenedEvent) applicationEvent).getContext();
+			this.endpoint = ((ApplicationContextOpenedEvent) applicationEvent).getEndpoint();
 
 			this.refresh(applicationEvent);
 		}
@@ -170,9 +168,9 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 	private void onAccountRootActionPerformed(ActionEvent e) {
 
-		XRI3Segment subjectXri = this.context.getCanonical();
+		XRI3Segment contextNodeXri = this.endpoint.getCanonical();
 		AccountRootWindowPane accountRootWindowPane = new AccountRootWindowPane();
-		accountRootWindowPane.setContextAndSubjectXri(this.context, subjectXri);
+		accountRootWindowPane.setEndpointAndContextNodeXri(this.endpoint, contextNodeXri);
 
 		this.add(accountRootWindowPane);
 	}
@@ -221,8 +219,8 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 					try {
 
-						Operation operation = MainContentPane.this.context.prepareOperation(MessagingConstants.XRI_DEL);
-						MainContentPane.this.context.send(operation);
+						Message message = MainContentPane.this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_DEL, XDIConstants.XRI_S_ROOT);
+						MainContentPane.this.endpoint.send(message);
 					} catch (Exception ex) {
 
 						MessageDialog.problem("Sorry, a problem occurred while deleting your Personal Data: " + ex.getMessage(), ex);
@@ -238,7 +236,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 	private void onDataExportActionPerformed(ActionEvent e) {
 
 		DataExportWindowPane dataExportWindowPane = new DataExportWindowPane();
-		dataExportWindowPane.setContext(this.context);
+		dataExportWindowPane.setEndpoint(this.endpoint);
 
 		this.add(dataExportWindowPane);
 	}
@@ -246,7 +244,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 	private void onDataImportActionPerformed(ActionEvent e) {
 
 		DataImportWindowPane dataImportWindowPane = new DataImportWindowPane();
-		dataImportWindowPane.setContext(this.context);
+		dataImportWindowPane.setEndpoint(this.endpoint);
 
 		this.add(dataImportWindowPane);
 	}

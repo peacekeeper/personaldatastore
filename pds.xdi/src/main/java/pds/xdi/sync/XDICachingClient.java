@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import xdi2.client.XDIClient;
+import xdi2.client.exceptions.Xdi2ClientException;
 import xdi2.core.Graph;
-import xdi2.core.exceptions.Xdi2MessagingException;
 import xdi2.core.impl.memory.MemoryGraphFactory;
 import xdi2.core.xri3.impl.XRI3;
 import xdi2.messaging.MessageEnvelope;
@@ -35,7 +35,7 @@ public class XDICachingClient implements XDIClient {
 	}
 
 	@Override
-	public MessageResult send(MessageEnvelope messageEnvelope, MessageResult messageResult) throws Xdi2MessagingException {
+	public MessageResult send(MessageEnvelope messageEnvelope, MessageResult messageResult) throws Xdi2ClientException {
 
 		return this.xdiClient.send(messageEnvelope, messageResult);
 	}
@@ -51,17 +51,17 @@ public class XDICachingClient implements XDIClient {
 	}
 
 	public Graph getCachingGraph() {
-		
+
 		return this.cachingGraph;
 	}
 
 	public Set<XRI3> getCachedAddresses() {
-		
+
 		return this.cachedAddresses;
 	}
 
 	public Set<XRI3> getDirtyAddresses() {
-		
+
 		return this.dirtyAddresses;
 	}
 }

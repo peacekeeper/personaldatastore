@@ -21,19 +21,17 @@ import nextapp.echo.app.SplitPane;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
-
-import org.eclipse.higgins.XDI2.addressing.Addressing;
-import org.eclipse.higgins.XDI2.constants.MessagingConstants;
-import org.eclipse.higgins.XDI2.messaging.MessageResult;
-import org.eclipse.higgins.XDI2.messaging.Operation;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
-
 import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
 import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
+import xdi2.core.Literal;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
+import xdi2.messaging.MessageResult;
+import xdi2.messaging.constants.XDIMessagingConstants;
 
 public class OpenContentPane extends ContentPane implements XdiGraphListener {
 
@@ -49,10 +47,10 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
-	private XRI3 address = new XRI3("$");
-	private XRI3 addressFirstAccess = new XRI3("$/$d$first");
-	private XRI3 addressLastAccess = new XRI3("$/$d$last");
+	private XdiEndpoint endpoint;
+	private XRI3Segment address = new XRI3Segment("()");
+	private XRI3Segment addressFirstAccess = new XRI3Segment("$d$first");
+	private XRI3Segment addressLastAccess = new XRI3Segment("$d$last");
 
 	private Label identifierTextField;
 	private Label canonicalTextField;
@@ -82,49 +80,42 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 
 		// remove us as listener
 		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
 
-		this.identifierTextField.setText(this.context.getIdentifier());
-		this.canonicalTextField.setText(this.context.getCanonical().toString());
-		this.endpointTextField.setText(this.context.getEndpoint());
+		this.identifierTextField.setText(this.endpoint.getIdentifier());
+		this.canonicalTextField.setText(this.endpoint.getCanonical().toString());
+		this.endpointTextField.setText(this.endpoint.getEndpoint());
 
-		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
+		this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.endpoint, this.address, this.xdiGetAddresses());
 	}
 
-	public XRI3[] xdiGetAddresses() {
+	public XRI3Segment[] xdiGetAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
 
-	public XRI3[] xdiAddAddresses() {
+	public XRI3Segment[] xdiAddAddresses() {
 
-		return new XRI3[] {
-				new XRI3("" + this.address + "/$$")
+		return new XRI3Segment[] {
+				new XRI3Segment("" + this.address + "/$$")
 		};
 	}
 
-	public XRI3[] xdiModAddresses() {
+	public XRI3Segment[] xdiModAddresses() {
 
-		return new XRI3[] {
-				new XRI3("" + this.address + "/$$")
+		return new XRI3Segment[] {
+				new XRI3Segment("" + this.address + "/$$")
 		};
 	}
 
-	public XRI3[] xdiSetAddresses() {
+	public XRI3Segment[] xdiDelAddresses() {
 
-		return new XRI3[] {
-				new XRI3("" + this.address + "/$$")
-		};
-	}
-
-	public XRI3[] xdiDelAddresses() {
-
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
@@ -135,36 +126,36 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 		this.refresh();
 	}
 
-	public void setContext(XdiContext context) {
+	public void setEndpoint(XdiEndpoint endpoint) {
 
 		// remove us as listener
 		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 
 		// refresh
 		
-		this.context = context;
+		this.endpoint = endpoint;
 
 		this.refresh();
 
 		// add us as listener
 
-		this.context.addXdiGraphListener(this);
+		this.endpoint.addXdiGraphListener(this);
 	}
 
 	private Date getFirstAccess() throws XdiException {
 
 		// $get
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.addressFirstAccess);
-		MessageResult messageResult = this.context.send(operation);
+		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_GET, this.addressFirstAccess);
+		MessageResult messageResult = this.endpoint.send(message);
 
-		String data = Addressing.findLiteralData(messageResult.getGraph(), this.addressFirstAccess);
-		if (data == null) return null;
+		Literal literal = messageResult.getGraph().findLiteral(this.addressFirstAccess);
+		if (literal == null) return null;
 
 		try {
 
-			return DATEFORMAT.parse(data);
+			return DATEFORMAT.parse(literal.getLiteralData());
 		} catch (ParseException ex) {
 
 			return null;
@@ -175,15 +166,15 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 
 		// $get
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.addressLastAccess);
-		MessageResult messageResult = this.context.send(operation);
+		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_GET, this.addressLastAccess);
+		MessageResult messageResult = this.endpoint.send(message);
 
-		String data = Addressing.findLiteralData(messageResult.getGraph(), this.addressLastAccess);
-		if (data == null) return null;
+		Literal literal = messageResult.getGraph().findLiteral(this.addressLastAccess);
+		if (literal == null) return null;
 
 		try {
 
-			return DATEFORMAT.parse(data);
+			return DATEFORMAT.parse(literal.getLiteralData());
 		} catch (ParseException ex) {
 
 			return null;

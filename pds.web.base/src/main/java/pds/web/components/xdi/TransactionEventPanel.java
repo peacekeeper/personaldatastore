@@ -15,13 +15,11 @@ import nextapp.echo.app.ResourceImageReference;
 import nextapp.echo.app.Row;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
-
-import org.eclipse.higgins.XDI2.messaging.Operation;
-
 import pds.web.ui.MainWindow;
 import pds.xdi.events.XdiTransactionEvent;
 import pds.xdi.events.XdiTransactionFailureEvent;
 import pds.xdi.events.XdiTransactionSuccessEvent;
+import xdi2.messaging.Operation;
 
 public class TransactionEventPanel extends Panel {
 
@@ -73,7 +71,7 @@ public class TransactionEventPanel extends Panel {
 			this.button.setIcon(IMAGEREFERENCE_SUCCESS);
 
 			if (buffer.length() > 0) buffer.append(" / ");
-			buffer.append(Integer.toString(((XdiTransactionSuccessEvent) this.transactionEvent).getMessageResult().getGraph().getStatementCount()) + " result statements.");
+			buffer.append(Integer.toString(((XdiTransactionSuccessEvent) this.transactionEvent).getMessageResult().getGraph().getRootContextNode().getAllStatementCount()) + " result statements.");
 		} else if (this.transactionEvent instanceof XdiTransactionFailureEvent) {
 
 			this.button.setIcon(IMAGEREFERENCE_FAILURE);

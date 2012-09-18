@@ -4,19 +4,17 @@ import java.util.ResourceBundle;
 
 import nextapp.echo.app.Column;
 import nextapp.echo.app.Component;
-
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
-
 import pds.dictionary.PdsDictionary;
 import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
+import xdi2.core.xri3.impl.XRI3;
+import xdi2.core.xri3.impl.XRI3Segment;
 
 public class DataPredicatesColumn extends Column implements XdiGraphListener {
 
@@ -24,9 +22,9 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
-	private XRI3Segment subjectXri;
-	private XRI3 address;
+	private XdiEndpoint endpoint;
+	private XRI3Segment contextNodeXri;
+	private XRI3Segment address;
 
 	private boolean readOnly;
 
@@ -55,7 +53,7 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 
 		// remove us as listener
 		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
@@ -83,35 +81,30 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 	private void addDataPredicatePanel(XRI3Segment dataPredicateXri) {
 
 		DataPredicatePanel dataPredicatePanel = new DataPredicatePanel();
-		dataPredicatePanel.setContextAndSubjectXriAndPredicateXri(this.context, this.subjectXri, dataPredicateXri);
+		dataPredicatePanel.setEndpointAndContextNodeXriAndPredicateXri(this.endpoint, this.contextNodeXri, dataPredicateXri);
 		dataPredicatePanel.setReadOnly(this.readOnly);
 
 		this.add(dataPredicatePanel);
 	}
 
-	public XRI3[] xdiGetAddresses() {
+	public XRI3Segment[] xdiGetAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiAddAddresses() {
+	public XRI3Segment[] xdiAddAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiModAddresses() {
+	public XRI3Segment[] xdiModAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiSetAddresses() {
+	public XRI3Segment[] xdiDelAddresses() {
 
-		return new XRI3[0];
-	}
-
-	public XRI3[] xdiDelAddresses() {
-
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
@@ -144,23 +137,23 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 		}
 	}
 
-	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
+	public void setEndpointAndContextNodeXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri) {
 
 		// remove us as listener
 		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 
 		// refresh
 		
-		this.context = context;
-		this.subjectXri = subjectXri;
-		this.address = new XRI3("" + this.subjectXri);
+		this.endpoint = endpoint;
+		this.contextNodeXri = contextNodeXri;
+		this.address = new XRI3Segment("" + this.contextNodeXri);
 
 		this.refresh();
 
 		// add us as listener
 
-		this.context.addXdiGraphListener(this);
+		this.endpoint.addXdiGraphListener(this);
 	}
 
 	public void setReadOnly(boolean readOnly) {

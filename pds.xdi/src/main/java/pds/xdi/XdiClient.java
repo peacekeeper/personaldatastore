@@ -19,14 +19,13 @@ import pds.xdi.events.XdiTransactionFailureEvent;
 import pds.xdi.events.XdiTransactionSuccessEvent;
 import xdi2.client.XDIClient;
 import xdi2.client.http.XDIHttpClient;
-import xdi2.core.ContextNode;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
 import xdi2.messaging.Operation;
+import xdi2.messaging.constants.XDIMessagingConstants;
 import xdi2.messaging.error.ErrorMessageResult;
-import xdi2.messaging.util.XDIMessagingConstants;
 
 /**
  * Support for resolving and opening XDI contexts.
@@ -58,7 +57,7 @@ public class XdiClient {
 	 * Context methods
 	 */
 
-/* TODO	public XdiContext resolveContextByIname(String iname, String password) throws XdiException {
+/* TODO	public XdiContext resolveContextByIname(String iname, String secretToken) throws XdiException {
 
 		log.trace("resolveContextByIname()");
 
@@ -99,18 +98,18 @@ public class XdiClient {
 				new XDIHttpClient(endpoint), 
 				iname, 
 				new XRI3Segment(inumber), 
-				password);
+				secretToken);
 
-		// check password
+		// check secret token
 
-		if (password != null) context.checkPassword();
+		if (secretToken != null) context.checkSecretToken();
 
 		// done
 
 		return context;
 	} */
 
-/* TODO	public XdiContext resolveContextByInumber(String inumber, String password) throws XdiException {
+/* TODO	public XdiContext resolveContextByInumber(String inumber, String secretToken) throws XdiException {
 
 		log.trace("resolveContextByInumber()");
 
@@ -136,18 +135,18 @@ public class XdiClient {
 				new XDIHttpClient(endpoint), 
 				inumber, 
 				new XRI3Segment(inumber), 
-				password);
+				secretToken);
 
-		// check password
+		// check secret token
 
-		if (password != null) context.checkPassword();
+		if (secretToken != null) context.checkSecretToken();
 
 		// done
 
 		return context;
 	}*/
 
-	public XdiEndpoint resolveEndpointByEndpointUrl(String endpointUrl, String password) throws XdiException {
+	public XdiEndpoint resolveEndpointByEndpointUrl(String endpointUrl, String secretToken) throws XdiException {
 
 		log.trace("resolveEndpointByEndpointUrl()");
 
@@ -158,13 +157,12 @@ public class XdiClient {
 
 		try {
 
-			MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
-			ContextNode contextNode = messageEnvelope.getGraph().addStatement("()/$is($xdi$v$1)/($)").getSubject();
-			Message message = messageEnvelope.getMessageContainer(XDIMessagingConstants.XRI_S_SELF, true).createMessage();
-			message.createGetOperation(contextNode.getXri());
+			MessageEnvelope messageEnvelope = new MessageEnvelope();
+			Message message = messageEnvelope.getMessage(XDIMessagingConstants.XRI_S_ANONYMOUS, true);
+			message.createGetOperation(new XRI3Segment("(()/$is$is/($))"));
 			MessageResult messageResult = this.send(xdiClient, messageEnvelope);
 
-			inumber = messageResult.getGraph().findRelation(new XRI3Segment("()"), new XRI3Segment("$is($xdi$v$1)")).toString();
+			inumber = messageResult.getGraph().findRelation(new XRI3Segment("()"), new XRI3Segment("$is$is")).toString();
 		} catch (Exception ex) {
 
 			throw new RuntimeException("Problem while resolving the endpoint: " + ex.getMessage());
@@ -180,18 +178,18 @@ public class XdiClient {
 				xdiClient, 
 				inumber, 
 				new XRI3Segment(inumber), 
-				password);
+				secretToken);
 
-		// check password
+		// check secret token
 
-		if (password != null) context.checkPassword();
+		if (secretToken != null) context.checkSecretToken();
 
 		// done
 
 		return context;
 	}
 
-	public XdiEndpoint resolveContextManually(String endpoint, String identifier, XRI3Segment canonical, String password) throws XdiException {
+	public XdiEndpoint resolveContextManually(String endpoint, String identifier, XRI3Segment canonical, String secretToken) throws XdiException {
 
 		log.trace("resolveContextManually()");
 
@@ -202,11 +200,11 @@ public class XdiClient {
 				new XDIHttpClient(endpoint), 
 				identifier, 
 				canonical, 
-				password);
+				secretToken);
 
-		// check password
+		// check secret token
 
-		if (password != null) context.checkPassword();
+		if (secretToken != null) context.checkSecretToken();
 
 		// done
 
@@ -254,7 +252,7 @@ public class XdiClient {
 
 	public MessageResult send(XDIClient xdiClient, Message message) throws XdiException {
 
-		return this.send(xdiClient, message.getMessageContainer().getMessageEnvelope());
+		return this.send(xdiClient, message.getMessageEnvelope());
 	}
 
 	public MessageResult send(XDIClient xdiClient, MessageEnvelope messageEnvelope) throws XdiException {

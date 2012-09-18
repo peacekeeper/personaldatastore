@@ -74,7 +74,7 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 
 			String friend = this.referenceXri.toString();
 
-			this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
+			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 			this.friendButton.setText(friend);
 		} catch (Exception ex) {
 

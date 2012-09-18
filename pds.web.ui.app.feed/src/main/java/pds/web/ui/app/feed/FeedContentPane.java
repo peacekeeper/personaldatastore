@@ -202,7 +202,7 @@ public class FeedContentPane extends ContentPane implements XdiGraphListener {
 		this.mentionsAddress = new XRI3("" + this.address + "/" + XRI_MENTIONS);
 		this.topicsAddress = new XRI3("" + this.address + "/" + XRI_TOPICS);
 
-		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
+		this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 		this.entriesColumn.setContextAndAddress(context, this.feedAddress);
 		this.topicsColumn.setContextAndSubjectXri(context, subjectXri);
 

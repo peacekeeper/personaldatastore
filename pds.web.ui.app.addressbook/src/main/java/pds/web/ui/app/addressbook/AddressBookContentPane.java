@@ -98,7 +98,7 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 
 		try {
 
-			this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
+			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 
 			// get list of friend XRIs
 
@@ -133,7 +133,7 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 
 				try {
 
-					Xdi xdi = PDSApplication.getApp().getXdi();
+					Xdi xdi = PDSApplication.getApp().getXdiClient();
 					context = xdi.resolveContextByIname(friendXri.toString(), null);
 				} catch (Exception ex) {
 
@@ -141,7 +141,7 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 					return;
 				}
 
-				AddressBookContentPane.this.dataPredicatesColumn.setContextAndSubjectXri(context, context.getCanonical());
+				AddressBookContentPane.this.dataPredicatesColumn.setEndpointAndContextNodeXri(context, context.getCanonical());
 			}
 		});
 

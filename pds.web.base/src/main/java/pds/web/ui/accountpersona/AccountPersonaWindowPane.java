@@ -4,10 +4,8 @@ import java.util.ResourceBundle;
 
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.WindowPane;
-
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
-
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
+import xdi2.core.xri3.impl.XRI3Segment;
 
 public class AccountPersonaWindowPane extends WindowPane {
 
@@ -27,9 +25,9 @@ public class AccountPersonaWindowPane extends WindowPane {
 		initComponents();
 	}
 
-	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
+	public void setEndpointAndContextNodeXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri) {
 
-		this.accountPersonaContentPane.setContextAndSubjectXri(context, subjectXri);
+		this.accountPersonaContentPane.setEndpointAndContextNodeXri(endpoint, contextNodeXri);
 	}
 
 	/**

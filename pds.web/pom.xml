@@ -136,25 +136,11 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>pdsproject</groupId>
-			<artifactId>pds.web.signin.xri</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>pdsproject</groupId>
-			<artifactId>pds.web.signup.xri.openxri</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
 			<version>1.6.1</version>
 			<scope>compile</scope>
 		</dependency>
-		<!-- <dependency> <groupId>pdsproject</groupId> <artifactId>pds.web.signup.xri.grs</artifactId> 
-			<version>0.1-SNAPSHOT</version> <scope>compile</scope> </dependency> -->
 	</dependencies>
 
 </project>

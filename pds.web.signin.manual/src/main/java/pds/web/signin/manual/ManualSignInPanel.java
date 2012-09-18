@@ -47,7 +47,7 @@ public class ManualSignInPanel extends Panel {
 
 	private void onOpenActionPerformed(ActionEvent e) {
 
-		Xdi xdi = PDSApplication.getApp().getXdi();
+		Xdi xdi = PDSApplication.getApp().getXdiClient();
 		
 		String endpoint = this.endpointTextField.getText();
 		if (endpoint == null || endpoint.trim().equals("")) return;
@@ -60,7 +60,7 @@ public class ManualSignInPanel extends Panel {
 
 			XdiContext context = xdi.resolveContextByEndpoint(endpoint, null);
 
-			PDSApplication.getApp().openContext(context);
+			PDSApplication.getApp().openEndpoint(context);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, we could not open your Personal Data Store: " + ex.getMessage(), ex);

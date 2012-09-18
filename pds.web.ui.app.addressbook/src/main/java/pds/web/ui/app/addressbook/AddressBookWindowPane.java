@@ -29,7 +29,7 @@ public class AddressBookWindowPane extends WindowPane {
 
 	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
 
-		this.addressBookContentPane.setContextAndSubjectXri(context, subjectXri);
+		this.addressBookContentPane.setEndpointAndContextNodeXri(context, subjectXri);
 	}
 
 	/**

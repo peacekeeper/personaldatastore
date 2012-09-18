@@ -1,7 +1,7 @@
 package pds.core.base;
 
 import xdi2.core.xri3.impl.XRI3Segment;
-import xdi2.messaging.target.impl.AbstractMessagingTarget;
+import xdi2.messaging.target.AbstractMessagingTarget;
 
 /**
  * A PdsInstance represents a single PDS account backed by an XDI2 Graph object.

@@ -1,6 +1,7 @@
 package pds.web.ui;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -17,31 +18,26 @@ import nextapp.echo.app.Row;
 import nextapp.echo.app.TextField;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
-
-import org.eclipse.higgins.XDI2.Graph;
-import org.eclipse.higgins.XDI2.Subject;
-import org.eclipse.higgins.XDI2.constants.DictionaryConstants;
-import org.eclipse.higgins.XDI2.constants.MessagingConstants;
-import org.eclipse.higgins.XDI2.dictionary.Dictionary;
-import org.eclipse.higgins.XDI2.messaging.Message;
-import org.eclipse.higgins.XDI2.messaging.MessageResult;
-import org.eclipse.higgins.XDI2.messaging.Operation;
-import org.eclipse.higgins.XDI2.util.iterators.IteratorListMaker;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
-
 import pds.web.PDSApplication;
 import pds.web.events.ApplicationContextClosedEvent;
 import pds.web.events.ApplicationContextOpenedEvent;
 import pds.web.events.ApplicationEvent;
 import pds.web.events.ApplicationListener;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
 import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
+import xdi2.core.ContextNode;
+import xdi2.core.util.StatementUtil;
+import xdi2.core.util.XDIUtil;
+import xdi2.core.util.iterators.IteratorListMaker;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
+import xdi2.messaging.MessageResult;
+import xdi2.messaging.constants.XDIMessagingConstants;
 
 public class AccountRootGrid extends Grid implements ApplicationListener, XdiGraphListener {
 
@@ -49,10 +45,10 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
-	private XRI3 address;
-	private XRI3 extensionAddress;
-	private XRI3 addAddress;
+	private XdiEndpoint endpoint;
+	private XRI3Segment address;
+	private XRI3Segment extensionAddress;
+	private XRI3Segment addAddress;
 
 	private Button addAccountPersonaButton;
 	private Panel addAccountPersonaPanel;
@@ -109,33 +105,33 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		}
 	}
 
-	public XRI3[] xdiGetAddresses() {
+	public XRI3Segment[] xdiGetAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.extensionAddress
 		};
 	}
 
-	public XRI3[] xdiAddAddresses() {
+	public XRI3Segment[] xdiAddAddresses() {
 
-		return new XRI3[] {
-				new XRI3("" + this.addAddress + "/$$")
+		return new XRI3Segment[] {
+				new XRI3Segment("" + this.addAddress + "/$$")
 		};
 	}
 
-	public XRI3[] xdiModAddresses() {
+	public XRI3Segment[] xdiModAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiSetAddresses() {
+	public XRI3Segment[] xdiSetAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiDelAddresses() {
+	public XRI3Segment[] xdiDelAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
@@ -173,7 +169,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		this.remove(this.addAccountPersonaButton);
 
 		AccountPersonaPanel accountPersonaPanel = new AccountPersonaPanel();
-		accountPersonaPanel.setContextAndSubjectXri(this.context, accountPersonaXri);
+		accountPersonaPanel.setEndpointAndContextNodeXri(this.endpoint, accountPersonaXri);
 
 		this.add(accountPersonaPanel);
 
@@ -192,23 +188,23 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 
 			// remove us as listener
 
-			if (this.context != null) this.context.removeXdiGraphListener(this);
+			if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 		}
 
 		if (applicationEvent instanceof ApplicationContextOpenedEvent) {
 
 			// refresh
 
-			this.context = ((ApplicationContextOpenedEvent) applicationEvent).getContext();
-			this.address = new XRI3("" + this.context.getCanonical());
-			this.extensionAddress = new XRI3("" + this.context.getCanonical() + "/" + DictionaryConstants.XRI_EXTENSION);
-			this.addAddress = new XRI3("" + this.context.getCanonical() + "$($)");
+			this.endpoint = ((ApplicationContextOpenedEvent) applicationEvent).getEndpoint();
+			this.address = new XRI3Segment("" + this.endpoint.getCanonical());
+			this.extensionAddress = new XRI3Segment("" + this.endpoint.getCanonical() + "$extension");	// TODO
+			this.addAddress = new XRI3Segment("" + this.endpoint.getCanonical() + "($)");
 
 			this.refresh();
 
 			// add us as listener
 
-			this.context.addXdiGraphListener(this);
+			this.endpoint.addXdiGraphListener(this);
 		}
 	}
 
@@ -244,28 +240,26 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 
 		// $get
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.extensionAddress);
-		MessageResult messageResult = this.context.send(operation);
+		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_GET, this.extensionAddress);
+		MessageResult messageResult = this.endpoint.send(message);
 
-		Subject subject = messageResult.getGraph().getSubject(this.context.getCanonical());
-		if (subject == null) return new ArrayList<XRI3Segment> ();
+		ContextNode contextNode = messageResult.getGraph().findContextNode(this.endpoint.getCanonical(), false);
+		if (contextNode == null) return new ArrayList<XRI3Segment> ();
 
-		Iterator<XRI3Segment> accountPersonaXris = Dictionary.getSubjectExtensions(subject);
+		Iterator<XRI3Segment> accountPersonaXris = Dictionary.getContextNodeExtensions(contextNode);
 		return new IteratorListMaker<XRI3Segment> (accountPersonaXris).list();
 	}
 
 	private void addAccountPersona(String name) throws XdiException {
 
-		XRI3Segment accountPersonaXri = new XRI3Segment("" + this.context.getCanonical() + "$($)");
+		XRI3Segment accountPersonaXri = new XRI3Segment("" + this.endpoint.getCanonical() + "$($)");
 
 		// $add
 
-		Message message = this.context.prepareMessage();
-		Operation operation = message.createAddOperation();
-		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(accountPersonaXri, new XRI3Segment("$a$string"), name);
+		Message message = this.endpoint.prepareMessage();
+		message.createAddOperation(StatementUtil.fromComponents(accountPersonaXri, new XRI3Segment("$a$string"), XDIUtil.stringToDataXriSegment(name)));
 
-		this.context.send(message);
+		this.endpoint.send(message);
 	}
 
 	/**

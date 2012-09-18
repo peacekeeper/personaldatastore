@@ -20,7 +20,7 @@ import xdi2.core.io.XDIReaderRegistry;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
-import xdi2.messaging.util.XDIMessagingConstants;
+import xdi2.messaging.constants.XDIMessagingConstants;
 
 public class SiriusImpl implements Sirius {
 
@@ -166,7 +166,7 @@ public class SiriusImpl implements Sirius {
 		if (! "1".equals(this.vega.connected())) throw new RuntimeException("Not connected.");
 
 		Graph graph = MemoryGraphFactory.getInstance().openGraph();
-		XDIReaderRegistry.getAuto().read(graph, new StringReader(message), null);
+		XDIReaderRegistry.getAuto().read(graph, new StringReader(message));
 		MessageEnvelope messageEnvelope = MessageEnvelope.fromGraph(graph);
 
 		MessageResult messageResult = this.client.send(messageEnvelope, null);

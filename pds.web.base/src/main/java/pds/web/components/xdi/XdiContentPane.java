@@ -2,8 +2,6 @@ package pds.web.components.xdi;
 
 import java.util.ResourceBundle;
 
-import javax.xml.ws.soap.Addressing;
-
 import nextapp.echo.app.Border;
 import nextapp.echo.app.Color;
 import nextapp.echo.app.Column;
@@ -19,13 +17,11 @@ import nextapp.echo.app.layout.RowLayoutData;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;
-import pds.xdi.XdiContext;
-import xdi2.core.Graph;
-import xdi2.core.util.CopyUtil;
-import xdi2.core.xri3.impl.XRI3;
+import pds.xdi.XdiEndpoint;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
 import xdi2.messaging.MessageResult;
-import xdi2.messaging.Operation;
-import xdi2.messaging.util.XDIMessagingConstants;
+import xdi2.messaging.constants.XDIMessagingConstants;
 
 public class XdiContentPane extends ContentPane {
 
@@ -33,9 +29,9 @@ public class XdiContentPane extends ContentPane {
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
-	private XRI3 mainAddress;
-	private XRI3[] getAddresses;
+	private XdiEndpoint endpoint;
+	private XRI3Segment mainAddress;
+	private XRI3Segment[] getAddresses;
 
 	private Label xdiAddressLabel;
 	private Label httpAddressLabel;
@@ -63,23 +59,14 @@ public class XdiContentPane extends ContentPane {
 
 	private void refresh() {
 
+		if (this.getAddresses == null) return;
+
 		try {
 
-			Operation operation = this.context.prepareOperation(XDIMessagingConstants.XRI_S_GET);
+			Message message = this.endpoint.prepareOperations(XDIMessagingConstants.XRI_S_GET, this.getAddresses);
+			MessageResult messageResult = this.endpoint.send(message);
 
-			if (this.getAddresses != null) {
-
-				Graph operationGraph = operation.createOperationGraph(null);
-
-				for (XRI3 getAddress : this.getAddresses) {
-
-					CopyUtil.copyStatement(Addressing.convertAddressToStatement(getAddress), operationGraph, null);
-				}
-			}
-
-			MessageResult messageResult = this.context.send(operation);
-
-			String httpEndpoint = this.context.getEndpoint();
+			String httpEndpoint = this.endpoint.getEndpoint();
 
 			this.xdiAddressLabel.setText(this.mainAddress == null ? "" : this.mainAddress.toString());
 			this.httpAddressLabel.setText(httpEndpoint + (this.mainAddress == null ? "" : this.mainAddress.toString()));
@@ -91,26 +78,26 @@ public class XdiContentPane extends ContentPane {
 		}
 	}
 
-	public void setContextAndMainAddressAndGetAddresses(XdiContext context, XRI3 mainAddress, XRI3[] getAddresses) {
+	public void setEndpointAndMainAddressAndGetAddresses(XdiEndpoint endpoint, XRI3Segment mainAddress, XRI3Segment[] getAddresses) {
 
-		this.context = context;
+		this.endpoint = endpoint;
 		this.mainAddress = mainAddress;
 		this.getAddresses = getAddresses;
 
 		this.refresh();
 	}
 
-	public XdiContext getContext() {
+	public XdiEndpoint getEndpoint() {
 
-		return this.context;
+		return this.endpoint;
 	}
 
-	public XRI3 getMainAddress() {
+	public XRI3Segment getMainAddress() {
 
 		return this.mainAddress;
 	}
 
-	public XRI3[] getGetAddresses() {
+	public XRI3Segment[] getGetAddresses() {
 
 		return this.getAddresses;
 	}

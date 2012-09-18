@@ -85,7 +85,7 @@ public class DataPredicateInstancePanel extends Panel implements XdiGraphListene
 
 			String value = this.getValue();
 
-			this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
+			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 			this.valueLabel.setText(value);
 			this.valueTextField.setText(value);
 		} catch (Exception ex) {

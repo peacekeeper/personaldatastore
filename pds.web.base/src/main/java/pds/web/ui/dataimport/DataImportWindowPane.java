@@ -4,8 +4,7 @@ import java.util.ResourceBundle;
 
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.WindowPane;
-import pds.xdi.XdiContext;
-import pds.web.ui.dataimport.DataImportContentPane;
+import pds.xdi.XdiEndpoint;
 
 public class DataImportWindowPane extends WindowPane {
 
@@ -25,9 +24,9 @@ public class DataImportWindowPane extends WindowPane {
 		initComponents();
 	}
 
-	public void setContext(XdiContext context) {
+	public void setEndpoint(XdiEndpoint endpoint) {
 
-		this.dataImportContentPane.setContext(context);
+		this.dataImportContentPane.setEndpoint(endpoint);
 	}
 
 	/**

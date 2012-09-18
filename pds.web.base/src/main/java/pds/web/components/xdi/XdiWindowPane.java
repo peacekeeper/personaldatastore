@@ -4,8 +4,8 @@ import java.util.ResourceBundle;
 
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.WindowPane;
-import pds.xdi.XdiContext;
-import xdi2.core.xri3.impl.XRI3;
+import pds.xdi.XdiEndpoint;
+import xdi2.core.xri3.impl.XRI3Segment;
 
 public class XdiWindowPane extends WindowPane {
 
@@ -25,22 +25,22 @@ public class XdiWindowPane extends WindowPane {
 		initComponents();
 	}
 
-	public void setContextAndMainAddressAndGetAddresses(XdiContext context, XRI3 mainAddress, XRI3[] getAddresses) {
+	public void setEndpointAndMainAddressAndGetAddresses(XdiEndpoint endpoint, XRI3Segment mainAddress, XRI3Segment[] getAddresses) {
 
-		this.xdiContentPane.setContextAndMainAddressAndGetAddresses(context, mainAddress, getAddresses);
+		this.xdiContentPane.setEndpointAndMainAddressAndGetAddresses(endpoint, mainAddress, getAddresses);
 	}
 
-	public XdiContext getContext() {
+	public XdiEndpoint getEndpoint() {
 
-		return this.xdiContentPane.getContext();
+		return this.xdiContentPane.getEndpoint();
 	}
 
-	public XRI3 getMainAddress() {
+	public XRI3Segment getMainAddress() {
 
 		return this.xdiContentPane.getMainAddress();
 	}
 
-	public XRI3[] getGetAddresses() {
+	public XRI3Segment[] getGetAddresses() {
 
 		return this.xdiContentPane.getGetAddresses();
 	}

@@ -162,7 +162,7 @@ public class EntryPanel extends Panel implements XdiGraphListener {
 		this.context = context;
 		this.address = address;
 
-		this.xdiPanel.setContextAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
+		this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
 
 		this.refresh();
 

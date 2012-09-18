@@ -20,8 +20,8 @@ import pds.web.logger.Logger;
 import pds.web.resource.style.Styles;
 import pds.web.ui.MainContentPane;
 import pds.web.ui.MainWindow;
-import pds.xdi.Xdi;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiClient;
+import pds.xdi.XdiEndpoint;
 
 /**
  * Application instance implementation.
@@ -34,10 +34,10 @@ public class PDSApplication extends ApplicationInstance {
 	private MainWindow mainWindow;
 	private TaskQueueHandle taskQueueHandle;
 	private Map<String, Object> attributes;
-	private XdiContext openedContext;
+	private XdiEndpoint openedEndpoint;
 
 	private transient Logger logger;
-	private transient Xdi xdi;
+	private transient XdiClient xdiClient;
 
 	private List<ApplicationListener> applicationListeners;
 
@@ -46,7 +46,7 @@ public class PDSApplication extends ApplicationInstance {
 		this.servlet = servlet;
 
 		this.initLogger();
-		this.initXdi();
+		this.initXdiClient();
 
 		this.applicationListeners = new ArrayList<ApplicationListener> ();
 	}
@@ -86,7 +86,7 @@ public class PDSApplication extends ApplicationInstance {
 
 		this.removeTaskQueue(this.taskQueueHandle);
 
-		if (this.isContextOpen()) this.closeContext();
+		if (this.isEndpointOpen()) this.closeContext();
 	}
 
 	public PDSServlet getServlet() {
@@ -114,22 +114,22 @@ public class PDSApplication extends ApplicationInstance {
 		return this.attributes.get(name);
 	}
 
-	public void openContext(XdiContext context) throws Exception {
+	public void openEndpoint(XdiEndpoint endpoint) throws Exception {
 
 		try {
 
-			if (this.openedContext != null) this.closeContext();
+			if (this.openedEndpoint != null) this.closeContext();
 
 			String remoteAddr = WebContainerServlet.getActiveConnection().getRequest().getRemoteAddr();
 
-			this.openedContext = context;
+			this.openedEndpoint = endpoint;
 
-			this.fireApplicationEvent(new ApplicationContextOpenedEvent(this, this.openedContext));
+			this.fireApplicationEvent(new ApplicationContextOpenedEvent(this, this.openedEndpoint));
 
 			this.logger.info("Your Personal Data Store has been opened from " + remoteAddr + ".", null);
 		} catch (Exception ex) {
 
-			if (this.isContextOpen()) this.closeContext();
+			if (this.isEndpointOpen()) this.closeContext();
 			throw ex;
 		}
 	}
@@ -138,27 +138,27 @@ public class PDSApplication extends ApplicationInstance {
 
 		try {
 
-			if (this.openedContext == null) return;
+			if (this.openedEndpoint == null) return;
 
-			this.fireApplicationEvent(new ApplicationContextClosedEvent(this, this.openedContext));
+			this.fireApplicationEvent(new ApplicationContextClosedEvent(this, this.openedEndpoint));
 		} catch (Exception ex) {
 
 		} finally {
 
 			this.logger.info("Your Personal Data Store has been closed.", null);
 
-			this.openedContext = null;
+			this.openedEndpoint = null;
 		}
 	}
 
-	public XdiContext getOpenContext() {
+	public XdiEndpoint getOpenEndpoint() {
 
-		return this.openedContext;
+		return this.openedEndpoint;
 	}
 
-	public boolean isContextOpen() {
+	public boolean isEndpointOpen() {
 
-		return this.openedContext != null;
+		return this.openedEndpoint != null;
 	}
 
 	/*
@@ -176,11 +176,11 @@ public class PDSApplication extends ApplicationInstance {
 		}
 	}
 
-	private void initXdi() {
+	private void initXdiClient() {
 
 		try {
 
-			this.xdi = new Xdi(this.getServlet().getResolver());
+			this.xdiClient = new XdiClient(this.getServlet().getResolver());
 		} catch (Exception ex) {
 
 			throw new RuntimeException("Cannot initialize Xdi component: " + ex.getMessage(), ex);
@@ -194,11 +194,11 @@ public class PDSApplication extends ApplicationInstance {
 		return this.logger;
 	}
 
-	public Xdi getXdi() {
+	public XdiClient getXdiClient() {
 
-		if (this.xdi == null) this.initXdi();
+		if (this.xdiClient == null) this.initXdiClient();
 
-		return this.xdi;
+		return this.xdiClient;
 	}
 
 	/*
