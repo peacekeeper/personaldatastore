@@ -23,21 +23,19 @@ import pds.web.events.ApplicationContextOpenedEvent;
 import pds.web.events.ApplicationEvent;
 import pds.web.events.ApplicationListener;
 import pds.xdi.XdiEndpoint;
-import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
+import xdi2.client.exceptions.Xdi2ClientException;
 import xdi2.core.ContextNode;
-import xdi2.core.features.dictionary.Dictionary;
 import xdi2.core.util.StatementUtil;
-import xdi2.core.util.XDIUtil;
 import xdi2.core.util.iterators.IteratorListMaker;
+import xdi2.core.util.iterators.MappingContextNodeXrisIterator;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
 import xdi2.messaging.MessageResult;
-import xdi2.messaging.constants.XDIMessagingConstants;
 
 public class AccountRootGrid extends Grid implements ApplicationListener, XdiGraphListener {
 
@@ -46,9 +44,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 	protected ResourceBundle resourceBundle;
 
 	private XdiEndpoint endpoint;
-	private XRI3Segment address;
-	private XRI3Segment extensionAddress;
-	private XRI3Segment addAddress;
+	private XRI3Segment contextNodeXri;
 
 	private Button addAccountPersonaButton;
 	private Panel addAccountPersonaPanel;
@@ -105,17 +101,22 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		}
 	}
 
+	public XRI3Segment xdiMainAddress() {
+		
+		return this.contextNodeXri;
+	}
+	
 	public XRI3Segment[] xdiGetAddresses() {
 
 		return new XRI3Segment[] {
-				this.extensionAddress
+				this.contextNodeXri
 		};
 	}
 
 	public XRI3Segment[] xdiAddAddresses() {
 
 		return new XRI3Segment[] {
-				new XRI3Segment("" + this.addAddress + "/$$")
+				this.contextNodeXri
 		};
 	}
 
@@ -124,15 +125,10 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		return new XRI3Segment[0];
 	}
 
-	public XRI3Segment[] xdiSetAddresses() {
-
-		return new XRI3Segment[0];
-	}
-
 	public XRI3Segment[] xdiDelAddresses() {
 
 		return new XRI3Segment[] {
-				this.address
+				this.contextNodeXri
 		};
 	}
 
@@ -196,9 +192,7 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 			// refresh
 
 			this.endpoint = ((ApplicationContextOpenedEvent) applicationEvent).getEndpoint();
-			this.address = new XRI3Segment("" + this.endpoint.getCanonical());
-			this.extensionAddress = new XRI3Segment("" + this.endpoint.getCanonical() + "$extension");	// TODO
-			this.addAddress = new XRI3Segment("" + this.endpoint.getCanonical() + "($)");
+			this.contextNodeXri = new XRI3Segment("" + this.endpoint.getCanonical());
 
 			this.refresh();
 
@@ -236,28 +230,30 @@ public class AccountRootGrid extends Grid implements ApplicationListener, XdiGra
 		this.addAccountPersonaPanel.setVisible(false);
 	}
 
-	public List<XRI3Segment> getAccountPersonaXris() throws XdiException {
+	public List<XRI3Segment> getAccountPersonaXris() throws Xdi2ClientException {
 
 		// $get
 
-		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_GET, this.extensionAddress);
+		Message message = this.endpoint.prepareMessage();
+		message.createGetOperation(this.contextNodeXri);
+
 		MessageResult messageResult = this.endpoint.send(message);
 
 		ContextNode contextNode = messageResult.getGraph().findContextNode(this.endpoint.getCanonical(), false);
 		if (contextNode == null) return new ArrayList<XRI3Segment> ();
 
-		Iterator<XRI3Segment> accountPersonaXris = Dictionary.getContextNodeExtensions(contextNode);
+		Iterator<XRI3Segment> accountPersonaXris = new MappingContextNodeXrisIterator(contextNode.getContextNodes());
 		return new IteratorListMaker<XRI3Segment> (accountPersonaXris).list();
 	}
 
-	private void addAccountPersona(String name) throws XdiException {
+	private void addAccountPersona(String name) throws Xdi2ClientException {
 
 		XRI3Segment accountPersonaXri = new XRI3Segment("" + this.endpoint.getCanonical() + "$($)");
 
 		// $add
 
 		Message message = this.endpoint.prepareMessage();
-		message.createAddOperation(StatementUtil.fromComponents(accountPersonaXri, new XRI3Segment("$a$string"), XDIUtil.stringToDataXriSegment(name)));
+		message.createAddOperation(StatementUtil.fromLiteralComponents(accountPersonaXri, name));
 
 		this.endpoint.send(message);
 	}

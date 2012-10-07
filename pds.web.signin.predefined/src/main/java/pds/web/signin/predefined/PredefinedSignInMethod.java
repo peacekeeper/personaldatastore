@@ -1,13 +1,13 @@
 package pds.web.signin.predefined;
 
-import java.util.Map;
+import java.util.List;
 
 import nextapp.echo.app.Panel;
-import pds.web.ui.context.SignInMethod;
+import pds.web.ui.endpoint.SignInMethod;
 
 public class PredefinedSignInMethod implements SignInMethod {
 
-	private Map<String, String> contexts;
+	private List<PredefinedSignIn> predefinedSignIns;
 
 	@Override
 	public String getMethodName() {
@@ -24,13 +24,13 @@ public class PredefinedSignInMethod implements SignInMethod {
 		return predefinedSignInPanel;
 	}
 
-	public Map<String, String> getContexts() {
+	public List<PredefinedSignIn> getPredefinedSignIns() {
 
-		return this.contexts;
+		return this.predefinedSignIns;
 	}
 
-	public void setContexts(Map<String, String> contexts) {
+	public void setPredefinedSignIns(List<PredefinedSignIn> predefinedSignIns) {
 
-		this.contexts = contexts;
+		this.predefinedSignIns = predefinedSignIns;
 	}
 }

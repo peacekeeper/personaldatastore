@@ -10,30 +10,33 @@
 	<description>Project Danube</description>
 
 	<modules>
-		<module>pds.core</module>
-		<module>pds.core.base</module>
-		<module>pds.core.any</module>
-		<module>pds.core.single</module>
-		<module>pds.p2p.api</module>
-		<module>pds.p2p.api.orion</module>
-		<module>pds.p2p.api.vega</module>
-		<module>pds.p2p.api.sirius</module>
-		<module>pds.p2p.api.polaris</module>
-		<module>pds.p2p.node</module>
-		<module>pds.p2p.node.client</module>
-		<module>pds.p2p.node.shell</module>
-		<module>pds.p2p.node.webshell</module>
-		<!-- <module>pds.dictionary</module> <module>pds.dictionary.feed</module> 
-			<module>pds.discovery</module> <module>pds.profile</module> <module>pds.web</module> 
-			<module>pds.web.base</module> <module>pds.web.logger</module> <module>pds.web.tools</module> 
-			<module>pds.web.signin.manual</module> <module>pds.web.signin.predefined</module> 
-			<module>pds.web.signin.rpxnow</module> <module>pds.web.ui.app.addressbook</module> 
-			<module>pds.web.ui.app.feed</module> <module>pds.web.ui.app.photos</module> 
-			<module>pds.web.ui.app.directxdi</module> <module>pds.web.ui.app.whisper</module> 
+		<!-- <module>pds.core</module> <module>pds.core.base</module> <module>pds.core.any</module> 
+			<module>pds.core.single</module> -->
+		<!-- <module>pds.p2p.api</module> <module>pds.p2p.api.orion</module> <module>pds.p2p.api.vega</module> 
+			<module>pds.p2p.api.sirius</module> <module>pds.p2p.api.polaris</module> 
+			<module>pds.p2p.node</module> <module>pds.p2p.node.client</module> <module>pds.p2p.node.shell</module> 
+			<module>pds.p2p.node.webshell</module> -->
+		<module>pds.dictionary</module>
+		<!-- <module>pds.dictionary.feed</module> -->
+		<module>pds.discovery</module>
+		<!-- <module>pds.profile</module> -->
+		<module>pds.web</module>
+		<module>pds.web.base</module>
+		<module>pds.web.logger</module>
+		<module>pds.web.tools</module>
+		<module>pds.web.signin.manual</module>
+		<module>pds.web.signin.predefined</module>
+		<module>pds.web.signin.rpxnow</module>
+		<module>pds.web.signin.xri</module>
+		<module>pds.web.ui.app.directxdi</module>
+		<!-- <module>pds.web.ui.app.addressbook</module>
+		<module>pds.web.ui.app.feed</module> <module>pds.web.ui.app.photos</module> 
+			 <module>pds.web.ui.app.whisper</module> 
 			<module>pds.endpoint.feed</module> <module>pds.endpoint.foaf</module> <module>pds.endpoint.hcard</module> 
 			<module>pds.endpoint.poco</module> <module>pds.endpoint.pubsubhubbub</module> 
-			<module>pds.endpoint.salmon</module> <module>pds.endpoint.oauth2</module> 
-			<module>pds.util.spring</module> <module>pds.xdi</module> -->
+			<module>pds.endpoint.salmon</module> <module>pds.endpoint.oauth2</module> -->
+		<module>pds.util.spring</module>
+		<module>pds.xdi</module>
 	</modules>
 
 	<issueManagement>
@@ -120,6 +123,7 @@
 	</build>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -129,27 +133,28 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.6.4</version>
+			<version>1.7.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.6.4</version>
+			<version>1.7.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.4</version>
+			<version>1.7.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
+			<version>1.2.17</version>
 			<scope>compile</scope>
 		</dependency>
+
 	</dependencies>
 
 </project>

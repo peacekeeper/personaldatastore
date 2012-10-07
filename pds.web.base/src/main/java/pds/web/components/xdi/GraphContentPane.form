@@ -6,34 +6,48 @@
 <c i="Component_row1" t="nextapp.echo.app.Row">
 <c i="Component_button2" t="nextapp.echo.app.Button">
 <p n="styleName">Default</p>
-<p n="text">X3 Simple</p>
+
 <e t="action">
-<h n="actionPerformed" v="onX3SimpleActionPerformed"/>
+<h n="actionPerformed" v="onXDIDISPLAYActionPerformed"/>
 </e>
+<p n="text">XDI DISPLAY</p>
 </c>
 <c i="Component_button1" t="nextapp.echo.app.Button">
 <p n="styleName">Default</p>
-<p n="text">X3 Standard</p>
+
 <e t="action">
-<h n="actionPerformed" v="onX3StandardActionPerformed"/>
+<h n="actionPerformed" v="onXDIJSONActionPerformed"/>
 </e>
+<p n="text">XDI/JSON</p>
 </c>
 
-<c i="Component_button3" t="nextapp.echo.app.Button">
-<p n="styleName">Default</p>
-<p n="text">X3J</p>
-<e t="action">
-<h n="actionPerformed" v="onX3JActionPerformed"/>
-</e>
-</c>
-<c i="Component_button4" t="nextapp.echo.app.Button">
-<p n="styleName">Default</p>
-<p n="text">XDI/XML</p>
-<e t="action">
-<h n="actionPerformed" v="onXDIXMLActionPerformed"/>
-</e>
-</c>
+
+
 <p n="cellSpacing">10px</p>
+<c i="Component_contextsCheckbox" t="nextapp.echo.app.CheckBox" vis="private">
+<p n="text">contexts=1</p>
+
+<e t="change">
+<h n="stateChanged" v="onCheckboxStateChanged"/>
+</e>
+<p n="selected">true</p>
+</c>
+<c i="Component_orderedCheckbox" t="nextapp.echo.app.CheckBox" vis="private">
+<p n="text">ordered=1</p>
+
+<e t="change">
+<h n="stateChanged" v="onCheckboxStateChanged"/>
+</e>
+<p n="selected">true</p>
+</c>
+<c i="Component_prettyCheckbox" t="nextapp.echo.app.CheckBox" vis="private">
+<p n="text">pretty=1</p>
+
+<e t="change">
+<h n="stateChanged" v="onCheckboxStateChanged"/>
+</e>
+<p n="selected">false</p>
+</c>
 </c>
 
 

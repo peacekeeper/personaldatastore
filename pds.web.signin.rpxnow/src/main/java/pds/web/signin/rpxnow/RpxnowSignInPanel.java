@@ -12,9 +12,8 @@ import nextapp.echo.app.Insets;
 import nextapp.echo.app.Panel;
 import nextapp.echo.app.TaskQueueHandle;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import pds.web.PDSApplication;
@@ -23,8 +22,9 @@ import pds.web.servlet.external.ExternalCallReceiver;
 import pds.web.signin.rpxnow.rpx.Rpx;
 import pds.web.tools.util.XmlUtils;
 import pds.web.ui.MessageDialog;
-import pds.xdi.Xdi;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiClient;
+import pds.xdi.XdiEndpoint;
+import xdi2.core.xri3.impl.XRI3Segment;
 
 public class RpxnowSignInPanel extends Panel implements ExternalCallReceiver {
 
@@ -94,21 +94,21 @@ public class RpxnowSignInPanel extends Panel implements ExternalCallReceiver {
 		if (canonical == null && (rpxnowIdentifier.startsWith("=!") || rpxnowIdentifier.startsWith("@!"))) canonical = new XRI3Segment(rpxnowIdentifier);
 		if (canonical == null) canonical = new XRI3Segment("=(" + rpxnowIdentifier + ")");
 
-		String endpoint = this.rpxnowSignUpMethod.getEndpoint();
-		if (! endpoint.endsWith("/")) endpoint += "/";
-		endpoint += canonical.toString() + "/";
+		String endpointUrl = this.rpxnowSignUpMethod.getEndpoint();
+		if (! endpointUrl.endsWith("/")) endpointUrl += "/";
+		endpointUrl += canonical.toString() + "/";
 
 		log.debug("identifier: " + identifier);
 		log.debug("canonical: " + canonical);
-		log.debug("endpoint: " + endpoint);
+		log.debug("endpoint: " + endpointUrl);
 
 		// try to open the context
 
-		Xdi xdi = pdsApplication.getXdiClient();
+		XdiClient xdiClient = pdsApplication.getXdiClient();
 
 		try {
 
-			final XdiContext context = xdi.resolveContextManually(endpoint, identifier, canonical, null);
+			final XdiEndpoint endpoint = xdiClient.resolveEndpointManually(endpointUrl, identifier, canonical, null);
 
 			pdsApplication.enqueueTask(taskQueueHandle, new Runnable() {
 
@@ -116,10 +116,10 @@ public class RpxnowSignInPanel extends Panel implements ExternalCallReceiver {
 
 					try {
 
-						PDSApplication.getApp().openEndpoint(context);
+						PDSApplication.getApp().openEndpoint(endpoint);
 					} catch (Exception ex) {
 
-						MessageDialog.problem("Sorry, we could not open your Personal Data Store: " + ex.getMessage(), ex);
+						MessageDialog.problem("Sorry, we could not open your Personal Cloud: " + ex.getMessage(), ex);
 						return;
 					}
 				}
@@ -131,7 +131,7 @@ public class RpxnowSignInPanel extends Panel implements ExternalCallReceiver {
 
 				public void run() {
 
-					MessageDialog.problem("Sorry, we could not open your Personal Data Store: " + ex.getMessage(), ex);
+					MessageDialog.problem("Sorry, we could not open your Personal Cloud: " + ex.getMessage(), ex);
 					return;
 				}
 			});

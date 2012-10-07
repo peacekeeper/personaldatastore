@@ -1,6 +1,8 @@
 package pds.web.ui.app.directxdi;
 
+import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ResourceBundle;
 
 import nextapp.echo.app.Alignment;
@@ -20,23 +22,23 @@ import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.RowLayoutData;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
-
-import org.eclipse.higgins.XDI2.Graph;
-import org.eclipse.higgins.XDI2.Literal;
-import org.eclipse.higgins.XDI2.Statement;
-import org.eclipse.higgins.XDI2.impl.memory.MemoryGraphFactory;
-import org.eclipse.higgins.XDI2.io.XDIReaderRegistry;
-import org.eclipse.higgins.XDI2.messaging.MessageEnvelope;
-import org.eclipse.higgins.XDI2.util.CopyUtil;
-import org.eclipse.higgins.XDI2.util.CopyUtil.CopyStatementStrategy;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
-
 import pds.web.PDSApplication;
 import pds.web.components.xdi.TransactionEventWindowPane;
 import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
 import pds.xdi.events.XdiTransactionEvent;
+import xdi2.core.Graph;
+import xdi2.core.Literal;
+import xdi2.core.impl.BasicLiteral;
+import xdi2.core.impl.memory.MemoryGraphFactory;
+import xdi2.core.io.XDIReaderRegistry;
+import xdi2.core.io.XDIWriterRegistry;
+import xdi2.core.util.CopyUtil;
+import xdi2.core.util.CopyUtil.CopyStrategy;
+import xdi2.messaging.Message;
+import xdi2.messaging.MessageEnvelope;
+import xdi2.messaging.constants.XDIMessagingConstants;
 
 public class DirectXdiContentPane extends ContentPane {
 
@@ -44,7 +46,7 @@ public class DirectXdiContentPane extends ContentPane {
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
+	private XdiEndpoint endpoint;
 
 	private TextArea xdiTextArea;
 
@@ -63,45 +65,44 @@ public class DirectXdiContentPane extends ContentPane {
 
 		super.init();
 
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("" + this.context.getCanonical() + "\n");
+		Message message = this.endpoint.prepareMessage();
+		StringWriter writer = new StringWriter();
 
-		if (this.context.getPassword() != null) {
-
-			buffer.append("\t$password\n");
-			buffer.append("\t\t\"********\"\n");
+		try {
+			
+			XDIWriterRegistry.getDefault().write(message.getMessageEnvelope().getGraph(), writer);
+		} catch (IOException ex) {
+			
+			throw new RuntimeException(ex.getMessage(), ex);
 		}
-
-		buffer.append("\t$get\n");
-		buffer.append("\t\t/\n");
-		buffer.append("\t\t\t" + this.context.getCanonical() + "\n");
-		this.xdiTextArea.setText(buffer.toString());
+		
+		this.xdiTextArea.setText(writer.toString());
 	}
 
 	private void refresh() {
 
 	}
 
-	public void setContext(XdiContext context) {
+	public void setEndpoint(XdiEndpoint endpoint) {
 
-		this.context = context;
+		this.endpoint = endpoint;
 
 		this.refresh();
 	}
 
 	private void onSendXdiActionPerformed(ActionEvent e) {
 
-		XdiContext context = PDSApplication.getApp().getOpenEndpoint();
+		XdiEndpoint endpoint = PDSApplication.getApp().getOpenEndpoint();
 
-		MessageEnvelope messageEnvelope = MessageEnvelope.newInstance();
+		MessageEnvelope messageEnvelope = new MessageEnvelope();
 		XdiTransactionEvent transactionEvent = null;
 
 		try {
 
 			Graph tempGraph = MemoryGraphFactory.getInstance().openGraph();
-			XDIReaderRegistry.getAuto().read(tempGraph, new StringReader(this.xdiTextArea.getText()), null);
-			CopyUtil.copyStatements(tempGraph, messageEnvelope.getGraph(), PASSWORDINSERTINGCOPYSTATEMENTSTRATEGY);
-			transactionEvent = context.directXdi(messageEnvelope);
+			XDIReaderRegistry.getAuto().read(tempGraph, new StringReader(this.xdiTextArea.getText()));
+			CopyUtil.copyGraph(tempGraph, messageEnvelope.getGraph(), secretTokenInsertingCopyStrategy);
+			transactionEvent = endpoint.directXdi(messageEnvelope);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Problem while sending direct XDI: " + ex.getMessage(), ex);
@@ -122,28 +123,20 @@ public class DirectXdiContentPane extends ContentPane {
 		windowPane.getParent().remove(windowPane);
 	}
 
-	private static final XRI3Segment XRI_PASSWORD = new XRI3Segment("$password");
-
-	private static CopyStatementStrategy PASSWORDINSERTINGCOPYSTATEMENTSTRATEGY = new CopyStatementStrategy() {
+	private static CopyStrategy secretTokenInsertingCopyStrategy = new CopyStrategy() {
 
 		@Override
-		public boolean doCopy(Statement statement, Graph target) {
+		public Literal replaceLiteral(Literal literal) {
 
-			return true;
-		}
+			if (literal.getContextNode().getXri().toString().contains(XDIMessagingConstants.XRI_S_SECRET_TOKEN.toString())) {
 
-		@Override
-		public String replaceLiteralData(Literal literal) {
+				XdiEndpoint endpoint = PDSApplication.getApp().getOpenEndpoint();
+				String secretToken = endpoint.getSecretToken();
 
-			if (literal.getPredicate().getPredicateXri().equals(XRI_PASSWORD)) {
-
-				XdiContext context = PDSApplication.getApp().getOpenEndpoint();
-				String password = context.getPassword();
-
-				return password != null ? password : literal.getData();
+				return secretToken == null ? null : new BasicLiteral(secretToken);
 			} else {
 
-				return literal.getData();
+				return literal;
 			}
 		};
 	};
@@ -173,7 +166,7 @@ public class DirectXdiContentPane extends ContentPane {
 		Label label2 = new Label();
 		label2.setStyleName("Default");
 		label2
-		.setText("Here you can send arbitrary XDI transactions to your Personal Data Store.");
+		.setText("Here you can send arbitrary XDI transactions to your Personal Cloud.");
 		RowLayoutData label2LayoutData = new RowLayoutData();
 		label2LayoutData.setInsets(new Insets(new Extent(10, Extent.PX)));
 		label2.setLayoutData(label2LayoutData);

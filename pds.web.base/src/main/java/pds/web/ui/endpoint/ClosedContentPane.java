@@ -1,4 +1,4 @@
-package pds.web.ui.context;
+package pds.web.ui.endpoint;
 
 
 import java.util.List;

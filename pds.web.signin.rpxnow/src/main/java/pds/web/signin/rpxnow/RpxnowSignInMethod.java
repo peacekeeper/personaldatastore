@@ -1,7 +1,7 @@
 package pds.web.signin.rpxnow;
 
 import nextapp.echo.app.Panel;
-import pds.web.ui.context.SignInMethod;
+import pds.web.ui.endpoint.SignInMethod;
 
 public class RpxnowSignInMethod implements SignInMethod {
 

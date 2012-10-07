@@ -11,17 +11,16 @@ import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import pds.web.ui.accountpersona.AccountPersonaWindowPane;
 import pds.xdi.XdiEndpoint;
-import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
+import xdi2.client.exceptions.Xdi2ClientException;
 import xdi2.core.Literal;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
 import xdi2.messaging.MessageResult;
-import xdi2.messaging.constants.XDIMessagingConstants;
 
 public class AccountPersonaPanel extends Panel implements XdiGraphListener {
 
@@ -31,8 +30,6 @@ public class AccountPersonaPanel extends Panel implements XdiGraphListener {
 
 	private XdiEndpoint endpoint;
 	private XRI3Segment contextNodeXri;
-	private XRI3Segment address;
-	private XRI3Segment nameAddress;
 
 	private Button button;
 
@@ -74,10 +71,15 @@ public class AccountPersonaPanel extends Panel implements XdiGraphListener {
 		}
 	}
 
+	public XRI3Segment xdiMainAddress() {
+		
+		return this.contextNodeXri;
+	}
+	
 	public XRI3Segment[] xdiGetAddresses() {
 
 		return new XRI3Segment[] {
-				this.nameAddress
+				this.contextNodeXri
 		};
 	}
 
@@ -89,21 +91,14 @@ public class AccountPersonaPanel extends Panel implements XdiGraphListener {
 	public XRI3Segment[] xdiModAddresses() {
 
 		return new XRI3Segment[] {
-				new XRI3Segment("" + this.nameAddress + "/$$")
-		};
-	}
-
-	public XRI3Segment[] xdiSetAddresses() {
-
-		return new XRI3Segment[] {
-				new XRI3Segment("" + this.nameAddress + "/$$")
+				this.contextNodeXri
 		};
 	}
 
 	public XRI3Segment[] xdiDelAddresses() {
 
 		return new XRI3Segment[] {
-				this.address
+				this.contextNodeXri
 		};
 	}
 
@@ -145,8 +140,6 @@ public class AccountPersonaPanel extends Panel implements XdiGraphListener {
 
 		this.endpoint = endpoint;
 		this.contextNodeXri = contextNodeXri;
-		this.address = new XRI3Segment("" + this.contextNodeXri);
-		this.nameAddress = new XRI3Segment("" + this.contextNodeXri + "/$a$string");
 
 		this.refresh();
 
@@ -163,12 +156,16 @@ public class AccountPersonaPanel extends Panel implements XdiGraphListener {
 		MainWindow.findMainContentPane(this).add(accountPersonaWindowPane);
 	}
 
-	private String getName() throws XdiException {
+	private String getName() throws Xdi2ClientException {
 
-		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_GET, this.nameAddress);
+		XRI3Segment nameAddress = new XRI3Segment("" + this.contextNodeXri + "$!(+name)");
+		
+		Message message = this.endpoint.prepareMessage();
+		message.createGetOperation(nameAddress);
+
 		MessageResult messageResult = this.endpoint.send(message);
 
-		Literal literal = messageResult.getGraph().findLiteral(this.nameAddress);
+		Literal literal = messageResult.getGraph().findLiteral(nameAddress);
 		if (literal == null) return null;
 
 		return literal.getLiteralData();

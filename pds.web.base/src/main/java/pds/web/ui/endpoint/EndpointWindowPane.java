@@ -1,4 +1,4 @@
-package pds.web.ui.context;
+package pds.web.ui.endpoint;
 
 import java.util.ResourceBundle;
 
@@ -9,9 +9,9 @@ import pds.web.events.ApplicationContextClosedEvent;
 import pds.web.events.ApplicationContextOpenedEvent;
 import pds.web.events.ApplicationEvent;
 import pds.web.events.ApplicationListener;
-import pds.web.ui.context.ClosedContentPane;
+import pds.web.ui.endpoint.ClosedContentPane;
 
-public class ContextWindowPane extends WindowPane implements ApplicationListener {
+public class EndpointWindowPane extends WindowPane implements ApplicationListener {
 
 	private static final long serialVersionUID = -2629138014392846780L;
 
@@ -20,7 +20,7 @@ public class ContextWindowPane extends WindowPane implements ApplicationListener
 	/**
 	 * Creates a new <code>AccountWindowPane</code>.
 	 */
-	public ContextWindowPane() {
+	public EndpointWindowPane() {
 		super();
 
 		// Add design-time configured components.

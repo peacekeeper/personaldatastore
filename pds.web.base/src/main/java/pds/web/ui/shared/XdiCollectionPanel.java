@@ -1,8 +1,6 @@
 package pds.web.ui.shared;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import nextapp.echo.app.Button;
@@ -21,49 +19,45 @@ import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MainWindow;
 import pds.web.ui.MessageDialog;
 import pds.xdi.XdiEndpoint;
-import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
+import xdi2.client.exceptions.Xdi2ClientException;
 import xdi2.core.ContextNode;
-import xdi2.core.Graph;
-import xdi2.core.features.dictionary.Dictionary;
-import xdi2.core.util.iterators.IteratorListMaker;
+import xdi2.core.features.multiplicity.Multiplicity;
+import xdi2.core.features.multiplicity.XdiAttribute;
+import xdi2.core.features.multiplicity.XdiAttributeMember;
+import xdi2.core.features.multiplicity.XdiCollection;
+import xdi2.core.util.StatementUtil;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
 import xdi2.messaging.MessageResult;
-import xdi2.messaging.Operation;
-import xdi2.messaging.constants.XDIMessagingConstants;
 
-public class DataAttributePanel extends Panel implements XdiGraphListener {
+public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 
 	private static final long serialVersionUID = -5082464847478633075L;
 
 	protected ResourceBundle resourceBundle;
 
 	private XdiEndpoint endpoint;
-	private XRI3Segment contextNodeXri;
-	private XRI3Segment attributeXri;
-	private XRI3Segment address;
-	private XRI3Segment extensionAddress;
-	private XRI3Segment canonicalAddress;
-	private XRI3Segment addAddress;
+	private XdiCollection xdiCollection;
+	private XRI3Segment xdiCollectionXri;
 
 	private boolean readOnly;
 
 	private XdiPanel xdiPanel;
-	private Label attributeXriLabel;
+	private Label xdiCollectionXriLabel;
+	private Column xdiAttributesColumn;
 	private TextField addTextField;
-	private Column instanceValuesColumn;
 	private Button cancelButton;
 	private Button addButton;
 
 	/**
 	 * Creates a new <code>AccountPersonaPanel</code>.
 	 */
-	public DataAttributePanel() {
+	public XdiCollectionPanel() {
 		super();
 
 		this.readOnly = false;
@@ -92,15 +86,22 @@ public class DataAttributePanel extends Panel implements XdiGraphListener {
 
 		try {
 
-			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.endpoint, this.address, this.xdiGetAddresses());
-			this.attributeXriLabel.setText(this.attributeXri.toString());
+			// refresh data
 
-			this.instanceValuesColumn.removeAll();
-			List<XRI3Segment> dataAttributeInstanceXris = this.getDataAttributeInstanceXris();
+			if (this.xdiCollection == null) this.xdiGet();
 
-			for (XRI3Segment dataAttributeInstanceXri : dataAttributeInstanceXris) {
+			// refresh UI
 
-				this.addDataAttributeInstancePanel(dataAttributeInstanceXri);
+			this.xdiPanel.setEndpointAndGraphListener(this.endpoint, this);
+			this.xdiCollectionXriLabel.setText(this.xdiCollection.getContextNode().getArcXri().toString());
+
+			this.xdiAttributesColumn.removeAll();
+
+			for (Iterator<XdiAttributeMember> xdiAttributeMembers = this.xdiCollection.attributes(); xdiAttributeMembers.hasNext(); ) {
+
+				XdiAttributeMember xdiAttributeMember = xdiAttributeMembers.next();
+
+				this.addXdiAttributePanel(xdiAttributeMember);
 			}
 		} catch (Exception ex) {
 
@@ -109,28 +110,49 @@ public class DataAttributePanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	private void addDataAttributeInstancePanel(XRI3Segment attributeInstanceXri) {
+	private void xdiGet() throws Xdi2ClientException {
 
-		DataAttributeInstancePanel dataAttributeInstancePanel = new DataAttributeInstancePanel();
-		dataAttributeInstancePanel.setEndpointAndContextNodeXriAndAttributeXri(this.endpoint, this.contextNodeXri, attributeInstanceXri);
-		dataAttributeInstancePanel.setReadOnly(this.readOnly);
+		// $get
 
-		this.instanceValuesColumn.add(dataAttributeInstancePanel);
+		Message message = this.endpoint.prepareMessage();
+		message.createGetOperation(this.xdiCollectionXri);
+
+		MessageResult messageResult = this.endpoint.send(message);
+
+		ContextNode contextNode = messageResult.getGraph().findContextNode(this.xdiCollectionXri, false);
+		if (contextNode == null) this.xdiCollection = null;
+
+		this.xdiCollection = XdiCollection.fromContextNode(contextNode);
+	}
+
+	private void xdiAdd(String value) throws Xdi2ClientException {
+
+		// $add
+
+		XRI3Segment xdiAttributeMemberXri = new XRI3Segment("" + this.xdiCollectionXri + Multiplicity.attributeMemberArcXri());
+
+		Message message = this.endpoint.prepareMessage();
+		message.createAddOperation(StatementUtil.fromLiteralComponents(xdiAttributeMemberXri, value));
+
+		this.endpoint.send(message);
+	}
+
+	public XRI3Segment xdiMainAddress() {
+
+		return this.xdiCollection.getContextNode().getXri();
 	}
 
 	public XRI3Segment[] xdiGetAddresses() {
 
 		return new XRI3Segment[] {
-				this.address,
-				this.extensionAddress,
-				this.canonicalAddress
+				this.xdiCollection.getContextNode().getXri()
 		};
 	}
 
 	public XRI3Segment[] xdiAddAddresses() {
 
 		return new XRI3Segment[] {
-				this.addAddress
+				this.xdiCollection.getContextNode().getXri()
 		};
 	}
 
@@ -139,15 +161,10 @@ public class DataAttributePanel extends Panel implements XdiGraphListener {
 		return new XRI3Segment[0];
 	}
 
-	public XRI3Segment[] xdiSetAddresses() {
-
-		return new XRI3Segment[0];
-	}
-
 	public XRI3Segment[] xdiDelAddresses() {
 
 		return new XRI3Segment[] {
-				this.address
+				this.xdiCollection.getContextNode().getXri()
 		};
 	}
 
@@ -179,7 +196,7 @@ public class DataAttributePanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	public void setEndpointAndContextNodeXriAndAttributeXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri, XRI3Segment attributeXri) {
+	public void setEndpointAndXdiCollection(XdiEndpoint endpoint, XdiCollection xdiCollection, XRI3Segment xdiCollectionXri) {
 
 		// remove us as listener
 
@@ -188,12 +205,8 @@ public class DataAttributePanel extends Panel implements XdiGraphListener {
 		// refresh
 
 		this.endpoint = endpoint;
-		this.contextNodeXri = contextNodeXri;
-		this.attributeXri = attributeXri;
-		this.address = new XRI3Segment("" + this.contextNodeXri + this.attributeXri);
-		this.extensionAddress = new XRI3Segment("" + this.contextNodeXri + Dictionary.makeExtensionPredicate(this.attributeXri));
-		this.canonicalAddress = new XRI3Segment("" + this.contextNodeXri + Dictionary.makeCanonicalPredicate(this.attributeXri));
-		this.addAddress = new XRI3Segment("" + this.contextNodeXri + this.attributeXri + "$($)");
+		this.xdiCollection = xdiCollection;
+		this.xdiCollectionXri = xdiCollectionXri;
 
 		this.refresh();
 
@@ -218,10 +231,19 @@ public class DataAttributePanel extends Panel implements XdiGraphListener {
 
 		this.readOnly = readOnly;
 
-		for (Component component : MainWindow.findChildComponentsByClass(this, DataAttributeInstancePanel.class)) {
+		for (Component component : MainWindow.findChildComponentsByClass(this, XdiAttributePanel.class)) {
 
-			((DataAttributeInstancePanel) component).setReadOnly(readOnly);
+			((XdiAttributePanel) component).setReadOnly(readOnly);
 		}
+	}
+
+	private void addXdiAttributePanel(XdiAttribute xdiAttribute) {
+
+		XdiAttributePanel xdiAttributePanel = new XdiAttributePanel();
+		xdiAttributePanel.setEndpointAndXdiAttribute(this.endpoint, xdiAttribute, xdiAttribute.getContextNode().getXri());
+		xdiAttributePanel.setReadOnly(this.readOnly);
+
+		this.xdiAttributesColumn.add(xdiAttributePanel);
 	}
 
 	private void onAddActionPerformed(ActionEvent e) {
@@ -233,7 +255,7 @@ public class DataAttributePanel extends Panel implements XdiGraphListener {
 
 			try {
 
-				this.addDataPredicateInstance(value);
+				this.xdiAdd(value);
 			} catch (Exception ex) {
 
 				MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
@@ -257,37 +279,6 @@ public class DataAttributePanel extends Panel implements XdiGraphListener {
 		this.cancelButton.setVisible(false);
 	}
 
-	private List<XRI3Segment> getDataAttributeInstanceXris() throws XdiException {
-
-		// $get
-
-		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_GET, this.extensionAddress);
-		MessageResult messageResult = this.endpoint.send(message);
-
-		ContextNode contextNode = messageResult.getGraph().findContextNode(this.contextNodeXri, false);
-		if (contextNode == null) return new ArrayList<XRI3Segment> ();
-
-		Iterator<XRI3Segment> dataAttributeInstanceXris = Dictionary.getPredicateExtensions(contextNode, this.attributeXri);
-		return new IteratorListMaker<XRI3Segment> (dataAttributeInstanceXris).list();
-	}
-
-	private void addDataPredicateInstance(final String value) throws XdiException {
-
-		XRI3Segment dataPredicateInstanceAddXri = new XRI3Segment("" + this.attributeXri + "$($)");
-		XRI3Segment dataPredicateInstanceSetXri = new XRI3Segment("$" + this.attributeXri);
-
-		// $add and $set
-
-		Message message = this.endpoint.prepareMessage();
-		Operation operation = message.createOperation(MessagingConstants.XRI_ADD);
-		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(this.contextNodeXri, dataPredicateInstanceAddXri, value);
-		Operation operation2 = message.createOperation(MessagingConstants.XRI_SET);
-		Graph operationGraph2 = operation2.createOperationGraph(null);
-		operationGraph2.createStatement(this.contextNodeXri, dataPredicateInstanceSetXri, value);
-		this.endpoint.send(operation);
-	}
-
 	/**
 	 * Configures initial state of component.
 	 * WARNING: AUTO-GENERATED METHOD.
@@ -302,13 +293,13 @@ public class DataAttributePanel extends Panel implements XdiGraphListener {
 		column1.add(row2);
 		xdiPanel = new XdiPanel();
 		row2.add(xdiPanel);
-		attributeXriLabel = new Label();
-		attributeXriLabel.setStyleName("Bold");
-		attributeXriLabel.setText("...");
-		RowLayoutData predicateXriLabelLayoutData = new RowLayoutData();
-		predicateXriLabelLayoutData.setWidth(new Extent(120, Extent.PX));
-		attributeXriLabel.setLayoutData(predicateXriLabelLayoutData);
-		row2.add(attributeXriLabel);
+		xdiCollectionXriLabel = new Label();
+		xdiCollectionXriLabel.setStyleName("Bold");
+		xdiCollectionXriLabel.setText("...");
+		RowLayoutData xdiCollectionXriLabelLayoutData = new RowLayoutData();
+		xdiCollectionXriLabelLayoutData.setWidth(new Extent(120, Extent.PX));
+		xdiCollectionXriLabel.setLayoutData(xdiCollectionXriLabelLayoutData);
+		row2.add(xdiCollectionXriLabel);
 		addTextField = new TextField();
 		addTextField.setStyleName("Default");
 		addTextField.setVisible(false);
@@ -323,7 +314,7 @@ public class DataAttributePanel extends Panel implements XdiGraphListener {
 		addButton = new Button();
 		addButton.setStyleName("Plain");
 		ResourceImageReference imageReference1 = new ResourceImageReference(
-		"/pds/web/resource/image/op-add.png");
+				"/pds/web/resource/image/op-add.png");
 		addButton.setIcon(imageReference1);
 		addButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
@@ -336,7 +327,7 @@ public class DataAttributePanel extends Panel implements XdiGraphListener {
 		cancelButton = new Button();
 		cancelButton.setStyleName("Plain");
 		ResourceImageReference imageReference2 = new ResourceImageReference(
-		"/pds/web/resource/image/op-cancel.png");
+				"/pds/web/resource/image/op-cancel.png");
 		cancelButton.setIcon(imageReference2);
 		cancelButton.setVisible(false);
 		cancelButton.addActionListener(new ActionListener() {
@@ -347,7 +338,7 @@ public class DataAttributePanel extends Panel implements XdiGraphListener {
 			}
 		});
 		row2.add(cancelButton);
-		instanceValuesColumn = new Column();
-		column1.add(instanceValuesColumn);
+		xdiAttributesColumn = new Column();
+		column1.add(xdiAttributesColumn);
 	}
 }

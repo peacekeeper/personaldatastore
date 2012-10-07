@@ -21,59 +21,54 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<attachClasses>true</attachClasses>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.26</version>
 				<configuration>
 					<jettyEnvXml>
 						${basedir}/src/test/resources/jetty-env.xml
 					</jettyEnvXml>
 					<contextPath>/</contextPath>
-					<systemproperties>
-						<systemproperty>
-							<name>org.apache.commons.logging.Log</name>
-							<value>org.apache.commons.logging.impl.Log4JLogger</value>
-						</systemproperty>
-						<systemproperty>
+					<useTestClasspath>true</useTestClasspath>
+					<systemProperties>
+						<systemProperty>
+							<name>jetty.port</name>
+							<value>11110</value>
+						</systemProperty>
+						<systemProperty>
 							<name>slf4j</name>
-							<value>false</value>
-						</systemproperty>
-						<systemproperty>
+							<value>true</value>
+						</systemProperty>
+						<systemProperty>
 							<name>log4j.configuration</name>
 							<value>file:${basedir}/src/main/resources/log4j.properties</value>
-						</systemproperty>
-					</systemproperties>
+						</systemProperty>
+					</systemProperties>
 				</configuration>
 				<dependencies>
 					<dependency>
-						<groupId>log4j</groupId>
-						<artifactId>log4j</artifactId>
-						<version>1.2.15</version>
-						<exclusions>
-							<exclusion>
-								<groupId>javax.jms</groupId>
-								<artifactId>jms</artifactId>
-							</exclusion>
-							<exclusion>
-								<groupId>com.sun.jdmk</groupId>
-								<artifactId>jmxtools</artifactId>
-							</exclusion>
-							<exclusion>
-								<groupId>com.sun.jmx</groupId>
-								<artifactId>jmxri</artifactId>
-							</exclusion>
-						</exclusions>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-api</artifactId>
+						<version>1.6.4</version>
+						<scope>compile</scope>
 					</dependency>
 					<dependency>
-						<groupId>commons-dbcp</groupId>
-						<artifactId>commons-dbcp</artifactId>
-						<version>1.4</version>
+						<groupId>org.slf4j</groupId>
+						<artifactId>jcl-over-slf4j</artifactId>
+						<version>1.6.4</version>
+						<scope>compile</scope>
 					</dependency>
 					<dependency>
-						<groupId>mysql</groupId>
-						<artifactId>mysql-connector-java</artifactId>
-						<version>5.1.6</version>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-log4j12</artifactId>
+						<version>1.6.4</version>
+						<scope>compile</scope>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -88,6 +83,12 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>pdsproject</groupId>
+			<artifactId>pds.web.ui.app.directxdi</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+<!-- 		<dependency>
 			<groupId>pdsproject</groupId>
 			<artifactId>pds.web.ui.app.addressbook</artifactId>
 			<version>0.1-SNAPSHOT</version>
@@ -107,16 +108,10 @@
 		</dependency>
 		<dependency>
 			<groupId>pdsproject</groupId>
-			<artifactId>pds.web.ui.app.directxdi</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>pdsproject</groupId>
 			<artifactId>pds.web.ui.app.whisper</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>pdsproject</groupId>
 			<artifactId>pds.web.signin.manual</artifactId>
@@ -132,6 +127,12 @@
 		<dependency>
 			<groupId>pdsproject</groupId>
 			<artifactId>pds.web.signin.rpxnow</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>pdsproject</groupId>
+			<artifactId>pds.web.signin.xri</artifactId>
 			<version>0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>

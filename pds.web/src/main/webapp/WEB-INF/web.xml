@@ -30,7 +30,7 @@
 
 	<servlet-mapping>
 		<servlet-name>ExternalCallServlet</servlet-name>
-		<url-pattern>/ExternalCall/*</url-pattern>
+		<url-pattern>/external/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- SECURITY -->

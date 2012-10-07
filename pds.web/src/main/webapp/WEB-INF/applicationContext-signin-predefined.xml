@@ -9,12 +9,21 @@
 
 		<!-- Predefined contexts. -->
 
-		<property name="contexts">
-			<map>
-				<entry key="=danube*bob">
-					<value>http://danube/pds-core/=!BDF3.1FB.E70C.3958!271b.72f3.df86.af8f/</value>
-				</entry>
-			</map>
+		<property name="predefinedSignIns">
+			<util:list>
+				<bean class="pds.web.signin.predefined.PredefinedSignIn">
+					<property name="endpointUrl" value="http://localhost:8080/xdi/users/=!BDF3.1FB.E70C.3958!1111" />
+					<property name="identifier" value="=danube*markus" />
+					<property name="canonical" value="=!BDF3.1FB.E70C.3958!1111" />
+					<property name="secretToken" value="xmarkus" />
+				</bean>
+				<bean class="pds.web.signin.predefined.PredefinedSignIn">
+					<property name="endpointUrl" value="http://localhost:8080/xdi/users/=!BDF3.1FB.E70C.3958!2222" />
+					<property name="identifier" value="=danube*animesh" />
+					<property name="canonical" value="=!BDF3.1FB.E70C.3958!2222" />
+					<property name="secretToken" value="xanimesh" />
+				</bean>
+			</util:list>
 		</property>
 
 	</bean>

@@ -2,6 +2,7 @@ package pds.web.ui.app.photos;
 
 import java.io.DataInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -30,17 +31,6 @@ import nextapp.echo.filetransfer.app.event.UploadListener;
 import nextapp.echo.filetransfer.model.Upload;
 
 import org.apache.commons.codec.binary.Base64;
-import org.eclipse.higgins.XDI2.Graph;
-import org.eclipse.higgins.XDI2.Predicate;
-import org.eclipse.higgins.XDI2.Reference;
-import org.eclipse.higgins.XDI2.Subject;
-import org.eclipse.higgins.XDI2.constants.MessagingConstants;
-import org.eclipse.higgins.XDI2.messaging.MessageResult;
-import org.eclipse.higgins.XDI2.messaging.Operation;
-import org.eclipse.higgins.XDI2.util.iterators.IteratorListMaker;
-import org.eclipse.higgins.XDI2.util.iterators.MappingReferenceXrisIterator;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
 
 import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;
@@ -50,14 +40,27 @@ import pds.web.ui.app.photos.components.PhotosColumn;
 import pds.web.ui.shared.FriendPanel;
 import pds.web.ui.shared.FriendPanel.FriendPanelDelegate;
 import pds.web.util.MimeTypeUtil;
-import pds.xdi.Xdi;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiClient;
+import pds.xdi.XdiEndpoint;
 import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
+import xdi2.core.ContextNode;
+import xdi2.core.Graph;
+import xdi2.core.Relation;
+import xdi2.core.Statement;
+import xdi2.core.util.StatementUtil;
+import xdi2.core.util.XDIUtil;
+import xdi2.core.util.iterators.IteratorListMaker;
+import xdi2.core.util.iterators.MappingRelationArcXriIterator;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
+import xdi2.messaging.MessageResult;
+import xdi2.messaging.Operation;
+import xdi2.messaging.constants.XDIMessagingConstants;
 import echopoint.ImageIcon;
 
 public class PhotosContentPane extends ContentPane implements XdiGraphListener {
@@ -66,11 +69,11 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
-	private XRI3Segment subjectXri;
-	private XRI3 address;
-	private XRI3 friendAddress;
-	private XRI3 photosAddress;
+	private XdiEndpoint endpoint;
+	private XRI3Segment contextNodeXri;
+	private XRI3Segment address;
+	private XRI3Segment friendAddress;
+	private XRI3Segment photosAddress;
 
 	private XdiPanel xdiPanel;
 	private TextField addTextField;
@@ -106,15 +109,15 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		super.dispose();
 
 		// remove us as listener
-		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
 
 		try {
 
-			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
+			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.endpoint, this.address, this.xdiGetAddresses());
 
 			// get list of friend XRIs
 
@@ -139,60 +142,60 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 	private void addFriendPanel(final XRI3Segment friendXri) {
 
 		FriendPanel friendPanel = new FriendPanel();
-		friendPanel.setContextAndSubjectXriAndReferenceXri(this.context, this.subjectXri, friendXri);
+		friendPanel.setEndpointAndContextNodeXriAndRelationXri(this.endpoint, this.contextNodeXri, friendXri);
 		friendPanel.setFriendPanelDelegate(new FriendPanelDelegate() {
 
 			@Override
 			public void onFriendActionPerformed(ActionEvent e) {
 
-				XdiContext context;
+				XdiEndpoint endpoint;
 
 				try {
 
-					Xdi xdi = PDSApplication.getApp().getXdiClient();
-					context = xdi.resolveContextByIname(friendXri.toString(), null);
+					XdiClient xdiClient = PDSApplication.getApp().getXdiClient();
+					endpoint = xdiClient.resolveEndpointByIname(friendXri.toString(), null);
 				} catch (Exception ex) {
 
-					MessageDialog.problem("Sorry, we could not open the Personal Data Store: " + ex.getMessage(), ex);
+					MessageDialog.problem("Sorry, we could not open the Personal Cloud: " + ex.getMessage(), ex);
 					return;
 				}
 
-				PhotosContentPane.this.photosColumn.setContextAndSubjectXri(context, context.getCanonical());
+				PhotosContentPane.this.photosColumn.setEndpointAndContextNodeXri(endpoint, endpoint.getCanonical());
 			}
 		});
 
 		this.friendsColumn.add(friendPanel);
 	}
 
-	public XRI3[] xdiGetAddresses() {
+	public XRI3Segment[] xdiGetAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.friendAddress,
 				this.photosAddress
 		};
 	}
 
-	public XRI3[] xdiAddAddresses() {
+	public XRI3Segment[] xdiAddAddresses() {
 
-		return new XRI3[] {
-				new XRI3("" + this.friendAddress + "/$$"),
-				new XRI3("" + this.photosAddress + "/$$")
+		return new XRI3Segment[] {
+				new XRI3Segment("" + this.friendAddress + "/$$"),
+				new XRI3Segment("" + this.photosAddress + "/$$")
 		};
 	}
 
-	public XRI3[] xdiModAddresses() {
+	public XRI3Segment[] xdiModAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiSetAddresses() {
+	public XRI3Segment[] xdiSetAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiDelAddresses() {
+	public XRI3Segment[] xdiDelAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
@@ -225,25 +228,25 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		}
 	}
 
-	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
+	public void setContextAndSubjectXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri) {
 
 		// remove us as listener
-		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 
 		// refresh
-		
-		this.context = context;
-		this.subjectXri = subjectXri;
-		this.address = new XRI3("" + this.subjectXri);
-		this.friendAddress = new XRI3("" + this.subjectXri + "/+friend");
-		this.photosAddress = new XRI3("" + this.subjectXri + "/+photos");
+
+		this.endpoint = endpoint;
+		this.contextNodeXri = contextNodeXri;
+		this.address = new XRI3Segment("" + this.contextNodeXri);
+		this.friendAddress = new XRI3Segment("" + this.contextNodeXri + "/+friend");
+		this.photosAddress = new XRI3Segment("" + this.contextNodeXri + "/+photos");
 
 		this.refresh();
 
 		// add us as listener
 
-		this.context.addXdiGraphListener(this);
+		this.endpoint.addXdiGraphListener(this);
 	}
 
 	private void onAddActionPerformed(ActionEvent e) {
@@ -335,30 +338,26 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 
 	private List<XRI3Segment> getFriendXris() throws XdiException {
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.friendAddress);
-		MessageResult messageResult = this.context.send(operation);
+		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_GET, this.friendAddress);
+		MessageResult messageResult = this.endpoint.send(message);
 
-		Subject subject = messageResult.getGraph().getSubject(this.subjectXri);
-		if (subject == null) return new ArrayList<XRI3Segment> ();
+		ContextNode contextNode = messageResult.getGraph().findContextNode(this.contextNodeXri, false);
+		if (contextNode == null) return new ArrayList<XRI3Segment> ();
 
-		Predicate predicate = subject.getPredicate(new XRI3Segment("+friend"));
-		if (predicate == null) return new ArrayList<XRI3Segment> ();
-		if (! predicate.containsReferences()) return new ArrayList<XRI3Segment> ();
+		Iterator<Relation> relations = contextNode.getRelations(new XRI3Segment("+friend"));
+		Iterator<XRI3Segment> relationArcXris = new MappingRelationArcXriIterator(relations);
 
-		Iterator<Reference> references = predicate.getReferences();
-		Iterator<XRI3Segment> referenceXris = new MappingReferenceXrisIterator(references);
-
-		return new IteratorListMaker<XRI3Segment> (referenceXris).list();
+		return new IteratorListMaker<XRI3Segment> (relationArcXris).list();
 	}
 
 	private void addFriendXri(XRI3Segment friendXri) throws XdiException {
 
 		// $add
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_ADD);
-		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(this.subjectXri, new XRI3Segment("+friend"), friendXri);
-		this.context.send(operation);
+		Statement targetStatement = StatementUtil.fromComponents(this.contextNodeXri, new XRI3Segment("+friend"), friendXri);
+
+		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_ADD, targetStatement);
+		this.endpoint.send(message);
 	}
 
 	private void addPhoto(byte[] bytes, String title, String mimeType) throws XdiException {
@@ -367,14 +366,15 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 
 		// $add
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_ADD);
-		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(this.subjectXri, new XRI3Segment("+photos"), (Graph) null);
-		Graph photosGraph = operationGraph.getSubject(this.subjectXri).getPredicate(new XRI3Segment("+photos")).getInnerGraph();
-		photosGraph.createStatement(new XRI3Segment("$" + imageGuid), new XRI3Segment("$a$mime"), mimeType);
-		photosGraph.createStatement(new XRI3Segment("$" + imageGuid), new XRI3Segment("$a$bin"), new String(Base64.encodeBase64(bytes)));
-		photosGraph.createStatement(new XRI3Segment("$" + imageGuid), new XRI3Segment("$a$xsd$string"), title);
-		this.context.send(operation);
+		Statement[] targetStatements = new Statement[] {
+				StatementUtil.fromComponents(new XRI3Segment("+photo$" + imageGuid), new XRI3Segment("$a$mime"), XDIUtil.stringToDataXriSegment(mimeType)),
+				StatementUtil.fromComponents(new XRI3Segment("+photo$" + imageGuid), new XRI3Segment("$a$bin"), XDIUtil.stringToDataXriSegment(new String(Base64.encodeBase64(bytes)))),
+				StatementUtil.fromComponents(new XRI3Segment("+photo$" + imageGuid), new XRI3Segment("$a$xsd$string"), XDIUtil.stringToDataXriSegment(title))
+		};
+
+		Message message = this.endpoint.prepareOperations(XDIMessagingConstants.XRI_S_ADD, Arrays.asList(targetStatements).iterator());
+
+		this.endpoint.send(message);
 	}
 
 	/**
@@ -460,7 +460,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		uploadSelect1.setId("imageFileUploadSelect");
 		uploadSelect1.addUploadListener(new UploadListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void uploadComplete(UploadEvent e) {
 				onImageFileUploadComplete(e);
 			}
@@ -471,7 +471,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		button1.setText("Post!");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onPostActionPerformed(e);
 			}
@@ -489,7 +489,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		addTextField.setVisible(false);
 		addTextField.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onAddActionPerformed(e);
 			}
@@ -502,7 +502,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		addButton.setIcon(imageReference3);
 		addButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onAddActionPerformed(e);
 			}
@@ -516,7 +516,7 @@ public class PhotosContentPane extends ContentPane implements XdiGraphListener {
 		cancelButton.setVisible(false);
 		cancelButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onCancelActionPerformed(e);
 			}

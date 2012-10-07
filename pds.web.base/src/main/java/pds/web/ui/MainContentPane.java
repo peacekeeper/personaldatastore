@@ -34,11 +34,15 @@ import pds.web.events.ApplicationEvent;
 import pds.web.events.ApplicationListener;
 import pds.web.ui.accountroot.AccountRootWindowPane;
 import pds.web.ui.app.PdsWebApp;
-import pds.web.ui.context.ContextWindowPane;
+import pds.web.ui.connectors.FacebookConnectorPanel;
+import pds.web.ui.connectors.PersonalConnectorPanel;
 import pds.web.ui.dataexport.DataExportWindowPane;
 import pds.web.ui.dataimport.DataImportWindowPane;
+import pds.web.ui.endpoint.EndpointWindowPane;
 import pds.web.ui.log.LogWindowPane;
 import pds.xdi.XdiEndpoint;
+import xdi2.connector.facebook.mapping.FacebookMapping;
+import xdi2.connector.personal.mapping.PersonalMapping;
 import xdi2.core.constants.XDIConstants;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
@@ -55,6 +59,8 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 	private Column pdsColumn;
 	private AccountRootGrid accountRootGrid;
+	private FacebookConnectorPanel facebookConnectorPanel;
+	private PersonalConnectorPanel personalConnectorPanel;
 	private CheckBox logWindowCheckBox;
 	private CheckBox developerModeCheckBox;
 	private Grid pdsWebAppGrid;
@@ -91,8 +97,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 				public void actionPerformed(ActionEvent e) {
 
-					XRI3Segment contextNodeXri = MainContentPane.this.getEndpoint().getCanonical();
-					pdsWebApp.onActionPerformed(MainContentPane.this, MainContentPane.this.getEndpoint(), contextNodeXri);
+					pdsWebApp.onActionPerformed(MainContentPane.this, MainContentPane.this.getEndpoint());
 				}
 			});
 			MainContentPane.this.pdsWebAppGrid.add(pdsWebAppButton);
@@ -129,6 +134,11 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 	private void refresh(EventObject event) {
 
+		XRI3Segment facebookXdiAttributeXri = new XRI3Segment("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + this.endpoint.getCanonical() + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
+		XRI3Segment personalXdiAttributeXri = new XRI3Segment("" + PersonalMapping.XRI_S_PERSONAL_CONTEXT + this.endpoint.getCanonical() + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
+
+		this.facebookConnectorPanel.setEndpointAndXdiAttribute(this.endpoint, null, facebookXdiAttributeXri);
+		this.personalConnectorPanel.setEndpointAndXdiAttribute(this.endpoint, null, personalXdiAttributeXri);
 	}
 
 	public XdiEndpoint getEndpoint() {
@@ -159,7 +169,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 			for (Component component : MainWindow.findChildComponentsByClass(this, WindowPane.class)) {
 
 				if (component instanceof LogWindowPane) continue;
-				if (component instanceof ContextWindowPane) continue;
+				if (component instanceof EndpointWindowPane) continue;
 
 				this.remove(component);
 			}
@@ -304,6 +314,11 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 			}
 		});
 		row4.add(button10);
+		facebookConnectorPanel = new FacebookConnectorPanel();
+		facebookConnectorPanel.setId("facebookConnectorPanel");
+		row4.add(facebookConnectorPanel);
+		personalConnectorPanel = new PersonalConnectorPanel();
+		row4.add(personalConnectorPanel);
 		Label label1 = new Label();
 		label1.setStyleName("Header");
 		label1.setText("Account Personas");
@@ -348,7 +363,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 		toolTipContainer1.add(panel1);
 		Label label4 = new Label();
 		label4.setStyleName("Default");
-		label4.setText("This will clear all data from your Personal Data Store. Make sure you have a backup!");
+		label4.setText("This will clear all data from your Personal Cloud. Make sure you have a backup!");
 		panel1.add(label4);
 		ToolTipContainer toolTipContainer2 = new ToolTipContainer();
 		row5.add(toolTipContainer2);
@@ -371,7 +386,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 		toolTipContainer2.add(panel2);
 		Label label5 = new Label();
 		label5.setStyleName("Default");
-		label5.setText("This allows you to download all the contents of your Personal Data Store as an XDI file.");
+		label5.setText("This allows you to download all the contents of your Personal Cloud as an XDI file.");
 		panel2.add(label5);
 		ToolTipContainer toolTipContainer3 = new ToolTipContainer();
 		row5.add(toolTipContainer3);
@@ -394,7 +409,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 		toolTipContainer3.add(panel3);
 		Label label6 = new Label();
 		label6.setStyleName("Default");
-		label6.setText("This allows you to import data from an XDI file input your Personal Data Store.");
+		label6.setText("This allows you to import data from an XDI file input your Personal Cloud.");
 		panel3.add(label6);
 		Column column2 = new Column();
 		column2.setInsets(new Insets(new Extent(10, Extent.PX)));
@@ -456,7 +471,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 		LogWindowPane logWindowPane1 = new LogWindowPane();
 		logWindowPane1.setVisible(false);
 		add(logWindowPane1);
-		ContextWindowPane accountWindowPane1 = new ContextWindowPane();
+		EndpointWindowPane accountWindowPane1 = new EndpointWindowPane();
 		add(accountWindowPane1);
 	}
 }

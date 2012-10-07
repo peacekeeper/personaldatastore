@@ -44,7 +44,7 @@
 
 <p n="styleName">Default</p>
 
-<p n="text">Welcome. This is a "manual" way of opening a Personal Data Store by selecting a predefined user.</p>
+<p n="text">Welcome. This is a "manual" way of opening a Personal Cloud by selecting a predefined user.</p>
 </c>
 
 
@@ -56,7 +56,7 @@
 
 
 
-<c i="Component_contextsColumn" t="nextapp.echo.app.Column" vis="private">
+<c i="Component_predefinedSignInsColumn" t="nextapp.echo.app.Column" vis="private">
 
 </c>
 </c>

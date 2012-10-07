@@ -20,33 +20,31 @@ import nextapp.echo.app.TextField;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
-
-import org.eclipse.higgins.XDI2.Graph;
-import org.eclipse.higgins.XDI2.Predicate;
-import org.eclipse.higgins.XDI2.Reference;
-import org.eclipse.higgins.XDI2.Subject;
-import org.eclipse.higgins.XDI2.constants.MessagingConstants;
-import org.eclipse.higgins.XDI2.messaging.MessageResult;
-import org.eclipse.higgins.XDI2.messaging.Operation;
-import org.eclipse.higgins.XDI2.util.iterators.IteratorListMaker;
-import org.eclipse.higgins.XDI2.util.iterators.MappingReferenceXrisIterator;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
-
 import pds.web.PDSApplication;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
-import pds.web.ui.shared.DataPredicatesColumn;
+import pds.web.ui.shared.DataAttributeColumn;
 import pds.web.ui.shared.FriendPanel;
 import pds.web.ui.shared.FriendPanel.FriendPanelDelegate;
-import pds.xdi.Xdi;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiClient;
+import pds.xdi.XdiEndpoint;
 import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
+import xdi2.core.ContextNode;
+import xdi2.core.Graph;
+import xdi2.core.Relation;
+import xdi2.core.util.iterators.IteratorListMaker;
+import xdi2.core.util.iterators.MappingRelationArcXriIterator;
+import xdi2.core.xri3.impl.XRI3;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
+import xdi2.messaging.MessageResult;
+import xdi2.messaging.Operation;
+import xdi2.messaging.constants.XDIMessagingConstants;
 import echopoint.ImageIcon;
 
 public class AddressBookContentPane extends ContentPane implements XdiGraphListener {
@@ -55,16 +53,16 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
-	private XRI3Segment subjectXri;
-	private XRI3 address;
+	private XdiEndpoint endpoint;
+	private XRI3Segment contextNodeXri;
+	private XRI3Segment address;
 
 	private XdiPanel xdiPanel;
 	private TextField addTextField;
 	private Button addButton;
 	private Button cancelButton;
 	private Column friendsColumn;
-	private DataPredicatesColumn dataPredicatesColumn;
+	private DataAttributeColumn dataAttributeColumn;
 
 	/**
 	 * Creates a new <code>AddressBookContentPane</code>.
@@ -81,7 +79,7 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 
 		super.init();
 
-		this.dataPredicatesColumn.setReadOnly(true);
+		this.dataAttributeColumn.setReadOnly(true);
 	}
 
 	@Override
@@ -91,14 +89,14 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 
 		// remove us as listener
 		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
 
 		try {
 
-			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.context, this.address, this.xdiGetAddresses());
+			this.xdiPanel.setEndpointAndGraphListener(this.endpoint, this);
 
 			// get list of friend XRIs
 
@@ -123,58 +121,53 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 	private void addFriendPanel(final XRI3Segment friendXri) {
 
 		FriendPanel friendPanel = new FriendPanel();
-		friendPanel.setContextAndSubjectXriAndReferenceXri(this.context, this.subjectXri, friendXri);
+		friendPanel.setEndpointAndContextNodeXriAndTargetContextNodeXri(this.endpoint, this.contextNodeXri, friendXri);
 		friendPanel.setFriendPanelDelegate(new FriendPanelDelegate() {
 
 			@Override
 			public void onFriendActionPerformed(ActionEvent e) {
 
-				XdiContext context;
+				XdiEndpoint endpoint;
 
 				try {
 
-					Xdi xdi = PDSApplication.getApp().getXdiClient();
-					context = xdi.resolveContextByIname(friendXri.toString(), null);
+					XdiClient xdiClient = PDSApplication.getApp().getXdiClient();
+					endpoint = xdiClient.resolveEndpointByIname(friendXri.toString(), null);
 				} catch (Exception ex) {
 
-					MessageDialog.problem("Sorry, we could not open the Personal Data Store: " + ex.getMessage(), ex);
+					MessageDialog.problem("Sorry, we could not open the Personal Cloud: " + ex.getMessage(), ex);
 					return;
 				}
 
-				AddressBookContentPane.this.dataPredicatesColumn.setEndpointAndContextNodeXri(context, context.getCanonical());
+				AddressBookContentPane.this.dataAttributeColumn.setEndpointAndContextNodeXri(endpoint, endpoint.getCanonical());
 			}
 		});
 
 		this.friendsColumn.add(friendPanel);
 	}
 
-	public XRI3[] xdiGetAddresses() {
+	public XRI3Segment[] xdiGetAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
 
-	public XRI3[] xdiAddAddresses() {
+	public XRI3Segment[] xdiAddAddresses() {
 
-		return new XRI3[] {
-				new XRI3("" + this.address + "/$$")
+		return new XRI3Segment[] {
+				this.address
 		};
 	}
 
-	public XRI3[] xdiModAddresses() {
+	public XRI3Segment[] xdiModAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiSetAddresses() {
+	public XRI3Segment[] xdiDelAddresses() {
 
-		return new XRI3[0];
-	}
-
-	public XRI3[] xdiDelAddresses() {
-
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
@@ -211,19 +204,19 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 
 		// remove us as listener
 		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 
 		// refresh
 		
-		this.context = context;
-		this.subjectXri = subjectXri;
-		this.address = new XRI3("" + this.subjectXri + "/+friend");
+		this.endpoint = context;
+		this.contextNodeXri = subjectXri;
+		this.address = new XRI3("" + this.contextNodeXri + "/+friend");
 
 		this.refresh();
 
 		// add us as listener
 
-		this.context.addXdiGraphListener(this);
+		this.endpoint.addXdiGraphListener(this);
 	}
 
 	private void onAddActionPerformed(ActionEvent e) {
@@ -261,30 +254,26 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 
 	private List<XRI3Segment> getFriendXris() throws XdiException {
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET, this.address);
-		MessageResult messageResult = this.context.send(operation);
+		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_GET, this.address);
+		MessageResult messageResult = this.endpoint.send(message);
 
-		Subject subject = messageResult.getGraph().getSubject(this.subjectXri);
-		if (subject == null) return new ArrayList<XRI3Segment> ();
+		ContextNode contextNode = messageResult.getGraph().findContextNode(this.contextNodeXri, false);
+		if (contextNode == null) return new ArrayList<XRI3Segment> ();
 
-		Predicate predicate = subject.getPredicate(new XRI3Segment("+friend"));
-		if (predicate == null) return new ArrayList<XRI3Segment> ();
-		if (! predicate.containsReferences()) return new ArrayList<XRI3Segment> ();
+		Iterator<Relation> relations = contextNode.getRelations(new XRI3Segment("+friend"));
+		Iterator<XRI3Segment> relationArcXris = new MappingRelationArcXriIterator(relations);
 
-		Iterator<Reference> references = predicate.getReferences();
-		Iterator<XRI3Segment> referenceXris = new MappingReferenceXrisIterator(references);
-
-		return new IteratorListMaker<XRI3Segment> (referenceXris).list();
+		return new IteratorListMaker<XRI3Segment> (relationArcXris).list();
 	}
 
 	private void addFriendXri(XRI3Segment friendXri) throws XdiException {
 
 		// $add
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_ADD);
+		Operation operation = this.endpoint.prepareOperation(MessagingConstants.XRI_ADD);
 		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(this.subjectXri, new XRI3Segment("+friend"), friendXri);
-		this.context.send(operation);
+		operationGraph.createStatement(this.contextNodeXri, new XRI3Segment("+friend"), friendXri);
+		this.endpoint.send(operation);
 	}
 
 	/**
@@ -386,10 +375,10 @@ public class AddressBookContentPane extends ContentPane implements XdiGraphListe
 		friendsColumn = new Column();
 		friendsColumn.setCellSpacing(new Extent(10, Extent.PX));
 		column1.add(friendsColumn);
-		dataPredicatesColumn = new DataPredicatesColumn();
-		dataPredicatesColumn.setInsets(new Insets(new Extent(10, Extent.PX),
+		dataAttributeColumn = new DataPredicatesColumn();
+		dataAttributeColumn.setInsets(new Insets(new Extent(10, Extent.PX),
 				new Extent(0, Extent.PX), new Extent(0, Extent.PX), new Extent(
 						0, Extent.PX)));
-		splitPane2.add(dataPredicatesColumn);
+		splitPane2.add(dataAttributeColumn);
 	}
 }

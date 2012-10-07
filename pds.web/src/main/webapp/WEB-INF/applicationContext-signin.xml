@@ -7,6 +7,8 @@
 
 	<util:list id="signInMethods">
 
+		<ref bean="manualSignInMethod" />
+		<ref bean="xriSignInMethod" />
 		<ref bean="predefinedSignInMethod" />
 
 	</util:list>

@@ -4,27 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.security.auth.Subject;
+import javax.sql.rowset.Predicate;
+
 import nextapp.echo.app.Column;
-
-import org.eclipse.higgins.XDI2.Graph;
-import org.eclipse.higgins.XDI2.Predicate;
-import org.eclipse.higgins.XDI2.Subject;
-import org.eclipse.higgins.XDI2.constants.MessagingConstants;
-import org.eclipse.higgins.XDI2.messaging.MessageResult;
-import org.eclipse.higgins.XDI2.messaging.Operation;
-import org.eclipse.higgins.XDI2.util.iterators.IteratorListMaker;
-import org.eclipse.higgins.XDI2.util.iterators.MappingIterator;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3;
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
-
 import pds.web.ui.MessageDialog;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
 import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphAddEvent;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
+import xdi2.core.ContextNode;
+import xdi2.core.Graph;
+import xdi2.core.util.iterators.IteratorListMaker;
+import xdi2.core.util.iterators.MappingIterator;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
+import xdi2.messaging.MessageResult;
+import xdi2.messaging.constants.XDIMessagingConstants;
 
 public class PhotosColumn extends Column implements XdiGraphListener {
 
@@ -32,9 +31,9 @@ public class PhotosColumn extends Column implements XdiGraphListener {
 
 	protected ResourceBundle resourceBundle;
 
-	private XdiContext context;
-	private XRI3Segment subjectXri;
-	private XRI3 address;
+	private XdiEndpoint endpoint;
+	private XRI3Segment contextNodeXri;
+	private XRI3Segment address;
 
 	/**
 	 * Creates a new <code>DataPredicatesColumn</code>.
@@ -58,8 +57,8 @@ public class PhotosColumn extends Column implements XdiGraphListener {
 		super.dispose();
 
 		// remove us as listener
-		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 
 	private void refresh() {
@@ -89,39 +88,39 @@ public class PhotosColumn extends Column implements XdiGraphListener {
 	private void addPhotoPanel(XRI3Segment photoXri) {
 
 		PhotoPanel photoPanel = new PhotoPanel();
-		photoPanel.setContextAndSubjectXriAndPhotoXri(this.context, this.subjectXri, photoXri);
+		photoPanel.setContextAndSubjectXriAndPhotoXri(this.endpoint, this.contextNodeXri, photoXri);
 
 		this.add(photoPanel);
 	}
 
-	public XRI3[] xdiGetAddresses() {
+	public XRI3Segment[] xdiGetAddresses() {
 
-		return new XRI3[] {
+		return new XRI3Segment[] {
 				this.address
 		};
 	}
 
-	public XRI3[] xdiAddAddresses() {
+	public XRI3Segment[] xdiAddAddresses() {
 
-		return new XRI3[] {
-				new XRI3("" + this.address + "/$$")
+		return new XRI3Segment[] {
+				new XRI3Segment("" + this.address + "/$$")
 		};
 	}
 
-	public XRI3[] xdiModAddresses() {
+	public XRI3Segment[] xdiModAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiSetAddresses() {
+	public XRI3Segment[] xdiSetAddresses() {
 
-		return new XRI3[0];
+		return new XRI3Segment[0];
 	}
 
-	public XRI3[] xdiDelAddresses() {
+	public XRI3Segment[] xdiDelAddresses() {
 
-		return new XRI3[] {
-				new XRI3("" + this.address)
+		return new XRI3Segment[] {
+				new XRI3Segment("" + this.address)
 		};
 	}
 
@@ -153,45 +152,39 @@ public class PhotosColumn extends Column implements XdiGraphListener {
 		}
 	}
 
-	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
+	public void setEndpointAndContextNodeXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri) {
 
 		// remove us as listener
-		
-		if (this.context != null) this.context.removeXdiGraphListener(this);
+
+		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 
 		// refresh
-		
-		this.context = context;
-		this.subjectXri = subjectXri;
-		this.address = new XRI3("" + this.subjectXri + "/+photos");
+
+		this.endpoint = endpoint;
+		this.contextNodeXri = contextNodeXri;
+		this.address = new XRI3Segment("" + this.contextNodeXri + "/+photos");
 
 		this.refresh();
 
 		// add us as listener
 
-		this.context.addXdiGraphListener(this);
+		this.endpoint.addXdiGraphListener(this);
 	}
 
 	private List<XRI3Segment> getPhotoXris() throws XdiException {
 
 		// $get
 
-		Operation operation = this.context.prepareOperation(MessagingConstants.XRI_GET);
-		Graph operationGraph = operation.createOperationGraph(null);
-		operationGraph.createStatement(this.subjectXri, new XRI3Segment("+photos"));
+		XRI3Segment targetXri = new XRI3Segment("" + this.contextNodeXri + "+photos");
 
-		MessageResult messageResult = this.context.send(operation);
+		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_GET, targetXri);
 
-		Subject subject = messageResult.getGraph().getSubject(this.subjectXri);
-		if (subject == null) return new ArrayList<XRI3Segment> ();
+		MessageResult messageResult = this.endpoint.send(message);
 
-		Predicate predicate = subject.getPredicate(new XRI3Segment("+photos"));
-		if (predicate == null) return new ArrayList<XRI3Segment> ();
+		ContextNode contextNode = messageResult.getGraph().findContextNode(targetXri, false);
+		if (contextNode == null) return new ArrayList<XRI3Segment> ();
 
-		Graph innerGraph = predicate.getInnerGraph();
-		if (innerGraph == null) return new ArrayList<XRI3Segment> ();
-
-		return new IteratorListMaker<XRI3Segment> (new MappingIterator<Subject, XRI3Segment> (innerGraph.getSubjects()) {
+		return new IteratorListMaker<XRI3Segment> (new MappingIterator<ContextNode, XRI3Segment> (innerGraph.getSubjects()) {
 
 			@Override
 			public XRI3Segment map(Subject item) {

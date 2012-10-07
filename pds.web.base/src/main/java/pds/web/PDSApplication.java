@@ -126,7 +126,7 @@ public class PDSApplication extends ApplicationInstance {
 
 			this.fireApplicationEvent(new ApplicationContextOpenedEvent(this, this.openedEndpoint));
 
-			this.logger.info("Your Personal Data Store has been opened from " + remoteAddr + ".", null);
+			this.logger.info("Your Personal Cloud has been opened from " + remoteAddr + ".", null);
 		} catch (Exception ex) {
 
 			if (this.isEndpointOpen()) this.closeContext();
@@ -145,7 +145,7 @@ public class PDSApplication extends ApplicationInstance {
 
 		} finally {
 
-			this.logger.info("Your Personal Data Store has been closed.", null);
+			this.logger.info("Your Personal Cloud has been closed.", null);
 
 			this.openedEndpoint = null;
 		}

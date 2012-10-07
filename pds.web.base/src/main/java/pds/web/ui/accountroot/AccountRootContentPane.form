@@ -75,7 +75,7 @@
 </p>
 </c>
 
-<c i="Component_dataPredicatesColumn" t="pds.web.ui.shared.DataPredicatesColumn" vis="private"/>
+<c i="Component_xdiEntityColumn" t="pds.web.ui.shared.XdiEntityColumn" vis="private"/>
 </c>
 </c>
 </form>

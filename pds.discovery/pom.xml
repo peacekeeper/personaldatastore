@@ -64,12 +64,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-jcl</artifactId>
-			<version>1.5.8</version>
-			<scope>compile</scope>
-		</dependency>
 	</dependencies>
 
 </project>

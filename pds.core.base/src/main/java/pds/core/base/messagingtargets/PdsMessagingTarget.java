@@ -8,11 +8,10 @@ import pds.core.base.PdsInstance;
 import pds.core.base.messagingtargets.handlers.PdsContextNodeHandler;
 import pds.core.base.messagingtargets.handlers.PdsRootContextNodeHandler;
 import xdi2.core.ContextNode;
-import xdi2.core.exceptions.Xdi2MessagingException;
 import xdi2.core.xri3.impl.XRI3;
 import xdi2.core.xri3.impl.XRI3Segment;
-import xdi2.messaging.target.impl.AbstractMessagingTarget;
-import xdi2.messaging.target.impl.ContextNodeHandler;
+import xdi2.messaging.exceptions.Xdi2MessagingException;
+import xdi2.messaging.target.AbstractMessagingTarget;
 
 public class PdsMessagingTarget extends AbstractMessagingTarget {
 

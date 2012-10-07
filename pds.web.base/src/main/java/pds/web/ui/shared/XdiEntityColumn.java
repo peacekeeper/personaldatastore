@@ -13,24 +13,31 @@ import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
+import xdi2.client.exceptions.Xdi2ClientException;
+import xdi2.core.ContextNode;
+import xdi2.core.features.multiplicity.XdiAttribute;
+import xdi2.core.features.multiplicity.XdiCollection;
+import xdi2.core.features.multiplicity.XdiEntity;
 import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
+import xdi2.messaging.MessageResult;
 
-public class DataPredicatesColumn extends Column implements XdiGraphListener {
+public class XdiEntityColumn extends Column implements XdiGraphListener {
 
 	private static final long serialVersionUID = -5106531864010407671L;
 
 	protected ResourceBundle resourceBundle;
 
 	private XdiEndpoint endpoint;
-	private XRI3Segment contextNodeXri;
-	private XRI3Segment address;
+	private XdiEntity xdiEntity;
+	private XRI3Segment xdiEntityXri;
 
 	private boolean readOnly;
 
 	/**
 	 * Creates a new <code>DataPredicatesColumn</code>.
 	 */
-	public DataPredicatesColumn() {
+	public XdiEntityColumn() {
 		super();
 
 		this.readOnly = false;
@@ -51,7 +58,7 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 		super.dispose();
 
 		// remove us as listener
-		
+
 		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 
@@ -59,16 +66,27 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 
 		try {
 
-			// get list of data predicate XRIs
+			// refresh data
 
-			XRI3Segment[] pdsDictionaryPredicates = PdsDictionary.DICTIONARY_PREDICATES;
+			if (this.xdiEntity == null) this.xdiGet();
 
-			// add them
+			// refresh UI
+
+			XRI3Segment[] pdsDictionaryXris = PdsDictionary.DICTIONARY_PERSON;
 
 			this.removeAll();
-			for (XRI3Segment dataPredicateXri : pdsDictionaryPredicates) {
 
-				this.addDataAttributePanel(dataPredicateXri);
+			for (XRI3Segment pdsDictionaryXri : pdsDictionaryXris) {
+
+				ContextNode contextNode = this.xdiEntity.getContextNode().findContextNode(pdsDictionaryXri, true);
+
+				if (XdiCollection.isValid(contextNode)) {
+
+					this.addXdiCollectionPanel(XdiCollection.fromContextNode(contextNode));
+				} else if (XdiAttribute.isValid(contextNode)) {
+
+					this.addXdiAttributePanel(XdiAttribute.fromContextNode(contextNode));
+				}
 			}
 		} catch (Exception ex) {
 
@@ -77,13 +95,42 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 		}
 	}
 
-	private void addDataAttributePanel(XRI3Segment dataAttributeXri) {
+	private void xdiGet() throws Xdi2ClientException {
 
-		DataAttributePanel dataAttributePanel = new DataAttributePanel();
-		dataAttributePanel.setEndpointAndContextNodeXriAndAttributeXri(this.endpoint, this.contextNodeXri, dataAttributeXri);
-		dataAttributePanel.setReadOnly(this.readOnly);
+		// $get
 
-		this.add(dataAttributePanel);
+		Message message = this.endpoint.prepareMessage();
+		message.createGetOperation(this.xdiEntityXri);
+
+		MessageResult messageResult = this.endpoint.send(message);
+
+		ContextNode contextNode = messageResult.getGraph().findContextNode(this.xdiEntityXri, false);
+		if (contextNode == null) this.xdiEntity = null;
+
+		this.xdiEntity = XdiEntity.fromContextNode(contextNode);
+	}
+
+	private void addXdiCollectionPanel(XdiCollection xdiCollection) {
+
+		XdiCollectionPanel xdiCollectionPanel = new XdiCollectionPanel();
+		xdiCollectionPanel.setEndpointAndXdiCollection(this.endpoint, xdiCollection, xdiCollection.getContextNode().getXri());
+		xdiCollectionPanel.setReadOnly(this.readOnly);
+
+		this.add(xdiCollectionPanel);
+	}
+
+	private void addXdiAttributePanel(XdiAttribute xdiAttribute) {
+
+		XdiAttributePanel xdiAttributePanel = new XdiAttributePanel();
+		xdiAttributePanel.setEndpointAndXdiAttribute(this.endpoint, xdiAttribute, xdiAttribute.getContextNode().getXri());
+		xdiAttributePanel.setReadOnly(this.readOnly);
+
+		this.add(xdiAttributePanel);
+	}
+
+	public XRI3Segment xdiMainAddress() {
+
+		return this.xdiEntity.getContextNode().getXri();
 	}
 
 	public XRI3Segment[] xdiGetAddresses() {
@@ -104,7 +151,7 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 	public XRI3Segment[] xdiDelAddresses() {
 
 		return new XRI3Segment[] {
-				this.address
+				this.xdiEntity.getContextNode().getXri()
 		};
 	}
 
@@ -136,17 +183,17 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 		}
 	}
 
-	public void setEndpointAndContextNodeXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri) {
+	public void setEndpointAndXdiEntity(XdiEndpoint endpoint, XdiEntity xdiEntity, XRI3Segment xdiEntityXri) {
 
 		// remove us as listener
-		
+
 		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 
 		// refresh
-		
+
 		this.endpoint = endpoint;
-		this.contextNodeXri = contextNodeXri;
-		this.address = new XRI3Segment("" + this.contextNodeXri);
+		this.xdiEntity = xdiEntity;
+		this.xdiEntityXri = xdiEntityXri;
 
 		this.refresh();
 
@@ -159,9 +206,9 @@ public class DataPredicatesColumn extends Column implements XdiGraphListener {
 
 		this.readOnly = readOnly;
 
-		for (Component component : MainWindow.findChildComponentsByClass(this, DataAttributePanel.class)) {
+		for (Component component : MainWindow.findChildComponentsByClass(this, XdiCollectionPanel.class)) {
 
-			((DataAttributePanel) component).setReadOnly(readOnly);
+			((XdiCollectionPanel) component).setReadOnly(readOnly);
 		}
 	}
 

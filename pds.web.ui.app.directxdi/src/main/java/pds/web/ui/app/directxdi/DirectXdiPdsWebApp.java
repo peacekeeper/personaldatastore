@@ -1,12 +1,9 @@
 package pds.web.ui.app.directxdi;
 
 import nextapp.echo.app.ResourceImageReference;
-
-import org.eclipse.higgins.XDI2.xri3.impl.XRI3Segment;
-
 import pds.web.ui.MainContentPane;
 import pds.web.ui.app.PdsWebApp;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiEndpoint;
 
 public class DirectXdiPdsWebApp implements PdsWebApp {
 
@@ -23,10 +20,10 @@ public class DirectXdiPdsWebApp implements PdsWebApp {
 	}
 
 	@Override
-	public void onActionPerformed(MainContentPane mainContentPane, XdiContext context, XRI3Segment subjectXri) {
+	public void onActionPerformed(MainContentPane mainContentPane, XdiEndpoint endpoint) {
 
 		DirectXdiWindowPane directXdiWindowPane = new DirectXdiWindowPane();
-		directXdiWindowPane.setContext(context);
+		directXdiWindowPane.setEndpoint(endpoint);
 
 		mainContentPane.add(directXdiWindowPane);
 	}

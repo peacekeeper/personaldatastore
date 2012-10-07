@@ -22,9 +22,12 @@ import pds.xdi.events.XdiTransactionEvent;
 import pds.xdi.events.XdiTransactionFailureEvent;
 import pds.xdi.events.XdiTransactionSuccessEvent;
 import xdi2.client.XDIClient;
+import xdi2.client.exceptions.Xdi2ClientException;
 import xdi2.client.http.XDIHttpClient;
 import xdi2.core.ContextNode;
 import xdi2.core.Statement;
+import xdi2.core.constants.XDILinkContractConstants;
+import xdi2.core.features.remoteroots.RemoteRoots;
 import xdi2.core.util.XRIUtil;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
@@ -32,7 +35,6 @@ import xdi2.messaging.MessageEnvelope;
 import xdi2.messaging.MessageResult;
 import xdi2.messaging.Operation;
 import xdi2.messaging.constants.XDIMessagingConstants;
-import xdi2.messaging.error.ErrorMessageResult;
 
 public class XdiEndpoint {
 
@@ -44,10 +46,10 @@ public class XdiEndpoint {
 	private final XRI3Segment canonical;
 	private final String secretToken;
 
-	private final Map<XRI3Segment, List<XdiGraphListener> > xdiGetGraphListeners;
-	private final Map<XRI3Segment, List<XdiGraphListener> > xdiAddGraphListeners;
-	private final Map<XRI3Segment, List<XdiGraphListener> > xdiModGraphListeners;
-	private final Map<XRI3Segment, List<XdiGraphListener> > xdiDelGraphListeners;
+	private final Map<XRI3Segment, List<XdiGraphListener>> xdiGetGraphListeners;
+	private final Map<XRI3Segment, List<XdiGraphListener>> xdiAddGraphListeners;
+	private final Map<XRI3Segment, List<XdiGraphListener>> xdiModGraphListeners;
+	private final Map<XRI3Segment, List<XdiGraphListener>> xdiDelGraphListeners;
 
 	XdiEndpoint(XdiClient xdi, XDIClient xdiClient, String identifier, XRI3Segment canonical, String secretToken) { 
 
@@ -57,10 +59,10 @@ public class XdiEndpoint {
 		this.canonical = canonical;
 		this.secretToken = secretToken;
 
-		this.xdiGetGraphListeners = new HashMap<XRI3Segment, List<XdiGraphListener> > ();
-		this.xdiAddGraphListeners = new HashMap<XRI3Segment, List<XdiGraphListener> > ();
-		this.xdiModGraphListeners = new HashMap<XRI3Segment, List<XdiGraphListener> > ();
-		this.xdiDelGraphListeners = new HashMap<XRI3Segment, List<XdiGraphListener> > ();
+		this.xdiGetGraphListeners = new HashMap<XRI3Segment, List<XdiGraphListener>> ();
+		this.xdiAddGraphListeners = new HashMap<XRI3Segment, List<XdiGraphListener>> ();
+		this.xdiModGraphListeners = new HashMap<XRI3Segment, List<XdiGraphListener>> ();
+		this.xdiDelGraphListeners = new HashMap<XRI3Segment, List<XdiGraphListener>> ();
 	}
 
 	public String getEndpoint() {
@@ -106,19 +108,20 @@ public class XdiEndpoint {
 
 		// do XDI transaction
 
+		MessageResult messageResult = null;
 		Date beginTimestamp = new Date();
 		XdiTransactionEvent transactionEvent;
 
 		try {
 
-			MessageResult ret = XdiEndpoint.this.xdiClient.send(messageEnvelope, null);
+			messageResult = XdiEndpoint.this.xdiClient.send(messageEnvelope, null);
 
-			transactionEvent = new XdiTransactionSuccessEvent(this, messageEnvelope, beginTimestamp, new Date(), ret);
+			transactionEvent = new XdiTransactionSuccessEvent(this, messageEnvelope, messageResult, beginTimestamp, new Date());
 			this.xdi.fireXdiTransactionEvent(transactionEvent);
 		} catch (Exception ex) {
 
 			if (! (ex instanceof XdiException)) ex = new XdiException("Problem during XDI Transaction: " + ex.getMessage(), ex);
-			transactionEvent = new XdiTransactionFailureEvent(this, messageEnvelope, beginTimestamp, new Date(), ex);
+			transactionEvent = new XdiTransactionFailureEvent(this, messageEnvelope, messageResult, beginTimestamp, new Date(), ex);
 			this.xdi.fireXdiTransactionEvent(transactionEvent);
 		}
 
@@ -134,9 +137,16 @@ public class XdiEndpoint {
 		MessageEnvelope messageEnvelope = new MessageEnvelope();
 		Message message = messageEnvelope.getMessage(this.canonical, true);
 
+		message.getContextNode().createRelation(XDILinkContractConstants.XRI_S_DO, XDILinkContractConstants.XRI_S_DO);
+
+		if (this.canonical != null) {
+
+			message.setRecipientAuthority(RemoteRoots.remoteRootXri(this.canonical));
+		}
+
 		if (this.secretToken != null) {
 
-			ContextNode secretTokenContextNode = message.getContextNode().createContextNodes(new XRI3Segment("$($secret)$!($token)"));
+			ContextNode secretTokenContextNode = message.getContextNode().createContextNodes(XDIMessagingConstants.XRI_S_SECRET_TOKEN);
 			secretTokenContextNode.createLiteral(this.secretToken);
 		}
 
@@ -178,7 +188,7 @@ public class XdiEndpoint {
 		Message message = this.prepareMessage();
 
 		while (targetStatements.hasNext()) {
-			
+
 			Statement targetStatement = targetStatements.next();
 
 			message.createOperation(operationXri, targetStatement);
@@ -191,17 +201,17 @@ public class XdiEndpoint {
 	 * Sending methods
 	 */
 
-	public MessageResult send(Operation operation) throws XdiException {
+	public MessageResult send(Operation operation) throws Xdi2ClientException {
 
 		return this.send(operation.getMessage());
 	}
 
-	public MessageResult send(Message message) throws XdiException {
+	public MessageResult send(Message message) throws Xdi2ClientException {
 
 		return this.send(message.getMessageEnvelope());
 	}
 
-	public MessageResult send(MessageEnvelope messageEnvelope) throws XdiException {
+	public MessageResult send(MessageEnvelope messageEnvelope) throws Xdi2ClientException {
 
 		// send the message envelope
 
@@ -220,14 +230,6 @@ public class XdiEndpoint {
 
 				this.fireXdiGraphEvent(operationXri, targetXri);
 			}
-		}
-
-		// check for eerrors
-
-		if (ErrorMessageResult.isValid(messageResult.getGraph())) {
-
-			messageResult = ErrorMessageResult.fromGraph(messageResult.getGraph());
-			throw new XdiException("Problem from XDI Server: " + ((ErrorMessageResult) messageResult).getErrorString());
 		}
 
 		// done
@@ -306,7 +308,7 @@ public class XdiEndpoint {
 				break;
 			}
 
-			targetXri = XRIUtil.parentXri(targetXri);
+			targetXri = XRIUtil.parentXri(targetXri, -1);
 			bubbled = true;
 		}
 

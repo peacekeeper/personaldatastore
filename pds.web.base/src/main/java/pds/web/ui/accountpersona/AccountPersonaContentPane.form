@@ -70,7 +70,7 @@
 <p n="separatorVisible">false</p>
 <p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM</p>
 <p n="resizable">false</p>
-<c i="Component_dataPredicatesColumn" t="pds.web.ui.accountroot.DataPredicatesColumn" vis="private"/>
+<c i="Component_xdiEntityColumn" t="pds.web.ui.shared.XdiEntityColumn" vis="private"/>
 </c>
 </c>
 </form>

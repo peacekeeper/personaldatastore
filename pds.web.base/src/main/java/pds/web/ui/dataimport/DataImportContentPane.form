@@ -90,7 +90,7 @@
 <p n="styleName">Default</p>
 
 
-<p n="text">This tool can import data from an interoperable XDI file into your Personal Data Store.</p>
+<p n="text">This tool can import data from an interoperable XDI file into your Personal Cloud.</p>
 </c>
 <c i="Component_label7" t="nextapp.echo.app.Label">
 <p n="styleName">Default</p>

@@ -42,7 +42,7 @@
 
 
 <p n="styleName">Default</p>
-<p n="text">Welcome. This is a "manual" way of opening a Personal Data Store by providing its XDI endpoint URI.</p>
+<p n="text">Welcome. This is a "manual" way of opening a Personal Cloud by providing its XDI endpoint URI.</p>
 </c>
 <c i="Component_grid2" t="nextapp.echo.app.Grid">
 <c i="Component_label1" t="nextapp.echo.app.Label">
@@ -65,6 +65,40 @@
 
 <p n="width">100%</p>
 <p n="columnWidth" x="0">150px</p>
+<c i="Component_label3" t="nextapp.echo.app.Label">
+
+<p n="styleName">Default</p>
+
+
+<p n="text">I-Name:</p>
+</c>
+<c i="Component_inameTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+
+<e t="action">
+<h n="actionPerformed" v="onOpenActionPerformed"/>
+</e>
+<p n="width">100%</p>
+</c>
+<c i="Component_label6" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">I-Number:</p>
+</c>
+<c i="Component_inumberTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+<p n="width">100%</p>
+</c>
+<c i="Component_label5" t="nextapp.echo.app.Label">
+
+<p n="styleName">Default</p>
+
+
+<p n="text">Secret Token:</p>
+</c>
+<c i="Component_secretTokenField" t="nextapp.echo.app.PasswordField" vis="private">
+<p n="styleName">Default</p>
+<p n="width">100%</p>
+</c>
 </c>
 
 
@@ -81,7 +115,7 @@
 <h n="actionPerformed" v="onOpenActionPerformed"/>
 </e>
 
-<p n="text">Open Personal Data Store</p>
+<p n="text">Open Personal Cloud</p>
 </c>
 
 

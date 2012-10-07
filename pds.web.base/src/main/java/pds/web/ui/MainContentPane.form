@@ -58,6 +58,10 @@
 </e>
 <p n="styleName">PlainWhite</p>
 </c>
+<c i="Component_facebookConnectorPanel" t="pds.web.ui.connectors.FacebookConnectorPanel" vis="private">
+<p n="id">facebookConnectorPanel</p>
+</c>
+<c i="Component_personalConnectorPanel" t="pds.web.ui.connectors.PersonalConnectorPanel" vis="private"/>
 </c>
 <c i="Component_label1" t="nextapp.echo.app.Label">
 
@@ -131,7 +135,7 @@
 <p n="styleName">Tooltip</p>
 <c i="Component_label4" t="nextapp.echo.app.Label">
 <p n="styleName">Default</p>
-<p n="text">This will clear all data from your Personal Data Store. Make sure you have a backup!</p>
+<p n="text">This will clear all data from your Personal Cloud. Make sure you have a backup!</p>
 </c>
 </c>
 </c>
@@ -149,7 +153,7 @@
 <p n="styleName">Tooltip</p>
 <c i="Component_label5" t="nextapp.echo.app.Label">
 <p n="styleName">Default</p>
-<p n="text">This allows you to download all the contents of your Personal Data Store as an XDI file.</p>
+<p n="text">This allows you to download all the contents of your Personal Cloud as an XDI file.</p>
 </c>
 </c>
 </c>
@@ -169,7 +173,7 @@
 <c i="Component_label6" t="nextapp.echo.app.Label">
 <p n="styleName">Default</p>
 
-<p n="text">This allows you to import data from an XDI file input your Personal Data Store.</p>
+<p n="text">This allows you to import data from an XDI file input your Personal Cloud.</p>
 </c>
 </c>
 </c>
@@ -272,7 +276,7 @@
 <c i="Component_logWindowPane1" t="pds.web.ui.log.LogWindowPane">
 <p n="visible">false</p>
 </c>
-<c i="Component_accountWindowPane1" t="pds.web.ui.context.ContextWindowPane"/>
+<c i="Component_accountWindowPane1" t="pds.web.ui.endpoint.EndpointWindowPane"/>
 
 <p n="backgroundImage">
 <fi r="xy" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/mainback-gray.jpg</fi>

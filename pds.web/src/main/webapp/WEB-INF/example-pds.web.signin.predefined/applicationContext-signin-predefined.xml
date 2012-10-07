@@ -5,16 +5,25 @@
 
 	<!-- PredefinedSignInMethod -->
 
-	<bean id="predefinedSignInMethod" class="pds.web.signin.manual.PredefinedSignInMethod">
+	<bean id="predefinedSignInMethod" class="pds.web.signin.predefined.PredefinedSignInMethod">
 
 		<!-- Predefined contexts. -->
 
-		<property name="contexts">
-			<map>
-				<entry key="bob@danube">
-					<value>http://danube/xdi/=(acct:bob@danube)</value>
-				</entry>
-			</map>
+		<property name="predefinedSignIns">
+			<util:list>
+				<bean class="pds.web.signin.predefined.PredefinedSignIn">
+					<property name="endpointUrl" value="http://localhost:8080/xdi/users/=!BDF3.1FB.E70C.3958!1111" />
+					<property name="identifier" value="=danube*markus" />
+					<property name="canonical" value="=!BDF3.1FB.E70C.3958!1111" />
+					<property name="secretToken" value="xmarkus" />
+				</bean>
+				<bean class="pds.web.signin.predefined.PredefinedSignIn">
+					<property name="endpointUrl" value="http://localhost:8080/xdi/users/=!BDF3.1FB.E70C.3958!2222" />
+					<property name="identifier" value="=danube*animesh" />
+					<property name="canonical" value="=!BDF3.1FB.E70C.3958!2222" />
+					<property name="secretToken" value="xanimesh" />
+				</bean>
+			</util:list>
 		</property>
 
 	</bean>

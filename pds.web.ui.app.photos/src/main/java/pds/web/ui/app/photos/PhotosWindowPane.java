@@ -29,7 +29,7 @@ public class PhotosWindowPane extends WindowPane {
 
 	public void setContextAndSubjectXri(XdiContext context, XRI3Segment subjectXri) {
 
-		this.photosContentPane.setContextAndSubjectXri(context, subjectXri);
+		this.photosContentPane.setEndpointAndContextNodeXri(context, subjectXri);
 	}
 
 	/**

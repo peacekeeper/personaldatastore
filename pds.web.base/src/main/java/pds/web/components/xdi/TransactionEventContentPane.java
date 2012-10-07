@@ -15,13 +15,13 @@ import nextapp.echo.app.Label;
 import nextapp.echo.app.ResourceImageReference;
 import nextapp.echo.app.Row;
 import nextapp.echo.app.SplitPane;
+import nextapp.echo.app.layout.ColumnLayoutData;
 import nextapp.echo.app.layout.RowLayoutData;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 import nextapp.echo.extras.app.TabPane;
 import nextapp.echo.extras.app.layout.TabPaneLayoutData;
 import pds.xdi.events.XdiTransactionEvent;
 import pds.xdi.events.XdiTransactionFailureEvent;
-import pds.xdi.events.XdiTransactionSuccessEvent;
 import pds.web.components.xdi.GraphContentPane;
 
 public class TransactionEventContentPane extends ContentPane  {
@@ -67,16 +67,22 @@ public class TransactionEventContentPane extends ContentPane  {
 		this.endTimestampLabel.setText(DATEFORMAT.format(this.transactionEvent.getEndTimestamp()));
 		this.durationLabel.setText(Long.toString(this.transactionEvent.getEndTimestamp().getTime() - this.transactionEvent.getBeginTimestamp().getTime()) + " ms");
 
-		if (this.transactionEvent instanceof XdiTransactionSuccessEvent) {
+		if (this.transactionEvent.getMessageResult() != null) {
 
 			this.messageResultTab.setVisible(true);
-			this.exceptionTab.setVisible(false);
-			this.messageResultGraphContentPane.setGraph(((XdiTransactionSuccessEvent) this.transactionEvent).getMessageResult().getGraph()); 
-		} else if (this.transactionEvent instanceof XdiTransactionFailureEvent) {
+			this.messageResultGraphContentPane.setGraph(this.transactionEvent.getMessageResult().getGraph()); 
+		} else {
 
 			this.messageResultTab.setVisible(false);
+		}
+
+		if (this.transactionEvent instanceof XdiTransactionFailureEvent) {
+
 			this.exceptionTab.setVisible(true);
 			this.exceptionLabel.setText(((XdiTransactionFailureEvent) this.transactionEvent).getException().getMessage());
+		} else {
+
+			this.exceptionTab.setVisible(false);
 		}
 	}
 
@@ -120,7 +126,7 @@ public class TransactionEventContentPane extends ContentPane  {
 		column1.add(row1);
 		Label label1 = new Label();
 		label1.setStyleName("Default");
-		label1.setText("This window displays a raw XDI transaction with your Personal Data Store.");
+		label1.setText("This window displays a raw XDI transaction with your Personal Cloud.");
 		RowLayoutData label1LayoutData = new RowLayoutData();
 		label1LayoutData.setInsets(new Insets(new Extent(10, Extent.PX)));
 		label1.setLayoutData(label1LayoutData);
@@ -191,6 +197,11 @@ public class TransactionEventContentPane extends ContentPane  {
 		exceptionLabel = new Label();
 		exceptionLabel.setStyleName("Bold");
 		exceptionLabel.setText("...");
+		ColumnLayoutData exceptionLabelLayoutData = new ColumnLayoutData();
+		exceptionLabelLayoutData.setInsets(new Insets(new Extent(0, Extent.PX),
+				new Extent(10, Extent.PX), new Extent(0, Extent.PX),
+				new Extent(0, Extent.PX)));
+		exceptionLabel.setLayoutData(exceptionLabelLayoutData);
 		column2.add(exceptionLabel);
 	}
 }

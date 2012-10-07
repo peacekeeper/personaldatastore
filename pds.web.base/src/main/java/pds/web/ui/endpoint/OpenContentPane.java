@@ -1,4 +1,4 @@
-package pds.web.ui.context;
+package pds.web.ui.endpoint;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +27,7 @@ import pds.xdi.XdiEndpoint;
 import pds.xdi.XdiException;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
+import xdi2.client.exceptions.Xdi2ClientException;
 import xdi2.core.Literal;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
@@ -79,7 +80,7 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 		super.dispose();
 
 		// remove us as listener
-		
+
 		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 
@@ -89,7 +90,12 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 		this.canonicalTextField.setText(this.endpoint.getCanonical().toString());
 		this.endpointTextField.setText(this.endpoint.getEndpoint());
 
-		this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.endpoint, this.address, this.xdiGetAddresses());
+		this.xdiPanel.setEndpointAndGraphListener(this.endpoint, this);
+	}
+
+	public XRI3Segment xdiMainAddress() {
+
+		return this.address;
 	}
 
 	public XRI3Segment[] xdiGetAddresses() {
@@ -102,14 +108,14 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 	public XRI3Segment[] xdiAddAddresses() {
 
 		return new XRI3Segment[] {
-				new XRI3Segment("" + this.address + "/$$")
+				new XRI3Segment("" + this.address + "($$)")
 		};
 	}
 
 	public XRI3Segment[] xdiModAddresses() {
 
 		return new XRI3Segment[] {
-				new XRI3Segment("" + this.address + "/$$")
+				new XRI3Segment("" + this.address + "($$)")
 		};
 	}
 
@@ -129,11 +135,11 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 	public void setEndpoint(XdiEndpoint endpoint) {
 
 		// remove us as listener
-		
+
 		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 
 		// refresh
-		
+
 		this.endpoint = endpoint;
 
 		this.refresh();
@@ -143,7 +149,7 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 		this.endpoint.addXdiGraphListener(this);
 	}
 
-	private Date getFirstAccess() throws XdiException {
+	private Date getFirstAccess() throws Xdi2ClientException {
 
 		// $get
 
@@ -162,7 +168,7 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 		}
 	}
 
-	private Date getLastAccess() throws XdiException {
+	private Date getLastAccess() throws Xdi2ClientException {
 
 		// $get
 
@@ -246,10 +252,10 @@ public class OpenContentPane extends ContentPane implements XdiGraphListener {
 		row1.add(xdiPanel);
 		Button button1 = new Button();
 		button1.setStyleName("Default");
-		button1.setText("Close Personal Data Store");
+		button1.setText("Close Personal Cloud");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onCloseActionPerformed(e);
 			}

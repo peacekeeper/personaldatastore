@@ -18,8 +18,9 @@ import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;
-import pds.xdi.Xdi;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiClient;
+import pds.xdi.XdiEndpoint;
+import nextapp.echo.app.PasswordField;
 
 public class ManualSignInPanel extends Panel {
 
@@ -28,6 +29,12 @@ public class ManualSignInPanel extends Panel {
 	protected ResourceBundle resourceBundle;
 
 	private TextField endpointTextField;
+
+	private TextField inameTextField;
+
+	private PasswordField secretTokenField;
+
+	private TextField inumberTextField;
 
 	/**
 	 * Creates a new <code>ManualSignInPanel</code>.
@@ -47,23 +54,23 @@ public class ManualSignInPanel extends Panel {
 
 	private void onOpenActionPerformed(ActionEvent e) {
 
-		Xdi xdi = PDSApplication.getApp().getXdiClient();
-		
-		String endpoint = this.endpointTextField.getText();
-		if (endpoint == null || endpoint.trim().equals("")) return;
-		if (! endpoint.endsWith("/")) endpoint += "/";
-		if ((! endpoint.toLowerCase().startsWith("http://")) && (! endpoint.toLowerCase().startsWith("https://"))) endpoint = "http://" + endpoint;
+		XdiClient xdiClient = PDSApplication.getApp().getXdiClient();
+
+		String endpointUrl = this.endpointTextField.getText();
+		if (endpointUrl == null || endpointUrl.trim().equals("")) return;
+		if (! endpointUrl.endsWith("/")) endpointUrl += "/";
+		if ((! endpointUrl.toLowerCase().startsWith("http://")) && (! endpointUrl.toLowerCase().startsWith("https://"))) endpointUrl = "http://" + endpointUrl;
 
 		// try to open the context
 
 		try {
 
-			XdiContext context = xdi.resolveContextByEndpoint(endpoint, null);
+			XdiEndpoint endpoint = xdiClient.resolveEndpointByEndpointUrl(endpointUrl, null);
 
-			PDSApplication.getApp().openEndpoint(context);
+			PDSApplication.getApp().openEndpoint(endpoint);
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, we could not open your Personal Data Store: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, we could not open your Personal Cloud: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -84,7 +91,7 @@ public class ManualSignInPanel extends Panel {
 		column2.add(label2);
 		Label label4 = new Label();
 		label4.setStyleName("Default");
-		label4.setText("Welcome. This is a \"manual\" way of opening a Personal Data Store by providing its XDI endpoint URI.");
+		label4.setText("Welcome. This is a \"manual\" way of opening a Personal Cloud by providing its XDI endpoint URI.");
 		column2.add(label4);
 		Grid grid2 = new Grid();
 		grid2.setWidth(new Extent(100, Extent.PERCENT));
@@ -105,6 +112,37 @@ public class ManualSignInPanel extends Panel {
 			}
 		});
 		grid2.add(endpointTextField);
+		Label label3 = new Label();
+		label3.setStyleName("Default");
+		label3.setText("I-Name:");
+		grid2.add(label3);
+		inameTextField = new TextField();
+		inameTextField.setStyleName("Default");
+		inameTextField.setWidth(new Extent(100, Extent.PERCENT));
+		inameTextField.addActionListener(new ActionListener() {
+			private static final long serialVersionUID = 1L;
+	
+			public void actionPerformed(ActionEvent e) {
+				onOpenActionPerformed(e);
+			}
+		});
+		grid2.add(inameTextField);
+		Label label6 = new Label();
+		label6.setStyleName("Default");
+		label6.setText("I-Number:");
+		grid2.add(label6);
+		inumberTextField = new TextField();
+		inumberTextField.setStyleName("Default");
+		inumberTextField.setWidth(new Extent(100, Extent.PERCENT));
+		grid2.add(inumberTextField);
+		Label label5 = new Label();
+		label5.setStyleName("Default");
+		label5.setText("Secret Token:");
+		grid2.add(label5);
+		secretTokenField = new PasswordField();
+		secretTokenField.setStyleName("Default");
+		secretTokenField.setWidth(new Extent(100, Extent.PERCENT));
+		grid2.add(secretTokenField);
 		Row row2 = new Row();
 		row2.setAlignment(new Alignment(Alignment.RIGHT, Alignment.DEFAULT));
 		row2.setCellSpacing(new Extent(10, Extent.PX));
@@ -116,7 +154,7 @@ public class ManualSignInPanel extends Panel {
 		column2.add(row2);
 		Button button2 = new Button();
 		button2.setStyleName("Default");
-		button2.setText("Open Personal Data Store");
+		button2.setText("Open Personal Cloud");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
 	

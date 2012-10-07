@@ -17,9 +17,9 @@ import pds.xdi.XdiEndpoint;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
+import xdi2.core.util.StatementUtil;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
-import xdi2.messaging.constants.XDIMessagingConstants;
 import echopoint.ImageIcon;
 
 public class FriendPanel extends Panel implements XdiGraphListener {
@@ -29,9 +29,8 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 	protected ResourceBundle resourceBundle;
 
 	private XdiEndpoint endpoint;
-	private XRI3Segment subjectXri;
-	private XRI3Segment relationXri;
-	private XRI3Segment address;
+	private XRI3Segment contextNodeXri;
+	private XRI3Segment targetContextNodeXri;
 
 	private XdiPanel xdiPanel;
 	private Button friendButton;
@@ -69,9 +68,9 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 
 		try {
 
-			String friend = this.relationXri.toString();
+			String friend = this.targetContextNodeXri.toString();
 
-			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.endpoint, this.address, this.xdiGetAddresses());
+			this.xdiPanel.setEndpointAndGraphListener(this.endpoint, this);
 			this.friendButton.setText(friend);
 		} catch (Exception ex) {
 
@@ -80,10 +79,15 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 		}
 	}
 
+	public XRI3Segment xdiMainAddress() {
+		
+		return this.contextNodeXri;
+	}
+	
 	public XRI3Segment[] xdiGetAddresses() {
 
 		return new XRI3Segment[] {
-				this.address
+				this.contextNodeXri
 		};
 	}
 
@@ -95,21 +99,14 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 	public XRI3Segment[] xdiModAddresses() {
 
 		return new XRI3Segment[] {
-				this.address
-		};
-	}
-
-	public XRI3Segment[] xdiSetAddresses() {
-
-		return new XRI3Segment[] {
-				this.address
+				this.contextNodeXri
 		};
 	}
 
 	public XRI3Segment[] xdiDelAddresses() {
 
 		return new XRI3Segment[] {
-				this.address
+				this.contextNodeXri
 		};
 	}
 
@@ -129,7 +126,7 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	public void setEndpointAndContextNodeXriAndRelationXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri, XRI3Segment relationXri) {
+	public void setEndpointAndContextNodeXriAndTargetContextNodeXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri, XRI3Segment targetContextNodeXri) {
 
 		// remove us as listener
 
@@ -138,9 +135,8 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 		// refresh
 
 		this.endpoint = endpoint;
-		this.subjectXri = contextNodeXri;
-		this.relationXri = relationXri;
-		this.address = new XRI3Segment("" + this.subjectXri + "/+friend/" + this.relationXri);
+		this.contextNodeXri = contextNodeXri;
+		this.targetContextNodeXri = targetContextNodeXri;
 
 		this.refresh();
 
@@ -173,7 +169,8 @@ public class FriendPanel extends Panel implements XdiGraphListener {
 
 			// $del
 
-			Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_DEL, this.address);
+			Message message = this.endpoint.prepareMessage();
+			message.createDelOperation(StatementUtil.fromRelationComponents(this.contextNodeXri, new XRI3Segment("+friend"), this.targetContextNodeXri));
 
 			this.endpoint.send(message);
 		} catch (Exception ex) {

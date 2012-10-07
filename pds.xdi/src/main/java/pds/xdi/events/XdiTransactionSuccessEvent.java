@@ -11,9 +11,9 @@ public class XdiTransactionSuccessEvent extends XdiTransactionEvent {
 
 	private MessageResult messageResult;
 
-	public XdiTransactionSuccessEvent(Object source, MessageEnvelope messageEnvelope, Date beginTimestamp, Date endTimestamp, MessageResult messageResult) {
+	public XdiTransactionSuccessEvent(Object source, MessageEnvelope messageEnvelope, MessageResult messageResult, Date beginTimestamp, Date endTimestamp) {
 
-		super(source, messageEnvelope, beginTimestamp, endTimestamp);
+		super(source, messageEnvelope, messageResult, beginTimestamp, endTimestamp);
 
 		this.messageResult = messageResult;
 	}

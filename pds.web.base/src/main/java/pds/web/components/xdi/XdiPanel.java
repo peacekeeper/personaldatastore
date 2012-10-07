@@ -10,7 +10,7 @@ import nextapp.echo.app.event.ActionListener;
 import pds.web.ui.DeveloperModeComponent;
 import pds.web.ui.MainWindow;
 import pds.xdi.XdiEndpoint;
-import xdi2.core.xri3.impl.XRI3Segment;
+import pds.xdi.events.XdiGraphListener;
 
 public class XdiPanel extends Panel implements DeveloperModeComponent {
 
@@ -19,8 +19,7 @@ public class XdiPanel extends Panel implements DeveloperModeComponent {
 	protected ResourceBundle resourceBundle;
 
 	private XdiEndpoint endpoint;
-	private XRI3Segment mainAddress;
-	private XRI3Segment[] getAddresses;
+	private XdiGraphListener graphListener;
 
 	/**
 	 * Creates a new <code>ClaimPanel</code>.
@@ -46,11 +45,10 @@ public class XdiPanel extends Panel implements DeveloperModeComponent {
 		super.dispose();
 	}
 
-	public void setEndpointAndMainAddressAndGetAddresses(XdiEndpoint endpoint, XRI3Segment mainAddress, XRI3Segment[] getAddresses) {
+	public void setEndpointAndGraphListener(XdiEndpoint endpoint, XdiGraphListener graphListener) {
 
 		this.endpoint = endpoint;
-		this.mainAddress = mainAddress;
-		this.getAddresses = getAddresses;
+		this.graphListener = graphListener;
 	}
 
 	public XdiEndpoint getEndpoint() {
@@ -58,20 +56,15 @@ public class XdiPanel extends Panel implements DeveloperModeComponent {
 		return this.endpoint;
 	}
 
-	public XRI3Segment getMainAddress() {
+	public XdiGraphListener getGraphListener() {
 		
-		return this.mainAddress;
-	}
-
-	public XRI3Segment[] getGetAddresses() {
-		
-		return this.getAddresses;
+		return this.graphListener;
 	}
 
 	private void onButtonActionPerformed(ActionEvent e) {
 
 		XdiWindowPane xdiWindowPane = new XdiWindowPane();
-		xdiWindowPane.setEndpointAndMainAddressAndGetAddresses(this.endpoint, this.mainAddress, this.getAddresses);
+		xdiWindowPane.setEndpointAndGraphListener(this.endpoint, this.graphListener);
 
 		MainWindow.findMainContentPane(this).add(xdiWindowPane);
 	}

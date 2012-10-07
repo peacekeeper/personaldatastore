@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.WindowPane;
 import pds.xdi.XdiEndpoint;
-import xdi2.core.xri3.impl.XRI3Segment;
+import pds.xdi.events.XdiGraphListener;
 
 public class XdiWindowPane extends WindowPane {
 
@@ -25,9 +25,9 @@ public class XdiWindowPane extends WindowPane {
 		initComponents();
 	}
 
-	public void setEndpointAndMainAddressAndGetAddresses(XdiEndpoint endpoint, XRI3Segment mainAddress, XRI3Segment[] getAddresses) {
+	public void setEndpointAndGraphListener(XdiEndpoint endpoint, XdiGraphListener graphListener) {
 
-		this.xdiContentPane.setEndpointAndMainAddressAndGetAddresses(endpoint, mainAddress, getAddresses);
+		this.xdiContentPane.setEndpointAndGraphListener(endpoint, graphListener);
 	}
 
 	public XdiEndpoint getEndpoint() {
@@ -35,14 +35,9 @@ public class XdiWindowPane extends WindowPane {
 		return this.xdiContentPane.getEndpoint();
 	}
 
-	public XRI3Segment getMainAddress() {
+	public XdiGraphListener getGraphListener() {
 
-		return this.xdiContentPane.getMainAddress();
-	}
-
-	public XRI3Segment[] getGetAddresses() {
-
-		return this.xdiContentPane.getGetAddresses();
+		return this.xdiContentPane.getGraphListener();
 	}
 
 	/**

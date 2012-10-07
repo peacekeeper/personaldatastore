@@ -11,12 +11,12 @@ import nextapp.echo.webcontainer.WebContainerServlet;
 import nextapp.echo.webcontainer.service.JavaScriptService;
 import nextapp.echo.webcontainer.service.StaticTextService;
 
-import org.openxri.resolve.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pds.web.ui.app.PdsWebApp;
-import pds.web.ui.context.SignInMethod;
+import pds.web.ui.endpoint.SignInMethod;
+import xdi2.resolution.XDIResolver;
 
 public class PDSServlet extends WebContainerServlet {
 
@@ -27,7 +27,7 @@ public class PDSServlet extends WebContainerServlet {
 	private List<PdsWebApp> pdsWebApps;
 	private List<SignInMethod> signInMethods;
 
-	private transient Resolver resolver;
+	private transient XDIResolver resolver;
 
 	@Override
 	public ApplicationInstance newApplicationInstance() {
@@ -53,14 +53,14 @@ public class PDSServlet extends WebContainerServlet {
 
 		try {
 
-			this.resolver = new Resolver(null);
+			this.resolver = new XDIResolver();
 		} catch (Exception ex) {
 
 			throw new RuntimeException("Cannot initialize resolver: " + ex.getMessage(), ex);
 		}
 	}
 
-	public Resolver getResolver() {
+	public XDIResolver getResolver() {
 
 		if (this.resolver == null) this.initResolver();
 

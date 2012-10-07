@@ -13,6 +13,14 @@
 
 
 <p n="cellSpacing">10px</p>
+<c i="Component_xdiAttributeXriLabel" t="nextapp.echo.app.Label" vis="private">
+
+<p n="text">...</p>
+<p n="styleName">Bold</p>
+<p n="layoutData" t="nextapp.echo.app.layout.RowLayoutData">
+<p n="width">120px</p>
+</p>
+</c>
 <c i="Component_valueLabel" t="nextapp.echo.app.Label" vis="private">
 <p n="styleName">Default</p>
 <p n="text">...</p>
@@ -51,6 +59,27 @@
 </e>
 <p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/op-cancel.png</p>
 <p n="styleName">Plain</p>
+</c>
+<c i="Component_button1" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+<p n="text">Link to Facebook</p>
+<e t="action">
+<h n="actionPerformed" v="onLinkFacebookActionPerformed"/>
+</e>
+</c>
+<c i="Component_button2" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+<p n="text">Link to Personal.com</p>
+<e t="action">
+<h n="actionPerformed" v="onLinkPersonalActionPerformed"/>
+</e>
+</c>
+<c i="Component_button3" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+<p n="text">Unlink</p>
+<e t="action">
+<h n="actionPerformed" v="onUnlinkActionPerformed"/>
+</e>
 </c>
 </c>
 

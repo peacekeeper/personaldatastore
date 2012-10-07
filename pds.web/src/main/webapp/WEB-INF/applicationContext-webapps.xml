@@ -7,20 +7,22 @@
 
 	<util:list id="pdsWebApps">
 
-		<bean class="pds.web.ui.app.addressbook.AddressBookPdsWebApp" />
+		<bean class="pds.web.ui.app.directxdi.DirectXdiPdsWebApp" />
+
+<!-- 		<bean class="pds.web.ui.app.addressbook.AddressBookPdsWebApp" />
 
 		<bean class="pds.web.ui.app.feed.FeedPdsWebApp">
 			<property name="hub" value="http://pubsubhubbub.appspot.com/" />
 			<property name="pubsubhubbubEndpoint" value="http://ginger.freexri.com:8188/pds-endpoint-pubsubhubbub/" />
 			<property name="atomFeedEndpoint" value="http://ginger.freexri.com:8188/pds-endpoint-feed/atom/" />
-			<!-- <property name="leaseSeconds" value="..." /> -->
+			<property name="leaseSeconds" value="..." />
 		</bean>
 
 		<bean class="pds.web.ui.app.photos.PhotosPdsWebApp" />
 
 		<bean class="pds.web.ui.app.whisper.WhisperPdsWebApp" />
 
-		<bean class="pds.web.ui.app.directxdi.DirectXdiPdsWebApp" />
+		 -->
 
 	</util:list>
 

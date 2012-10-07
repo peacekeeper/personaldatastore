@@ -13,7 +13,7 @@
 <c i="Component_column1" t="nextapp.echo.app.Column">
 <c i="Component_row2" t="nextapp.echo.app.Row">
 <c i="Component_xdiPanel" t="pds.web.components.xdi.XdiPanel" vis="private"/>
-<c i="Component_predicateXriLabel" t="nextapp.echo.app.Label" vis="private">
+<c i="Component_xdiCollectionXriLabel" t="nextapp.echo.app.Label" vis="private">
 
 <p n="text">...</p>
 <p n="styleName">Bold</p>
@@ -51,7 +51,7 @@
 <p n="styleName">Plain</p>
 </c>
 </c>
-<c i="Component_instanceValuesColumn" t="nextapp.echo.app.Column" vis="private"/>
+<c i="Component_xdiAttributesColumn" t="nextapp.echo.app.Column" vis="private"/>
 <p n="cellSpacing">10px</p>
 </c>
 

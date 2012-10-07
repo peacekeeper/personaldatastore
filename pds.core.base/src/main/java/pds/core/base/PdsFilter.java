@@ -16,12 +16,11 @@ import org.slf4j.LoggerFactory;
 
 import pds.core.base.messagingtargets.PdsMessagingTarget;
 import xdi2.core.Graph;
+import xdi2.messaging.target.AbstractMessagingTarget;
 import xdi2.messaging.target.MessagingTarget;
-import xdi2.messaging.target.impl.AbstractMessagingTarget;
-import xdi2.messaging.target.impl.CompoundMessagingTarget;
 import xdi2.messaging.target.impl.graph.GraphMessagingTarget;
-import xdi2.server.EndpointRegistry;
 import xdi2.server.EndpointServlet;
+import xdi2.server.registry.EndpointRegistry;
 
 /**
  * A servlet filter that instantiates PDS instances as needed and mounts them

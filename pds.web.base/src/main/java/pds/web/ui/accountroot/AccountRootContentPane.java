@@ -14,11 +14,10 @@ import nextapp.echo.app.layout.RowLayoutData;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
-import pds.web.ui.shared.DataPredicatesColumn;
+import pds.web.ui.shared.XdiEntityColumn;
 import pds.xdi.XdiEndpoint;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
-import xdi2.core.xri3.impl.XRI3;
 import xdi2.core.xri3.impl.XRI3Segment;
 import echopoint.ImageIcon;
 
@@ -30,14 +29,10 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 
 	private XdiEndpoint endpoint;
 	private XRI3Segment contextNodeXri;
-	private XRI3Segment address;
-	private XRI3Segment extensionAddress;
-	private XRI3Segment equivalenceAddress;
-	private XRI3Segment inheritanceAddress;
 
 	private Label inumberLabel;
 	private XdiPanel xdiPanel;
-	private DataPredicatesColumn dataPredicatesColumn;
+	private XdiEntityColumn xdiEntityColumn;
 
 	/**
 	 * Creates a new <code>ConfigureAPIsContentPane</code>.
@@ -70,8 +65,8 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 		try {
 
 			this.inumberLabel.setText(this.contextNodeXri.toString());
-			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.endpoint, this.address, this.xdiGetAddresses());
-			this.dataPredicatesColumn.setEndpointAndContextNodeXri(this.endpoint, this.contextNodeXri);
+			this.xdiPanel.setEndpointAndGraphListener(this.endpoint, this);
+			this.xdiEntityColumn.setEndpointAndXdiEntity(this.endpoint, null, this.contextNodeXri);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
@@ -79,21 +74,22 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 		}
 	}
 
+	public XRI3Segment xdiMainAddress() {
+		
+		return this.contextNodeXri;
+	}
+	
 	public XRI3Segment[] xdiGetAddresses() {
 
 		return new XRI3Segment[] {
-				this.extensionAddress,
-				this.equivalenceAddress,
-				this.inheritanceAddress
+				this.contextNodeXri
 		};
 	}
 
 	public XRI3Segment[] xdiAddAddresses() {
 
 		return new XRI3Segment[] {
-				new XRI3Segment("" + this.extensionAddress + "/$$"),
-				new XRI3Segment("" + this.equivalenceAddress + "/$$"),
-				new XRI3Segment("" + this.inheritanceAddress + "/$$")
+				this.contextNodeXri
 		};
 	}
 
@@ -105,7 +101,7 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 	public XRI3Segment[] xdiDelAddresses() {
 
 		return new XRI3Segment[] {
-				this.address
+				this.contextNodeXri
 		};
 	}
 
@@ -124,10 +120,6 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 
 		this.endpoint = endpoint;
 		this.contextNodeXri = contextNodeXri;
-		this.address = new XRI3Segment("" + this.contextNodeXri);
-		this.extensionAddress = new XRI3Segment("" + this.contextNodeXri + "$extension");	// TODO
-		this.equivalenceAddress = new XRI3Segment("" + this.contextNodeXri + "$equivalence");	// TODO
-		this.inheritanceAddress = new XRI3Segment("" + this.contextNodeXri + "$inheritance");	// TODO
 
 		this.refresh();
 
@@ -189,7 +181,7 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 		row1.add(inumberLabel);
 		xdiPanel = new XdiPanel();
 		row1.add(xdiPanel);
-		dataPredicatesColumn = new DataPredicatesColumn();
-		splitPane1.add(dataPredicatesColumn);
+		xdiEntityColumn = new XdiEntityColumn();
+		splitPane1.add(xdiEntityColumn);
 	}
 }

@@ -1,7 +1,6 @@
 package pds.web.signin.predefined;
 
 
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import nextapp.echo.app.Button;
@@ -14,8 +13,8 @@ import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;
-import pds.xdi.Xdi;
-import pds.xdi.XdiContext;
+import pds.xdi.XdiClient;
+import pds.xdi.XdiEndpoint;
 
 public class PredefinedSignInPanel extends Panel {
 
@@ -25,7 +24,7 @@ public class PredefinedSignInPanel extends Panel {
 
 	private PredefinedSignInMethod predefinedSignInMethod;
 
-	private Column contextsColumn;
+	private Column predefinedSignInsColumn;
 
 	/**
 	 * Creates a new <code>PredefinedSignInPanel</code>.
@@ -42,19 +41,15 @@ public class PredefinedSignInPanel extends Panel {
 
 		super.init();
 
-		// contexts
+		// predefined sign-ins
 
-		this.contextsColumn.removeAll();
-		for (Map.Entry<String, String> entry : this.predefinedSignInMethod.getContexts().entrySet()) {
-
-			String identifier = entry.getKey();
-			String endpoint = entry.getValue();
+		this.predefinedSignInsColumn.removeAll();
+		for (PredefinedSignIn predefinedSignIn : this.predefinedSignInMethod.getPredefinedSignIns()) {
 
 			Button contextButton = new Button();
 			contextButton.setStyleName("Default");
-			contextButton.setText("Sign in as " + identifier);
-			contextButton.set("identifier", identifier);
-			contextButton.set("endpoint", endpoint);
+			contextButton.setText("Sign in as " + predefinedSignIn.getIdentifier());
+			contextButton.set("predefinedSignIn", predefinedSignIn);
 			contextButton.addActionListener(new ActionListener() {
 				private static final long serialVersionUID = 1L;
 
@@ -63,7 +58,7 @@ public class PredefinedSignInPanel extends Panel {
 				}
 			});
 
-			this.contextsColumn.add(contextButton);
+			this.predefinedSignInsColumn.add(contextButton);
 		}
 	}
 
@@ -75,24 +70,21 @@ public class PredefinedSignInPanel extends Panel {
 	private void onOpenActionPerformed(ActionEvent e) {
 
 		Button contextButton = (Button) e.getSource();
-		
-		Xdi xdi = PDSApplication.getApp().getXdiClient();
 
-		String endpoint = (String) contextButton.get("endpoint");
-		if (endpoint == null || endpoint.trim().equals("")) return;
-		if (! endpoint.endsWith("/")) endpoint += "/";
-		if ((! endpoint.toLowerCase().startsWith("http://")) && (! endpoint.toLowerCase().startsWith("https://"))) endpoint = "http://" + endpoint;
+		XdiClient xdiClient = PDSApplication.getApp().getXdiClient();
+
+		PredefinedSignIn predefinedSignIn = (PredefinedSignIn) contextButton.get("predefinedSignIn");
 
 		// try to open the context
 
 		try {
 
-			XdiContext context = xdi.resolveContextByEndpoint(endpoint, null);
+			XdiEndpoint endpoint = xdiClient.resolveEndpointManually(predefinedSignIn.getEndpointUrl(), predefinedSignIn.getIdentifier(), predefinedSignIn.getCanonical(), predefinedSignIn.getSecretToken());
 
-			PDSApplication.getApp().openEndpoint(context);
+			PDSApplication.getApp().openEndpoint(endpoint);
 		} catch (Exception ex) {
 
-			MessageDialog.problem("Sorry, we could not open your Personal Data Store: " + ex.getMessage(), ex);
+			MessageDialog.problem("Sorry, we could not open your Personal Cloud: " + ex.getMessage(), ex);
 			return;
 		}
 	}
@@ -113,9 +105,9 @@ public class PredefinedSignInPanel extends Panel {
 		column2.add(label2);
 		Label label4 = new Label();
 		label4.setStyleName("Default");
-		label4.setText("Welcome. This is a \"manual\" way of opening a Personal Data Store by selecting a predefined user.");
+		label4.setText("Welcome. This is a \"manual\" way of opening a Personal Cloud by selecting a predefined user.");
 		column2.add(label4);
-		contextsColumn = new Column();
-		column2.add(contextsColumn);
+		predefinedSignInsColumn = new Column();
+		column2.add(predefinedSignInsColumn);
 	}
 }

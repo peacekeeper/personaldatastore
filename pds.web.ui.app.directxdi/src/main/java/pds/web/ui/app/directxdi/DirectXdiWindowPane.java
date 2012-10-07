@@ -4,8 +4,7 @@ import java.util.ResourceBundle;
 
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.WindowPane;
-import pds.xdi.XdiContext;
-import pds.web.ui.app.directxdi.DirectXdiContentPane;
+import pds.xdi.XdiEndpoint;
 
 public class DirectXdiWindowPane extends WindowPane {
 
@@ -25,9 +24,9 @@ public class DirectXdiWindowPane extends WindowPane {
 		initComponents();
 	}
 
-	public void setContext(XdiContext context) {
+	public void setEndpoint(XdiEndpoint endpoint) {
 
-		this.directXdiContentPane.setContext(context);
+		this.directXdiContentPane.setEndpoint(endpoint);
 	}
 
 	/**

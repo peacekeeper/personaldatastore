@@ -2,9 +2,11 @@ package pds.web.components.xdi;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import nextapp.echo.app.Button;
+import nextapp.echo.app.CheckBox;
 import nextapp.echo.app.Column;
 import nextapp.echo.app.ContentPane;
 import nextapp.echo.app.Extent;
@@ -12,6 +14,8 @@ import nextapp.echo.app.Insets;
 import nextapp.echo.app.Row;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
+import nextapp.echo.app.event.ChangeEvent;
+import nextapp.echo.app.event.ChangeListener;
 import pds.web.PDSApplication;
 import pds.web.components.HtmlLabel;
 import pds.web.ui.MessageDialog;
@@ -23,7 +27,7 @@ import xdi2.core.impl.memory.MemoryGraphFactory;
 import xdi2.core.io.XDIWriterRegistry;
 import xdi2.core.util.CopyUtil;
 import xdi2.core.util.CopyUtil.CopyStrategy;
-import xdi2.core.xri3.impl.XRI3SubSegment;
+import xdi2.messaging.constants.XDIMessagingConstants;
 
 public class GraphContentPane extends ContentPane {
 
@@ -36,6 +40,9 @@ public class GraphContentPane extends ContentPane {
 	private String originalHtml;
 
 	private HtmlLabel htmlLabel;
+	private CheckBox contextsCheckbox;
+	private CheckBox orderedCheckbox;
+	private CheckBox prettyCheckbox;
 
 	/**
 	 * Creates a new <code>XdiContentPane</code>.
@@ -46,7 +53,7 @@ public class GraphContentPane extends ContentPane {
 		// Add design-time configured components.
 		initComponents();
 
-		this.format = "X3 Simple";
+		this.format = "XDI DISPLAY";
 		this.originalHtml = this.htmlLabel.getHtml();
 	}
 
@@ -65,7 +72,12 @@ public class GraphContentPane extends ContentPane {
 
 		try {
 
-			XDIWriterRegistry.forFormat(this.format, null).write(this.graph, writer);
+			Properties parameters = new Properties();
+			parameters.put(XDIWriterRegistry.PARAMETER_CONTEXTS, this.contextsCheckbox.isSelected() ? "1" : "0");
+			parameters.put(XDIWriterRegistry.PARAMETER_ORDERED, this.orderedCheckbox.isSelected() ? "1" : "0");
+			parameters.put(XDIWriterRegistry.PARAMETER_PRETTY, this.prettyCheckbox.isSelected() ? "1" : "0");
+
+			XDIWriterRegistry.forFormat(this.format, parameters).write(this.graph, writer);
 
 			String html = this.originalHtml;
 			html = html.replace("<!-- $$$ -->", HtmlUtil.htmlEncode(writer.getBuffer().toString(), true, false));
@@ -81,7 +93,7 @@ public class GraphContentPane extends ContentPane {
 	public void setGraph(Graph graph) {
 
 		this.graph = MemoryGraphFactory.getInstance().openGraph();
-		CopyUtil.copyGraph(graph, this.graph, PASSWORDCENSORINGCOPYSTATEMENTSTRATEGY);
+		CopyUtil.copyGraph(graph, this.graph, secretTokenCensoringCopyStrategy);
 
 		this.refresh();
 	}
@@ -91,38 +103,29 @@ public class GraphContentPane extends ContentPane {
 		return this.graph;
 	}
 
-	private void onX3SimpleActionPerformed(ActionEvent e) {
+	private void onXDIDISPLAYActionPerformed(ActionEvent e) {
 
-		this.format = "X3 Simple";
+		this.format = "XDI DISPLAY";
 		this.refresh();
 	}
 
-	private void onX3StandardActionPerformed(ActionEvent e) {
+	private void onXDIJSONActionPerformed(ActionEvent e) {
 
-		this.format = "X3 Standard";
+		this.format = "XDI/JSON";
 		this.refresh();
 	}
 
-	private void onX3JActionPerformed(ActionEvent e) {
+	private void onCheckboxStateChanged(ChangeEvent e) {
 
-		this.format = "X3J";
 		this.refresh();
 	}
 
-	private void onXDIXMLActionPerformed(ActionEvent e) {
-
-		this.format = "XDI/XML";
-		this.refresh();
-	}
-
-	private static final XRI3SubSegment XRI_PASSWORD = new XRI3SubSegment("$password");
-
-	private static CopyStrategy PASSWORDCENSORINGCOPYSTATEMENTSTRATEGY = new CopyStrategy() {
+	private static CopyStrategy secretTokenCensoringCopyStrategy = new CopyStrategy() {
 
 		@Override
 		public Literal replaceLiteral(Literal literal) {
 
-			if (literal.getContextNode().getArcXri().equals(XRI_PASSWORD)) {
+			if (literal.getContextNode().getXri().toString().contains(XDIMessagingConstants.XRI_S_SECRET_TOKEN.toString())) {
 
 				return new BasicLiteral("********");
 			} else {
@@ -147,48 +150,59 @@ public class GraphContentPane extends ContentPane {
 		column1.add(row1);
 		Button button2 = new Button();
 		button2.setStyleName("Default");
-		button2.setText("X3 Simple");
+		button2.setText("XDI DISPLAY");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-				onX3SimpleActionPerformed(e);
+				onXDIDISPLAYActionPerformed(e);
 			}
 		});
 		row1.add(button2);
 		Button button1 = new Button();
 		button1.setStyleName("Default");
-		button1.setText("X3 Standard");
+		button1.setText("XDI/JSON");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-				onX3StandardActionPerformed(e);
+				onXDIJSONActionPerformed(e);
 			}
 		});
 		row1.add(button1);
-		Button button3 = new Button();
-		button3.setStyleName("Default");
-		button3.setText("X3J");
-		button3.addActionListener(new ActionListener() {
+		contextsCheckbox = new CheckBox();
+		contextsCheckbox.setSelected(true);
+		contextsCheckbox.setText("contexts=1");
+		contextsCheckbox.addChangeListener(new ChangeListener() {
 			private static final long serialVersionUID = 1L;
 
-			public void actionPerformed(ActionEvent e) {
-				onX3JActionPerformed(e);
+			public void stateChanged(ChangeEvent e) {
+				onCheckboxStateChanged(e);
 			}
 		});
-		row1.add(button3);
-		Button button4 = new Button();
-		button4.setStyleName("Default");
-		button4.setText("XDI/XML");
-		button4.addActionListener(new ActionListener() {
+		row1.add(contextsCheckbox);
+		orderedCheckbox = new CheckBox();
+		orderedCheckbox.setSelected(true);
+		orderedCheckbox.setText("ordered=1");
+		orderedCheckbox.addChangeListener(new ChangeListener() {
 			private static final long serialVersionUID = 1L;
 
-			public void actionPerformed(ActionEvent e) {
-				onXDIXMLActionPerformed(e);
+			public void stateChanged(ChangeEvent e) {
+				onCheckboxStateChanged(e);
 			}
 		});
-		row1.add(button4);
+		row1.add(orderedCheckbox);
+		prettyCheckbox = new CheckBox();
+		prettyCheckbox.setSelected(false);
+		prettyCheckbox.setText("pretty=1");
+		prettyCheckbox.addChangeListener(new ChangeListener() {
+			private static final long serialVersionUID = 1L;
+
+			public void stateChanged(ChangeEvent e) {
+				onCheckboxStateChanged(e);
+			}
+		});
+		row1.add(prettyCheckbox);
 		htmlLabel = new HtmlLabel();
 		htmlLabel
 		.setHtml("<div style=\"white-space:nowrap;font-family:monospace;\"><pre><!-- $$$ --></pre></div>");

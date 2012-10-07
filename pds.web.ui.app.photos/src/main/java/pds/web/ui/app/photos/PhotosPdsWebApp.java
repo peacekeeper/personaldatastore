@@ -26,7 +26,7 @@ public class PhotosPdsWebApp implements PdsWebApp {
 	public void onActionPerformed(MainContentPane mainContentPane, XdiContext context, XRI3Segment subjectXri) {
 
 		PhotosWindowPane photosWindowPane = new PhotosWindowPane();
-		photosWindowPane.setContextAndSubjectXri(context, subjectXri);
+		photosWindowPane.setEndpointAndContextNodeXri(context, subjectXri);
 
 		mainContentPane.add(photosWindowPane);
 	}

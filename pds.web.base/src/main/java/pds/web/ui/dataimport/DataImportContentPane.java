@@ -88,7 +88,7 @@ public class DataImportContentPane extends ContentPane {
 		try {
 
 			this.canonicalLabel.setText(this.endpoint.getCanonical().toString());
-			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.endpoint, null, null);
+			this.xdiPanel.setEndpointAndGraphListener(this.endpoint, null);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
@@ -301,7 +301,7 @@ public class DataImportContentPane extends ContentPane {
 		splitPane1.add(column1);
 		Label label6 = new Label();
 		label6.setStyleName("Default");
-		label6.setText("This tool can import data from an interoperable XDI file into your Personal Data Store.");
+		label6.setText("This tool can import data from an interoperable XDI file into your Personal Cloud.");
 		column1.add(label6);
 		Label label7 = new Label();
 		label7.setStyleName("Default");

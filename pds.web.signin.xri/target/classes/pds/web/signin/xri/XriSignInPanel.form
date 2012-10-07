@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_contentPane1" t="nextapp.echo.app.Panel">
+
+<p n="insets">10px</p>
+<p n="overflow">1</p>
+
+
+
+<c i="Component_column2" t="nextapp.echo.app.Column">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<c i="Component_label2" t="nextapp.echo.app.Label">
+<p n="styleName">Header</p>
+
+<p n="text">I-Name Sign-In</p>
+</c>
+<c i="Component_label4" t="nextapp.echo.app.Label">
+
+
+
+
+
+<p n="styleName">Default</p>
+
+<p n="text">Welcome. Please enter your I-Name and Secret Token.</p>
+</c>
+<c i="Component_grid2" t="nextapp.echo.app.Grid">
+<c i="Component_label1" t="nextapp.echo.app.Label">
+
+<p n="styleName">Default</p>
+
+
+<p n="text">I-Name:</p>
+</c>
+<c i="Component_inameTextField" t="nextapp.echo.app.TextField" vis="private">
+<p n="styleName">Default</p>
+
+<e t="action">
+<h n="actionPerformed" v="onOpenActionPerformed"/>
+</e>
+<p n="width">100%</p>
+</c>
+
+
+
+
+<p n="width">100%</p>
+<p n="columnWidth" x="0">150px</p>
+<c i="Component_label3" t="nextapp.echo.app.Label">
+
+<p n="styleName">Default</p>
+
+
+<p n="text">Secret Token:</p>
+</c>
+<c i="Component_secretTokenField" t="nextapp.echo.app.PasswordField" vis="private">
+<p n="styleName">Default</p>
+<p n="width">100%</p>
+</c>
+</c>
+
+
+
+
+<p n="cellSpacing">10px</p>
+
+<c i="Component_row2" t="nextapp.echo.app.Row">
+
+<c i="Component_button2" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+
+<e t="action">
+<h n="actionPerformed" v="onOpenActionPerformed"/>
+</e>
+
+<p n="text">Open Personal Cloud</p>
+</c>
+
+
+
+
+<p n="alignment">
+<a h="right"/>
+</p>
+<p n="cellSpacing">10px</p>
+<p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+<p n="maximumSize">40px</p>
+<p n="minimumSize">40px</p>
+<p n="overflow">nextapp.echo.app.layout.SplitPaneLayoutData.OVERFLOW_HIDDEN</p>
+</p>
+</c>
+
+
+</c>
+</c>
+</form>

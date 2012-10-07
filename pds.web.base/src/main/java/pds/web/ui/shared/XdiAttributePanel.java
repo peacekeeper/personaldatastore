@@ -12,39 +12,38 @@ import nextapp.echo.app.Row;
 import nextapp.echo.app.TextField;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
+import nextapp.echo.app.layout.RowLayoutData;
 import pds.web.components.xdi.XdiPanel;
 import pds.web.ui.MessageDialog;
 import pds.xdi.XdiEndpoint;
-import pds.xdi.XdiException;
-import pds.xdi.XdiNotExistentException;
 import pds.xdi.events.XdiGraphDelEvent;
 import pds.xdi.events.XdiGraphEvent;
 import pds.xdi.events.XdiGraphListener;
 import pds.xdi.events.XdiGraphModEvent;
+import xdi2.client.exceptions.Xdi2ClientException;
+import xdi2.connector.facebook.mapping.FacebookMapping;
+import xdi2.core.ContextNode;
 import xdi2.core.Literal;
-import xdi2.core.Statement;
-import xdi2.core.constants.XDIConstants;
+import xdi2.core.features.multiplicity.XdiAttribute;
 import xdi2.core.util.StatementUtil;
-import xdi2.core.util.XDIUtil;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
 import xdi2.messaging.MessageResult;
-import xdi2.messaging.constants.XDIMessagingConstants;
 
-public class DataAttributeInstancePanel extends Panel implements XdiGraphListener {
+public class XdiAttributePanel extends Panel implements XdiGraphListener {
 
 	private static final long serialVersionUID = -5082464847478633075L;
 
 	protected ResourceBundle resourceBundle;
 
 	private XdiEndpoint endpoint;
-	private XRI3Segment contextNodeXri;
-	private XRI3Segment attributeXri;
-	private XRI3Segment address;
+	private XdiAttribute xdiAttribute;
+	private XRI3Segment xdiAttributeXri;
 
 	private boolean readOnly;
 
 	private XdiPanel xdiPanel;
+	private Label xdiAttributeXriLabel;
 	private Label valueLabel;
 	private TextField valueTextField;
 	private Button editButton;
@@ -54,11 +53,11 @@ public class DataAttributeInstancePanel extends Panel implements XdiGraphListene
 	/**
 	 * Creates a new <code>AccountPersonaPanel</code>.
 	 */
-	public DataAttributeInstancePanel() {
+	public XdiAttributePanel() {
 		super();
 
 		this.readOnly = false;
-		
+
 		// Add design-time configured components.
 		initComponents();
 	}
@@ -75,7 +74,7 @@ public class DataAttributeInstancePanel extends Panel implements XdiGraphListene
 		super.dispose();
 
 		// remove us as listener
-		
+
 		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 
@@ -83,9 +82,17 @@ public class DataAttributeInstancePanel extends Panel implements XdiGraphListene
 
 		try {
 
-			String value = this.getValue();
+			// refresh data
 
-			this.xdiPanel.setEndpointAndMainAddressAndGetAddresses(this.endpoint, this.address, this.xdiGetAddresses());
+			if (this.xdiAttribute == null) this.xdiGet();
+
+			// refresh UI
+
+			Literal literal = this.xdiAttribute.getContextNode().getLiteral();
+			String value = literal == null ? null : literal.getLiteralData();
+
+			this.xdiPanel.setEndpointAndGraphListener(this.endpoint, this);
+			this.xdiAttributeXriLabel.setText(this.xdiAttribute.getContextNode().getArcXri().toString());
 			this.valueLabel.setText(value);
 			this.valueTextField.setText(value);
 		} catch (Exception ex) {
@@ -95,10 +102,54 @@ public class DataAttributeInstancePanel extends Panel implements XdiGraphListene
 		}
 	}
 
+	private void xdiGet() throws Xdi2ClientException {
+
+		// $get
+
+		Message message = this.endpoint.prepareMessage();
+		message.createGetOperation(this.xdiAttributeXri);
+
+		MessageResult messageResult = this.endpoint.send(message);
+
+		ContextNode contextNode = messageResult.getGraph().findContextNode(this.xdiAttributeXri, false);
+		if (contextNode == null) this.xdiAttribute = null;
+
+		this.xdiAttribute = XdiAttribute.fromContextNode(contextNode);
+	}
+
+	private void xdiMod(String value) throws Xdi2ClientException {
+
+		// $mod
+
+		XRI3Segment contextNodeXri = this.xdiAttribute.getContextNode().getXri();
+
+		Message message = this.endpoint.prepareMessage();
+		message.createModOperation(StatementUtil.fromLiteralComponents(contextNodeXri, value));
+
+		this.endpoint.send(message);
+	}
+
+	private void xdiDel() throws Xdi2ClientException {
+
+		// $del
+
+		XRI3Segment contextNodeXri = this.xdiAttribute.getContextNode().getXri();
+
+		Message message = this.endpoint.prepareMessage();
+		message.createDelOperation(contextNodeXri);
+
+		this.endpoint.send(message);
+	}
+
+	public XRI3Segment xdiMainAddress() {
+
+		return this.xdiAttribute.getContextNode().getXri();
+	}
+
 	public XRI3Segment[] xdiGetAddresses() {
 
 		return new XRI3Segment[] {
-				this.address
+				this.xdiAttribute.getContextNode().getXri()
 		};
 	}
 
@@ -110,21 +161,14 @@ public class DataAttributeInstancePanel extends Panel implements XdiGraphListene
 	public XRI3Segment[] xdiModAddresses() {
 
 		return new XRI3Segment[] {
-				this.address
-		};
-	}
-
-	public XRI3Segment[] xdiSetAddresses() {
-
-		return new XRI3Segment[] {
-				this.address
+				this.xdiAttribute.getContextNode().getXri()
 		};
 	}
 
 	public XRI3Segment[] xdiDelAddresses() {
 
 		return new XRI3Segment[] {
-				this.address
+				this.xdiAttribute.getContextNode().getXri()
 		};
 	}
 
@@ -150,18 +194,17 @@ public class DataAttributeInstancePanel extends Panel implements XdiGraphListene
 		}
 	}
 
-	public void setEndpointAndContextNodeXriAndAttributeXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri, XRI3Segment attributeXri) {
+	public void setEndpointAndXdiAttribute(XdiEndpoint endpoint, XdiAttribute xdiAttribute, XRI3Segment xdiAttributeXri) {
 
 		// remove us as listener
-		
+
 		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
-		
+
 		// refresh
-		
+
 		this.endpoint = endpoint;
-		this.contextNodeXri = contextNodeXri;
-		this.attributeXri = attributeXri;
-		this.address = new XRI3Segment("" + contextNodeXri + attributeXri);
+		this.xdiAttribute = xdiAttribute;
+		this.xdiAttributeXri = xdiAttributeXri;
 
 		this.refresh();
 
@@ -205,7 +248,7 @@ public class DataAttributeInstancePanel extends Panel implements XdiGraphListene
 
 		try {
 
-			this.setValue(this.valueTextField.getText());
+			this.xdiMod(this.valueTextField.getText());
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
@@ -224,7 +267,7 @@ public class DataAttributeInstancePanel extends Panel implements XdiGraphListene
 
 			try {
 
-				this.delete();
+				this.xdiDel();
 			} catch (Exception ex) {
 
 				MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
@@ -239,36 +282,18 @@ public class DataAttributeInstancePanel extends Panel implements XdiGraphListene
 		}
 	}
 
-	private String getValue() throws XdiException {
+	private void onLinkFacebookActionPerformed(ActionEvent e) {
 
-		// $get
-		
-		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_GET, this.address);
-		MessageResult messageResult = this.endpoint.send(message);
-
-		Literal literal = messageResult.getGraph().findLiteral(this.address);
-		if (literal == null) throw new XdiNotExistentException();
-
-		return literal.getLiteralData();
+		FacebookMapping.getInstance();
+		//TODO Implement.
 	}
 
-	private void setValue(String value) throws XdiException {
-
-		// $mod
-
-		Statement targetStatement = StatementUtil.fromComponents(this.address, XDIConstants.XRI_S_LITERAL, XDIUtil.stringToDataXriSegment(value));
-		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_MOD, targetStatement);
-
-		this.endpoint.send(message);
+	private void onLinkPersonalActionPerformed(ActionEvent e) {
+		//TODO Implement.
 	}
 
-	private void delete() throws XdiException {
-
-		// $del
-
-		Message message = this.endpoint.prepareOperation(XDIMessagingConstants.XRI_S_DEL, this.address);
-
-		this.endpoint.send(message);
+	private void onUnlinkActionPerformed(ActionEvent e) {
+		//TODO Implement.
 	}
 
 	/**
@@ -277,15 +302,20 @@ public class DataAttributeInstancePanel extends Panel implements XdiGraphListene
 	 * Contents will be overwritten.
 	 */
 	private void initComponents() {
-		this
-				.setInsets(new Insets(new Extent(30, Extent.PX), new Extent(0,
-						Extent.PX), new Extent(0, Extent.PX), new Extent(5,
-						Extent.PX)));
+		this.setInsets(new Insets(new Extent(30, Extent.PX), new Extent(0,
+				Extent.PX), new Extent(0, Extent.PX), new Extent(5, Extent.PX)));
 		Row row1 = new Row();
 		row1.setCellSpacing(new Extent(10, Extent.PX));
 		add(row1);
 		xdiPanel = new XdiPanel();
 		row1.add(xdiPanel);
+		xdiAttributeXriLabel = new Label();
+		xdiAttributeXriLabel.setStyleName("Bold");
+		xdiAttributeXriLabel.setText("...");
+		RowLayoutData xdiAttributeXriLabelLayoutData = new RowLayoutData();
+		xdiAttributeXriLabelLayoutData.setWidth(new Extent(120, Extent.PX));
+		xdiAttributeXriLabel.setLayoutData(xdiAttributeXriLabelLayoutData);
+		row1.add(xdiAttributeXriLabel);
 		valueLabel = new Label();
 		valueLabel.setStyleName("Default");
 		valueLabel.setText("...");
@@ -341,5 +371,38 @@ public class DataAttributeInstancePanel extends Panel implements XdiGraphListene
 			}
 		});
 		row1.add(deleteButton);
+		Button button1 = new Button();
+		button1.setStyleName("Default");
+		button1.setText("Link to Facebook");
+		button1.addActionListener(new ActionListener() {
+			private static final long serialVersionUID = 1L;
+	
+			public void actionPerformed(ActionEvent e) {
+				onLinkFacebookActionPerformed(e);
+			}
+		});
+		row1.add(button1);
+		Button button2 = new Button();
+		button2.setStyleName("Default");
+		button2.setText("Link to Personal.com");
+		button2.addActionListener(new ActionListener() {
+			private static final long serialVersionUID = 1L;
+	
+			public void actionPerformed(ActionEvent e) {
+				onLinkPersonalActionPerformed(e);
+			}
+		});
+		row1.add(button2);
+		Button button3 = new Button();
+		button3.setStyleName("Default");
+		button3.setText("Unlink");
+		button3.addActionListener(new ActionListener() {
+			private static final long serialVersionUID = 1L;
+	
+			public void actionPerformed(ActionEvent e) {
+				onUnlinkActionPerformed(e);
+			}
+		});
+		row1.add(button3);
 	}
 }

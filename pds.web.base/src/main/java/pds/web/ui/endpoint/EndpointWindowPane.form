@@ -23,7 +23,7 @@
 
 
 
-<c i="Component_loginContentPane1" t="pds.web.ui.context.ClosedContentPane"/>
+<c i="Component_loginContentPane1" t="pds.web.ui.endpoint.ClosedContentPane"/>
 
 
 

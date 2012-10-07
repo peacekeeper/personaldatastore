@@ -18,7 +18,7 @@ import nextapp.echo.app.layout.SplitPaneLayoutData;
 import pds.web.PDSApplication;
 import pds.web.ui.MessageDialog;
 import pds.xdi.XdiEndpoint;
-import xdi2.core.xri3.impl.XRI3Segment;
+import pds.xdi.events.XdiGraphListener;
 import xdi2.messaging.Message;
 import xdi2.messaging.MessageResult;
 import xdi2.messaging.constants.XDIMessagingConstants;
@@ -30,8 +30,7 @@ public class XdiContentPane extends ContentPane {
 	protected ResourceBundle resourceBundle;
 
 	private XdiEndpoint endpoint;
-	private XRI3Segment mainAddress;
-	private XRI3Segment[] getAddresses;
+	private XdiGraphListener graphListener;
 
 	private Label xdiAddressLabel;
 	private Label httpAddressLabel;
@@ -59,17 +58,18 @@ public class XdiContentPane extends ContentPane {
 
 	private void refresh() {
 
-		if (this.getAddresses == null) return;
+		if (this.graphListener.xdiGetAddresses()  == null) return;
 
 		try {
 
-			Message message = this.endpoint.prepareOperations(XDIMessagingConstants.XRI_S_GET, this.getAddresses);
+			Message message = this.endpoint.prepareOperations(XDIMessagingConstants.XRI_S_GET, this.graphListener.xdiGetAddresses());
 			MessageResult messageResult = this.endpoint.send(message);
 
 			String httpEndpoint = this.endpoint.getEndpoint();
+			if (! httpEndpoint.endsWith("/")) httpEndpoint += "/";
 
-			this.xdiAddressLabel.setText(this.mainAddress == null ? "" : this.mainAddress.toString());
-			this.httpAddressLabel.setText(httpEndpoint + (this.mainAddress == null ? "" : this.mainAddress.toString()));
+			this.xdiAddressLabel.setText(this.graphListener.xdiMainAddress() == null ? "" : this.graphListener.xdiMainAddress().toString());
+			this.httpAddressLabel.setText(httpEndpoint + (this.graphListener.xdiMainAddress() == null ? "" : this.graphListener.xdiMainAddress().toString()));
 			this.graphContentPane.setGraph(messageResult.getGraph());
 		} catch (Exception ex) {
 
@@ -78,11 +78,10 @@ public class XdiContentPane extends ContentPane {
 		}
 	}
 
-	public void setEndpointAndMainAddressAndGetAddresses(XdiEndpoint endpoint, XRI3Segment mainAddress, XRI3Segment[] getAddresses) {
+	public void setEndpointAndGraphListener(XdiEndpoint endpoint, XdiGraphListener graphListener) {
 
 		this.endpoint = endpoint;
-		this.mainAddress = mainAddress;
-		this.getAddresses = getAddresses;
+		this.graphListener = graphListener;
 
 		this.refresh();
 	}
@@ -92,14 +91,9 @@ public class XdiContentPane extends ContentPane {
 		return this.endpoint;
 	}
 
-	public XRI3Segment getMainAddress() {
+	public XdiGraphListener getGraphListener() {
 
-		return this.mainAddress;
-	}
-
-	public XRI3Segment[] getGetAddresses() {
-
-		return this.getAddresses;
+		return this.graphListener;
 	}
 
 	/**
@@ -130,7 +124,7 @@ public class XdiContentPane extends ContentPane {
 		column1.add(row1);
 		Label label1 = new Label();
 		label1.setStyleName("Default");
-		label1.setText("This window displays the raw XDI data of an object in your Personal Data Store.");
+		label1.setText("This window displays the raw XDI data of an object in your Personal Cloud.");
 		RowLayoutData label1LayoutData = new RowLayoutData();
 		label1LayoutData.setInsets(new Insets(new Extent(10, Extent.PX)));
 		label1.setLayoutData(label1LayoutData);
