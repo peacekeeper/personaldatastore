@@ -58,6 +58,7 @@
 
 <c i="Component_predefinedSignInsColumn" t="nextapp.echo.app.Column" vis="private">
 
+<p n="cellSpacing">5px</p>
 </c>
 </c>
 </c>

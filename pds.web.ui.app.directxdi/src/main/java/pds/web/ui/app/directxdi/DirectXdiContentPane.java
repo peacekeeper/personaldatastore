@@ -30,6 +30,7 @@ import pds.xdi.XdiEndpoint;
 import pds.xdi.events.XdiTransactionEvent;
 import xdi2.core.Graph;
 import xdi2.core.Literal;
+import xdi2.core.constants.XDIConstants;
 import xdi2.core.impl.BasicLiteral;
 import xdi2.core.impl.memory.MemoryGraphFactory;
 import xdi2.core.io.XDIReaderRegistry;
@@ -66,16 +67,17 @@ public class DirectXdiContentPane extends ContentPane {
 		super.init();
 
 		Message message = this.endpoint.prepareMessage();
+		message.createGetOperation(XDIConstants.XRI_S_CONTEXT);
 		StringWriter writer = new StringWriter();
 
 		try {
-			
-			XDIWriterRegistry.getDefault().write(message.getMessageEnvelope().getGraph(), writer);
+
+			XDIWriterRegistry.forFormat("XDI DISPLAY" , null).write(message.getMessageEnvelope().getGraph(), writer);
 		} catch (IOException ex) {
-			
+
 			throw new RuntimeException(ex.getMessage(), ex);
 		}
-		
+
 		this.xdiTextArea.setText(writer.toString());
 	}
 

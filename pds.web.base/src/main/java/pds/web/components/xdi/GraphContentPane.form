@@ -30,7 +30,8 @@
 <e t="change">
 <h n="stateChanged" v="onCheckboxStateChanged"/>
 </e>
-<p n="selected">true</p>
+
+<p n="selected">false</p>
 </c>
 <c i="Component_orderedCheckbox" t="nextapp.echo.app.CheckBox" vis="private">
 <p n="text">ordered=1</p>
@@ -38,7 +39,8 @@
 <e t="change">
 <h n="stateChanged" v="onCheckboxStateChanged"/>
 </e>
-<p n="selected">true</p>
+
+<p n="selected">false</p>
 </c>
 <c i="Component_prettyCheckbox" t="nextapp.echo.app.CheckBox" vis="private">
 <p n="text">pretty=1</p>

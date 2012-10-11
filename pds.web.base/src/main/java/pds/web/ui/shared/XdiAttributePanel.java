@@ -39,6 +39,7 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 	private XdiEndpoint endpoint;
 	private XdiAttribute xdiAttribute;
 	private XRI3Segment xdiAttributeXri;
+	private String label;
 
 	private boolean readOnly;
 
@@ -92,7 +93,7 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 			String value = literal == null ? null : literal.getLiteralData();
 
 			this.xdiPanel.setEndpointAndGraphListener(this.endpoint, this);
-			this.xdiAttributeXriLabel.setText(this.xdiAttribute.getContextNode().getArcXri().toString());
+			this.xdiAttributeXriLabel.setText(this.label);
 			this.valueLabel.setText(value);
 			this.valueTextField.setText(value);
 		} catch (Exception ex) {
@@ -115,6 +116,18 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 		if (contextNode == null) this.xdiAttribute = null;
 
 		this.xdiAttribute = XdiAttribute.fromContextNode(contextNode);
+	}
+
+	private void xdiAdd(String value) throws Xdi2ClientException {
+
+		// $add
+
+		XRI3Segment contextNodeXri = this.xdiAttribute.getContextNode().getXri();
+
+		Message message = this.endpoint.prepareMessage();
+		message.createAddOperation(StatementUtil.fromLiteralComponents(contextNodeXri, value));
+
+		this.endpoint.send(message);
 	}
 
 	private void xdiMod(String value) throws Xdi2ClientException {
@@ -194,7 +207,7 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	public void setEndpointAndXdiAttribute(XdiEndpoint endpoint, XdiAttribute xdiAttribute, XRI3Segment xdiAttributeXri) {
+	public void setEndpointAndXdiAttribute(XdiEndpoint endpoint, XdiAttribute xdiAttribute, XRI3Segment xdiAttributeXri, String label) {
 
 		// remove us as listener
 
@@ -205,6 +218,7 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 		this.endpoint = endpoint;
 		this.xdiAttribute = xdiAttribute;
 		this.xdiAttributeXri = xdiAttributeXri;
+		this.label = label;
 
 		this.refresh();
 
@@ -234,8 +248,12 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 		this.readOnly = readOnly;
 	}
 
+	private boolean needAdd = false;
+	
 	private void onEditActionPerformed(ActionEvent e) {
 
+		this.needAdd = this.valueLabel.getText() == null;
+		
 		this.valueTextField.setText(this.valueLabel.getText());
 
 		this.valueLabel.setVisible(false);
@@ -248,7 +266,10 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 
 		try {
 
-			this.xdiMod(this.valueTextField.getText());
+			if (this.needAdd)
+				this.xdiAdd(this.valueTextField.getText());
+			else
+				this.xdiMod(this.valueTextField.getText());
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
@@ -289,6 +310,10 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 	}
 
 	private void onLinkPersonalActionPerformed(ActionEvent e) {
+		//TODO Implement.
+	}
+
+	private void onLinkAllfiledActionPerformed(ActionEvent e) {
 		//TODO Implement.
 	}
 
@@ -373,6 +398,9 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 		row1.add(deleteButton);
 		Button button1 = new Button();
 		button1.setStyleName("Default");
+		ResourceImageReference imageReference4 = new ResourceImageReference(
+				"/pds/web/resource/image/connect-facebook.png");
+		button1.setIcon(imageReference4);
 		button1.setText("Link to Facebook");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
@@ -384,6 +412,9 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 		row1.add(button1);
 		Button button2 = new Button();
 		button2.setStyleName("Default");
+		ResourceImageReference imageReference5 = new ResourceImageReference(
+				"/pds/web/resource/image/connect-personal.png");
+		button2.setIcon(imageReference5);
 		button2.setText("Link to Personal.com");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
@@ -393,6 +424,20 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 			}
 		});
 		row1.add(button2);
+		Button button4 = new Button();
+		button4.setStyleName("Default");
+		ResourceImageReference imageReference6 = new ResourceImageReference(
+				"/pds/web/resource/image/connect-allfiled.png");
+		button4.setIcon(imageReference6);
+		button4.setText("Link to Allfiled");
+		button4.addActionListener(new ActionListener() {
+			private static final long serialVersionUID = 1L;
+	
+			public void actionPerformed(ActionEvent e) {
+				onLinkAllfiledActionPerformed(e);
+			}
+		});
+		row1.add(button4);
 		Button button3 = new Button();
 		button3.setStyleName("Default");
 		button3.setText("Unlink");

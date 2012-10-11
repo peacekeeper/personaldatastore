@@ -48,6 +48,8 @@ import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
 import xdi2.messaging.constants.XDIMessagingConstants;
 import echopoint.ImageIcon;
+import pds.web.ui.connectors.AllfiledConnectorPanel;
+import pds.web.ui.AccountRootGrid;
 
 public class MainContentPane extends ContentPane implements ApplicationListener {
 
@@ -64,6 +66,8 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 	private CheckBox logWindowCheckBox;
 	private CheckBox developerModeCheckBox;
 	private Grid pdsWebAppGrid;
+
+	private AllfiledConnectorPanel allfiledConnectorPanel;
 
 	/**
 	 * Creates a new <code>MainContentPane</code>.
@@ -318,7 +322,11 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 		facebookConnectorPanel.setId("facebookConnectorPanel");
 		row4.add(facebookConnectorPanel);
 		personalConnectorPanel = new PersonalConnectorPanel();
+		personalConnectorPanel.setId("personalConnectorPanel");
 		row4.add(personalConnectorPanel);
+		allfiledConnectorPanel = new AllfiledConnectorPanel();
+		allfiledConnectorPanel.setId("allfiledConnectorPanel");
+		row4.add(allfiledConnectorPanel);
 		Label label1 = new Label();
 		label1.setStyleName("Header");
 		label1.setText("Account Personas");

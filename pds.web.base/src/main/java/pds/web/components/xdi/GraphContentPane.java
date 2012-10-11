@@ -153,7 +153,7 @@ public class GraphContentPane extends ContentPane {
 		button2.setText("XDI DISPLAY");
 		button2.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onXDIDISPLAYActionPerformed(e);
 			}
@@ -164,29 +164,29 @@ public class GraphContentPane extends ContentPane {
 		button1.setText("XDI/JSON");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onXDIJSONActionPerformed(e);
 			}
 		});
 		row1.add(button1);
 		contextsCheckbox = new CheckBox();
-		contextsCheckbox.setSelected(true);
+		contextsCheckbox.setSelected(false);
 		contextsCheckbox.setText("contexts=1");
 		contextsCheckbox.addChangeListener(new ChangeListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void stateChanged(ChangeEvent e) {
 				onCheckboxStateChanged(e);
 			}
 		});
 		row1.add(contextsCheckbox);
 		orderedCheckbox = new CheckBox();
-		orderedCheckbox.setSelected(true);
+		orderedCheckbox.setSelected(false);
 		orderedCheckbox.setText("ordered=1");
 		orderedCheckbox.addChangeListener(new ChangeListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void stateChanged(ChangeEvent e) {
 				onCheckboxStateChanged(e);
 			}
@@ -197,7 +197,7 @@ public class GraphContentPane extends ContentPane {
 		prettyCheckbox.setText("pretty=1");
 		prettyCheckbox.addChangeListener(new ChangeListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void stateChanged(ChangeEvent e) {
 				onCheckboxStateChanged(e);
 			}
@@ -205,7 +205,7 @@ public class GraphContentPane extends ContentPane {
 		row1.add(prettyCheckbox);
 		htmlLabel = new HtmlLabel();
 		htmlLabel
-		.setHtml("<div style=\"white-space:nowrap;font-family:monospace;\"><pre><!-- $$$ --></pre></div>");
+				.setHtml("<div style=\"white-space:nowrap;font-family:monospace;\"><pre><!-- $$$ --></pre></div>");
 		column1.add(htmlLabel);
 	}
 }

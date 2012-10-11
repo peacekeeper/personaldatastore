@@ -85,7 +85,7 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 					this.addXdiCollectionPanel(XdiCollection.fromContextNode(contextNode));
 				} else if (XdiAttribute.isValid(contextNode)) {
 
-					this.addXdiAttributePanel(XdiAttribute.fromContextNode(contextNode));
+					this.addXdiAttributePanel(XdiAttribute.fromContextNode(contextNode), pdsDictionaryXri.toString());
 				}
 			}
 		} catch (Exception ex) {
@@ -119,10 +119,10 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 		this.add(xdiCollectionPanel);
 	}
 
-	private void addXdiAttributePanel(XdiAttribute xdiAttribute) {
+	private void addXdiAttributePanel(XdiAttribute xdiAttribute, String label) {
 
 		XdiAttributePanel xdiAttributePanel = new XdiAttributePanel();
-		xdiAttributePanel.setEndpointAndXdiAttribute(this.endpoint, xdiAttribute, xdiAttribute.getContextNode().getXri());
+		xdiAttributePanel.setEndpointAndXdiAttribute(this.endpoint, xdiAttribute, xdiAttribute.getContextNode().getXri(), label);
 		xdiAttributePanel.setReadOnly(this.readOnly);
 
 		this.add(xdiAttributePanel);

@@ -66,12 +66,22 @@
 <e t="action">
 <h n="actionPerformed" v="onLinkFacebookActionPerformed"/>
 </e>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/connect-facebook.png</p>
 </c>
 <c i="Component_button2" t="nextapp.echo.app.Button">
 <p n="styleName">Default</p>
 <p n="text">Link to Personal.com</p>
 <e t="action">
 <h n="actionPerformed" v="onLinkPersonalActionPerformed"/>
+</e>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/connect-personal.png</p>
+</c>
+<c i="Component_button4" t="nextapp.echo.app.Button">
+<p n="styleName">Default</p>
+<p n="text">Link to Allfiled</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/connect-allfiled.png</p>
+<e t="action">
+<h n="actionPerformed" v="onLinkAllfiledActionPerformed"/>
 </e>
 </c>
 <c i="Component_button3" t="nextapp.echo.app.Button">

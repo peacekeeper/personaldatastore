@@ -101,7 +101,7 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 
 				XdiAttributeMember xdiAttributeMember = xdiAttributeMembers.next();
 
-				this.addXdiAttributePanel(xdiAttributeMember);
+				this.addXdiAttributePanel(xdiAttributeMember, xdiAttributeMember.getContextNode().getArcXri().toString());
 			}
 		} catch (Exception ex) {
 
@@ -237,10 +237,10 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	private void addXdiAttributePanel(XdiAttribute xdiAttribute) {
+	private void addXdiAttributePanel(XdiAttribute xdiAttribute, String label) {
 
 		XdiAttributePanel xdiAttributePanel = new XdiAttributePanel();
-		xdiAttributePanel.setEndpointAndXdiAttribute(this.endpoint, xdiAttribute, xdiAttribute.getContextNode().getXri());
+		xdiAttributePanel.setEndpointAndXdiAttribute(this.endpoint, xdiAttribute, xdiAttribute.getContextNode().getXri(), label);
 		xdiAttributePanel.setReadOnly(this.readOnly);
 
 		this.xdiAttributesColumn.add(xdiAttributePanel);

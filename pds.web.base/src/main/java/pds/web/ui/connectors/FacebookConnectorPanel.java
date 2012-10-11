@@ -35,6 +35,7 @@ import xdi2.core.util.StatementUtil;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
 import xdi2.messaging.MessageResult;
+import nextapp.echo.app.ResourceImageReference;
 
 public class FacebookConnectorPanel extends Panel implements XdiGraphListener, ExternalCallReceiver {
 
@@ -298,11 +299,14 @@ public class FacebookConnectorPanel extends Panel implements XdiGraphListener, E
 	 */
 	private void initComponents() {
 		Button button1 = new Button();
-		button1.setStyleName("Default");
+		button1.setStyleName("PlainWhite");
+		ResourceImageReference imageReference1 = new ResourceImageReference(
+				"/pds/web/resource/image/connect-facebook.png");
+		button1.setIcon(imageReference1);
 		button1.setText("Connect to Facebook");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-
+	
 			public void actionPerformed(ActionEvent e) {
 				onConnectFacebookActionPerformed(e);
 			}

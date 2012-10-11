@@ -2,12 +2,14 @@
 <form rbi="resourceBundle">
 <c i="Component_contentPane1" t="nextapp.echo.app.ContentPane">
 <c i="Component_button1" t="nextapp.echo.app.Button">
-<p n="styleName">Default</p>
+
 
 <e t="action">
 <h n="actionPerformed" v="onConnectPersonalActionPerformed"/>
 </e>
 <p n="text">Connect to Personal</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/connect-personal.png</p>
+<p n="styleName">PlainWhite</p>
 </c>
 </c>
 </form>

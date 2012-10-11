@@ -61,7 +61,12 @@
 <c i="Component_facebookConnectorPanel" t="pds.web.ui.connectors.FacebookConnectorPanel" vis="private">
 <p n="id">facebookConnectorPanel</p>
 </c>
-<c i="Component_personalConnectorPanel" t="pds.web.ui.connectors.PersonalConnectorPanel" vis="private"/>
+<c i="Component_personalConnectorPanel" t="pds.web.ui.connectors.PersonalConnectorPanel" vis="private">
+<p n="id">personalConnectorPanel</p>
+</c>
+<c i="Component_allfiledConnectorPanel" t="pds.web.ui.connectors.AllfiledConnectorPanel" vis="private">
+<p n="id">allfiledConnectorPanel</p>
+</c>
 </c>
 <c i="Component_label1" t="nextapp.echo.app.Label">
 

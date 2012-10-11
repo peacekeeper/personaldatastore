@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_panel1" t="nextapp.echo.app.Panel">
+<c i="Component_button1" t="nextapp.echo.app.Button">
+<p n="text">Connect to Allfiled</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/pds/web/resource/image/connect-allfiled.png</p>
+<p n="styleName">PlainWhite</p>
+<e t="action">
+<h n="actionPerformed" v="onConnectAllfiledActionPerformed"/>
+</e>
+</c>
+</c>
+</form>

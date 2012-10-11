@@ -88,7 +88,7 @@ public class EndpointWindowPane extends WindowPane implements ApplicationListene
 	private void initComponents() {
 		this.setStyleName("Glass");
 		this.setZIndex(10);
-		this.setTitle("Project Danube");
+		this.setTitle("Personal Cloud");
 		this.setHeight(new Extent(400, Extent.PX));
 		this.setMaximizeEnabled(false);
 		this.setMinimizeEnabled(false);

@@ -108,6 +108,7 @@ public class PredefinedSignInPanel extends Panel {
 		label4.setText("Welcome. This is a \"manual\" way of opening a Personal Cloud by selecting a predefined user.");
 		column2.add(label4);
 		predefinedSignInsColumn = new Column();
+		predefinedSignInsColumn.setCellSpacing(new Extent(5, Extent.PX));
 		column2.add(predefinedSignInsColumn);
 	}
 }

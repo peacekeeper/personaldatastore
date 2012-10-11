@@ -31,6 +31,7 @@ import xdi2.core.util.StatementUtil;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
 import xdi2.messaging.MessageResult;
+import nextapp.echo.app.ResourceImageReference;
 
 public class PersonalConnectorPanel extends Panel implements XdiGraphListener, ExternalCallReceiver {
 
@@ -61,6 +62,8 @@ public class PersonalConnectorPanel extends Panel implements XdiGraphListener, E
 		super.init();
 
 		this.personalApi = new PersonalApi("2hmsfwb28jkmtuetxzk82x7r", "CyhuffsrBqdTfzTAsdMB9D6v");
+		this.personalApi.setScope("read_0000,read_0001");
+		this.personalApi.setUpdate("true");
 		this.personalMapping = new PersonalMapping();
 	}
 
@@ -292,7 +295,10 @@ public class PersonalConnectorPanel extends Panel implements XdiGraphListener, E
 	 */
 	private void initComponents() {
 		Button button1 = new Button();
-		button1.setStyleName("Default");
+		button1.setStyleName("PlainWhite");
+		ResourceImageReference imageReference1 = new ResourceImageReference(
+				"/pds/web/resource/image/connect-personal.png");
+		button1.setIcon(imageReference1);
 		button1.setText("Connect to Personal");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
